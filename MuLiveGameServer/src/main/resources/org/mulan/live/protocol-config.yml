@@ -1,0 +1,4 @@
+protocol_version: "1.0"
+protocol_name: "MuLive v1.0"
+protocol_host: "localhost"
+protocol_port: 45600

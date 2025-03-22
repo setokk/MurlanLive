@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  db:
+    container_name: "mulive-db"
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data_ac_cluster:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "root!238Ji*"
+      POSTGRES_DB: "mulive"
+
+  # User Management Service:
+  # Responsible for persistent features of the game (ex. players' user profiles, progress, history, score)
+  umserver:
+    container_name: "mulive-um-server"
+    build:
+      context: ./MuLiveUM
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      spring.datasource.url: "jdbc:postgresql://localhost:5432/mulive"
+
+  # Game Server Service:
+  # Responsible for handling real-time communication with clients based on game logic
+  gameserver:
+    container_name: "mulive-game-server"
+    build:
+      context: ./MuLiveGameServer
+      dockerfile: Dockerfile
+    ports:
+      - "45600:45600"
