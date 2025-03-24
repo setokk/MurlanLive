@@ -6,7 +6,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pg_data_ac_cluster:/var/lib/postgresql/data
+      - pg_um_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "root!238Ji*"
@@ -22,7 +22,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      spring.datasource.url: "jdbc:postgresql://localhost:5432/mulive"
+      spring.datasource.url: "jdbc:postgresql://db:5432/mulive"
 
   # Game Server Service:
   # Responsible for handling real-time communication with clients based on game logic
@@ -33,3 +33,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "45600:45600"
+
+volumes:
+  pg_um_data:
+    name: "pg_um_data"

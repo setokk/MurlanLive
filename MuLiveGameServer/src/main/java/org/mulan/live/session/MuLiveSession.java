@@ -13,9 +13,10 @@ import lombok.Setter;
 public class MuLiveSession {
     private String lobbyId;
     private Session session;
+    private PlayerInfo playerInfo;
 
     public static MuLiveSession fromSession(Session session) {
-        return new MuLiveSession(null, session);
+        return new MuLiveSession(null, session, null);
     }
 
     @Override

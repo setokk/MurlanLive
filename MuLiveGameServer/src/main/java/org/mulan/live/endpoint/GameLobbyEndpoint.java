@@ -17,7 +17,7 @@ public class GameLobbyEndpoint {
 
     @OnOpen
     public void onOpen(Session session, @PathParam("lobbyId") String lobbyId) throws IOException {
-        sessions.add(new MuLiveSession(lobbyId, session));
+        sessions.add(new MuLiveSession(lobbyId, session, null));
         LOGGER.info("New connection with sessionId: {}, for lobbyId: {}", session.getId(), lobbyId);
     }
 

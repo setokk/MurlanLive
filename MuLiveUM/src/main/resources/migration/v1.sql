@@ -5,8 +5,7 @@ CREATE TABLE IF NOT EXISTS player(
     id BIGINT NOT NULL PRIMARY KEY,
     username character varying(50) NOT NULL,
     password character varying(50) NOT NULL,
-    creation_date TIMESTAMP NOT NULL,
-    progress BIGINT NOT NULL
+    creation_date TIMESTAMP NOT NULL
 );
 CREATE SEQUENCE IF NOT EXISTS player_seq
     START WITH 1
@@ -19,7 +18,7 @@ CREATE SEQUENCE IF NOT EXISTS player_seq
 CREATE TABLE IF NOT EXISTS card_skin(
     id BIGINT NOT NULL PRIMARY KEY,
     name character varying(50) NOT NULL,
-    progress_to_unlock BIGINT NOT NULL
+    total_required_score BIGINT NOT NULL
 );
 
 --
@@ -40,8 +39,7 @@ CREATE SEQUENCE IF NOT EXISTS lobby_seq
 --
 CREATE TABLE IF NOT EXISTS history(
     player_id BIGINT NOT NULL,
-    lobby_id BIGINT NOT NULL
+    lobby_id BIGINT NOT NULL,
+    total_score BIGINT NOT NULL,
+    is_win BOOLEAN NOT NULL
 );
-ALTER TABLE ONLY history ADD CONSTRAINT fk_history_player FOREIGN KEY (player_id) REFERENCES player(id);
-ALTER TABLE ONLY history ADD CONSTRAINT fk_history_lobby FOREIGN KEY (lobby_id) REFERENCES lobby(id);
-ALTER TABLE ONLY history ADD CONSTRAINT history_pkey PRIMARY KEY (player_id, lobby_id);
