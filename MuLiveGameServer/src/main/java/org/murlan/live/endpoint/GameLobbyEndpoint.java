@@ -1,24 +1,27 @@
-package org.mulan.live.endpoint;
+package org.murlan.live.endpoint;
 
-import jakarta.websocket.*;
-import jakarta.websocket.server.PathParam;
+import jakarta.websocket.OnClose;
+import jakarta.websocket.OnError;
+import jakarta.websocket.OnMessage;
+import jakarta.websocket.OnOpen;
+import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mulan.live.session.MuLiveSession;
+import org.murlan.live.session.MuLiveSession;
 
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-@ServerEndpoint(value = "/game-lobby/{lobbyId}")
+@ServerEndpoint(value = "/game-lobby")
 public class GameLobbyEndpoint {
     private static final Logger LOGGER = LogManager.getLogger(GameLobbyEndpoint.class);
     private final CopyOnWriteArraySet<MuLiveSession> sessions = new CopyOnWriteArraySet<>();
 
     @OnOpen
-    public void onOpen(Session session, @PathParam("lobbyId") String lobbyId) throws IOException {
-        sessions.add(new MuLiveSession(lobbyId, session, null));
-        LOGGER.info("New connection with sessionId: {}, for lobbyId: {}", session.getId(), lobbyId);
+    public void onOpen(Session session) {
+        sessions.add(new MuLiveSession(session, null));
+        LOGGER.info("New connection with sessionId: {}", session.getId());
     }
 
     @OnMessage

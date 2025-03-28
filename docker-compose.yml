@@ -15,7 +15,7 @@ services:
   # User Management Service:
   # Responsible for persistent features of the game (ex. players' user profiles, progress, history, score)
   umserver:
-    container_name: "mulive-um-server"
+    container_name: "mulive-umserver"
     build:
       context: ./MuLiveUM
       dockerfile: Dockerfile
@@ -27,7 +27,7 @@ services:
   # Game Server Service:
   # Responsible for handling real-time communication with clients based on game logic
   gameserver:
-    container_name: "mulive-game-server"
+    container_name: "mulive-gameserver"
     build:
       context: ./MuLiveGameServer
       dockerfile: Dockerfile

@@ -1,4 +1,4 @@
-package org.mulan.um.model;
+package org.murlan.um.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

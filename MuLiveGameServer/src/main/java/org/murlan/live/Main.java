@@ -1,12 +1,12 @@
-package org.mulan.live;
+package org.murlan.live;
 
 import jakarta.websocket.DeploymentException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.tyrus.server.Server;
-import org.mulan.live.config.ConfigProvider;
-import org.mulan.live.config.ProtocolConfig;
-import org.mulan.live.endpoint.GameLobbyEndpoint;
+import org.murlan.live.config.ConfigProvider;
+import org.murlan.live.config.ProtocolConfig;
+import org.murlan.live.endpoint.GameLobbyEndpoint;
 
 public class Main {
     private static final Logger LOGGER = LogManager.getLogger(Main.class);

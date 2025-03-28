@@ -1,4 +1,4 @@
-package org.mulan.live.protocol;
+package org.murlan.live.protocol;
 
 /**
  * Enum defining <b>all</b> possible events that a player can take during a game lobby.

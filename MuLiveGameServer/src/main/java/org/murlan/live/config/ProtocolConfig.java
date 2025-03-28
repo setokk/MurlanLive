@@ -1,7 +1,10 @@
-package org.mulan.live.config;
+package org.murlan.live.config;
 
-import lombok.*;
-import lombok.experimental.Accessors;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -13,4 +16,5 @@ public class ProtocolConfig {
     private String protocol_name;
     private String protocol_host;
     private int protocol_port;
+    private String protocol_delimiter;
 }

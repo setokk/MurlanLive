@@ -1,4 +1,4 @@
-package org.mulan.live.session;
+package org.murlan.live.session;
 
 import jakarta.websocket.Session;
 import lombok.AllArgsConstructor;
@@ -11,12 +11,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MuLiveSession {
-    private String lobbyId;
     private Session session;
     private PlayerInfo playerInfo;
 
     public static MuLiveSession fromSession(Session session) {
-        return new MuLiveSession(null, session, null);
+        return new MuLiveSession(session, null);
     }
 
     @Override

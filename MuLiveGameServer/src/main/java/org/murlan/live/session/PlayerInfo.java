@@ -1,4 +1,4 @@
-package org.mulan.live.session;
+package org.murlan.live.session;
 
 import lombok.*;
 

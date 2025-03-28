@@ -1,4 +1,4 @@
-package org.mulan.live.config;
+package org.murlan.live.config;
 
 import org.yaml.snakeyaml.Yaml;
 
@@ -15,7 +15,7 @@ public class ConfigProvider {
     }
 
     public static void reloadProtocolConfig() {
-        InputStream inputStream = ConfigProvider.class.getClassLoader().getResourceAsStream("org/mulan/live/protocol-config.yml");
+        InputStream inputStream = ConfigProvider.class.getClassLoader().getResourceAsStream("org/murlan/live/protocol-config.yml");
         protocolConfig = new Yaml().loadAs(inputStream, ProtocolConfig.class);
     }
 }
