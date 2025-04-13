@@ -10,18 +10,18 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MuLiveSession {
+public class PlayerSession {
     private Session session;
     private PlayerInfo playerInfo;
 
-    public static MuLiveSession fromSession(Session session) {
-        return new MuLiveSession(session, null);
+    public static PlayerSession fromSession(Session session) {
+        return new PlayerSession(session, null);
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        MuLiveSession that = (MuLiveSession) o;
+        PlayerSession that = (PlayerSession) o;
         return session.getId().equals(that.session.getId());
     }
 }
