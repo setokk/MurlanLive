@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -21,12 +20,11 @@ public class Deck {
     public void addCard(Card card) {
         Assert.notNull(card, "card must not be null");
         Assert.notNull(cards, "cards must not be null");
-        cards.add(card);
+        this.cards.add(card);
     }
 
-    public void removeCards(Card... card) {
-        Assert.notNull(card, "card must not be null");
+    public void removeCards(Card... cards) {
         Assert.notNull(cards, "cards must not be null");
-        cards.removeAll(Arrays.asList(card));
+        this.cards.removeAll(List.of(cards));
     }
 }
