@@ -9,18 +9,16 @@ import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.murlan.live.session.PlayerSession;
 import org.murlan.live.session.Room;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 @ServerEndpoint(value = "/game-lobby")
 public class GameLobbyEndpoint {
     private static final Logger LOGGER = LogManager.getLogger(GameLobbyEndpoint.class);
     private final ConcurrentHashMap<String, String> roomsBySessionMap = new ConcurrentHashMap<>();
-    private final CopyOnWriteArraySet<Room> rooms = new CopyOnWriteArraySet<>();
+    private final ConcurrentHashMap<String, Room> rooms = new ConcurrentHashMap<>();
 
     @OnOpen
     public void onOpen(Session session, @PathParam("roomId") String roomId) {
@@ -29,7 +27,7 @@ public class GameLobbyEndpoint {
         if (rooms.contains(Room.fromId(roomId))) {
 
         } else {
-            rooms.add(Room.fromId(roomId));
+            rooms.put(roomId, Room.fromId(roomId));
         }
     }
 
@@ -40,8 +38,8 @@ public class GameLobbyEndpoint {
 
     @OnClose
     public void onClose(Session session) throws IOException {
-        roomsBySessionMap.remove(session.getId());
-        rooms.
+        String roomId = roomsBySessionMap.remove(session.getId());
+        rooms.remove(roomId);
         session.close();
         LOGGER.info("Connection with sessionId: {} closed", session.getId());
     }

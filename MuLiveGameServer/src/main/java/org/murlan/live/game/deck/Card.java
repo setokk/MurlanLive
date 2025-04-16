@@ -1,5 +1,7 @@
 package org.murlan.live.game.deck;
 
+import java.util.Arrays;
+
 public enum Card {
     ACE_OF_HEARTS(Rank.ACE, Suit.HEARTS),
     ACE_OF_DIAMONDS(Rank.ACE, Suit.DIAMONDS),
@@ -64,6 +66,25 @@ public enum Card {
         this.id = rank.id() + suit.id();
         this.rank = rank;
         this.suit = suit;
+    }
+
+    public static Card fromId(String id) throws IllegalArgumentException {
+        return Arrays.stream(Card.values())
+                .filter(c -> c.id().equals(id))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException(id + " is not a valid card"));
+    }
+
+    public boolean hasSameRankAs(Card card) {
+        return this.rank.ordinal() == card.rank.ordinal();
+    }
+
+    public boolean hasBiggerRankThan(Card card) {
+        return this.rank.ordinal() > card.rank.ordinal();
+    }
+
+    public boolean hasSmallerRankThan(Card card) {
+        return !hasBiggerRankThan(card);
     }
 
     public String id() {

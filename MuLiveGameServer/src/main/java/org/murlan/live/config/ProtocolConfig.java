@@ -17,4 +17,5 @@ public class ProtocolConfig {
     private String protocol_host;
     private int protocol_port;
     private String protocol_delimiter;
+    private String protocol_card_delimiter;
 }
