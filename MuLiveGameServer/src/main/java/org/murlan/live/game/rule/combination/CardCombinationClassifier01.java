@@ -9,9 +9,9 @@ import java.util.List;
 /**
  * Checks for double card combinations
  */
-public class CardCombinationValidator01 implements ICardCombinationValidator {
+public class CardCombinationClassifier01 implements ICardCombinationClassifier {
     @Override
-    public boolean isCardCombinationValid(CardCombination cardCombination) {
+    public boolean isCardCombinationClassified(CardCombination cardCombination) {
         List<Card> cards = cardCombination.getCards();
         if (cards.size() != 2) {
             return false;

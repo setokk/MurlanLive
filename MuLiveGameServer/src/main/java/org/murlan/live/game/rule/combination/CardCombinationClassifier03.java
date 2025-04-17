@@ -9,9 +9,9 @@ import java.util.List;
 /**
  * Checks for quadruple card combinations (Bombs)
  */
-public class CardCombinationValidator03 implements ICardCombinationValidator {
+public class CardCombinationClassifier03 implements ICardCombinationClassifier {
     @Override
-    public boolean isCardCombinationValid(CardCombination cardCombination) {
+    public boolean isCardCombinationClassified(CardCombination cardCombination) {
         List<Card> cards = cardCombination.getCards();
         if (cards.size() != 4) {
             return false;

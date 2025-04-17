@@ -9,9 +9,9 @@ import java.util.List;
 /**
  * Checks for triple card combinations
  */
-public class CardCombinationValidator02 implements ICardCombinationValidator {
+public class CardCombinationClassifier02 implements ICardCombinationClassifier {
     @Override
-    public boolean isCardCombinationValid(CardCombination cardCombination) {
+    public boolean isCardCombinationClassified(CardCombination cardCombination) {
         List<Card> cards = cardCombination.getCards();
         if (cards.size() != 3) {
             return false;

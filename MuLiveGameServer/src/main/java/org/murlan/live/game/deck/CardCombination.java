@@ -17,4 +17,15 @@ public class CardCombination {
     public CardCombination(Card... cards) {
         this.cards = Arrays.asList(cards);
     }
+
+    @Override
+    public String toString() {
+        String prefix = "";
+        StringBuilder builder = new StringBuilder();
+        for (Card card : cards) {
+            builder.append(prefix).append(card.name());
+            prefix = ", ";
+        }
+        return builder.toString();
+    }
 }

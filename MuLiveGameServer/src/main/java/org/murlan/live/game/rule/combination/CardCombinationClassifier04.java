@@ -9,9 +9,9 @@ import java.util.List;
 /**
  * Checks for simple Kolors
  */
-public class CardCombinationValidator04 implements ICardCombinationValidator {
+public class CardCombinationClassifier04 implements ICardCombinationClassifier {
     @Override
-    public boolean isCardCombinationValid(CardCombination cardCombination) {
+    public boolean isCardCombinationClassified(CardCombination cardCombination) {
         List<Card> cards = cardCombination.getCards();
         if (cards.size() < 5) {
             return false;

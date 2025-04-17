@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 /**
  * Checks for Kolor Bombs
  */
-public class CardCombinationValidator05 implements ICardCombinationValidator {
-    private final CardCombinationValidator04 kolorValidator = new CardCombinationValidator04();
+public class CardCombinationClassifier05 implements ICardCombinationClassifier {
+    private final CardCombinationClassifier04 kolorValidator = new CardCombinationClassifier04();
 
     @Override
-    public boolean isCardCombinationValid(CardCombination cardCombination) {
-        boolean isKolor = kolorValidator.isCardCombinationValid(cardCombination);
+    public boolean isCardCombinationClassified(CardCombination cardCombination) {
+        boolean isKolor = kolorValidator.isCardCombinationClassified(cardCombination);
         if (!isKolor) {
             return false;
         }
