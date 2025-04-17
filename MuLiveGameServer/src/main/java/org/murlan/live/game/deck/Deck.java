@@ -27,4 +27,9 @@ public class Deck {
         Assert.notNull(cards, "cards must not be null");
         this.cards.removeAll(List.of(cards));
     }
+
+    public void removeCards(List<Card> cards) {
+        Assert.notNull(cards, "cards must not be null");
+        this.cards.removeAll(cards);
+    }
 }
