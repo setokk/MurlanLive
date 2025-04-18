@@ -8,26 +8,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Checks for Kolor Bombs
+ * Checks for simple Kolors
  */
 public class CardCombinationClassifier05 implements ICardCombinationClassifier {
-    private final CardCombinationClassifier04 kolorValidator = new CardCombinationClassifier04();
-
     @Override
     public boolean classifyCardCombination(CardCombination cardCombination) {
-        boolean isKolor = kolorValidator.classifyCardCombination(cardCombination);
-        if (!isKolor) {
+        List<Card> cards = cardCombination.getCards();
+        if (cards.size() < 5 || cards.contains(Card.BLACK_JOKER) || cards.contains(Card.RED_JOKER)) {
             return false;
         }
 
-        List<Card> cards = cardCombination.getCards();
-        boolean isBombKolor = cards.stream()
-                .collect(Collectors.groupingBy(Card::rank, Collectors.counting()))
-                .size() == cards.size();
-        if (isBombKolor) {
-            cardCombination.setType(CardCombinationType.BOMB_COLOR);
-            return true;
+        for (int i = 1; i < cards.size(); i++) {
+            Card card = cards.get(i);
+            Card prevCard = cards.get(i - 1);
+            if (card.rank().ordinal() - prevCard.rank().ordinal() != 1) {
+                return false;
+            }
         }
-        return false;
+        cardCombination.setType(CardCombinationType.KOLOR);
+        return true;
     }
 }

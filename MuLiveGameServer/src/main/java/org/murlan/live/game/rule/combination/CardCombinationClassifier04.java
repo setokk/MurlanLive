@@ -3,28 +3,32 @@ package org.murlan.live.game.rule.combination;
 import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.deck.CardCombinationType;
+import org.murlan.live.game.deck.Suit;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * Checks for simple Kolors
+ * Checks for Kolor Bombs
  */
 public class CardCombinationClassifier04 implements ICardCombinationClassifier {
+    private final CardCombinationClassifier05 kolorValidator = new CardCombinationClassifier05();
+
     @Override
     public boolean classifyCardCombination(CardCombination cardCombination) {
-        List<Card> cards = cardCombination.getCards();
-        if (cards.size() < 5) {
+        boolean isKolor = kolorValidator.classifyCardCombination(cardCombination);
+        if (!isKolor) {
             return false;
         }
 
-        for (int i = 1; i < cards.size(); i++) {
-            Card card = cards.get(i);
-            Card prevCard = cards.get(i - 1);
-            if (card.rank().ordinal() - prevCard.rank().ordinal() != 1) {
-                return false;
-            }
+        List<Card> cards = cardCombination.getCards();
+        Map<Suit, Long> cardCountBySuit = cards.stream().collect(Collectors.groupingBy(Card::suit, Collectors.counting()));
+        boolean isBombKolor = cardCountBySuit.size() == 1;
+        if (isBombKolor) {
+            cardCombination.setType(CardCombinationType.BOMB_COLOR);
+            return true;
         }
-        cardCombination.setType(CardCombinationType.KOLOR);
-        return true;
+        return false;
     }
 }

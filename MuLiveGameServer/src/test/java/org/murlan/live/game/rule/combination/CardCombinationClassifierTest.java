@@ -88,6 +88,21 @@ public class CardCombinationClassifierTest {
     }
 
     @Test
+    public void testCardCombination_BOMB_KOLOR_5() {
+        CardCombination combination = new CardCombination(
+                Card.SIX_OF_HEARTS, // out of order intentionally to check internal sorting of CardCombination
+                Card.SEVEN_OF_HEARTS,
+                Card.EIGHT_OF_HEARTS,
+                Card.NINE_OF_HEARTS,
+                Card.TEN_OF_HEARTS
+        );
+        LOGGER.debug("testCardCombination_BOMB_KOLOR_5() -> Card combination: {{}} should be classified!", combination);
+        boolean isClassified = runClassifiers(combination);
+        Assert.assertTrue(isClassified);
+        Assert.assertEquals(CardCombinationType.BOMB_COLOR, combination.getType());
+    }
+
+    @Test
     public void testCardCombination_SINGLE_4() {
         CardCombination combination = new CardCombination(
                 Card.TWO_OF_SPADES,
