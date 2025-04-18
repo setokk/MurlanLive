@@ -14,8 +14,8 @@ public class CardCombinationClassifier05 implements ICardCombinationClassifier {
     private final CardCombinationClassifier04 kolorValidator = new CardCombinationClassifier04();
 
     @Override
-    public boolean isCardCombinationClassified(CardCombination cardCombination) {
-        boolean isKolor = kolorValidator.isCardCombinationClassified(cardCombination);
+    public boolean classifyCardCombination(CardCombination cardCombination) {
+        boolean isKolor = kolorValidator.classifyCardCombination(cardCombination);
         if (!isKolor) {
             return false;
         }

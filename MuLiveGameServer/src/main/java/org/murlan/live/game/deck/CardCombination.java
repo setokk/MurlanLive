@@ -1,6 +1,5 @@
 package org.murlan.live.game.deck;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,13 +8,19 @@ import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class CardCombination {
     private final List<Card> cards;
     private CardCombinationType type;
+    private static final Card.CardComparator ASC_COMPARATOR = new Card.CardComparator();
+
+    public CardCombination(List<Card> cards) {
+        this.cards = cards;
+        this.cards.sort(ASC_COMPARATOR);
+    }
 
     public CardCombination(Card... cards) {
         this.cards = Arrays.asList(cards);
+        this.cards.sort(ASC_COMPARATOR);
     }
 
     @Override

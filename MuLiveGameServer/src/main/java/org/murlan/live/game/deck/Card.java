@@ -1,6 +1,7 @@
 package org.murlan.live.game.deck;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public enum Card {
     ACE_OF_HEARTS(Rank.ACE, Suit.HEARTS),
@@ -97,5 +98,12 @@ public enum Card {
 
     public Suit suit() {
         return suit;
+    }
+
+    static class CardComparator implements Comparator<Card> {
+        @Override
+        public int compare(Card o1, Card o2) {
+            return o1.rank().ordinal() - o2.rank().ordinal();
+        }
     }
 }

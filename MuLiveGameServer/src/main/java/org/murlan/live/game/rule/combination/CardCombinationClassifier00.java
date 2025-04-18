@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class CardCombinationClassifier00 implements ICardCombinationClassifier {
     @Override
-    public boolean isCardCombinationClassified(CardCombination cardCombination) {
+    public boolean classifyCardCombination(CardCombination cardCombination) {
         List<Card> cards = cardCombination.getCards();
         if (cards.size() != 1) {
             return false;
