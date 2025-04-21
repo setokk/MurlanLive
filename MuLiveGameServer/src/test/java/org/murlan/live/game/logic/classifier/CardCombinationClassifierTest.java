@@ -1,4 +1,4 @@
-package org.murlan.live.game.rule.combination;
+package org.murlan.live.game.logic.classifier;
 
 import org.junit.Assert;
 import org.junit.Before;

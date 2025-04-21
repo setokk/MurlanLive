@@ -33,4 +33,8 @@ public class CardCombination {
         }
         return builder.toString();
     }
+
+    public boolean containsRank(Rank rank) {
+        return cards.stream().anyMatch(card -> card.rank().equals(rank));
+    }
 }
