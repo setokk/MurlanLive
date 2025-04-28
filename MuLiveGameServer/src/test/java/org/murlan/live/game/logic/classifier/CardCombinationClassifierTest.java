@@ -6,11 +6,13 @@ import org.junit.Test;
 import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.deck.CardCombinationType;
+import org.murlan.live.game.deck.Suit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CardCombinationClassifierTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(CardCombinationClassifierTest.class);
@@ -85,6 +87,34 @@ public class CardCombinationClassifierTest {
         boolean isClassified = runClassifiers(combination);
         Assert.assertTrue(isClassified);
         Assert.assertEquals(CardCombinationType.KOLOR, combination.getType());
+    }
+
+    @Test
+    public void testCardCombination_KOLOR_5_KING_ACE() {
+        CardCombination combination = new CardCombination(
+                Card.KING_OF_HEARTS,
+                Card.QUEEN_OF_HEARTS,
+                Card.JACK_OF_CLUBS,
+                Card.ACE_OF_DIAMONDS,
+                Card.TEN_OF_SPADES
+        );
+        LOGGER.debug("testCardCombination_KOLOR_5_KING_ACE() -> Card combination: {{}} should be classified!", combination);
+        boolean isClassified = runClassifiers(combination);
+        Assert.assertTrue(isClassified);
+        Assert.assertEquals(CardCombinationType.KOLOR, combination.getType());
+    }
+
+    @Test
+    public void testCardCombination_BOMB_KOLOR_FULL() {
+        CardCombination combination = new CardCombination(
+                Arrays.stream(Card.values())
+                        .filter(c -> c.suit().equals(Suit.HEARTS)) // Pick one suit for testing easiness
+                        .collect(Collectors.toList())
+        );
+        LOGGER.debug("testCardCombination_BOMB_KOLOR_FULL() -> Card combination: {{}} should be classified!", combination);
+        boolean isClassified = runClassifiers(combination);
+        Assert.assertTrue(isClassified);
+        Assert.assertEquals(CardCombinationType.BOMB_COLOR, combination.getType());
     }
 
     @Test
