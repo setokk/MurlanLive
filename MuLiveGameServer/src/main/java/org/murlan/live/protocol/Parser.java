@@ -32,6 +32,7 @@ public class Parser {
                 yield request;
             }
         };
+        request.setJWT(parts[0]);
         return request;
     }
 }
