@@ -1,8 +1,11 @@
 package org.murlan.live.game.deck;
 
-import java.util.Arrays;
 import java.util.Comparator;
 
+/**
+ * <b>WARNING</b>: Do <b>NOT</b> reorder or insert into this enum.
+ * The ordinal() values are used as stable card identifiers when parsed.
+ */
 public enum Card {
     ACE_OF_HEARTS(Rank.ACE, Suit.HEARTS),
     ACE_OF_DIAMONDS(Rank.ACE, Suit.DIAMONDS),
@@ -69,13 +72,6 @@ public enum Card {
         this.suit = suit;
     }
 
-    public static Card fromId(String id) throws IllegalArgumentException {
-        return Arrays.stream(Card.values())
-                .filter(c -> c.id().equals(id))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException(id + " is not a valid card"));
-    }
-
     public boolean hasSameRankAs(Card card) {
         return this.rank.ordinal() == card.rank.ordinal();
     }
@@ -86,6 +82,13 @@ public enum Card {
 
     public boolean hasSmallerRankThan(Card card) {
         return !hasBiggerRankThan(card);
+    }
+
+    public static Card fromOrdinal(int ordinal) {
+        if (ordinal < 0 || ordinal >= values().length) {
+            throw new IllegalArgumentException("Invalid ordinal: " + ordinal);
+        }
+        return Card.values()[ordinal];
     }
 
     public String id() {

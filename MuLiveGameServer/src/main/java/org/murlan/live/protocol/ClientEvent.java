@@ -2,6 +2,7 @@ package org.murlan.live.protocol;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.murlan.live.config.ProtocolConfig;
 import org.murlan.live.protocol.message.GameStateReq;
 import org.murlan.live.protocol.message.GameStateResp;
 import org.murlan.live.protocol.message.PassReq;
@@ -30,23 +31,34 @@ public enum ClientEvent {
     /**
      * Indicates that a client wants to be informed about the game state (who's turn it is to play etc.).
      */
-    GAME_STATE(new GameStateReq(), new GameStateResp()),
+    GAME_STATE(GameStateReq::new, new GameStateResp()),
 
     /**
      * Indicates that a client wants to make a move (play their hand).
      */
-    PLAY_HAND(new PlayHandReq(), new PlayHandResp()),
+    PLAY_HAND(PlayHandReq::new, new PlayHandResp()),
 
     /**
      * Indicates that a client wants or cannot play anything at the moment.
      */
-    PASS(new PassReq(), new PassResp()),
+    PASS(PassReq::new, new PassResp()),
 
     /**
      * Indicates that a client wants to surrender.
      */
-    SURRENDER(new SurrenderReq(), new SurrenderResp());
+    SURRENDER(SurrenderReq::new, new SurrenderResp());
 
-    private final Req request;
+    private final ReqFactory requestFactory;
     private final Resp response;
+
+    public static ClientEvent fromOrdinal(int ordinal) {
+        if (ordinal < 0 || ordinal >= values().length) {
+            throw new IllegalArgumentException("Invalid ordinal: " + ordinal);
+        }
+        return ClientEvent.values()[ordinal];
+    }
+
+    interface ReqFactory {
+        Req newReq(String[] messageParts, ProtocolConfig config);
+    }
 }

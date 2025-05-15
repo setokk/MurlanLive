@@ -3,6 +3,7 @@ package org.murlan.live.protocol.message;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.murlan.live.config.ProtocolConfig;
 
 @Getter
 @Setter
@@ -10,7 +11,7 @@ import lombok.Setter;
 public class SurrenderReq implements Req {
     private String JWT;
 
-    public SurrenderReq(String[] messageParts) {
+    public SurrenderReq(String[] messageParts, ProtocolConfig config) {
 
     }
 }
