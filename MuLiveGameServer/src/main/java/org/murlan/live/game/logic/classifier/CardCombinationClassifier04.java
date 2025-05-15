@@ -26,7 +26,7 @@ public class CardCombinationClassifier04 implements ICardCombinationClassifier {
         Map<Suit, Long> cardCountBySuit = cards.stream().collect(Collectors.groupingBy(Card::suit, Collectors.counting()));
         boolean isBombKolor = cardCountBySuit.size() == 1;
         if (isBombKolor) {
-            cardCombination.setType(CardCombinationType.BOMB_COLOR);
+            cardCombination.setType(CardCombinationType.BOMB_KOLOR);
             return true;
         }
         return false;

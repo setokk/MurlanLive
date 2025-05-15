@@ -114,7 +114,7 @@ public class CardCombinationClassifierTest {
         LOGGER.debug("testCardCombination_BOMB_KOLOR_FULL() -> Card combination: {{}} should be classified!", combination);
         boolean isClassified = runClassifiers(combination);
         Assert.assertTrue(isClassified);
-        Assert.assertEquals(CardCombinationType.BOMB_COLOR, combination.getType());
+        Assert.assertEquals(CardCombinationType.BOMB_KOLOR, combination.getType());
     }
 
     @Test
@@ -129,7 +129,7 @@ public class CardCombinationClassifierTest {
         LOGGER.debug("testCardCombination_BOMB_KOLOR_5() -> Card combination: {{}} should be classified!", combination);
         boolean isClassified = runClassifiers(combination);
         Assert.assertTrue(isClassified);
-        Assert.assertEquals(CardCombinationType.BOMB_COLOR, combination.getType());
+        Assert.assertEquals(CardCombinationType.BOMB_KOLOR, combination.getType());
     }
 
     @Test

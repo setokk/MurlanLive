@@ -6,5 +6,5 @@ public enum CardCombinationType {
     TRIPLE_CARDS(),
     BOMB(),
     KOLOR(),
-    BOMB_COLOR();
+    BOMB_KOLOR();
 }
