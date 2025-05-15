@@ -154,7 +154,7 @@ public class CardCombinationClassifierTest {
                 Card.FIVE_OF_HEARTS,
                 Card.SIX_OF_HEARTS
         );
-        LOGGER.debug("testCardCombination_KOLOR_5_ACE() -> Card combination: {{}} should be classified!", combination);
+        LOGGER.debug("testCardCombination_KOLOR_5_ACE() -> Card combination: {{}} should not be classified!", combination);
         boolean isClassified = runClassifiers(combination);
         Assert.assertFalse(isClassified);
     }
