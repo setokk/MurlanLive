@@ -145,6 +145,20 @@ public class CardCombinationClassifierTest {
         Assert.assertFalse(isClassified);
     }
 
+    @Test
+    public void testCardCombination_KOLOR_5_ACE() {
+        CardCombination combination = new CardCombination(
+                Card.ACE_OF_CLUBS,
+                Card.TWO_OF_SPADES,
+                Card.FOUR_OF_CLUBS,
+                Card.FIVE_OF_HEARTS,
+                Card.SIX_OF_HEARTS
+        );
+        LOGGER.debug("testCardCombination_KOLOR_5_ACE() -> Card combination: {{}} should be classified!", combination);
+        boolean isClassified = runClassifiers(combination);
+        Assert.assertFalse(isClassified);
+    }
+
     private boolean runClassifiers(CardCombination combination) {
         for (ICardCombinationClassifier classifier : classifiers) {
             if (classifier.classifyCardCombination(combination)) {
