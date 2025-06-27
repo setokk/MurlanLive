@@ -24,7 +24,7 @@ public class MovePipeline {
             new CardCombinationClassifier05()
     };
 
-    public static boolean isMoveValid(CardCombination cardCombination) {
+    public static boolean validateMove(CardCombination cardCombination) {
         if (containsDuplicates(cardCombination)) {
             return false;
         }

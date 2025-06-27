@@ -14,7 +14,7 @@ public class MovePipelineTest {
     public void testDoubleCards() {
         CardCombination cardCombination = new CardCombination(Card.KING_OF_HEARTS, Card.KING_OF_DIAMONDS);
         LOGGER.debug("testDoubleCards() -> Card combination: {{}} should be valid!", cardCombination);
-        boolean isMoveValid = MovePipeline.isMoveValid(cardCombination);
+        boolean isMoveValid = MovePipeline.validateMove(cardCombination);
         Assert.assertTrue(isMoveValid);
     }
 
@@ -22,7 +22,7 @@ public class MovePipelineTest {
     public void testDuplicateCards() {
         CardCombination cardCombination = new CardCombination(Card.QUEEN_OF_HEARTS, Card.QUEEN_OF_HEARTS);
         LOGGER.debug("testDuplicateCards() -> Card combination: {{}} should NOT be valid!", cardCombination);
-        boolean isMoveValid = MovePipeline.isMoveValid(cardCombination);
+        boolean isMoveValid = MovePipeline.validateMove(cardCombination);
         Assert.assertFalse(isMoveValid);
     }
 }
