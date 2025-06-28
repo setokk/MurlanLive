@@ -42,4 +42,10 @@ public class PlayerEntity {
 
     @Column(name = "created_date", updatable = false, nullable = false)
     private LocalDateTime createdDate;
+
+    public PlayerEntity(String username, String password, LocalDateTime createdDate) {
+        this.username = username;
+        this.password = password;
+        this.createdDate = createdDate;
+    }
 }
