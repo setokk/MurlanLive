@@ -37,4 +37,8 @@ public class CardCombination {
     public boolean containsRank(Rank rank) {
         return cards.stream().anyMatch(card -> card.rank().equals(rank));
     }
+
+    public boolean isStrongerThan(CardCombination other) {
+        return false;
+    }
 }

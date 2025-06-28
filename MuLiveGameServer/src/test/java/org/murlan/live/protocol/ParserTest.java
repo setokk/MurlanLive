@@ -8,8 +8,8 @@ import org.murlan.live.config.ProtocolConfig;
 import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombinationType;
 import org.murlan.live.game.logic.MovePipeline;
-import org.murlan.live.protocol.message.PlayHandReq;
-import org.murlan.live.protocol.message.Req;
+import org.murlan.live.protocol.api.PlayHandReq;
+import org.murlan.live.protocol.api.Req;
 
 public class ParserTest {
     private ProtocolConfig config;

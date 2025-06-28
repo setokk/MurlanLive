@@ -23,6 +23,10 @@ public class Deck {
         this.cards.add(card);
     }
 
+    public void addCards(List<Card> cards) {
+        this.cards.addAll(cards);
+    }
+
     public void removeCards(Card... cards) {
         Assert.notNull(cards, "cards must not be null");
         this.cards.removeAll(List.of(cards));
@@ -31,5 +35,11 @@ public class Deck {
     public void removeCards(List<Card> cards) {
         Assert.notNull(cards, "cards must not be null");
         this.cards.removeAll(cards);
+    }
+
+    public void removeCards(CardCombination cardCombination) {
+        Assert.notNull(cardCombination, "cardCombination must not be null");
+        Assert.notNull(cardCombination.getCards(), "cardCombination.cards must not be null");
+        this.cards.removeAll(cardCombination.getCards());
     }
 }

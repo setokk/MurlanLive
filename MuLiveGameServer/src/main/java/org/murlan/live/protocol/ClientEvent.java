@@ -3,16 +3,16 @@ package org.murlan.live.protocol;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.murlan.live.config.ProtocolConfig;
-import org.murlan.live.protocol.message.GameStateReq;
-import org.murlan.live.protocol.message.GameStateResp;
-import org.murlan.live.protocol.message.PassReq;
-import org.murlan.live.protocol.message.PassResp;
-import org.murlan.live.protocol.message.PlayHandReq;
-import org.murlan.live.protocol.message.PlayHandResp;
-import org.murlan.live.protocol.message.Req;
-import org.murlan.live.protocol.message.Resp;
-import org.murlan.live.protocol.message.SurrenderReq;
-import org.murlan.live.protocol.message.SurrenderResp;
+import org.murlan.live.protocol.api.GameStateReq;
+import org.murlan.live.protocol.api.GameStateResp;
+import org.murlan.live.protocol.api.PassReq;
+import org.murlan.live.protocol.api.PassResp;
+import org.murlan.live.protocol.api.PlayHandReq;
+import org.murlan.live.protocol.api.PlayHandResp;
+import org.murlan.live.protocol.api.Req;
+import org.murlan.live.protocol.api.Resp;
+import org.murlan.live.protocol.api.SurrenderReq;
+import org.murlan.live.protocol.api.SurrenderResp;
 
 /**
  * Enum defining <b>all</b> possible events that a player can take during a game lobby.
@@ -39,7 +39,7 @@ public enum ClientEvent {
     PLAY_HAND(PlayHandReq::new, new PlayHandResp()),
 
     /**
-     * Indicates that a client wants or cannot play anything at the moment.
+     * Indicates that a client doesn't want or cannot play anything at the moment.
      */
     PASS(PassReq::new, new PassResp()),
 

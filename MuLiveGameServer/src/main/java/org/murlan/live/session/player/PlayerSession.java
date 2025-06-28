@@ -1,4 +1,4 @@
-package org.murlan.live.session;
+package org.murlan.live.session.player;
 
 import jakarta.websocket.Session;
 import lombok.AllArgsConstructor;

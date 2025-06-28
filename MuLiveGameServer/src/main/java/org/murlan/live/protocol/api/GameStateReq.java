@@ -1,17 +1,17 @@
-package org.murlan.live.protocol.message;
+package org.murlan.live.protocol.api;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.murlan.live.config.ProtocolConfig;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
-public class SurrenderReq implements Req {
+public final class GameStateReq implements Req {
     private String JWT;
 
-    public SurrenderReq(String[] messageParts, ProtocolConfig config) {
+    public GameStateReq(String[] messageParts, ProtocolConfig config) {
 
     }
 }

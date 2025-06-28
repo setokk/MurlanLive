@@ -1,4 +1,4 @@
-package org.murlan.live.protocol.message;
+package org.murlan.live.protocol.api;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
-public class PlayHandReq implements Req {
+public final class PlayHandReq implements Req {
     private String JWT;
     private CardCombination cardCombination;
 
@@ -29,7 +29,7 @@ public class PlayHandReq implements Req {
             }
         }
         cardCombination = new CardCombination(
-                (cards.size() == individualCards.length) // Means no parsing error occurred
+                (cards.size() == individualCards.length) // Means no parsing error occurred (IllegalArgumentException)
                         ? cards
                         : Collections.emptyList()
         );

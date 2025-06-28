@@ -8,6 +8,7 @@ import org.murlan.um.model.dto.PlayerDto;
 import org.murlan.um.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,5 +34,10 @@ public class PlayerController {
         request.validate();
         PlayerDto playerDto = playerService.registerPlayer(request.getUsername(), request.getPassword());
         return ResponseEntity.ok(JwtUtils.generateJWT(playerDto));
+    }
+
+    @GetMapping("/validateJwt")
+    public ResponseEntity<?> validateJwt() {
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,4 +1,4 @@
-package org.murlan.live.protocol.message;
+package org.murlan.live.protocol.api;
 
 public class PlayHandResp implements Resp {
 }
