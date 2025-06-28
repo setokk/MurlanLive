@@ -3,8 +3,8 @@
 --
 CREATE TABLE IF NOT EXISTS player(
     id BIGINT NOT NULL PRIMARY KEY,
-    username character varying(50) NOT NULL,
-    password character varying(50) NOT NULL,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL,
     creation_date TIMESTAMP NOT NULL
 );
 CREATE SEQUENCE IF NOT EXISTS player_seq
@@ -17,7 +17,7 @@ CREATE SEQUENCE IF NOT EXISTS player_seq
 --
 CREATE TABLE IF NOT EXISTS card_skin(
     id BIGINT NOT NULL PRIMARY KEY,
-    name character varying(50) NOT NULL,
+    name TEXT NOT NULL,
     total_required_score BIGINT NOT NULL
 );
 

@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PlayerSession {
     private Session session;
-    private PlayerInfo playerInfo;
+    private PlayerDto playerDto;
 
     public static PlayerSession fromSession(Session session) {
         return new PlayerSession(session, null);
