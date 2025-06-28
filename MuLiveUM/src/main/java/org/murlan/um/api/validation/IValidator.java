@@ -1,4 +1,4 @@
-package org.murlan.um.validation;
+package org.murlan.um.api.validation;
 
 import org.murlan.um.error.BusinessLogicException;
 

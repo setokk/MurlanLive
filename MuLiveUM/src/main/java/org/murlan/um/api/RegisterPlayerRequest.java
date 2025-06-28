@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.murlan.um.validation.IValidatable;
+import org.murlan.um.api.validation.IValidatable;
 
 @Getter
 @AllArgsConstructor
