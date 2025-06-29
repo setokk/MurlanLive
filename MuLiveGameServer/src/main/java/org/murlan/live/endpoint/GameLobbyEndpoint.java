@@ -63,19 +63,21 @@ public class GameLobbyEndpoint {
         }
 
         // Update <session -> room ID> map to be able to remove them later easily
-        var sessionToRoomMap = roomHandler.getSessionToRoomMap();
-        var rooms = roomHandler.getRooms();
-        sessionToRoomMap.put(new PlayerSession(session, playerDto), roomId);
+        PlayerSession playerSession = new PlayerSession(session, playerDto);
+        roomHandler.addSession(roomId, playerSession);
 
-        if (rooms.containsKey(roomId)) { // Player wants to join Existing Room
-
+        if (roomHandler.roomExists(roomId)) { // Player wants to join Existing Room
+            boolean wasJoinSuccessful = roomHandler.addPlayerToRoom(roomId, playerDto);
+            if (!wasJoinSuccessful) {
+                roomHandler.removeSession(jwt);
+            }
         } else { // Player wants to create New Room
-            rooms.put(roomId, new Room(roomId, roomName, isPublic, passcode, new GameState(GameState.State.WAITING, playerDto)));
+            roomHandler.addRoom(roomId, new Room(roomId, roomName, isPublic, passcode, new GameState(GameState.State.WAITING, playerDto)));
         }
     }
 
     @OnMessage
-    public void onMessage(String message, Session session) throws IOException {
+    public void onMessage(String message, Session session) {
         Req req = parser.parse(message);
         switch (req) {
             case GameStateReq gameStateReq -> {

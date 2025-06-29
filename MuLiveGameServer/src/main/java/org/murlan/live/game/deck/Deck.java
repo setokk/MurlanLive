@@ -46,4 +46,17 @@ public class Deck {
         Assert.notNull(cardCombination.getCards(), "cardCombination.cards must not be null");
         this.cards.removeAll(cardCombination.getCards());
     }
+
+    public boolean contains(CardCombination cardCombination) {
+        int matchingCards = 0;
+        for (Card card : cardCombination.getCards()) {
+            for (Card ownedCard : this.cards) {
+                if (card.equals(ownedCard)) {
+                    matchingCards++;
+                    break;
+                }
+            }
+        }
+        return matchingCards == cardCombination.getCards().size();
+    }
 }

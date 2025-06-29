@@ -50,8 +50,12 @@ public class GameState {
             return false;
         }
 
+        if (!this.currTurnPlayer.getDeck().contains(cardCombination)) {
+            return false;
+        }
+
         boolean isValidMove = MovePipeline.validateMove(cardCombination);
-        if (!isValidMove || currCardCombination.isStrongerThan(cardCombination)) {
+        if (!isValidMove || this.currCardCombination.isStrongerThan(cardCombination)) {
             return false;
         }
         this.currCardCombination = cardCombination;
@@ -67,7 +71,7 @@ public class GameState {
     public synchronized void surrender() {
         this.players.remove(currTurnPlayer);
         this.score.put(currTurnPlayer, -1);
-        if (players.isEmpty()) {
+        if (this.players.isEmpty()) {
             this.state = State.FINISHED;
         }
     }
