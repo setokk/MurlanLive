@@ -15,20 +15,16 @@ public class Shuffler {
      */
     public static List<Deck> shuffle(int numParts) {
         List<Card> cards = new ArrayList<>(Arrays.asList(Card.values())); // Deep copy to not mutate original values() array
-        Random rand = new Random();
-        for (int i = cards.size() - 1; i > 0; i--) {
-            int j = rand.nextInt(i + 1);
-            Collections.swap(cards, i, j);
+        Collections.shuffle(cards, new Random());
+
+        List<Deck> decks = new ArrayList<>(numParts);
+        for (int i = 0; i <numParts; i++) {
+            decks.add(new Deck());
         }
 
-        int blockSize = cards.size() / numParts;
-        List<Deck> decks = new ArrayList<>();
-        for (int i = 0; i < numParts; i++) {
-            if (i == numParts - 1) {
-                decks.add(new Deck(cards.subList(i, cards.size())));
-            } else {
-                decks.add(new Deck(cards.subList(i, i + blockSize)));
-            }
+        for (int i = 0; i < cards.size(); i++) {
+            Deck deck = decks.get(i % numParts);
+            deck.addCard(cards.get(i));
         }
         return decks;
     }

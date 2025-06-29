@@ -7,15 +7,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class Deck {
     @Singular("withCard")
     private List<Card> cards;
+
+    public Deck() {
+        this.cards = new ArrayList<>();
+    }
 
     public void addCard(Card card) {
         Assert.notNull(card, "card must not be null");
