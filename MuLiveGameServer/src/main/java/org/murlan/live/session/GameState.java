@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 @Getter
@@ -69,8 +70,12 @@ public class GameState {
     }
 
     public synchronized void surrender(String jwt) {
-        this.players.remove(currTurnPlayer);
-        this.score.put(currTurnPlayer, -1);
+        Optional<PlayerDto> playerToSurrender = this.players.stream().filter(p -> p.getJwt().equals(jwt)).findFirst();
+        if (playerToSurrender.isEmpty()) {
+            return;
+        }
+        this.players.remove(playerToSurrender.get());
+        this.score.put(playerToSurrender.get(), -1);
         if (this.players.isEmpty()) {
             this.state = State.FINISHED;
         }
