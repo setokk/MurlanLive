@@ -58,6 +58,6 @@ public class RoomHandler {
     }
 
     public synchronized boolean addPlayerToRoom(@NonNull String roomId, @NonNull PlayerDto playerDto) {
-
+        return false; // TODO: Internal logic
     }
 }

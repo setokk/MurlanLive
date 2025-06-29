@@ -3,7 +3,6 @@ package org.murlan.live.session;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.deck.Deck;
 import org.murlan.live.game.deck.Shuffler;
@@ -45,8 +44,7 @@ public class GameState {
     }
 
     public synchronized boolean playHand(String jwt, CardCombination cardCombination) {
-        boolean isPlayerTurn = isPlayerTurn(jwt);
-        if (!isPlayerTurn) {
+        if (isNotPlayerTurn(jwt)) {
             return false;
         }
 
@@ -54,8 +52,7 @@ public class GameState {
             return false;
         }
 
-        boolean isValidMove = MovePipeline.validateMove(cardCombination);
-        if (!isValidMove || this.currCardCombination.isStrongerThan(cardCombination)) {
+        if (!MovePipeline.validateMove(cardCombination) || cardCombination.isWeakerThan(this.currCardCombination)) {
             return false;
         }
         this.currCardCombination = cardCombination;
@@ -65,10 +62,13 @@ public class GameState {
     }
 
     public synchronized void pass(String jwt) {
+        if (isNotPlayerTurn(jwt)) {
+            return;
+        }
         nextTurn();
     }
 
-    public synchronized void surrender() {
+    public synchronized void surrender(String jwt) {
         this.players.remove(currTurnPlayer);
         this.score.put(currTurnPlayer, -1);
         if (this.players.isEmpty()) {
@@ -87,8 +87,8 @@ public class GameState {
         }
     }
 
-    private boolean isPlayerTurn(String jwt) {
-        return jwt.equals(this.currTurnPlayer.getJwt());
+    private boolean isNotPlayerTurn(String jwt) {
+        return !jwt.equals(this.currTurnPlayer.getJwt());
     }
 
     private void nextTurn() {

@@ -89,10 +89,10 @@ public class GameLobbyEndpoint {
                 room.getGameState().playHand(req.getJWT(), playHandReq.getCardCombination());
             }
             case PassReq passReq -> {
-
+                room.getGameState().pass(req.getJWT());
             }
             case SurrenderReq surrenderReq -> {
-
+                room.getGameState().surrender(req.getJWT());
             }
         }
     }

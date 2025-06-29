@@ -80,6 +80,14 @@ public enum Card {
         return this.rank.ordinal() > card.rank.ordinal();
     }
 
+    public boolean hasBiggerRankForKolorThan(Card card) {
+        return switch (card.rank()) {
+            case ACE -> this.rank.equals(Rank.TWO) || this.hasBiggerRankThan(Card.THREE_OF_SPADES);
+            case TWO -> this.hasBiggerRankThan(Card.THREE_OF_SPADES);
+            default -> this.hasBiggerRankThan(card);
+        };
+    }
+
     public boolean hasSmallerRankThan(Card card) {
         return !hasBiggerRankThan(card);
     }

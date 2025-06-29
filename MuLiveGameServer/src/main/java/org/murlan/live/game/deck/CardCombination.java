@@ -6,6 +6,8 @@ import lombok.Setter;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.murlan.live.game.deck.CardCombinationType.*;
+
 @Getter
 @Setter
 public class CardCombination {
@@ -38,7 +40,41 @@ public class CardCombination {
         return cards.stream().anyMatch(card -> card.rank().equals(rank));
     }
 
-    public boolean isStrongerThan(CardCombination other) {
-        return false;
+    public boolean isWeakerThan(CardCombination other) {
+        return switch (this.type) {
+            case SINGLE_CARD -> {
+                boolean strongerBySingleCard = other.getType().equals(SINGLE_CARD)
+                        && other.getCards().getFirst().hasBiggerRankThan(this.getCards().getFirst());
+                boolean strongerByBombs = other.getType().equals(BOMB) || other.getType().equals(BOMB_KOLOR);
+                yield strongerBySingleCard || strongerByBombs;
+            }
+            case DOUBLE_CARDS -> {
+                boolean strongerByDoubleCards = other.getType().equals(DOUBLE_CARDS)
+                        && other.getCards().getFirst().hasBiggerRankThan(this.getCards().getFirst());
+                boolean strongerByBombs = other.getType().equals(BOMB) || other.getType().equals(BOMB_KOLOR);
+                yield strongerByDoubleCards || strongerByBombs;
+            }
+            case TRIPLE_CARDS -> {
+                boolean strongerTripleCards = other.getType().equals(TRIPLE_CARDS)
+                        && other.getCards().getFirst().hasBiggerRankThan(this.getCards().getFirst());
+                boolean strongerByBombs = other.getType().equals(BOMB) || other.getType().equals(BOMB_KOLOR);
+                yield strongerTripleCards || strongerByBombs;
+            }
+            case BOMB -> {
+                boolean strongerByBomb = other.getType().equals(BOMB) && other.getCards().getFirst().hasBiggerRankThan(this.getCards().getFirst());
+                boolean strongerByBombKolor = other.getType().equals(BOMB_KOLOR);
+                yield strongerByBomb || strongerByBombKolor;
+            }
+            case KOLOR -> {
+                boolean strongerByKolor = other.getType().equals(KOLOR)
+                        && other.getCards().size() == this.getCards().size()
+                        && other.getCards().getFirst().hasBiggerRankForKolorThan(this.getCards().getFirst());
+                boolean strongerByBombs = other.getType().equals(BOMB) || other.getType().equals(BOMB_KOLOR);
+                yield strongerByKolor || strongerByBombs;
+            }
+            case BOMB_KOLOR -> other.getType().equals(KOLOR)
+                    && other.getCards().size() == this.getCards().size()
+                    && other.getCards().getFirst().hasBiggerRankForKolorThan(this.getCards().getFirst());
+        };
     }
 }
