@@ -79,12 +79,14 @@ public class GameLobbyEndpoint {
     @OnMessage
     public void onMessage(String message, Session session) {
         Req req = parser.parse(message);
+        PlayerSession playerSession = roomHandler.getPlayerSession(req.getJWT());
+        Room room = roomHandler.getPlayerRoom(playerSession);
         switch (req) {
             case GameStateReq gameStateReq -> {
 
             }
             case PlayHandReq playHandReq -> {
-
+                room.getGameState().playHand(req.getJWT(), playHandReq.getCardCombination());
             }
             case PassReq passReq -> {
 
@@ -97,8 +99,13 @@ public class GameLobbyEndpoint {
 
     @OnClose
     public void onClose(Session session) throws IOException {
-        String roomId = roomHandler.getSessionToRoomMap().remove(PlayerSession.fromSession(session));
-        roomHandler.getRooms().remove(roomId);
+        PlayerSession playerSession = PlayerSession.fromSession(session);
+        Room room = roomHandler.getRoom(roomHandler.removeSession(playerSession));
+        synchronized (room) {
+            if (room.getGameState().getPlayers().size() == 1) {
+                roomHandler.removeRoom(room.getId());
+            }
+        }
         session.close();
         LOGGER.info("Connection with sessionId: {} closed", session.getId());
     }
