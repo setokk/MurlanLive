@@ -40,7 +40,7 @@ public class PlayerEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "created_date", updatable = false, nullable = false)
+    @Column(name = "creation_date", updatable = false, nullable = false)
     private LocalDateTime createdDate;
 
     public PlayerEntity(String username, String password, LocalDateTime createdDate) {

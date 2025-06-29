@@ -10,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Service
 public class PlayerService {
@@ -33,7 +32,7 @@ public class PlayerService {
         if (!isValidCredentials) {
             throw new BusinessLogicException(HttpStatus.NOT_FOUND, "Invalid credentials");
         }
-        return new PlayerDto(player.getId(), player.getUsername(), player.getCreatedDate().atZone(ZoneId.systemDefault()));
+        return new PlayerDto(player.getId(), player.getUsername(), player.getCreatedDate());
     }
 
     public PlayerDto registerPlayer(String username, String password) {
@@ -42,6 +41,6 @@ public class PlayerService {
             throw new BusinessLogicException(HttpStatus.CONFLICT, "Player with username: " + username + " exists");
         }
         PlayerEntity savedPlayer = playerRepository.save(new PlayerEntity(username, passwordEncoder.encode(password), LocalDateTime.now()));
-        return new PlayerDto(savedPlayer.getId(), savedPlayer.getUsername(), savedPlayer.getCreatedDate().atZone(ZoneId.systemDefault()));
+        return new PlayerDto(savedPlayer.getId(), savedPlayer.getUsername(), savedPlayer.getCreatedDate());
     }
 }

@@ -1,12 +1,13 @@
 package org.murlan.um.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,5 +17,6 @@ import java.time.ZonedDateTime;
 public class PlayerDto {
     private long id;
     private String username;
-    private ZonedDateTime creationDate;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    private LocalDateTime creationDate;
 }

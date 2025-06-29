@@ -31,7 +31,7 @@ public class JwtUtils {
         Map<String, Object> claims = new HashMap<>(3);
         claims.put("id", player.getId());
         claims.put("username", player.getUsername());
-        claims.put("creationDate", player.getCreationDate());
+        claims.put("creationDate", player.getCreationDate().toString());
 
         Instant currentInstant = Instant.now();
         return Jwts.builder()

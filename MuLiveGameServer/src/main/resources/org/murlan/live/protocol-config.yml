@@ -2,6 +2,6 @@ protocol_version: "1.0"
 protocol_name: "MuLive v1.0"
 protocol_host: "localhost"
 protocol_port: 45600
-protocol_delimiter: ";"
+protocol_delimiter: "@;-;@"
 protocol_card_delimiter: "_"
 protocol_um_server_host: "http://umserver:8080"

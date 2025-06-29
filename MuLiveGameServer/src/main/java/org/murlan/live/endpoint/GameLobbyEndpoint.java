@@ -9,6 +9,7 @@ import jakarta.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.murlan.live.config.ConfigProvider;
+import org.murlan.live.config.ProtocolConfig;
 import org.murlan.live.protocol.Parser;
 import org.murlan.live.protocol.api.GameStateReq;
 import org.murlan.live.protocol.api.PassReq;
@@ -25,18 +26,25 @@ import org.murlan.live.session.player.PlayerSession;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 @ServerEndpoint(value = "/game-lobby")
 public class GameLobbyEndpoint {
     private static final Logger LOGGER = LogManager.getLogger(GameLobbyEndpoint.class);
 
-    private final Parser parser = new Parser(ConfigProvider.getProtocolConfig());
-    private final AuthHttpClient authHttpClient = new AuthHttpClient(ConfigProvider.getProtocolConfig());
+    private final ProtocolConfig config = ConfigProvider.getProtocolConfig();
+    private final Parser parser = new Parser(config);
+    private final AuthHttpClient authHttpClient = new AuthHttpClient(config);
     private final RoomHandler roomHandler = new RoomHandler();
 
     @OnOpen
     public void onOpen(Session session) throws IOException, InterruptedException {
         LOGGER.info("New connection with sessionId: {}", session.getId());
+
+        if (session.getQueryString() == null || session.getQueryString().isEmpty()) {
+            session.close();
+            return;
+        }
 
         Map<String, String> queryParams = parser.parseQueryParams(session.getQueryString());
         String roomId = queryParams.get("roomId");
@@ -46,21 +54,27 @@ public class GameLobbyEndpoint {
         String jwt = queryParams.get("jwt");
 
         // Skip request if no roomId is provided
-        if (roomId == null) {
+        if (roomId == null && roomName == null) {
+            session.close();
             return;
         }
 
         // Check validity of JWT token that was sent
         boolean isValidJWT = authHttpClient.validateJwt(jwt);
         if (!isValidJWT) {
+            session.close();
             return;
         }
 
         // Check if player is actually valid
         PlayerDto playerDto = JwtUtils.decodeJWT(jwt);
         if (!playerDto.isValid()) {
+            session.close();
             return;
         }
+
+        // Create New Room ID
+        roomId = (roomId == null) ? UUID.randomUUID().toString() : roomId;
 
         // Update <session -> room ID> map to be able to remove them later easily
         PlayerSession playerSession = new PlayerSession(session, playerDto);
@@ -73,11 +87,12 @@ public class GameLobbyEndpoint {
             }
         } else { // Player wants to create New Room
             roomHandler.addRoom(roomId, new Room(roomId, roomName, isPublic, passcode, new GameState(GameState.State.WAITING, playerDto)));
+            session.getBasicRemote().sendText(jwt + config.getProtocol_delimiter() + roomId);
         }
     }
 
     @OnMessage
-    public void onMessage(String message, Session session) {
+    public void onMessage(String message, Session session) throws IOException {
         Req req = parser.parse(message);
         PlayerSession playerSession = roomHandler.getPlayerSession(req.getJWT());
         Room room = roomHandler.getPlayerRoom(playerSession);
@@ -87,6 +102,7 @@ public class GameLobbyEndpoint {
             }
             case PlayHandReq playHandReq -> {
                 room.getGameState().playHand(req.getJWT(), playHandReq.getCardCombination());
+                session.getBasicRemote().sendText(req.getJWT() + config.getProtocol_delimiter() + room.getId() + config.getProtocol_delimiter() + room.getGameState().getPlayers().size());
             }
             case PassReq passReq -> {
                 room.getGameState().pass(req.getJWT());

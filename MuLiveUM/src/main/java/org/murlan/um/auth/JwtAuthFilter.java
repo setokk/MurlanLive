@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @Component
@@ -35,7 +35,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         PlayerDto authPlayer = PlayerDto.builder()
                 .id(Long.parseLong(claims.getSubject()))
                 .username((String) claims.get("username"))
-                .creationDate(ZonedDateTime.parse((String) claims.get("creationDate")))
+                .creationDate(LocalDateTime.parse((String) claims.get("creationDate")))
                 .build();
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(authPlayer, null, Collections.emptyList());
