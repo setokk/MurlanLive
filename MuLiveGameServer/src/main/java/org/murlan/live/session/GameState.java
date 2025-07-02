@@ -45,6 +45,10 @@ public class GameState {
     }
 
     public synchronized boolean playHand(String jwt, CardCombination cardCombination) {
+        if (this.state != State.PLAYING) {
+            return false;
+        }
+
         if (isNotPlayerTurn(jwt)) {
             return false;
         }

@@ -21,7 +21,7 @@ public class RoomHandler {
         sessionToRoomIdMap.putIfAbsent(session, roomId);
     }
 
-    public String removeSession(@NonNull String jwt) {
+    public String removeSessionByJwt(@NonNull String jwt) {
         PlayerSession playerSession = jwtToSessionMap.remove(jwt);
         sessionToJwtMap.remove(playerSession);
         return sessionToRoomIdMap.remove(playerSession);

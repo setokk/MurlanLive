@@ -83,7 +83,7 @@ public class GameLobbyEndpoint {
         if (roomHandler.roomExists(roomId)) { // Player wants to join Existing Room
             boolean wasJoinSuccessful = roomHandler.addPlayerToRoom(roomId, playerDto);
             if (!wasJoinSuccessful) {
-                roomHandler.removeSession(jwt);
+                roomHandler.removeSessionByJwt(jwt);
             }
         } else { // Player wants to create New Room
             roomHandler.addRoom(roomId, new Room(roomId, roomName, isPublic, passcode, new GameState(GameState.State.WAITING, playerDto)));
@@ -120,6 +120,7 @@ public class GameLobbyEndpoint {
         synchronized (room) {
             if (room.getGameState().getPlayers().size() == 1) {
                 roomHandler.removeRoom(room.getId());
+                roomHandler.removeSession(playerSession);
             }
         }
         session.close();
