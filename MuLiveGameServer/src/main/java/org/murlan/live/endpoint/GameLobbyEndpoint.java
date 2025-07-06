@@ -114,16 +114,15 @@ public class GameLobbyEndpoint {
     }
 
     @OnClose
-    public void onClose(Session session) throws IOException {
+    public void onClose(Session session) {
         PlayerSession playerSession = PlayerSession.fromSession(session);
         Room room = roomHandler.getRoom(roomHandler.removeSession(playerSession));
         synchronized (room) {
             if (room.getGameState().getPlayers().size() == 1) {
                 roomHandler.removeRoom(room.getId());
-                roomHandler.removeSession(playerSession);
             }
         }
-        session.close();
+        roomHandler.removeSession(playerSession);
         LOGGER.info("Connection with sessionId: {} closed", session.getId());
     }
 

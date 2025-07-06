@@ -9,6 +9,7 @@ import org.murlan.live.game.deck.Shuffler;
 import org.murlan.live.game.logic.MovePipeline;
 import org.murlan.live.session.player.PlayerDto;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,8 @@ public class GameState {
 
     public GameState(State state, PlayerDto player) {
         this.state = state;
-        this.players = Arrays.asList(player);
+        this.players = new ArrayList<>();
+        this.players.add(player);
         this.score = new HashMap<>();
     }
 
@@ -44,29 +46,32 @@ public class GameState {
         }
     }
 
-    public synchronized boolean playHand(String jwt, CardCombination cardCombination) {
+    public synchronized void playHand(String jwt, CardCombination cardCombination) {
         if (this.state != State.PLAYING) {
-            return false;
+            return;
         }
 
         if (isNotPlayerTurn(jwt)) {
-            return false;
+            return;
         }
 
         if (!this.currTurnPlayer.getDeck().contains(cardCombination)) {
-            return false;
+            return;
         }
 
         if (!MovePipeline.validateMove(cardCombination) || cardCombination.isWeakerThan(this.currCardCombination)) {
-            return false;
+            return;
         }
         this.currCardCombination = cardCombination;
 
         nextTurn();
-        return true;
     }
 
     public synchronized void pass(String jwt) {
+        if (this.state != State.PLAYING) {
+            return;
+        }
+
         if (isNotPlayerTurn(jwt)) {
             return;
         }
@@ -74,6 +79,10 @@ public class GameState {
     }
 
     public synchronized void surrender(String jwt) {
+        if (this.state != State.PLAYING) {
+            return;
+        }
+
         Optional<PlayerDto> playerToSurrender = this.players.stream().filter(p -> p.getJwt().equals(jwt)).findFirst();
         if (playerToSurrender.isEmpty()) {
             return;
