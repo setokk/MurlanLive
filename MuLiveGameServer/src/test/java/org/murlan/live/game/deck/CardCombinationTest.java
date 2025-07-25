@@ -38,7 +38,7 @@ public class CardCombinationTest extends TestCase {
         weakerCombination.setType(CardCombinationType.KOLOR);
         strongerCombination.setType(CardCombinationType.KOLOR);
 
-        assertFalse(weakerCombination.isWeakerThan(strongerCombination));
+        assertTrue(weakerCombination.isWeakerThan(strongerCombination));
     }
 
     public void testIsWeakerThan_5() {
@@ -47,7 +47,7 @@ public class CardCombinationTest extends TestCase {
         weakerCombination.setType(CardCombinationType.KOLOR);
         strongerCombination.setType(CardCombinationType.KOLOR);
 
-        assertFalse(weakerCombination.isWeakerThan(strongerCombination));
+        assertTrue(weakerCombination.isWeakerThan(strongerCombination));
     }
 
     public void testIsWeakerThan_6() {
@@ -56,6 +56,15 @@ public class CardCombinationTest extends TestCase {
         weakerCombination.setType(CardCombinationType.KOLOR);
         strongerCombination.setType(CardCombinationType.KOLOR);
 
-        assertFalse(weakerCombination.isWeakerThan(strongerCombination));
+        assertTrue(weakerCombination.isWeakerThan(strongerCombination));
+    }
+
+    public void testIsWeakerThan_7() {
+        CardCombination weakerCombination = new CardCombination(Card.TWO_OF_HEARTS, Card.THREE_OF_HEARTS, Card.FOUR_OF_HEARTS, Card.FIVE_OF_HEARTS, Card.SIX_OF_HEARTS);
+        CardCombination strongerCombination = new CardCombination(Card.THREE_OF_SPADES, Card.FOUR_OF_SPADES, Card.FIVE_OF_SPADES, Card.SIX_OF_SPADES, Card.SEVEN_OF_SPADES);
+        weakerCombination.setType(CardCombinationType.BOMB_KOLOR);
+        strongerCombination.setType(CardCombinationType.BOMB_KOLOR);
+
+        assertTrue(weakerCombination.isWeakerThan(strongerCombination));
     }
 }

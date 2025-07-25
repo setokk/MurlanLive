@@ -3,6 +3,7 @@ package org.murlan.live.game.deck;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class CardCombination {
     private final List<Card> cards;
     private CardCombinationType type;
     private static final Card.CardComparator ASC_COMPARATOR = new Card.CardComparator();
+    private static final Card.KolorComparator KOLOR_COMPARATOR = new Card.KolorComparator();
 
     public CardCombination(List<Card> cards) {
         this.cards = cards;
@@ -38,6 +40,12 @@ public class CardCombination {
 
     public boolean containsRank(Rank rank) {
         return cards.stream().anyMatch(card -> card.rank().equals(rank));
+    }
+
+    public Card getLowestCardOfKolor() {
+        List<Card> kolorSortCards = new ArrayList<>(cards);
+        kolorSortCards.sort(KOLOR_COMPARATOR);
+        return kolorSortCards.getFirst();
     }
 
     public boolean isWeakerThan(CardCombination other) {
@@ -68,13 +76,13 @@ public class CardCombination {
             case KOLOR -> {
                 boolean strongerByKolor = other.getType().equals(KOLOR)
                         && other.getCards().size() == this.getCards().size()
-                        && other.getCards().getFirst().hasBiggerRankForKolorThan(this.getCards().getFirst());
+                        && other.getLowestCardOfKolor().hasBiggerRankForKolorThan(this.getLowestCardOfKolor());
                 boolean strongerByBombs = other.getType().equals(BOMB) || other.getType().equals(BOMB_KOLOR);
                 yield strongerByKolor || strongerByBombs;
             }
-            case BOMB_KOLOR -> other.getType().equals(KOLOR)
+            case BOMB_KOLOR -> other.getType().equals(BOMB_KOLOR)
                     && other.getCards().size() == this.getCards().size()
-                    && other.getCards().getFirst().hasBiggerRankForKolorThan(this.getCards().getFirst());
+                    && other.getLowestCardOfKolor().hasBiggerRankForKolorThan(this.getLowestCardOfKolor());
         };
     }
 }

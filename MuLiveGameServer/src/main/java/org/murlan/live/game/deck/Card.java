@@ -81,9 +81,10 @@ public enum Card {
     }
 
     public boolean hasBiggerRankForKolorThan(Card card) {
+        boolean isBiggerThanOrEqualToThree = this.rank.equals(Rank.THREE) || this.hasBiggerRankThan(Card.THREE_OF_SPADES);
         return switch (card.rank()) {
-            case ACE -> this.rank.equals(Rank.TWO) || this.hasBiggerRankThan(Card.THREE_OF_SPADES);
-            case TWO -> this.hasBiggerRankThan(Card.THREE_OF_SPADES);
+            case ACE -> this.rank.equals(Rank.TWO) || isBiggerThanOrEqualToThree;
+            case TWO -> isBiggerThanOrEqualToThree;
             default -> this.hasBiggerRankThan(card);
         };
     }
@@ -115,6 +116,13 @@ public enum Card {
         @Override
         public int compare(Card o1, Card o2) {
             return o1.rank().ordinal() - o2.rank().ordinal();
+        }
+    }
+
+    static class KolorComparator implements Comparator<Card> {
+        @Override
+        public int compare(Card o1, Card o2) {
+            return o1.ordinal() - o2.ordinal();
         }
     }
 }
