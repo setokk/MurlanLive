@@ -13,6 +13,7 @@ import static org.murlan.live.game.deck.CardCombinationType.*;
 @Setter
 public class CardCombination {
     private final List<Card> cards;
+    private List<Card> kolorSortCards;
     private CardCombinationType type;
     private static final Card.CardComparator ASC_COMPARATOR = new Card.CardComparator();
     private static final Card.KolorComparator KOLOR_COMPARATOR = new Card.KolorComparator();
@@ -25,6 +26,14 @@ public class CardCombination {
     public CardCombination(Card... cards) {
         this.cards = Arrays.asList(cards);
         this.cards.sort(ASC_COMPARATOR);
+    }
+
+    public void setType(CardCombinationType type) {
+        this.type = type;
+        if (this.type.equals(KOLOR) || this.type.equals(BOMB_KOLOR)) {
+            this.kolorSortCards = new ArrayList<>(this.cards);
+            this.kolorSortCards.sort(KOLOR_COMPARATOR);
+        }
     }
 
     @Override
@@ -43,8 +52,13 @@ public class CardCombination {
     }
 
     public Card getLowestCardOfKolor() {
-        List<Card> kolorSortCards = new ArrayList<>(cards);
-        kolorSortCards.sort(KOLOR_COMPARATOR);
+        boolean isNotKolor = !this.getType().equals(KOLOR) && !this.getType().equals(BOMB_KOLOR);
+        if (isNotKolor) {
+            throw new IllegalStateException("Card combination is not of type Kolor");
+        }
+        if (kolorSortCards == null || kolorSortCards.isEmpty()) {
+            throw new IllegalStateException("kolorSortCards is not properly initialized");
+        }
         return kolorSortCards.getFirst();
     }
 
@@ -84,5 +98,9 @@ public class CardCombination {
                     && other.getCards().size() == this.getCards().size()
                     && other.getLowestCardOfKolor().hasBiggerRankForKolorThan(this.getLowestCardOfKolor());
         };
+    }
+
+    public boolean isStrongerThan(CardCombination other) {
+        return !isWeakerThan(other);
     }
 }

@@ -10,7 +10,6 @@ import org.murlan.live.game.logic.MovePipeline;
 import org.murlan.live.session.player.PlayerDto;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,15 +35,17 @@ public class GameState {
         this.score = new HashMap<>();
     }
 
-    public synchronized void addPlayer(PlayerDto player) {
+    public synchronized boolean addPlayer(PlayerDto player) {
         if (players.size() == MAX_PLAYERS) {
-            return;
+            return false;
         }
         this.players.add(player);
         if (players.size() == MAX_PLAYERS) {
             startGame();
         }
+        return true;
     }
+
 
     public synchronized void playHand(String jwt, CardCombination cardCombination) {
         if (this.state != State.PLAYING) {
@@ -94,7 +95,7 @@ public class GameState {
         }
     }
 
-    private void startGame() {
+    private synchronized void startGame() {
         this.state = State.PLAYING; // Set game state to PLAYING
         this.currTurnPlayer = players.get(new Random().nextInt(0, players.size())); // Randomly select which player is going to start
 

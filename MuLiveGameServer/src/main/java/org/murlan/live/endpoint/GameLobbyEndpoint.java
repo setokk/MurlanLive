@@ -53,40 +53,34 @@ public class GameLobbyEndpoint {
         String passcode = queryParams.get("passcode");
         String jwt = queryParams.get("jwt");
 
-        // Skip request if no roomId is provided
         if (roomId == null && roomName == null) {
             session.close();
             return;
         }
 
-        // Check validity of JWT token that was sent
         boolean isValidJWT = authHttpClient.validateJwt(jwt);
         if (!isValidJWT) {
             session.close();
             return;
         }
 
-        // Check if player is actually valid
         PlayerDto playerDto = JwtUtils.decodeJWT(jwt);
-        if (!playerDto.isValid()) {
+        if (playerDto.isInvalid()) {
             session.close();
             return;
         }
 
-        // Create New Room ID
         roomId = (roomId == null) ? UUID.randomUUID().toString() : roomId;
-
-        // Update <session -> room ID> map to be able to remove them later easily
         PlayerSession playerSession = new PlayerSession(session, playerDto);
         roomHandler.addSession(roomId, playerSession);
 
-        if (roomHandler.roomExists(roomId)) { // Player wants to join Existing Room
-            boolean wasJoinSuccessful = roomHandler.addPlayerToRoom(roomId, playerDto);
+        if (roomHandler.roomExists(roomId)) {
+            boolean wasJoinSuccessful = roomHandler.addPlayerToRoom(roomId, passcode, playerDto);
             if (!wasJoinSuccessful) {
                 roomHandler.removeSessionByJwt(jwt);
             }
-        } else { // Player wants to create New Room
-            roomHandler.addRoom(roomId, new Room(roomId, roomName, isPublic, passcode, new GameState(GameState.State.WAITING, playerDto)));
+        } else {
+            roomHandler.createRoom(roomId, new Room(roomId, roomName, isPublic, passcode, new GameState(GameState.State.WAITING, playerDto)));
             session.getBasicRemote().sendText(jwt + config.getProtocol_delimiter() + roomId);
         }
     }

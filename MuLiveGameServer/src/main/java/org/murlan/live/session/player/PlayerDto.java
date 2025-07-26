@@ -28,7 +28,7 @@ public class PlayerDto {
         this.jwt = jwt;
     }
 
-    public boolean isValid() {
-        return jwt != null;
+    public boolean isInvalid() {
+        return jwt == null;
     }
 }

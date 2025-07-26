@@ -1,6 +1,5 @@
 package org.murlan.live.session;
 
-import jakarta.websocket.Session;
 import lombok.Getter;
 import lombok.NonNull;
 import org.murlan.live.session.player.PlayerDto;
@@ -21,10 +20,10 @@ public class RoomHandler {
         sessionToRoomIdMap.putIfAbsent(session, roomId);
     }
 
-    public String removeSessionByJwt(@NonNull String jwt) {
+    public void removeSessionByJwt(@NonNull String jwt) {
         PlayerSession playerSession = jwtToSessionMap.remove(jwt);
         sessionToJwtMap.remove(playerSession);
-        return sessionToRoomIdMap.remove(playerSession);
+        sessionToRoomIdMap.remove(playerSession);
     }
 
     public String removeSession(@NonNull PlayerSession playerSession) {
@@ -37,7 +36,7 @@ public class RoomHandler {
         return jwtToSessionMap.get(jwt);
     }
 
-    public void addRoom(@NonNull String roomId, @NonNull Room room) {
+    public void createRoom(@NonNull String roomId, @NonNull Room room) {
         roomIdToRoomMap.putIfAbsent(roomId, room);
     }
 
@@ -57,7 +56,19 @@ public class RoomHandler {
         return roomIdToRoomMap.containsKey(roomId);
     }
 
-    public synchronized boolean addPlayerToRoom(@NonNull String roomId, @NonNull PlayerDto playerDto) {
-        return false; // TODO: Internal logic
+    public synchronized boolean addPlayerToRoom(@NonNull String roomId, String passcode, @NonNull PlayerDto playerDto) {
+        if (!roomExists(roomId)) {
+            return false;
+        }
+
+        final Room room = getRoom(roomId);
+        if (!room.getGameState().getState().equals(GameState.State.WAITING)) {
+            return false;
+        }
+        if (!room.isPublic() && !room.getPasscode().equals(passcode)) {
+            return false;
+        }
+
+        return room.addPlayer(playerDto);
     }
 }
