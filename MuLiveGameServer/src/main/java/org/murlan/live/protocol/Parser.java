@@ -18,7 +18,7 @@ public class Parser {
         }
         try {
             ClientEvent clientEvent = ClientEvent.fromOrdinal(Integer.parseInt(messageParts[0]));
-            Req request = clientEvent.getRequestFactory().newReq(messageParts, config);
+            Req request = clientEvent.getReqFactory().newReq(messageParts, config);
             request.setJWT(messageParts[1]);
             return request;
         } catch (IllegalArgumentException e) {

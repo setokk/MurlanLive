@@ -31,25 +31,25 @@ public enum ClientEvent {
     /**
      * Indicates that a client wants to be informed about the game state (who's turn it is to play etc.).
      */
-    GAME_STATE(GameStateReq::new, new GameStateResp()),
+    GAME_STATE(GameStateReq::new, GameStateResp::new),
 
     /**
      * Indicates that a client wants to make a move (play their hand).
      */
-    PLAY_HAND(PlayHandReq::new, new PlayHandResp()),
+    PLAY_HAND(PlayHandReq::new, PlayHandResp::new),
 
     /**
      * Indicates that a client doesn't want or cannot play anything at the moment.
      */
-    PASS(PassReq::new, new PassResp()),
+    PASS(PassReq::new, PassResp::new),
 
     /**
      * Indicates that a client wants to surrender.
      */
-    SURRENDER(SurrenderReq::new, new SurrenderResp());
+    SURRENDER(SurrenderReq::new, SurrenderResp::new);
 
-    private final ReqFactory requestFactory;
-    private final Resp response;
+    private final ReqFactory reqFactory;
+    private final RespFactory respFactory;
 
     public static ClientEvent fromOrdinal(int ordinal) {
         if (ordinal < 0 || ordinal >= values().length) {
@@ -58,7 +58,11 @@ public enum ClientEvent {
         return ClientEvent.values()[ordinal];
     }
 
-    interface ReqFactory {
+    public interface ReqFactory {
         Req newReq(String[] messageParts, ProtocolConfig config);
+    }
+
+    public interface RespFactory {
+        Resp newResp();
     }
 }

@@ -10,11 +10,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.murlan.live.config.ConfigProvider;
 import org.murlan.live.config.ProtocolConfig;
+import org.murlan.live.protocol.ClientEvent;
+import org.murlan.live.protocol.Generator;
 import org.murlan.live.protocol.Parser;
 import org.murlan.live.protocol.api.GameStateReq;
 import org.murlan.live.protocol.api.PassReq;
 import org.murlan.live.protocol.api.PlayHandReq;
+import org.murlan.live.protocol.api.PlayHandResp;
 import org.murlan.live.protocol.api.Req;
+import org.murlan.live.protocol.api.Resp;
 import org.murlan.live.protocol.api.SurrenderReq;
 import org.murlan.live.protocol.auth.AuthHttpClient;
 import org.murlan.live.protocol.auth.JwtUtils;
@@ -34,6 +38,7 @@ public class GameLobbyEndpoint {
 
     private final ProtocolConfig config = ConfigProvider.getProtocolConfig();
     private final Parser parser = new Parser(config);
+    private final Generator generator = new Generator(config);
     private final AuthHttpClient authHttpClient = new AuthHttpClient(config);
     private final RoomHandler roomHandler = new RoomHandler();
 
@@ -90,20 +95,27 @@ public class GameLobbyEndpoint {
         Req req = parser.parse(message);
         PlayerSession playerSession = roomHandler.getPlayerSession(req.getJWT());
         Room room = roomHandler.getPlayerRoom(playerSession);
-        switch (req) {
-            case GameStateReq gameStateReq -> {
 
+        Resp resp = switch (req) {
+            case GameStateReq gameStateReq -> {
+                yield ClientEvent.GAME_STATE.getRespFactory().newResp();
             }
             case PlayHandReq playHandReq -> {
                 room.getGameState().playHand(req.getJWT(), playHandReq.getCardCombination());
-                session.getBasicRemote().sendText(req.getJWT() + config.getProtocol_delimiter() + room.getId() + config.getProtocol_delimiter() + room.getGameState().getPlayers().size());
+                yield ClientEvent.PLAY_HAND.getRespFactory().newResp();
             }
             case PassReq passReq -> {
                 room.getGameState().pass(req.getJWT());
+                yield ClientEvent.PASS.getRespFactory().newResp();
             }
             case SurrenderReq surrenderReq -> {
                 room.getGameState().surrender(req.getJWT());
+                yield ClientEvent.SURRENDER.getRespFactory().newResp();
             }
+        };
+        String responseString = generator.generateMessage(resp);
+        if (!responseString.isEmpty()) {
+            session.getBasicRemote().sendText(responseString);
         }
     }
 

@@ -62,7 +62,7 @@ public class RoomHandler {
         }
 
         final Room room = getRoom(roomId);
-        if (!room.getGameState().getState().equals(GameState.State.WAITING)) {
+        if (!GameState.State.WAITING.equals(room.getGameState().getState())) {
             return false;
         }
         if (!room.isPublic() && !room.getPasscode().equals(passcode)) {
