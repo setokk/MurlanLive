@@ -51,20 +51,18 @@ public class GameState {
         if (this.state != State.PLAYING) {
             return;
         }
-
         if (isNotPlayerTurn(jwt)) {
             return;
         }
-
         if (!this.currTurnPlayer.getDeck().contains(cardCombination)) {
             return;
         }
-
-        if (!MovePipeline.validateMove(cardCombination) || cardCombination.isWeakerThan(this.currCardCombination)) {
+        if (!MovePipeline.validate(cardCombination) || cardCombination.isWeakerThan(this.currCardCombination)) {
             return;
         }
-        this.currCardCombination = cardCombination;
 
+        this.currTurnPlayer.getDeck().removeCards(cardCombination);
+        this.currCardCombination = cardCombination;
         nextTurn();
     }
 
@@ -72,10 +70,10 @@ public class GameState {
         if (this.state != State.PLAYING) {
             return;
         }
-
         if (isNotPlayerTurn(jwt)) {
             return;
         }
+
         nextTurn();
     }
 
@@ -83,11 +81,11 @@ public class GameState {
         if (this.state != State.PLAYING) {
             return;
         }
-
         Optional<PlayerDto> playerToSurrender = this.players.stream().filter(p -> p.getJwt().equals(jwt)).findFirst();
         if (playerToSurrender.isEmpty()) {
             return;
         }
+
         this.players.remove(playerToSurrender.get());
         this.score.put(playerToSurrender.get(), -1);
         if (this.players.isEmpty()) {
@@ -96,8 +94,8 @@ public class GameState {
     }
 
     private synchronized void startGame() {
-        this.state = State.PLAYING; // Set game state to PLAYING
-        this.currTurnPlayer = players.get(new Random().nextInt(0, players.size())); // Randomly select which player is going to start
+        this.state = State.PLAYING;
+        this.currTurnPlayer = players.get(new Random().nextInt(0, players.size()));
 
         // Shuffle and assign decks to each player
         List<Deck> decks = Shuffler.shuffle(players.size());

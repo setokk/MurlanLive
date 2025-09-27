@@ -8,6 +8,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.murlan.live.game.deck.Deck;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @Builder
@@ -30,5 +32,17 @@ public class PlayerDto {
 
     public boolean isInvalid() {
         return jwt == null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        PlayerDto playerDto = (PlayerDto) o;
+        return id == playerDto.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

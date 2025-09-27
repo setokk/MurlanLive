@@ -51,7 +51,7 @@ public class Deck {
         int matchingCards = 0;
         for (Card card : cardCombination.getCards()) {
             for (Card ownedCard : this.cards) {
-                if (card.equals(ownedCard)) {
+                if (ownedCard.equals(card)) {
                     matchingCards++;
                     break;
                 }

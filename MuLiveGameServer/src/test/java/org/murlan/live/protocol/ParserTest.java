@@ -46,7 +46,7 @@ public class ParserTest {
         Assert.assertTrue(request instanceof PlayHandReq);
 
         PlayHandReq playHandRequest = (PlayHandReq) request;
-        boolean isMoveValid = MovePipeline.validateMove(playHandRequest.getCardCombination());
+        boolean isMoveValid = MovePipeline.validate(playHandRequest.getCardCombination());
         Assert.assertTrue(isMoveValid);
         Assert.assertEquals(CardCombinationType.DOUBLE_CARDS, playHandRequest.getCardCombination().getType());
     }
