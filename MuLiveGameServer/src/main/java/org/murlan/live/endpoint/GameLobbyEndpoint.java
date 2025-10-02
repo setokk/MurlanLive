@@ -16,7 +16,6 @@ import org.murlan.live.protocol.Parser;
 import org.murlan.live.protocol.api.GameStateReq;
 import org.murlan.live.protocol.api.PassReq;
 import org.murlan.live.protocol.api.PlayHandReq;
-import org.murlan.live.protocol.api.PlayHandResp;
 import org.murlan.live.protocol.api.Req;
 import org.murlan.live.protocol.api.Resp;
 import org.murlan.live.protocol.api.SurrenderReq;
@@ -62,13 +61,11 @@ public class GameLobbyEndpoint {
             session.close();
             return;
         }
-
         boolean isValidJWT = authHttpClient.validateJwt(jwt);
         if (!isValidJWT) {
             session.close();
             return;
         }
-
         PlayerDto playerDto = JwtUtils.decodeJWT(jwt);
         if (playerDto.isInvalid()) {
             session.close();

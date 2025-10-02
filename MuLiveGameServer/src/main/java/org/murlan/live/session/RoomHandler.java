@@ -60,7 +60,6 @@ public class RoomHandler {
         if (!roomExists(roomId)) {
             return false;
         }
-
         final Room room = getRoom(roomId);
         if (!GameState.State.WAITING.equals(room.getGameState().getState())) {
             return false;

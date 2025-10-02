@@ -6,7 +6,7 @@ import lombok.Getter;
 /**
  * Enum defining <b>all</b> possible events that the server can send during a game lobby.
  * </br>
- * List of possible requested actions:
+ * List of possible actions:
  * <ul>
  *     <li>{@link #GAME_STATE}</li>
  *     <li>{@link #PLAY_HAND}</li>
