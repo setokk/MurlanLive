@@ -83,11 +83,14 @@ public class GameLobbyEndpoint {
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
         Req req = parser.parse(message);
+        if (req == null) {
+            sendErrorMessage(session, new GenericErrorResp("Request Body Error"));
+            return;
+        }
+
         PlayerSession playerSession = roomHandler.getSession(req.getJWT());
         if (playerSession == null) {
-            String errorMessage = generator.generateMessage(new GenericErrorResp("JWT Not Recognized"));
-            session.getBasicRemote().sendText(errorMessage);
-            session.close();
+            sendErrorMessage(session, new GenericErrorResp("JWT Not Recognized"));
             return;
         }
 
@@ -154,5 +157,11 @@ public class GameLobbyEndpoint {
     @OnError
     public void onError(Session session, Throwable throwable) {
         LOGGER.error("Error", throwable);
+    }
+
+    private void sendErrorMessage(Session session, GenericErrorResp resp) throws IOException {
+        String errorMessage = generator.generateMessage(resp);
+        session.getBasicRemote().sendText(errorMessage);
+        session.close();
     }
 }
