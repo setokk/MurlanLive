@@ -1,6 +1,6 @@
 ALTER TABLE ONLY history ADD CONSTRAINT fk_history_player FOREIGN KEY (player_id) REFERENCES player(id);
-ALTER TABLE ONLY history ADD CONSTRAINT fk_history_lobby FOREIGN KEY (lobby_id) REFERENCES lobby(id);
-ALTER TABLE ONLY history ADD CONSTRAINT history_pkey PRIMARY KEY (player_id, lobby_id);
+ALTER TABLE ONLY history ADD CONSTRAINT fk_history_room FOREIGN KEY (room_id) REFERENCES room(id);
+ALTER TABLE ONLY history ADD CONSTRAINT history_pkey PRIMARY KEY (player_id, room_id);
 
 -- Foreign key constraint fk_history_player
 DO $$
@@ -15,16 +15,16 @@ ALTER TABLE ONLY history
 END IF;
 END $$;
 
--- Foreign key constraint fk_history_lobby
+-- Foreign key constraint fk_history_room
 DO $$
 BEGIN
     IF NOT EXISTS (
         SELECT 1 FROM information_schema.table_constraints
         WHERE table_name = 'history'
-        AND constraint_name = 'fk_history_lobby'
+        AND constraint_name = 'fk_history_room'
     ) THEN
 ALTER TABLE ONLY history
-    ADD CONSTRAINT fk_history_lobby FOREIGN KEY (lobby_id) REFERENCES lobby(id);
+    ADD CONSTRAINT fk_history_room FOREIGN KEY (room_id) REFERENCES room(id);
 END IF;
 END $$;
 
@@ -37,6 +37,6 @@ BEGIN
         AND constraint_name = 'history_pkey'
     ) THEN
 ALTER TABLE ONLY history
-    ADD CONSTRAINT history_pkey PRIMARY KEY (player_id, lobby_id);
+    ADD CONSTRAINT history_pkey PRIMARY KEY (player_id, room_id);
 END IF;
 END $$;
