@@ -1,7 +1,8 @@
-package org.murlan.live.protocol;
+package org.murlan.live.protocol.util;
 
 import lombok.AllArgsConstructor;
-import org.murlan.live.config.ProtocolConfig;
+import org.murlan.live.protocol.config.ProtocolConfig;
+import org.murlan.live.protocol.ClientEvent;
 import org.murlan.live.protocol.api.Req;
 
 import java.util.HashMap;
@@ -13,11 +14,11 @@ public class Parser {
 
     public Req parse(String message) {
         String[] messageParts = message.split(config.getProtocol_delimiter());
-        if (messageParts.length < 2) { // All messages should have at least 2 values: ClientEvent ID (ordinal) and JWT
+        if (messageParts.length < 2) { // All messages should have at least 2 values: ClientEvent ID and JWT
             return null;
         }
         try {
-            ClientEvent clientEvent = ClientEvent.fromOrdinal(Integer.parseInt(messageParts[0]));
+            ClientEvent clientEvent = ClientEvent.fromId(messageParts[0]);
             Req request = clientEvent.getReqFactory().newReq(messageParts, config);
             request.setJWT(messageParts[1]);
             return request;

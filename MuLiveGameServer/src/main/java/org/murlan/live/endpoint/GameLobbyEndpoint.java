@@ -1,5 +1,6 @@
 package org.murlan.live.endpoint;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnError;
 import jakarta.websocket.OnMessage;
@@ -8,11 +9,24 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.murlan.live.config.ConfigProvider;
-import org.murlan.live.config.ProtocolConfig;
-import org.murlan.live.protocol.ClientEvent;
-import org.murlan.live.protocol.Generator;
-import org.murlan.live.protocol.Parser;
+import org.murlan.live.protocol.api.CreateRoomReq;
+import org.murlan.live.protocol.api.CreateRoomResp;
+import org.murlan.live.protocol.api.error.GenericErrorResp;
+import org.murlan.live.protocol.config.ConfigProvider;
+import org.murlan.live.protocol.config.ProtocolConfig;
+import org.murlan.live.protocol.ResponseStatus;
+import org.murlan.live.protocol.api.AvailableRoomsReq;
+import org.murlan.live.protocol.api.AvailableRoomsResp;
+import org.murlan.live.protocol.api.GameStateResp;
+import org.murlan.live.protocol.api.JoinRoomReq;
+import org.murlan.live.protocol.api.JoinRoomResp;
+import org.murlan.live.protocol.api.PassResp;
+import org.murlan.live.protocol.api.PlayHandResp;
+import org.murlan.live.protocol.api.SurrenderResp;
+import org.murlan.live.protocol.auth.JwtUtils;
+import org.murlan.live.protocol.dto.RoomDto;
+import org.murlan.live.protocol.util.Generator;
+import org.murlan.live.protocol.util.Parser;
 import org.murlan.live.protocol.api.GameStateReq;
 import org.murlan.live.protocol.api.PassReq;
 import org.murlan.live.protocol.api.PlayHandReq;
@@ -20,14 +34,15 @@ import org.murlan.live.protocol.api.Req;
 import org.murlan.live.protocol.api.Resp;
 import org.murlan.live.protocol.api.SurrenderReq;
 import org.murlan.live.protocol.auth.AuthHttpClient;
-import org.murlan.live.protocol.auth.JwtUtils;
 import org.murlan.live.session.GameState;
 import org.murlan.live.session.Room;
 import org.murlan.live.session.RoomHandler;
-import org.murlan.live.session.player.PlayerDto;
-import org.murlan.live.session.player.PlayerSession;
+import org.murlan.live.protocol.dto.PlayerDto;
+import org.murlan.live.session.PlayerSession;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -40,6 +55,7 @@ public class GameLobbyEndpoint {
     private final Generator generator = new Generator(config);
     private final AuthHttpClient authHttpClient = new AuthHttpClient(config);
     private final RoomHandler roomHandler = new RoomHandler();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @OnOpen
     public void onOpen(Session session) throws IOException, InterruptedException {
@@ -49,20 +65,9 @@ public class GameLobbyEndpoint {
             session.close();
             return;
         }
-
         Map<String, String> queryParams = parser.parseQueryParams(session.getQueryString());
-        String roomId = queryParams.get("roomId");
-        String roomName = queryParams.get("roomName");
-        boolean isPublic = Boolean.parseBoolean(queryParams.get("isPublic"));
-        String passcode = queryParams.get("passcode");
         String jwt = queryParams.get("jwt");
-
-        if (roomId == null && roomName == null) {
-            session.close();
-            return;
-        }
-        boolean isValidJWT = authHttpClient.validateJwt(jwt);
-        if (!isValidJWT) {
+        if (!authHttpClient.validateJwt(jwt)) {
             session.close();
             return;
         }
@@ -72,44 +77,61 @@ public class GameLobbyEndpoint {
             return;
         }
 
-        roomId = (roomId == null) ? UUID.randomUUID().toString() : roomId;
-        PlayerSession playerSession = new PlayerSession(session, playerDto);
-        roomHandler.addSession(roomId, playerSession);
-
-        if (roomHandler.roomExists(roomId)) {
-            boolean wasJoinSuccessful = roomHandler.addPlayerToRoom(roomId, passcode, playerDto);
-            if (!wasJoinSuccessful) {
-                roomHandler.removeSessionByJwt(jwt);
-            }
-        } else {
-            roomHandler.createRoom(roomId, new Room(roomId, roomName, isPublic, passcode, new GameState(GameState.State.WAITING, playerDto)));
-            session.getBasicRemote().sendText(jwt + config.getProtocol_delimiter() + roomId);
-        }
+        roomHandler.addSession(new PlayerSession(session, playerDto));
     }
 
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
         Req req = parser.parse(message);
-        PlayerSession playerSession = roomHandler.getPlayerSession(req.getJWT());
-        Room room = roomHandler.getPlayerRoom(playerSession);
+        PlayerSession playerSession = roomHandler.getSession(req.getJWT());
+        if (playerSession == null) {
+            String errorMessage = generator.generateMessage(new GenericErrorResp("JWT Not Recognized"));
+            session.getBasicRemote().sendText(errorMessage);
+            session.close();
+            return;
+        }
 
+        Room room = roomHandler.getPlayerRoom(playerSession);
         Resp resp = switch (req) {
             case GameStateReq gameStateReq -> {
-                yield ClientEvent.GAME_STATE.getRespFactory().newResp();
+                boolean isSuccessful = true;
+                yield new GameStateResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case PlayHandReq playHandReq -> {
-                room.getGameState().playHand(req.getJWT(), playHandReq.getCardCombination());
-                yield ClientEvent.PLAY_HAND.getRespFactory().newResp();
+                boolean isSuccessful = room.getGameState().playHand(req.getJWT(), playHandReq.getCardCombination());
+                yield new PlayHandResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case PassReq passReq -> {
-                room.getGameState().pass(req.getJWT());
-                yield ClientEvent.PASS.getRespFactory().newResp();
+                boolean isSuccessful = room.getGameState().pass(req.getJWT());
+                yield new PassResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case SurrenderReq surrenderReq -> {
-                room.getGameState().surrender(req.getJWT());
-                yield ClientEvent.SURRENDER.getRespFactory().newResp();
+                boolean isSuccessful = room.getGameState().surrender(req.getJWT());
+                yield new SurrenderResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
+            case AvailableRoomsReq availableRoomsReq -> {
+                List<RoomDto> availableRooms = roomHandler.getAvailableRooms();
+                yield new AvailableRoomsResp(ResponseStatus.OK, objectMapper.writeValueAsString(availableRooms));
+            }
+            case JoinRoomReq joinRoomReq -> {
+                boolean isSuccessful = roomHandler.joinRoom(joinRoomReq.getRoomId(), joinRoomReq.getPasscode(), playerSession);
+                yield new JoinRoomResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
+            }
+            case CreateRoomReq createRoomReq -> {
+                Room roomToBeCreated = new Room(
+                        UUID.randomUUID().toString(),
+                        createRoomReq.getRoomName(),
+                        createRoomReq.isPublic(),
+                        createRoomReq.getPasscode(),
+                        new GameState(GameState.State.WAITING, playerSession.getPlayerDto()),
+                        LocalDateTime.now()
+                );
+                boolean isSuccessful = roomHandler.createRoom(roomToBeCreated, playerSession);
+                yield new CreateRoomResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
+            }
+            default -> throw new IllegalStateException("Unexpected request: " + req);
         };
+
         String responseString = generator.generateMessage(resp);
         if (!responseString.isEmpty()) {
             session.getBasicRemote().sendText(responseString);

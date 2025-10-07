@@ -4,8 +4,8 @@ import jakarta.websocket.DeploymentException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.tyrus.server.Server;
-import org.murlan.live.config.ConfigProvider;
-import org.murlan.live.config.ProtocolConfig;
+import org.murlan.live.protocol.config.ConfigProvider;
+import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.endpoint.GameLobbyEndpoint;
 
 public class Main {

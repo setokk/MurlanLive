@@ -3,7 +3,7 @@ package org.murlan.live.protocol.api;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.murlan.live.config.ProtocolConfig;
+import org.murlan.live.protocol.config.ProtocolConfig;
 
 @Getter
 @Setter

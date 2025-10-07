@@ -2,7 +2,7 @@ package org.murlan.live.protocol.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.murlan.live.session.player.PlayerDto;
+import org.murlan.live.protocol.dto.PlayerDto;
 
 import java.util.Base64;
 import java.util.Map;

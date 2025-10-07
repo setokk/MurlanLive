@@ -1,4 +1,4 @@
-package org.murlan.live.session.player;
+package org.murlan.live.protocol.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

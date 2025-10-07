@@ -7,7 +7,7 @@ import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.deck.Deck;
 import org.murlan.live.game.deck.Shuffler;
 import org.murlan.live.game.logic.MovePipeline;
-import org.murlan.live.session.player.PlayerDto;
+import org.murlan.live.protocol.dto.PlayerDto;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,43 +47,46 @@ public class GameState {
     }
 
 
-    public synchronized void playHand(String jwt, CardCombination cardCombination) {
+    public synchronized boolean playHand(String jwt, CardCombination cardCombination) {
         if (this.state != State.PLAYING) {
-            return;
+            return false;
         }
         if (isNotPlayerTurn(jwt)) {
-            return;
+            return false;
         }
         if (!this.currTurnPlayer.getDeck().contains(cardCombination)) {
-            return;
+            return false;
         }
         if (!MovePipeline.validate(cardCombination) || cardCombination.isWeakerThan(this.currCardCombination)) {
-            return;
+            return false;
         }
 
         this.currTurnPlayer.getDeck().removeCards(cardCombination);
         this.currCardCombination = cardCombination;
         nextTurn();
+
+        return true;
     }
 
-    public synchronized void pass(String jwt) {
+    public synchronized boolean pass(String jwt) {
         if (this.state != State.PLAYING) {
-            return;
+            return false;
         }
         if (isNotPlayerTurn(jwt)) {
-            return;
+            return false;
         }
-
         nextTurn();
+
+        return true;
     }
 
-    public synchronized void surrender(String jwt) {
+    public synchronized boolean surrender(String jwt) {
         if (this.state != State.PLAYING) {
-            return;
+            return false;
         }
         Optional<PlayerDto> playerToSurrender = this.players.stream().filter(p -> p.getJwt().equals(jwt)).findFirst();
         if (playerToSurrender.isEmpty()) {
-            return;
+            return false;
         }
 
         this.players.remove(playerToSurrender.get());
@@ -91,6 +94,8 @@ public class GameState {
         if (this.players.isEmpty()) {
             this.state = State.FINISHED;
         }
+
+        return true;
     }
 
     private synchronized void startGame() {

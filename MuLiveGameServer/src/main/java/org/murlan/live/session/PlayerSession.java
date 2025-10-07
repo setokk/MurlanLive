@@ -1,10 +1,11 @@
-package org.murlan.live.session.player;
+package org.murlan.live.session;
 
 import jakarta.websocket.Session;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.murlan.live.protocol.dto.PlayerDto;
 
 import java.util.Objects;
 

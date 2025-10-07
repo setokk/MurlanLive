@@ -1,15 +1,22 @@
 package org.murlan.live.protocol.api;
 
-import lombok.NoArgsConstructor;
-import org.murlan.live.config.ProtocolConfig;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.ClientEvent;
+import org.murlan.live.protocol.ResponseStatus;
 
-@NoArgsConstructor
+@Setter
+@Getter
+@AllArgsConstructor
 public class SurrenderResp implements Resp {
+    private ResponseStatus responseStatus;
+
     @Override
     public String convertToString(ProtocolConfig config) {
+        String eventId = ClientEvent.SURRENDER.id();
         String statusCode = getResponseStatus().toString();
-        String eventOrdinal = String.valueOf(ClientEvent.SURRENDER.ordinal());
-        return String.join(config.getProtocol_delimiter(), statusCode, eventOrdinal);
+        return String.join(config.getProtocol_delimiter(), eventId, statusCode);
     }
 }

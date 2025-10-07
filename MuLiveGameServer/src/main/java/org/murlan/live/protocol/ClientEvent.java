@@ -2,17 +2,17 @@ package org.murlan.live.protocol;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.murlan.live.config.ProtocolConfig;
+import org.murlan.live.protocol.api.CreateRoomReq;
+import org.murlan.live.protocol.api.JoinRoomReq;
+import org.murlan.live.protocol.config.ProtocolConfig;
+import org.murlan.live.protocol.api.AvailableRoomsReq;
 import org.murlan.live.protocol.api.GameStateReq;
-import org.murlan.live.protocol.api.GameStateResp;
 import org.murlan.live.protocol.api.PassReq;
-import org.murlan.live.protocol.api.PassResp;
 import org.murlan.live.protocol.api.PlayHandReq;
-import org.murlan.live.protocol.api.PlayHandResp;
 import org.murlan.live.protocol.api.Req;
-import org.murlan.live.protocol.api.Resp;
 import org.murlan.live.protocol.api.SurrenderReq;
-import org.murlan.live.protocol.api.SurrenderResp;
+
+import java.util.Arrays;
 
 /**
  * Enum defining <b>all</b> possible events that a player can take during a game lobby.
@@ -31,38 +31,51 @@ public enum ClientEvent {
     /**
      * Indicates that a client wants to be informed about the game state (who's turn it is to play etc.).
      */
-    GAME_STATE(GameStateReq::new, GameStateResp::new),
+    GAME_STATE(GameStateReq::new),
 
     /**
      * Indicates that a client wants to make a move (play their hand).
      */
-    PLAY_HAND(PlayHandReq::new, PlayHandResp::new),
+    PLAY_HAND(PlayHandReq::new),
 
     /**
      * Indicates that a client doesn't want or cannot play anything at the moment.
      */
-    PASS(PassReq::new, PassResp::new),
+    PASS(PassReq::new),
 
     /**
      * Indicates that a client wants to surrender.
      */
-    SURRENDER(SurrenderReq::new, SurrenderResp::new);
+    SURRENDER(SurrenderReq::new),
+
+    /**
+     * Indicates that a client wants to know about the available public rooms.
+     */
+    AVAILABLE_ROOMS(AvailableRoomsReq::new),
+
+    /**
+     * Indicates that a client wants to join a specific room.
+     */
+    JOIN_ROOM(JoinRoomReq::new),
+
+    /**
+     * Indicates that a client wants to create a new room.
+     */
+    CREATE_ROOM(CreateRoomReq::new);
 
     private final ReqFactory reqFactory;
-    private final RespFactory respFactory;
 
-    public static ClientEvent fromOrdinal(int ordinal) {
-        if (ordinal < 0 || ordinal >= values().length) {
-            throw new IllegalArgumentException("Invalid ordinal: " + ordinal);
-        }
-        return ClientEvent.values()[ordinal];
+    public String id() {
+        return "C" + this.ordinal();
+    }
+
+    public static ClientEvent fromId(String id) {
+        return Arrays.stream(ClientEvent.values())
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("Unknown event " + id));
     }
 
     public interface ReqFactory {
         Req newReq(String[] messageParts, ProtocolConfig config);
-    }
-
-    public interface RespFactory {
-        Resp newResp();
     }
 }

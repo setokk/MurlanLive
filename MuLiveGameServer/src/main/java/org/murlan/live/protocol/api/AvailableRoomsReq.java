@@ -8,10 +8,10 @@ import org.murlan.live.protocol.config.ProtocolConfig;
 @Setter
 @Getter
 @NoArgsConstructor
-public final class PassReq implements Req {
+public final class AvailableRoomsReq implements Req {
     private String JWT;
 
-    public PassReq(String[] messageParts, ProtocolConfig config) {
+    public AvailableRoomsReq(String[] messageParts, ProtocolConfig config) {
 
     }
 }

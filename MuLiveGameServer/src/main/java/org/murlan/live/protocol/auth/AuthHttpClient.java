@@ -1,6 +1,6 @@
 package org.murlan.live.protocol.auth;
 
-import org.murlan.live.config.ProtocolConfig;
+import org.murlan.live.protocol.config.ProtocolConfig;
 
 import java.io.IOException;
 import java.net.URI;

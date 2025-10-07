@@ -1,4 +1,4 @@
-package org.murlan.live.config;
+package org.murlan.live.protocol.config;
 
 import org.yaml.snakeyaml.Yaml;
 

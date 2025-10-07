@@ -1,4 +1,4 @@
-package org.murlan.live.config;
+package org.murlan.live.protocol.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +17,6 @@ public class ProtocolConfig {
     private String protocol_host;
     private int protocol_port;
     private String protocol_delimiter;
-    private String protocol_card_delimiter;
+    private String protocol_list_delimiter;
     private String protocol_um_server_host;
 }

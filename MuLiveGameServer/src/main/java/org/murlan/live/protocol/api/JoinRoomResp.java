@@ -9,7 +9,7 @@ import org.murlan.live.protocol.ResponseStatus;
 @Setter
 @Getter
 @AllArgsConstructor
-public class PassResp implements Resp {
+public class JoinRoomResp implements Resp {
     private ResponseStatus responseStatus;
 
     @Override

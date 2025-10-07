@@ -3,12 +3,13 @@ package org.murlan.live.session;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.murlan.live.session.player.PlayerDto;
+import org.murlan.live.protocol.dto.PlayerDto;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 public class Room {
     private final String id;
@@ -16,9 +17,14 @@ public class Room {
     private final boolean isPublic;
     private final String passcode;
     private GameState gameState;
+    private LocalDateTime creationDate;
 
     public boolean addPlayer(PlayerDto playerDto) {
         return this.gameState.addPlayer(playerDto);
+    }
+
+    public int getNumPlayers() {
+        return this.gameState.getPlayers().size();
     }
 
     @Override

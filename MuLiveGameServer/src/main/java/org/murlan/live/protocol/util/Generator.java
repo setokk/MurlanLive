@@ -1,7 +1,7 @@
-package org.murlan.live.protocol;
+package org.murlan.live.protocol.util;
 
 import lombok.AllArgsConstructor;
-import org.murlan.live.config.ProtocolConfig;
+import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.api.Resp;
 
 import java.util.Optional;
