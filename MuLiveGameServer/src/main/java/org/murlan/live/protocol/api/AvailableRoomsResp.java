@@ -15,7 +15,7 @@ public class AvailableRoomsResp implements Resp {
     private String availableRoomsJson;
 
     @Override
-    public String convertToString(ProtocolConfig config) {
+    public String toMessage(ProtocolConfig config) {
         String eventId = ClientEvent.AVAILABLE_ROOMS.id();
         String statusCode = getResponseStatus().toString();
         return String.join(config.getProtocol_delimiter(), eventId, statusCode, availableRoomsJson);

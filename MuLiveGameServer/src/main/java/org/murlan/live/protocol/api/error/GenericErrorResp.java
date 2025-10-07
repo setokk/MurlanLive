@@ -19,7 +19,7 @@ public class GenericErrorResp implements Resp {
     }
 
     @Override
-    public String convertToString(ProtocolConfig config) {
+    public String toMessage(ProtocolConfig config) {
         return String.join(config.getProtocol_delimiter(), "-1", errorMessage);
     }
 }

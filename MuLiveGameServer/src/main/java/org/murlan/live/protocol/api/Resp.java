@@ -5,5 +5,5 @@ import org.murlan.live.protocol.ResponseStatus;
 
 public interface Resp {
     ResponseStatus getResponseStatus();
-    String convertToString(ProtocolConfig config);
+    String toMessage(ProtocolConfig config);
 }

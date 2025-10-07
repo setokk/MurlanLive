@@ -13,7 +13,7 @@ public class GameStateResp implements Resp {
     private ResponseStatus responseStatus;
 
     @Override
-    public String convertToString(ProtocolConfig config) {
+    public String toMessage(ProtocolConfig config) {
         return "";
     }
 }

@@ -14,7 +14,7 @@ public class SurrenderResp implements Resp {
     private ResponseStatus responseStatus;
 
     @Override
-    public String convertToString(ProtocolConfig config) {
+    public String toMessage(ProtocolConfig config) {
         String eventId = ClientEvent.SURRENDER.id();
         String statusCode = getResponseStatus().toString();
         return String.join(config.getProtocol_delimiter(), eventId, statusCode);

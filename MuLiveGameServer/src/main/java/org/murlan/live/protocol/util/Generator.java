@@ -11,7 +11,7 @@ public class Generator {
     private final ProtocolConfig config;
 
     public String generateMessage(Resp resp) {
-        return Optional.ofNullable(resp.convertToString(config))
+        return Optional.ofNullable(resp.toMessage(config))
                 .orElse("");
     }
 }
