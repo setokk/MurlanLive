@@ -41,12 +41,15 @@ public class RoomHandler {
     }
 
     public boolean createRoom(@NonNull Room room, @NonNull PlayerSession playerSession) {
-        boolean roomExists = roomIdToRoomMap.putIfAbsent(room.getId(), room) != null;
-        if (roomExists) {
+        if (roomExists(room.getId())) {
             return false;
         }
+        if (isPlayerInRoom(playerSession)) {
+            return false;
+        }
+        roomIdToRoomMap.put(room.getId(), room);
         linkSessionWithRoom(playerSession, room.getId());
-        return roomIdToRoomMap.putIfAbsent(room.getId(), room) == null;
+        return true;
     }
 
     public Room getRoom(@NonNull String roomId) {
@@ -88,7 +91,13 @@ public class RoomHandler {
             return false;
         }
 
-        return room.addPlayer(playerSession.getPlayerDto());
+        boolean isSuccessful = room.addPlayer(playerSession.getPlayerDto());
+        if (isSuccessful) {
+            linkSessionWithRoom(playerSession, roomId);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public List<RoomDto> getAvailableRooms() {

@@ -21,6 +21,7 @@ import java.util.Random;
 @AllArgsConstructor
 public class GameState {
     public static final int MAX_PLAYERS = 4;
+    private static final CardCombination EMPTY_CARD_COMBINATION = new CardCombination();
 
     private PlayerDto currTurnPlayer;
     private State state;
@@ -33,6 +34,7 @@ public class GameState {
         this.players = new ArrayList<>();
         this.players.add(player);
         this.score = new HashMap<>();
+        this.currCardCombination = EMPTY_CARD_COMBINATION;
     }
 
     public synchronized boolean addPlayer(PlayerDto player) {
@@ -57,7 +59,8 @@ public class GameState {
         if (!this.currTurnPlayer.getDeck().contains(cardCombination)) {
             return false;
         }
-        if (!MovePipeline.validate(cardCombination) || cardCombination.isWeakerThan(this.currCardCombination)) {
+        boolean isNotFirstMove = this.currCardCombination != EMPTY_CARD_COMBINATION;
+        if (isNotFirstMove && (!MovePipeline.validate(cardCombination) || cardCombination.isWeakerThan(this.currCardCombination))) {
             return false;
         }
 
@@ -98,6 +101,7 @@ public class GameState {
         return true;
     }
 
+    // TODO: More logic to take into account (first game of room and later on the other ones)
     private synchronized void startGame() {
         this.state = State.PLAYING;
         this.currTurnPlayer = players.get(new Random().nextInt(0, players.size()));

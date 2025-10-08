@@ -12,12 +12,14 @@ import org.murlan.live.protocol.ResponseStatus;
 @AllArgsConstructor
 public class GameStateResp implements Resp {
     private ResponseStatus responseStatus;
+    private String gameStateJson;
 
     @Override
     public String toMessage(ProtocolConfig config) {
         return String.join(config.getProtocol_delimiter(),
                 ClientEvent.GAME_STATE.id(),
-                getResponseStatus().toString()
+                getResponseStatus().toString(),
+                gameStateJson
         );
     }
 }

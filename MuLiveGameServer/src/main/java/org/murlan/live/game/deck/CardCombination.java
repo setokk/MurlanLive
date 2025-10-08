@@ -6,6 +6,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.murlan.live.game.deck.CardCombinationType.*;
 
@@ -102,5 +103,11 @@ public class CardCombination {
 
     public boolean isStrongerThan(CardCombination other) {
         return !isWeakerThan(other);
+    }
+
+    public String toMessage(String protocolListDelimiter) {
+        return cards.stream()
+                .map(c -> String.valueOf(c.ordinal()))
+                .collect(Collectors.joining(protocolListDelimiter));
     }
 }

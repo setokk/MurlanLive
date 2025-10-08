@@ -39,7 +39,11 @@ public class MovePipeline {
 
     private static boolean containsDuplicates(CardCombination cardCombination) {
         int numCardsReceived = cardCombination.getCards().size();
-        int numDistinctCards = new HashSet<>(cardCombination.getCards()).size();
-        return numCardsReceived != numDistinctCards;
+        if (numCardsReceived == 1) {
+            return false;
+        } else {
+            int numDistinctCards = new HashSet<>(cardCombination.getCards()).size();
+            return numCardsReceived != numDistinctCards;
+        }
     }
 }

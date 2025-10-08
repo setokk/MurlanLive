@@ -9,6 +9,7 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.api.AvailableRoomsReq;
 import org.murlan.live.protocol.api.AvailableRoomsResp;
@@ -30,6 +31,7 @@ import org.murlan.live.protocol.api.error.GenericErrorResp;
 import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ConfigProvider;
 import org.murlan.live.protocol.config.ProtocolConfig;
+import org.murlan.live.protocol.dto.GameStateDto;
 import org.murlan.live.protocol.dto.PlayerDto;
 import org.murlan.live.protocol.dto.RoomDto;
 import org.murlan.live.protocol.jwt.JwtUtils;
@@ -51,13 +53,16 @@ import java.util.UUID;
 public class GameLobbyEndpoint {
     private static final Logger LOGGER = LogManager.getLogger(GameLobbyEndpoint.class);
 
-    private final ProtocolConfig config = ConfigProvider.getProtocolConfig();
-    private final Parser parser = new Parser(config);
-    private final Generator generator = new Generator(config);
-    private final EndpointHelper endpointHelper = new EndpointHelper(parser, generator);
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private final AuthHttpClient authHttpClient = new AuthHttpClient(config);
-    private final RoomHandler roomHandler = new RoomHandler();
+    /**
+     * Shared state between sessions
+     */
+    private static final ProtocolConfig config = ConfigProvider.getProtocolConfig();
+    private static final Parser parser = new Parser(config);
+    private static final Generator generator = new Generator(config);
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final AuthHttpClient authHttpClient = new AuthHttpClient(config);
+    private static final EndpointHelper endpointHelper = new EndpointHelper(parser, generator);
+    private static final RoomHandler roomHandler = new RoomHandler();
 
     @OnOpen
     public void onOpen(Session session) throws IOException, InterruptedException {
@@ -105,8 +110,17 @@ public class GameLobbyEndpoint {
         Room room = roomHandler.getPlayerRoom(playerSession);
         Resp resp = switch (req) {
             case GameStateReq gameStateReq -> {
-                boolean isSuccessful = true;
-                yield new GameStateResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
+                GameStateDto gameStateDto = new GameStateDto(
+                        room.getGameState().getState().ordinal(),
+                        room.getGameState().getCurrTurnPlayer(),
+                        room.getGameState().getPlayers(),
+                        room.getGameState().getCurrCardCombination().toMessage(config.getProtocol_list_delimiter()),
+                        new CardCombination(player.getDeck().getCards()).toMessage(config.getProtocol_list_delimiter())
+                );
+                yield new GameStateResp(
+                        ResponseStatus.OK,
+                        objectMapper.writeValueAsString(gameStateDto)
+                );
             }
             case PlayHandReq playHandReq -> {
                 boolean isSuccessful = room.getGameState().playHand(player, playHandReq.getCardCombination());
@@ -164,7 +178,8 @@ public class GameLobbyEndpoint {
         if (optionalRoomId.isPresent()) {
             Room room = roomHandler.getRoom(optionalRoomId.get());
             synchronized (room) {
-                if (room.getNumPlayers() == 1) {
+                room.getGameState().getPlayers().remove(playerSession.getPlayerDto());
+                if (room.getNumPlayers() == 0) {
                     roomHandler.removeRoom(room.getId());
                 }
             }

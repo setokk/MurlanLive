@@ -1,5 +1,6 @@
 package org.murlan.live.protocol.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +21,9 @@ public class PlayerDto {
     private long id;
     private String username;
     private String creationDate;
+    @JsonIgnore
     private String jwt;
+    @JsonIgnore
     private Deck deck;
 
     public PlayerDto(long id, String username, String creationDate, String jwt) {
