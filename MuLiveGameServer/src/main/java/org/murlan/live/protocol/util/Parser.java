@@ -17,13 +17,13 @@ public class Parser {
     public Req parse(String message) throws InvalidDataException {
         String[] messageParts = message.split(config.getProtocol_delimiter());
         if (messageParts.length < MIN_NUM_VALUES) { // All messages should start with: ClientEvent ID
-            return null;
+            throw new InvalidDataException();
         }
         try {
             ClientEvent clientEvent = ClientEvent.fromId(messageParts[0]);
             return clientEvent.getReqFactory().newReq(messageParts, config);
         } catch (IllegalArgumentException e) {
-            return null;
+            throw new InvalidDataException();
         }
     }
 
