@@ -24,9 +24,9 @@ public class RoomHandler {
                 .findAny();
     }
 
-    public String removeSession(@NonNull PlayerSession playerSession) {
+    public Optional<String> removeSession(@NonNull PlayerSession playerSession) {
         jwtToSessionMap.remove(playerSession.getPlayerDto().getJwt());
-        return sessionToRoomIdMap.remove(playerSession);
+        return Optional.ofNullable(sessionToRoomIdMap.remove(playerSession));
     }
 
     public boolean jwtSessionExists(@NonNull String jwt) {

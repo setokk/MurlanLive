@@ -160,10 +160,13 @@ public class GameLobbyEndpoint {
         }
         PlayerSession playerSession = optionalPlayerSession.get();
 
-        Room room = roomHandler.getRoom(roomHandler.removeSession(playerSession));
-        synchronized (room) {
-            if (room.getNumPlayers() == 1) {
-                roomHandler.removeRoom(room.getId());
+        Optional<String> optionalRoomId = roomHandler.removeSession(playerSession);
+        if (optionalRoomId.isPresent()) {
+            Room room = roomHandler.getRoom(optionalRoomId.get());
+            synchronized (room) {
+                if (room.getNumPlayers() == 1) {
+                    roomHandler.removeRoom(room.getId());
+                }
             }
         }
         LOGGER.info("Connection with sessionId: {} closed", session.getId());
