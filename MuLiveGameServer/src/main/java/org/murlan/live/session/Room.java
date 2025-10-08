@@ -20,11 +20,11 @@ public class Room {
     private LocalDateTime creationDate;
 
     public boolean addPlayer(PlayerDto playerDto) {
-        return this.gameState.addPlayer(playerDto);
+        return gameState.addPlayer(playerDto);
     }
 
     public int getNumPlayers() {
-        return this.gameState.getPlayers().size();
+        return gameState.getPlayers().size();
     }
 
     @Override

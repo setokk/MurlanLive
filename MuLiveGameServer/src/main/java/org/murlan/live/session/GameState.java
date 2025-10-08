@@ -47,11 +47,11 @@ public class GameState {
     }
 
 
-    public synchronized boolean playHand(String jwt, CardCombination cardCombination) {
+    public synchronized boolean playHand(PlayerDto player, CardCombination cardCombination) {
         if (this.state != State.PLAYING) {
             return false;
         }
-        if (isNotPlayerTurn(jwt)) {
+        if (isNotPlayerTurn(player)) {
             return false;
         }
         if (!this.currTurnPlayer.getDeck().contains(cardCombination)) {
@@ -68,11 +68,11 @@ public class GameState {
         return true;
     }
 
-    public synchronized boolean pass(String jwt) {
+    public synchronized boolean pass(PlayerDto player) {
         if (this.state != State.PLAYING) {
             return false;
         }
-        if (isNotPlayerTurn(jwt)) {
+        if (isNotPlayerTurn(player)) {
             return false;
         }
         nextTurn();
@@ -80,11 +80,11 @@ public class GameState {
         return true;
     }
 
-    public synchronized boolean surrender(String jwt) {
+    public synchronized boolean surrender(PlayerDto player) {
         if (this.state != State.PLAYING) {
             return false;
         }
-        Optional<PlayerDto> playerToSurrender = this.players.stream().filter(p -> p.getJwt().equals(jwt)).findFirst();
+        Optional<PlayerDto> playerToSurrender = this.players.stream().filter(player::equals).findAny();
         if (playerToSurrender.isEmpty()) {
             return false;
         }
@@ -109,8 +109,8 @@ public class GameState {
         }
     }
 
-    private boolean isNotPlayerTurn(String jwt) {
-        return !jwt.equals(this.currTurnPlayer.getJwt());
+    private boolean isNotPlayerTurn(PlayerDto player) {
+        return !player.equals(this.currTurnPlayer);
     }
 
     private void nextTurn() {

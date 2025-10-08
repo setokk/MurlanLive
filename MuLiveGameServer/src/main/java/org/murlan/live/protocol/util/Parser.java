@@ -1,6 +1,7 @@
 package org.murlan.live.protocol.util;
 
 import lombok.AllArgsConstructor;
+import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.ClientEvent;
 import org.murlan.live.protocol.api.Req;
@@ -10,18 +11,17 @@ import java.util.Map;
 
 @AllArgsConstructor
 public class Parser {
+    public static final int MIN_NUM_VALUES = 1;
     private final ProtocolConfig config;
 
-    public Req parse(String message) {
+    public Req parse(String message) throws InvalidDataException {
         String[] messageParts = message.split(config.getProtocol_delimiter());
-        if (messageParts.length < 2) { // All messages should have at least 2 values: ClientEvent ID and JWT
+        if (messageParts.length < MIN_NUM_VALUES) { // All messages should start with: ClientEvent ID
             return null;
         }
         try {
             ClientEvent clientEvent = ClientEvent.fromId(messageParts[0]);
-            Req request = clientEvent.getReqFactory().newReq(messageParts, config);
-            request.setJWT(messageParts[1]);
-            return request;
+            return clientEvent.getReqFactory().newReq(messageParts, config);
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -29,9 +29,8 @@ public class Parser {
 
     public Map<String, String> parseQueryParams(String queryString) {
         Map<String, String> queryParams = new HashMap<>();
-        String[] keyValues = queryString.split("&"); // queryString is basically this pattern: roomId=ROOM1ID000&jwt=2mkkfds0d89fsdfj
+        String[] keyValues = queryString.split("&");
         for (String keyValue : keyValues) {
-            // keyValue is basically this pattern: roomId=ROOM1ID000 (key=value)
             String[] keyAndValue = keyValue.split("=");
             if (keyAndValue.length != 2) {
                 break;

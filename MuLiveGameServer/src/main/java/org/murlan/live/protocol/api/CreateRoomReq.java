@@ -1,21 +1,16 @@
 package org.murlan.live.protocol.api;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ProtocolConfig;
 
-@Setter
 @Getter
-@NoArgsConstructor
-public class CreateRoomReq implements Req {
-    private String JWT;
-    private String roomName;
-    private boolean isPublic;
-    private String passcode;
+public final class CreateRoomReq implements Req {
+    private final String roomName;
+    private final boolean isPublic;
+    private final String passcode;
 
-    public CreateRoomReq(String[] messageParts, ProtocolConfig config) {
+    public CreateRoomReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException {
         if (messageParts.length != startIndex() + 3) {
             throw new InvalidDataException();
         }

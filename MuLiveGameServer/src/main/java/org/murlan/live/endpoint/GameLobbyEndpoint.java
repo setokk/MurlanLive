@@ -9,41 +9,42 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.murlan.live.protocol.api.CreateRoomReq;
-import org.murlan.live.protocol.api.CreateRoomResp;
-import org.murlan.live.protocol.api.error.GenericErrorResp;
-import org.murlan.live.protocol.config.ConfigProvider;
-import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.api.AvailableRoomsReq;
 import org.murlan.live.protocol.api.AvailableRoomsResp;
+import org.murlan.live.protocol.api.CreateRoomReq;
+import org.murlan.live.protocol.api.CreateRoomResp;
+import org.murlan.live.protocol.api.GameStateReq;
 import org.murlan.live.protocol.api.GameStateResp;
 import org.murlan.live.protocol.api.JoinRoomReq;
 import org.murlan.live.protocol.api.JoinRoomResp;
-import org.murlan.live.protocol.api.PassResp;
-import org.murlan.live.protocol.api.PlayHandResp;
-import org.murlan.live.protocol.api.SurrenderResp;
-import org.murlan.live.protocol.auth.JwtUtils;
-import org.murlan.live.protocol.dto.RoomDto;
-import org.murlan.live.protocol.util.Generator;
-import org.murlan.live.protocol.util.Parser;
-import org.murlan.live.protocol.api.GameStateReq;
 import org.murlan.live.protocol.api.PassReq;
+import org.murlan.live.protocol.api.PassResp;
 import org.murlan.live.protocol.api.PlayHandReq;
+import org.murlan.live.protocol.api.PlayHandResp;
 import org.murlan.live.protocol.api.Req;
 import org.murlan.live.protocol.api.Resp;
 import org.murlan.live.protocol.api.SurrenderReq;
-import org.murlan.live.protocol.auth.AuthHttpClient;
+import org.murlan.live.protocol.api.SurrenderResp;
+import org.murlan.live.protocol.api.error.GenericErrorResp;
+import org.murlan.live.protocol.api.error.InvalidDataException;
+import org.murlan.live.protocol.config.ConfigProvider;
+import org.murlan.live.protocol.config.ProtocolConfig;
+import org.murlan.live.protocol.dto.PlayerDto;
+import org.murlan.live.protocol.dto.RoomDto;
+import org.murlan.live.protocol.jwt.JwtUtils;
+import org.murlan.live.protocol.um.AuthHttpClient;
+import org.murlan.live.protocol.util.Generator;
+import org.murlan.live.protocol.util.Parser;
 import org.murlan.live.session.GameState;
+import org.murlan.live.session.PlayerSession;
 import org.murlan.live.session.Room;
 import org.murlan.live.session.RoomHandler;
-import org.murlan.live.protocol.dto.PlayerDto;
-import org.murlan.live.session.PlayerSession;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @ServerEndpoint(value = "/game-lobby")
@@ -53,47 +54,54 @@ public class GameLobbyEndpoint {
     private final ProtocolConfig config = ConfigProvider.getProtocolConfig();
     private final Parser parser = new Parser(config);
     private final Generator generator = new Generator(config);
+    private final EndpointHelper endpointHelper = new EndpointHelper(parser, generator);
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final AuthHttpClient authHttpClient = new AuthHttpClient(config);
     private final RoomHandler roomHandler = new RoomHandler();
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @OnOpen
     public void onOpen(Session session) throws IOException, InterruptedException {
         LOGGER.info("New connection with sessionId: {}", session.getId());
 
-        if (session.getQueryString() == null || session.getQueryString().isEmpty()) {
-            session.close();
-            return;
-        }
-        Map<String, String> queryParams = parser.parseQueryParams(session.getQueryString());
-        String jwt = queryParams.get("jwt");
+        String jwt = endpointHelper.getAndCheckQueryParam("jwt", session.getQueryString()).orElse("");
         if (!authHttpClient.validateJwt(jwt)) {
-            session.close();
+            endpointHelper.sendErrorMessage(session, new GenericErrorResp("Forbidden"));
             return;
         }
         PlayerDto playerDto = JwtUtils.decodeJWT(jwt);
         if (playerDto.isInvalid()) {
-            session.close();
+            endpointHelper.sendErrorMessage(session, new GenericErrorResp("Invalid JWT"));
             return;
         }
-
+        if (roomHandler.jwtSessionExists(jwt)) {
+            endpointHelper.sendErrorMessage(session, new GenericErrorResp("JWT session already exists"));
+            return;
+        }
         roomHandler.addSession(new PlayerSession(session, playerDto));
+
+        LOGGER.info("Connection with sessionId: {} established!", session.getId());
     }
 
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
-        Req req = parser.parse(message);
-        if (req == null) {
-            sendErrorMessage(session, new GenericErrorResp("Request Body Error"));
+        LOGGER.info("From {{}}, received message: {}", session.getId(), message);
+
+        Req req;
+        try {
+            req = parser.parse(message);
+        } catch (InvalidDataException e) {
+            endpointHelper.sendErrorMessage(session, new GenericErrorResp("Request body error"));
             return;
         }
 
-        PlayerSession playerSession = roomHandler.getSession(req.getJWT());
-        if (playerSession == null) {
-            sendErrorMessage(session, new GenericErrorResp("JWT Not Recognized"));
+        Optional<PlayerSession> optionalPlayerSession = roomHandler.getSession(session);
+        if (optionalPlayerSession.isEmpty()) {
+            endpointHelper.sendErrorMessage(session, new GenericErrorResp("No active session found for sessionId: " + session.getId()));
             return;
         }
 
+        PlayerSession playerSession = optionalPlayerSession.get();
+        PlayerDto player = playerSession.getPlayerDto();
         Room room = roomHandler.getPlayerRoom(playerSession);
         Resp resp = switch (req) {
             case GameStateReq gameStateReq -> {
@@ -101,15 +109,15 @@ public class GameLobbyEndpoint {
                 yield new GameStateResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case PlayHandReq playHandReq -> {
-                boolean isSuccessful = room.getGameState().playHand(req.getJWT(), playHandReq.getCardCombination());
+                boolean isSuccessful = room.getGameState().playHand(player, playHandReq.getCardCombination());
                 yield new PlayHandResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case PassReq passReq -> {
-                boolean isSuccessful = room.getGameState().pass(req.getJWT());
+                boolean isSuccessful = room.getGameState().pass(player);
                 yield new PassResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case SurrenderReq surrenderReq -> {
-                boolean isSuccessful = room.getGameState().surrender(req.getJWT());
+                boolean isSuccessful = room.getGameState().surrender(player);
                 yield new SurrenderResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case AvailableRoomsReq availableRoomsReq -> {
@@ -130,7 +138,10 @@ public class GameLobbyEndpoint {
                         LocalDateTime.now()
                 );
                 boolean isSuccessful = roomHandler.createRoom(roomToBeCreated, playerSession);
-                yield new CreateRoomResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
+                yield new CreateRoomResp(
+                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        objectMapper.writeValueAsString(new RoomDto(roomToBeCreated.getId(), roomToBeCreated.getName(), roomToBeCreated.getNumPlayers()))
+                );
             }
             default -> throw new IllegalStateException("Unexpected request: " + req);
         };
@@ -143,25 +154,23 @@ public class GameLobbyEndpoint {
 
     @OnClose
     public void onClose(Session session) {
-        PlayerSession playerSession = PlayerSession.fromSession(session);
+        Optional<PlayerSession> optionalPlayerSession = roomHandler.getSession(session);
+        if (optionalPlayerSession.isEmpty()) {
+            return;
+        }
+        PlayerSession playerSession = optionalPlayerSession.get();
+
         Room room = roomHandler.getRoom(roomHandler.removeSession(playerSession));
         synchronized (room) {
-            if (room.getGameState().getPlayers().size() == 1) {
+            if (room.getNumPlayers() == 1) {
                 roomHandler.removeRoom(room.getId());
             }
         }
-        roomHandler.removeSession(playerSession);
         LOGGER.info("Connection with sessionId: {} closed", session.getId());
     }
 
     @OnError
-    public void onError(Session session, Throwable throwable) {
+    public void onError(Session session, Throwable throwable) throws IOException {
         LOGGER.error("Error", throwable);
-    }
-
-    private void sendErrorMessage(Session session, GenericErrorResp resp) throws IOException {
-        String errorMessage = generator.generateMessage(resp);
-        session.getBasicRemote().sendText(errorMessage);
-        session.close();
     }
 }

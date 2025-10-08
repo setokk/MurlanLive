@@ -3,6 +3,7 @@ package org.murlan.live.protocol.api;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.murlan.live.protocol.ClientEvent;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.ResponseStatus;
 
@@ -14,6 +15,9 @@ public class PlayHandResp implements Resp {
 
     @Override
     public String toMessage(ProtocolConfig config) {
-        return "";
+        return String.join(config.getProtocol_delimiter(),
+                ClientEvent.PLAY_HAND.id(),
+                getResponseStatus().toString()
+        );
     }
 }

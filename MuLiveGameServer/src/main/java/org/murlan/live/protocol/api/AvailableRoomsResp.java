@@ -3,9 +3,9 @@ package org.murlan.live.protocol.api;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.ClientEvent;
 import org.murlan.live.protocol.ResponseStatus;
+import org.murlan.live.protocol.config.ProtocolConfig;
 
 @Setter
 @Getter
@@ -16,8 +16,10 @@ public class AvailableRoomsResp implements Resp {
 
     @Override
     public String toMessage(ProtocolConfig config) {
-        String eventId = ClientEvent.AVAILABLE_ROOMS.id();
-        String statusCode = getResponseStatus().toString();
-        return String.join(config.getProtocol_delimiter(), eventId, statusCode, availableRoomsJson);
+        return String.join(config.getProtocol_delimiter(),
+                ClientEvent.AVAILABLE_ROOMS.id(),
+                getResponseStatus().toString(),
+                availableRoomsJson
+        );
     }
 }

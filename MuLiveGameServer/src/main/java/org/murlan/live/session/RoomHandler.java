@@ -1,36 +1,40 @@
 package org.murlan.live.session;
 
+import jakarta.websocket.Session;
 import lombok.NonNull;
-import org.murlan.live.protocol.dto.PlayerDto;
 import org.murlan.live.protocol.dto.RoomDto;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class RoomHandler {
     private final ConcurrentHashMap<String, PlayerSession> jwtToSessionMap = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<PlayerSession, String> sessionToJwtMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<PlayerSession, String> sessionToRoomIdMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Room> roomIdToRoomMap = new ConcurrentHashMap<>();
 
     public void addSession(@NonNull PlayerSession playerSession) {
         jwtToSessionMap.putIfAbsent(playerSession.getPlayerDto().getJwt(), playerSession);
-        sessionToJwtMap.putIfAbsent(playerSession, playerSession.getPlayerDto().getJwt());
     }
 
-    public PlayerSession getSession(@NonNull String jwt) {
-        return jwtToSessionMap.get(jwt);
+    public Optional<PlayerSession> getSession(@NonNull Session session) {
+        return jwtToSessionMap.values().stream()
+                .filter(s -> s.getSession().getId().equals(session.getId()))
+                .findAny();
     }
 
     public String removeSession(@NonNull PlayerSession playerSession) {
-        String jwt = sessionToJwtMap.remove(playerSession);
-        jwtToSessionMap.remove(jwt);
+        jwtToSessionMap.remove(playerSession.getPlayerDto().getJwt());
         return sessionToRoomIdMap.remove(playerSession);
     }
 
+    public boolean jwtSessionExists(@NonNull String jwt) {
+        return jwtToSessionMap.containsKey(jwt);
+    }
+
     public void linkSessionWithRoom(@NonNull PlayerSession playerSession, @NonNull String roomId) {
-        if (!jwtToSessionMap.containsKey(playerSession.getPlayerDto().getJwt()) || !sessionToJwtMap.containsKey(playerSession)) {
+        if (!jwtToSessionMap.containsKey(playerSession.getPlayerDto().getJwt())) {
             throw new RuntimeException("Player session with JWT " + playerSession.getPlayerDto().getJwt() + " not found");
         }
         sessionToRoomIdMap.putIfAbsent(playerSession, roomId);
@@ -54,15 +58,26 @@ public class RoomHandler {
     }
 
     public Room getPlayerRoom(@NonNull PlayerSession playerSession) {
-        return roomIdToRoomMap.get(sessionToRoomIdMap.get(playerSession));
+        String roomId = sessionToRoomIdMap.get(playerSession);
+        if (roomId == null) {
+            return null;
+        }
+        return roomIdToRoomMap.get(roomId);
     }
 
     public boolean roomExists(@NonNull String roomId) {
         return roomIdToRoomMap.containsKey(roomId);
     }
 
-    public synchronized boolean addPlayerToRoom(@NonNull String roomId, String passcode, @NonNull PlayerDto playerDto) {
+    public boolean isPlayerInRoom(@NonNull PlayerSession playerSession) {
+        return sessionToRoomIdMap.containsKey(playerSession);
+    }
+
+    public synchronized boolean addPlayerToRoom(@NonNull String roomId, String passcode, @NonNull PlayerSession playerSession) {
         if (!roomExists(roomId)) {
+            return false;
+        }
+        if (isPlayerInRoom(playerSession)) {
             return false;
         }
         Room room = getRoom(roomId);
@@ -73,7 +88,7 @@ public class RoomHandler {
             return false;
         }
 
-        return room.addPlayer(playerDto);
+        return room.addPlayer(playerSession.getPlayerDto());
     }
 
     public List<RoomDto> getAvailableRooms() {
@@ -85,9 +100,8 @@ public class RoomHandler {
     }
 
     public synchronized boolean joinRoom(@NonNull String roomId, @NonNull String passcode, @NonNull PlayerSession playerSession) {
-        boolean isJoinSuccessful = addPlayerToRoom(roomId, passcode, playerSession.getPlayerDto());
+        boolean isJoinSuccessful = addPlayerToRoom(roomId, passcode, playerSession);
         if (!isJoinSuccessful) {
-            removeSession(playerSession);
             return false;
         }
         linkSessionWithRoom(playerSession, roomId);

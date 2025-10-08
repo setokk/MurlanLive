@@ -3,6 +3,7 @@ package org.murlan.live.protocol;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ConfigProvider;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.game.deck.Card;
@@ -23,11 +24,8 @@ public class ParserTest {
     }
 
     @Test
-    public void testParser() {
-        String playHandMessage =
-                ClientEvent.PLAY_HAND.ordinal() + config.getProtocol_delimiter() +
-                        "j2LVOAdsaclbmcvb"      + config.getProtocol_delimiter() +
-                        Card.ACE_OF_CLUBS.ordinal();
+    public void testParser() throws InvalidDataException {
+        String playHandMessage = ClientEvent.PLAY_HAND.id() + config.getProtocol_delimiter() + Card.ACE_OF_CLUBS.ordinal();
 
         Req request = parser.parse(playHandMessage);
         Assert.assertTrue(request instanceof PlayHandReq);
@@ -36,12 +34,10 @@ public class ParserTest {
     }
 
     @Test
-    public void testParserMovePipeline() {
-        String playHandMessage =
-                ClientEvent.PLAY_HAND.ordinal() + config.getProtocol_delimiter() +
-                        "j2LVOAdsaclbmcvb"      + config.getProtocol_delimiter() +
-                        Card.KING_OF_HEARTS.ordinal() + config.getProtocol_list_delimiter() +
-                        Card.KING_OF_DIAMONDS.ordinal();
+    public void testParserMovePipeline() throws InvalidDataException {
+        String playHandMessage = ClientEvent.PLAY_HAND.id() + config.getProtocol_delimiter() +
+                Card.KING_OF_HEARTS.ordinal() + config.getProtocol_list_delimiter() +
+                Card.KING_OF_DIAMONDS.ordinal();
 
         Req request = parser.parse(playHandMessage);
         Assert.assertTrue(request instanceof PlayHandReq);

@@ -1,25 +1,20 @@
 package org.murlan.live.protocol.api;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.murlan.live.protocol.api.error.InvalidDataException;
-import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
+import org.murlan.live.protocol.api.error.InvalidDataException;
+import org.murlan.live.protocol.config.ProtocolConfig;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Setter
 @Getter
-@NoArgsConstructor
 public final class PlayHandReq implements Req {
-    private String JWT;
-    private CardCombination cardCombination;
+    private final CardCombination cardCombination;
 
-    public PlayHandReq(String[] messageParts, ProtocolConfig config) {
+    public PlayHandReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException {
         if (messageParts.length != startIndex() + 1) {
             throw new InvalidDataException();
         }

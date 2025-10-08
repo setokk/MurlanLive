@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.murlan.live.protocol.api.CreateRoomReq;
 import org.murlan.live.protocol.api.JoinRoomReq;
+import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.api.AvailableRoomsReq;
 import org.murlan.live.protocol.api.GameStateReq;
@@ -66,16 +67,17 @@ public enum ClientEvent {
     private final ReqFactory reqFactory;
 
     public String id() {
-        return "C" + this.ordinal();
+        return "C" + ordinal();
     }
 
     public static ClientEvent fromId(String id) {
         return Arrays.stream(ClientEvent.values())
+                .filter(c -> c.id().equals(id))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("Unknown event " + id));
     }
 
     public interface ReqFactory {
-        Req newReq(String[] messageParts, ProtocolConfig config);
+        Req newReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException;
     }
 }

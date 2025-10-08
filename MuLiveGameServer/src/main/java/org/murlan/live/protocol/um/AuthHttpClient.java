@@ -1,4 +1,4 @@
-package org.murlan.live.protocol.auth;
+package org.murlan.live.protocol.um;
 
 import org.murlan.live.protocol.config.ProtocolConfig;
 
