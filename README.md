@@ -1,4 +1,3 @@
-
 # MurlanLive
 **MurlanLive** is an open-source game based on *Murlan*, a playing cards game that first originated in communist Albania from Chinese advisors/migrants. **MurlanLive** provides a UI (based on the Godot game engine), a game server, a user management service and a database.
 
