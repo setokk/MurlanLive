@@ -105,6 +105,18 @@ public class CardCombination {
         return !isWeakerThan(other);
     }
 
+    public boolean isEqualStrength(CardCombination other) {
+        Card firstCard = this.getCards().getFirst();
+        Card otherFirstCard = other.getCards().getFirst();
+        if (this.type.equals(KOLOR) || this.type.equals(BOMB_KOLOR)) {
+            firstCard = this.kolorSortCards.getFirst();
+        }
+        if (other.getType().equals(KOLOR) || other.getType().equals(BOMB_KOLOR)) {
+            otherFirstCard = other.getKolorSortCards().getFirst();
+        }
+        return firstCard.hasSameRankAs(otherFirstCard);
+    }
+
     public String toMessage(String protocolListDelimiter) {
         return cards.stream()
                 .map(c -> String.valueOf(c.ordinal()))

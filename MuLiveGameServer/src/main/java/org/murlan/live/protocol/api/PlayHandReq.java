@@ -9,6 +9,7 @@ import org.murlan.live.protocol.config.ProtocolConfig;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Getter
 public final class PlayHandReq implements Req {
@@ -19,7 +20,7 @@ public final class PlayHandReq implements Req {
             throw new InvalidDataException();
         }
         List<Card> cards = new ArrayList<>();
-        String[] individualCards = messageParts[startIndex()].split(config.getProtocol_list_delimiter());
+        String[] individualCards = messageParts[startIndex()].split(Pattern.quote(config.getProtocol_list_delimiter()));
         for (String individualCard : individualCards) {
             try {
                 cards.add(Card.fromOrdinal(Integer.parseInt(individualCard)));

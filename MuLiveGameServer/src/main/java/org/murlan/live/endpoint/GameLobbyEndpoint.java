@@ -71,15 +71,18 @@ public class GameLobbyEndpoint {
         String jwt = endpointHelper.getAndCheckQueryParam("jwt", session.getQueryString()).orElse("");
         if (!authHttpClient.validateJwt(jwt)) {
             endpointHelper.sendErrorMessage(session, new GenericErrorResp("Forbidden"));
+            session.close();
             return;
         }
         PlayerDto playerDto = JwtUtils.decodeJWT(jwt);
         if (playerDto.isInvalid()) {
             endpointHelper.sendErrorMessage(session, new GenericErrorResp("Invalid JWT"));
+            session.close();
             return;
         }
         if (roomHandler.jwtSessionExists(jwt)) {
             endpointHelper.sendErrorMessage(session, new GenericErrorResp("JWT session already exists"));
+            session.close();
             return;
         }
         roomHandler.addSession(new PlayerSession(session, playerDto));

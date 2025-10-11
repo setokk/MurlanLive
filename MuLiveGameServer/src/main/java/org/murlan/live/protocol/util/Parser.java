@@ -8,6 +8,7 @@ import org.murlan.live.protocol.api.Req;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @AllArgsConstructor
 public class Parser {
@@ -15,7 +16,7 @@ public class Parser {
     private final ProtocolConfig config;
 
     public Req parse(String message) throws InvalidDataException {
-        String[] messageParts = message.split(config.getProtocol_delimiter());
+        String[] messageParts = message.split(Pattern.quote(config.getProtocol_delimiter()));
         if (messageParts.length < MIN_NUM_VALUES) { // All messages should start with: ClientEvent ID
             throw new InvalidDataException();
         }

@@ -18,7 +18,6 @@ public class EndpointHelper {
     public void sendErrorMessage(Session session, GenericErrorResp resp) throws IOException {
         String errorMessage = generator.generateMessage(resp);
         session.getBasicRemote().sendText(errorMessage);
-        session.close();
     }
 
     public Optional<String> getAndCheckQueryParam(String key, String queryParamString) {
