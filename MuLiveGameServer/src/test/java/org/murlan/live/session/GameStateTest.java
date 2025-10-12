@@ -7,23 +7,17 @@ import org.murlan.live.game.deck.CardCombinationType;
 import org.murlan.live.game.deck.Deck;
 import org.murlan.live.protocol.dto.PlayerDto;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GameStateTest extends TestCase {
     public void testPlayHand_SameRankSingle() {
         PlayerDto currPlayer = new PlayerDto(1L, "currPlayer", "ignored", "currPlayer");
         PlayerDto otherPlayer = new PlayerDto(2L, "otherPlayer", "ignored", "otherPlayer");
-
-        List<Card> currPlayerCards = new ArrayList<>(2);
-        currPlayerCards.add(Card.FIVE_OF_CLUBS);
-        currPlayerCards.add(Card.FIVE_OF_DIAMONDS);
-        List<Card> otherPlayerCards = new ArrayList<>(2);
-        otherPlayerCards.add(Card.FIVE_OF_SPADES);
-        otherPlayerCards.add(Card.FIVE_OF_HEARTS);
-        currPlayer.setDeck(new Deck(currPlayerCards));
-        otherPlayer.setDeck(new Deck(otherPlayerCards));
+        currPlayer.setDeck(new Deck(getListOfCards(Card.FIVE_OF_CLUBS, Card.FIVE_OF_DIAMONDS)));
+        otherPlayer.setDeck(new Deck(getListOfCards(Card.FIVE_OF_SPADES, Card.FIVE_OF_HEARTS)));
 
         CardCombination initialCardCombination = new CardCombination(Card.THREE_OF_SPADES);
         initialCardCombination.setType(CardCombinationType.SINGLE_CARD);
@@ -35,29 +29,18 @@ public class GameStateTest extends TestCase {
                 initialCardCombination
         );
 
-        Card cardToPlay = currPlayer.equals(gameState.getCurrTurnPlayer()) ? Card.FIVE_OF_CLUBS : Card.FIVE_OF_HEARTS;
-        boolean isFirstMoveSuccessful = gameState.playHand(gameState.getCurrTurnPlayer(), new CardCombination(cardToPlay));
+        boolean isFirstMoveSuccessful = gameState.playHand(currPlayer, new CardCombination(Card.FIVE_OF_CLUBS));
         assertTrue(isFirstMoveSuccessful);
 
-        Card secondCardToPlay = currPlayer.equals(gameState.getCurrTurnPlayer()) ? Card.FIVE_OF_DIAMONDS : Card.FIVE_OF_SPADES;
-        boolean isSecondMoveSuccessful = gameState.playHand(gameState.getCurrTurnPlayer(), new CardCombination(secondCardToPlay));
+        boolean isSecondMoveSuccessful = gameState.playHand(otherPlayer, new CardCombination(Card.FIVE_OF_SPADES));
         assertFalse(isSecondMoveSuccessful);
     }
 
     public void testPlayHand_SameRankDouble() {
         PlayerDto currPlayer = new PlayerDto(1L, "currPlayer", "ignored", "currPlayer");
         PlayerDto otherPlayer = new PlayerDto(2L, "otherPlayer", "ignored", "otherPlayer");
-
-        List<Card> currPlayerCards = new ArrayList<>(3);
-        currPlayerCards.add(Card.TWO_OF_CLUBS);
-        currPlayerCards.add(Card.TWO_OF_DIAMONDS);
-        currPlayerCards.add(Card.TEN_OF_DIAMONDS);
-        List<Card> otherPlayerCards = new ArrayList<>(3);
-        otherPlayerCards.add(Card.TWO_OF_SPADES);
-        otherPlayerCards.add(Card.TWO_OF_HEARTS);
-        otherPlayerCards.add(Card.TEN_OF_HEARTS);
-        currPlayer.setDeck(new Deck(currPlayerCards));
-        otherPlayer.setDeck(new Deck(otherPlayerCards));
+        currPlayer.setDeck(new Deck(getListOfCards(Card.TWO_OF_CLUBS, Card.TWO_OF_DIAMONDS, Card.TEN_OF_DIAMONDS)));
+        otherPlayer.setDeck(new Deck(getListOfCards(Card.TWO_OF_SPADES, Card.TWO_OF_HEARTS, Card.TEN_OF_HEARTS)));
 
         CardCombination initialCardCombination = new CardCombination(Card.THREE_OF_SPADES, Card.THREE_OF_CLUBS);
         initialCardCombination.setType(CardCombinationType.DOUBLE_CARDS);
@@ -69,23 +52,43 @@ public class GameStateTest extends TestCase {
                 initialCardCombination
         );
 
-        List<Card> currCardsToPlay = new ArrayList<>(2);
-        currCardsToPlay.add(Card.TWO_OF_CLUBS);
-        currCardsToPlay.add(Card.TWO_OF_DIAMONDS);
-        List<Card> otherCardsToPlay = new ArrayList<>(2);
-        otherCardsToPlay.add(Card.TWO_OF_SPADES);
-        otherCardsToPlay.add(Card.TWO_OF_HEARTS);
+        List<Card> currCardsToPlay = getListOfCards(Card.TWO_OF_CLUBS, Card.TWO_OF_DIAMONDS);
+        List<Card> otherCardsToPlay = getListOfCards(Card.TWO_OF_SPADES, Card.TWO_OF_HEARTS);
 
-        List<Card> cardsToPlay = currPlayer.equals(gameState.getCurrTurnPlayer())
-                ? currCardsToPlay
-                : otherCardsToPlay;
-        boolean isFirstMoveSuccessful = gameState.playHand(gameState.getCurrTurnPlayer(), new CardCombination(cardsToPlay));
+        boolean isFirstMoveSuccessful = gameState.playHand(currPlayer, new CardCombination(currCardsToPlay));
         assertTrue(isFirstMoveSuccessful);
 
-        List<Card> secondCardsToPlay = currPlayer.equals(gameState.getCurrTurnPlayer())
-                ? currCardsToPlay
-                : otherCardsToPlay;
-        boolean isSecondMoveSuccessful = gameState.playHand(gameState.getCurrTurnPlayer(), new CardCombination(secondCardsToPlay));
+        boolean isSecondMoveSuccessful = gameState.playHand(otherPlayer, new CardCombination(otherCardsToPlay));
         assertFalse(isSecondMoveSuccessful);
+    }
+
+    public void testPlayHand_TripleWithDoubleCard() {
+        PlayerDto currPlayer = new PlayerDto(1L, "currPlayer", "ignored", "currPlayer");
+        PlayerDto otherPlayer = new PlayerDto(2L, "otherPlayer", "ignored", "otherPlayer");
+        currPlayer.setDeck(new Deck(getListOfCards(Card.FIVE_OF_SPADES, Card.FIVE_OF_CLUBS, Card.FIVE_OF_HEARTS, Card.ACE_OF_CLUBS)));
+        otherPlayer.setDeck(new Deck(getListOfCards(Card.TWO_OF_SPADES, Card.TWO_OF_HEARTS, Card.JACK_OF_CLUBS)));
+
+        CardCombination initialCardCombination = new CardCombination(Card.THREE_OF_SPADES, Card.THREE_OF_CLUBS, Card.THREE_OF_HEARTS);
+        initialCardCombination.setType(CardCombinationType.TRIPLE_CARDS);
+        GameState gameState = new GameState(
+                currPlayer,
+                GameState.State.PLAYING,
+                List.of(currPlayer, otherPlayer),
+                Map.of(currPlayer, 0, otherPlayer, 0),
+                initialCardCombination
+        );
+
+        List<Card> currCardsToPlay = getListOfCards(Card.FIVE_OF_SPADES, Card.FIVE_OF_CLUBS, Card.FIVE_OF_HEARTS);
+        List<Card> otherCardsToPlay = getListOfCards(Card.TWO_OF_SPADES, Card.TWO_OF_HEARTS);
+
+        boolean isFirstMoveSuccessful = gameState.playHand(currPlayer, new CardCombination(currCardsToPlay));
+        assertTrue(isFirstMoveSuccessful);
+
+        boolean isSecondMoveSuccessful = gameState.playHand(otherPlayer, new CardCombination(otherCardsToPlay));
+        assertFalse(isSecondMoveSuccessful);
+    }
+
+    private List<Card> getListOfCards(Card... card) {
+        return Arrays.stream(card).collect(Collectors.toList());
     }
 }

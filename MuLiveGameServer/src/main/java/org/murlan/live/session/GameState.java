@@ -62,7 +62,7 @@ public class GameState {
             return false;
         }
         boolean isNotFirstMove = this.currCardCombination != EMPTY_CARD_COMBINATION;
-        if (isNotFirstMove && (cardCombination.isEqualStrength(this.currCardCombination) || cardCombination.isWeakerThan(this.currCardCombination))) {
+        if (isNotFirstMove && (cardCombination.isEqualStrength(this.currCardCombination) || this.currCardCombination.isStrongerThan(cardCombination))) {
             return false;
         }
 
