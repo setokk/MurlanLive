@@ -9,13 +9,13 @@ public final class CreateRoomReq implements Req {
     private final String roomName;
     private final boolean isPublic;
     private final String passcode;
+    private final short totalScoreToWin;
 
     public CreateRoomReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException {
-        if (messageParts.length != startIndex() + 3) {
-            throw new InvalidDataException();
-        }
+        validate(messageParts);
         roomName = messageParts[startIndex()];
         isPublic = Boolean.parseBoolean(messageParts[startIndex() + 1]);
         passcode = messageParts[startIndex() + 2];
+        totalScoreToWin = Short.parseShort(messageParts[startIndex() + 3]);
     }
 }

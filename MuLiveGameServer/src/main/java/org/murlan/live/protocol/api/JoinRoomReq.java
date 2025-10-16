@@ -10,9 +10,7 @@ public final class JoinRoomReq implements Req {
     private final String passcode;
 
     public JoinRoomReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException {
-        if (messageParts.length != startIndex() + 2) {
-            throw new InvalidDataException();
-        }
+        validate(messageParts);
         roomId = messageParts[startIndex()];
         passcode = messageParts[startIndex() + 1];
     }

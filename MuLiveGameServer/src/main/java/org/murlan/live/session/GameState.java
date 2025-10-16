@@ -3,6 +3,7 @@ package org.murlan.live.session;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.deck.Deck;
 import org.murlan.live.game.deck.Shuffler;
@@ -14,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 
 @Getter
 @Setter
@@ -26,14 +26,29 @@ public class GameState {
     private PlayerDto currTurnPlayer;
     private State state;
     private List<PlayerDto> players;
-    private Map<PlayerDto, Integer> score;
+    private Map<PlayerDto, Short> score;
     private CardCombination currCardCombination;
+    private Runnable onFinishGame;
 
-    public GameState(State state, PlayerDto player) {
+    public GameState(State state, PlayerDto player, Runnable onFinishGame) {
         this.state = state;
         this.players = new ArrayList<>();
         this.players.add(player);
         this.score = new HashMap<>();
+        this.onFinishGame = onFinishGame;
+    }
+
+    public GameState(State state, List<PlayerDto> players, Runnable onFinishGame) {
+        this.state = state;
+        this.players = players;
+        this.score = new HashMap<>();
+        this.onFinishGame = onFinishGame;
+    }
+
+    public static GameState createFromPrevious(GameState previous) {
+        GameState newGameState = new GameState(State.WAITING, previous.getPlayers(), previous.getOnFinishGame());
+        newGameState.startGame();
+        return newGameState;
     }
 
     public synchronized boolean addPlayer(PlayerDto player) {
@@ -62,12 +77,15 @@ public class GameState {
             return false;
         }
         boolean isNotFirstMove = this.currCardCombination != EMPTY_CARD_COMBINATION;
-        if (isNotFirstMove && (cardCombination.isEqualStrength(this.currCardCombination) || this.currCardCombination.isStrongerThan(cardCombination))) {
+        if (isNotFirstMove && (this.currCardCombination.isEqualStrength(cardCombination) || this.currCardCombination.isStrongerThan(cardCombination))) {
             return false;
         }
 
         this.currTurnPlayer.getDeck().removeCards(cardCombination);
         this.currCardCombination = cardCombination;
+        if (this.currTurnPlayer.getDeck().isEmpty()) {
+            this.score.put(this.currTurnPlayer, (short) (MAX_PLAYERS - this.score.size() - 1));
+        }
         nextTurn();
 
         return true;
@@ -89,16 +107,18 @@ public class GameState {
         if (this.state != State.PLAYING) {
             return false;
         }
-        Optional<PlayerDto> playerToSurrender = this.players.stream().filter(player::equals).findAny();
-        if (playerToSurrender.isEmpty()) {
+        Optional<PlayerDto> optionalPlayerToSurrender = this.players.stream().filter(player::equals).findAny();
+        if (optionalPlayerToSurrender.isEmpty()) {
             return false;
         }
 
-        this.players.remove(playerToSurrender.get());
-        this.score.put(playerToSurrender.get(), -1);
-        if (this.players.isEmpty()) {
-            this.state = State.FINISHED;
+        PlayerDto playerToSurrender = optionalPlayerToSurrender.get();
+        this.players.remove(playerToSurrender);
+        this.score.put(playerToSurrender, (short)-1);
+        for (PlayerDto remainingPlayer : this.players) {
+            this.score.put(remainingPlayer, (short)1);
         }
+        finishGame();
 
         return true;
     }
@@ -106,7 +126,6 @@ public class GameState {
     // TODO: More logic to take into account (first game of room and later on the other ones)
     public synchronized void startGame() {
         this.state = State.PLAYING;
-        this.currTurnPlayer = players.get(new Random().nextInt(0, players.size()));
         this.currCardCombination = EMPTY_CARD_COMBINATION;
 
         // Shuffle and assign decks to each player
@@ -114,15 +133,42 @@ public class GameState {
         for (int i = 0; i < players.size(); i++) {
             players.get(i).setDeck(decks.get(i));
         }
+        this.currTurnPlayer = findPlayerWithCardCombination(new CardCombination(Card.THREE_OF_SPADES));
+    }
+
+    private void nextTurn() {
+        int nextTurnIndex = (players.indexOf(currTurnPlayer) + 1) % players.size();
+        this.currTurnPlayer = players.get(nextTurnIndex);
+        while (this.currTurnPlayer.getDeck().isEmpty()) {
+            nextTurnIndex = (nextTurnIndex + 1) % players.size();
+            this.currTurnPlayer = players.get(nextTurnIndex);
+        }
+        if (this.score.size() == MAX_PLAYERS - 1) {
+            this.score.put(this.currTurnPlayer, (short)0);
+            finishGame();
+        }
     }
 
     private boolean isNotPlayerTurn(PlayerDto player) {
         return !player.equals(this.currTurnPlayer);
     }
 
-    private void nextTurn() {
-        int nextTurnIndex = (players.indexOf(currTurnPlayer) + 1) % players.size();
-        this.currTurnPlayer = players.get(nextTurnIndex);
+    private void finishGame() {
+        if (State.FINISHED.equals(this.state)) {
+            return;
+        }
+        this.state = State.FINISHED;
+        if (players.size() != MAX_PLAYERS) {
+            return; // Surrender has occurred
+        }
+        onFinishGame.run();
+    }
+
+    private PlayerDto findPlayerWithCardCombination(CardCombination cardCombination) {
+        return this.players.stream()
+                .filter(p -> p.getDeck().contains(cardCombination))
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("No player found with card combination " + cardCombination));
     }
 
     public enum State {

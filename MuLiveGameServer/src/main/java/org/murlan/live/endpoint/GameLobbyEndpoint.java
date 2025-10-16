@@ -45,7 +45,10 @@ import org.murlan.live.session.RoomHandler;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -114,11 +117,15 @@ public class GameLobbyEndpoint {
         Resp resp = switch (req) {
             case GameStateReq gameStateReq -> {
                 GameStateDto gameStateDto = new GameStateDto(
-                        room.getGameState().getState().ordinal(),
-                        room.getGameState().getCurrTurnPlayer(),
-                        room.getGameState().getPlayers(),
-                        room.getGameState().getCurrCardCombination().toMessage(config.getProtocol_list_delimiter()),
-                        new CardCombination(player.getDeck().getCards()).toMessage(config.getProtocol_list_delimiter())
+                        room.getActiveGameState().getState().ordinal(),
+                        room.getTotalGamesPlayed(),
+                        room.getActiveGameState().getCurrTurnPlayer(),
+                        room.getActiveGameState().getPlayers(),
+                        room.getActiveGameState().getCurrCardCombination().toMessage(config.getProtocol_list_delimiter()),
+                        new CardCombination(player.getDeck() != null
+                                ? player.getDeck().getCards()
+                                : Collections.emptyList()
+                        ).toMessage(config.getProtocol_list_delimiter())
                 );
                 yield new GameStateResp(
                         ResponseStatus.OK,
@@ -126,15 +133,15 @@ public class GameLobbyEndpoint {
                 );
             }
             case PlayHandReq playHandReq -> {
-                boolean isSuccessful = room.getGameState().playHand(player, playHandReq.getCardCombination());
+                boolean isSuccessful = room.getActiveGameState().playHand(player, playHandReq.getCardCombination());
                 yield new PlayHandResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case PassReq passReq -> {
-                boolean isSuccessful = room.getGameState().pass(player);
+                boolean isSuccessful = room.getActiveGameState().pass(player);
                 yield new PassResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case SurrenderReq surrenderReq -> {
-                boolean isSuccessful = room.getGameState().surrender(player);
+                boolean isSuccessful = room.getActiveGameState().surrender(player);
                 yield new SurrenderResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case AvailableRoomsReq availableRoomsReq -> {
@@ -146,18 +153,40 @@ public class GameLobbyEndpoint {
                 yield new JoinRoomResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case CreateRoomReq createRoomReq -> {
-                Room roomToBeCreated = new Room(
+                Room newRoom = new Room(
                         UUID.randomUUID().toString(),
                         createRoomReq.getRoomName(),
                         createRoomReq.isPublic(),
                         createRoomReq.getPasscode(),
-                        new GameState(GameState.State.WAITING, playerSession.getPlayerDto()),
-                        LocalDateTime.now()
+                        LocalDateTime.now(),
+                        createRoomReq.getTotalScoreToWin(),
+                        playerSession.getPlayerDto()
                 );
-                boolean isSuccessful = roomHandler.createRoom(roomToBeCreated, playerSession);
+                newRoom.newGameState(() -> {
+                    Optional<PlayerDto> optionalWinnerPlayer = newRoom.getTotalScores().entrySet().stream()
+                            .filter(s -> s.getValue() >= newRoom.getTotalScoreToWin())
+                            .map(Map.Entry::getKey)
+                            .findAny();
+
+                    if (optionalWinnerPlayer.isPresent()) {
+                        //TODO: what to do in case of win
+                    } else {
+                        Map<PlayerDto, Short> previousScore = newRoom.getActiveGameState().getScore();
+                        PlayerDto firstPlayer = previousScore.entrySet().stream()
+                                .max(Map.Entry.comparingByValue())
+                                .orElseThrow(() -> new IllegalStateException(""))
+                                .getKey();
+                        PlayerDto lastPlayer = previousScore.entrySet().stream()
+                                .min(Map.Entry.comparingByValue())
+                                .orElseThrow(() -> new IllegalStateException(""))
+                                .getKey();
+                        newRoom.startNewGameFromPreviousGame();
+                    }
+                });
+                boolean isSuccessful = roomHandler.createRoom(newRoom, playerSession);
                 yield new CreateRoomResp(
                         isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
-                        objectMapper.writeValueAsString(new RoomDto(roomToBeCreated.getId(), roomToBeCreated.getName(), roomToBeCreated.getNumPlayers()))
+                        objectMapper.writeValueAsString(new RoomDto(newRoom.getId(), newRoom.getName(), newRoom.getNumPlayers()))
                 );
             }
             default -> throw new IllegalStateException("Unexpected request: " + req);
@@ -181,7 +210,7 @@ public class GameLobbyEndpoint {
         if (optionalRoomId.isPresent()) {
             Room room = roomHandler.getRoom(optionalRoomId.get());
             synchronized (room) {
-                room.getGameState().getPlayers().remove(playerSession.getPlayerDto());
+                room.getActiveGameState().getPlayers().remove(playerSession.getPlayerDto());
                 if (room.getNumPlayers() == 0) {
                     roomHandler.removeRoom(room.getId());
                 }

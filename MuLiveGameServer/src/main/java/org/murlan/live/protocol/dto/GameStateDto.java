@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class GameStateDto {
     private int state;
+    private int totalGamesPlayed;
     private PlayerDto currTurnPlayer;
     private List<PlayerDto> players;
     private String currCardCombination;

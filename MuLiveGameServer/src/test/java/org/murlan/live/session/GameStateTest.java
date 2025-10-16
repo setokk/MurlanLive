@@ -8,8 +8,8 @@ import org.murlan.live.game.deck.Deck;
 import org.murlan.live.protocol.dto.PlayerDto;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GameStateTest extends TestCase {
@@ -25,7 +25,7 @@ public class GameStateTest extends TestCase {
                 currPlayer,
                 GameState.State.PLAYING,
                 List.of(currPlayer, otherPlayer),
-                Map.of(currPlayer, 0, otherPlayer, 0),
+                new HashMap<>(),
                 initialCardCombination
         );
 
@@ -48,7 +48,7 @@ public class GameStateTest extends TestCase {
                 currPlayer,
                 GameState.State.PLAYING,
                 List.of(currPlayer, otherPlayer),
-                Map.of(currPlayer, 0, otherPlayer, 0),
+                new HashMap<>(),
                 initialCardCombination
         );
 
@@ -74,7 +74,7 @@ public class GameStateTest extends TestCase {
                 currPlayer,
                 GameState.State.PLAYING,
                 List.of(currPlayer, otherPlayer),
-                Map.of(currPlayer, 0, otherPlayer, 0),
+                new HashMap<>(),
                 initialCardCombination
         );
 

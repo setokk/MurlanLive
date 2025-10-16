@@ -1,30 +1,66 @@
 package org.murlan.live.session;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.murlan.live.protocol.dto.PlayerDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class Room {
     private final String id;
     private final String name;
     private final boolean isPublic;
     private final String passcode;
-    private GameState gameState;
-    private LocalDateTime creationDate;
+    private final LocalDateTime creationDate;
+    private final short totalScoreToWin;
+    private List<GameState> gameStates;
+    private final PlayerDto owner;
+    private Runnable onFinishGame;
 
-    public boolean addPlayer(PlayerDto playerDto) {
-        return gameState.addPlayer(playerDto);
+    public void newGameState(Runnable onFinishGame) {
+        this.gameStates = List.of(new GameState(GameState.State.WAITING, owner, onFinishGame));
+    }
+
+    public boolean addPlayer(PlayerDto player) {
+        return getActiveGameState().addPlayer(player);
+    }
+
+    public synchronized void startNewGameFromPreviousGame() {
+        GameState lastGameState = getActiveGameState();
+        if (GameState.State.FINISHED.equals(lastGameState.getState())) {
+            this.gameStates.add(GameState.createFromPrevious(lastGameState));
+        }
+    }
+
+    public GameState getActiveGameState() {
+        return gameStates.getLast();
+    }
+
+    public int getTotalGamesPlayed() {
+        return gameStates.isEmpty() ? 0 : gameStates.size() - 1;
+    }
+
+    public Map<PlayerDto, Short> getTotalScores() {
+        return gameStates.stream()
+                .map(GameState::getScore)
+                .flatMap(s -> s.entrySet().stream())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (partialScore, currScore) -> (short) (partialScore + currScore)
+                ));
     }
 
     public int getNumPlayers() {
-        return gameState.getPlayers().size();
+        return getActiveGameState().getPlayers().size();
     }
 
     @Override

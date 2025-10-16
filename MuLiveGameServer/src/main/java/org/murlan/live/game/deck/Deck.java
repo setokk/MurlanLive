@@ -59,4 +59,8 @@ public class Deck {
         }
         return matchingCards == cardCombination.getCards().size();
     }
+
+    public boolean isEmpty() {
+        return this.cards.isEmpty();
+    }
 }

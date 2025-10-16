@@ -16,9 +16,7 @@ public final class PlayHandReq implements Req {
     private final CardCombination cardCombination;
 
     public PlayHandReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException {
-        if (messageParts.length != startIndex() + 1) {
-            throw new InvalidDataException();
-        }
+        validate(messageParts);
         List<Card> cards = new ArrayList<>();
         String[] individualCards = messageParts[startIndex()].split(Pattern.quote(config.getProtocol_list_delimiter()));
         for (String individualCard : individualCards) {
