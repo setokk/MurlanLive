@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.logic.GameStateFactory;
+import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.api.AvailableRoomsReq;
 import org.murlan.live.protocol.api.AvailableRoomsResp;
@@ -41,7 +42,6 @@ import org.murlan.live.protocol.rest.RoomRESTClient;
 import org.murlan.live.protocol.util.Generator;
 import org.murlan.live.protocol.util.Parser;
 import org.murlan.live.session.PlayerSession;
-import org.murlan.live.game.logic.Room;
 import org.murlan.live.session.RoomHandler;
 
 import java.io.IOException;
