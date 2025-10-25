@@ -1,4 +1,4 @@
-package org.murlan.live.protocol.um;
+package org.murlan.live.protocol.rest;
 
 import org.murlan.live.protocol.config.ProtocolConfig;
 
@@ -8,11 +8,11 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class AuthHttpClient {
+public class PlayerRESTClient {
     private final HttpClient httpClient;
     private final ProtocolConfig config;
 
-    public AuthHttpClient(ProtocolConfig config) {
+    public PlayerRESTClient(ProtocolConfig config) {
         this.httpClient = HttpClient.newHttpClient();
         this.config = config;
     }

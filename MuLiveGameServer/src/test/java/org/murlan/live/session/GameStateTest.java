@@ -5,6 +5,7 @@ import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.deck.CardCombinationType;
 import org.murlan.live.game.deck.Deck;
+import org.murlan.live.game.logic.GameState;
 import org.murlan.live.protocol.dto.PlayerDto;
 
 import java.util.Arrays;

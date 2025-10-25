@@ -14,17 +14,17 @@ public class Shuffler {
      *
      */
     public static List<Deck> shuffle(int numParts) {
-        List<Card> cards = new ArrayList<>(Arrays.asList(Card.values())); // Deep copy to not mutate original values() array
-        Collections.shuffle(cards, new Random());
+        List<Card> shuffledCards = new ArrayList<>(Arrays.asList(Card.values())); // Deep copy to not mutate original values() array
+        Collections.shuffle(shuffledCards, new Random());
 
         List<Deck> decks = new ArrayList<>(numParts);
-        for (int i = 0; i <numParts; i++) {
+        for (int i = 0; i < numParts; i++) {
             decks.add(new Deck());
         }
 
-        for (int i = 0; i < cards.size(); i++) {
+        for (int i = 0; i < shuffledCards.size(); i++) {
             Deck deck = decks.get(i % numParts);
-            deck.addCard(cards.get(i));
+            deck.addCard(shuffledCards.get(i));
         }
         return decks;
     }

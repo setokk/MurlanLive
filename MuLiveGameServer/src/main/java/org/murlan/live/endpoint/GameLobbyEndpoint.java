@@ -10,6 +10,7 @@ import jakarta.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.murlan.live.game.deck.CardCombination;
+import org.murlan.live.game.logic.GameStateFactory;
 import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.api.AvailableRoomsReq;
 import org.murlan.live.protocol.api.AvailableRoomsResp;
@@ -35,20 +36,18 @@ import org.murlan.live.protocol.dto.GameStateDto;
 import org.murlan.live.protocol.dto.PlayerDto;
 import org.murlan.live.protocol.dto.RoomDto;
 import org.murlan.live.protocol.jwt.JwtUtils;
-import org.murlan.live.protocol.um.AuthHttpClient;
+import org.murlan.live.protocol.rest.PlayerRESTClient;
+import org.murlan.live.protocol.rest.RoomRESTClient;
 import org.murlan.live.protocol.util.Generator;
 import org.murlan.live.protocol.util.Parser;
-import org.murlan.live.session.GameState;
 import org.murlan.live.session.PlayerSession;
-import org.murlan.live.session.Room;
+import org.murlan.live.game.logic.Room;
 import org.murlan.live.session.RoomHandler;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -63,16 +62,17 @@ public class GameLobbyEndpoint {
     private static final Parser parser = new Parser(config);
     private static final Generator generator = new Generator(config);
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final AuthHttpClient authHttpClient = new AuthHttpClient(config);
     private static final EndpointHelper endpointHelper = new EndpointHelper(parser, generator);
     private static final RoomHandler roomHandler = new RoomHandler();
+    private static final PlayerRESTClient playerRESTClient = new PlayerRESTClient(config);
+    private static final RoomRESTClient roomRESTClient = new RoomRESTClient(objectMapper);
 
     @OnOpen
     public void onOpen(Session session) throws IOException, InterruptedException {
         LOGGER.info("New connection with sessionId: {}", session.getId());
 
         String jwt = endpointHelper.getAndCheckQueryParam("jwt", session.getQueryString()).orElse("");
-        if (!authHttpClient.validateJwt(jwt)) {
+        if (!playerRESTClient.validateJwt(jwt)) {
             endpointHelper.sendErrorMessage(session, new GenericErrorResp("Forbidden"));
             session.close();
             return;
@@ -118,7 +118,7 @@ public class GameLobbyEndpoint {
             case GameStateReq gameStateReq -> {
                 GameStateDto gameStateDto = new GameStateDto(
                         room.getActiveGameState().getState().ordinal(),
-                        room.getTotalGamesPlayed(),
+                        room.getTotalGames(),
                         room.getActiveGameState().getCurrTurnPlayer(),
                         room.getActiveGameState().getPlayers(),
                         room.getActiveGameState().getCurrCardCombination().toMessage(config.getProtocol_list_delimiter()),
@@ -160,29 +160,11 @@ public class GameLobbyEndpoint {
                         createRoomReq.getPasscode(),
                         LocalDateTime.now(),
                         createRoomReq.getTotalScoreToWin(),
-                        playerSession.getPlayerDto()
+                        playerSession.getPlayerDto(),
+                        new GameStateFactory(roomRESTClient)
                 );
-                newRoom.newGameState(() -> {
-                    Optional<PlayerDto> optionalWinnerPlayer = newRoom.getTotalScores().entrySet().stream()
-                            .filter(s -> s.getValue() >= newRoom.getTotalScoreToWin())
-                            .map(Map.Entry::getKey)
-                            .findAny();
+                newRoom.newGameState();
 
-                    if (optionalWinnerPlayer.isPresent()) {
-                        //TODO: what to do in case of win
-                    } else {
-                        Map<PlayerDto, Short> previousScore = newRoom.getActiveGameState().getScore();
-                        PlayerDto firstPlayer = previousScore.entrySet().stream()
-                                .max(Map.Entry.comparingByValue())
-                                .orElseThrow(() -> new IllegalStateException(""))
-                                .getKey();
-                        PlayerDto lastPlayer = previousScore.entrySet().stream()
-                                .min(Map.Entry.comparingByValue())
-                                .orElseThrow(() -> new IllegalStateException(""))
-                                .getKey();
-                        newRoom.startNewGameFromPreviousGame();
-                    }
-                });
                 boolean isSuccessful = roomHandler.createRoom(newRoom, playerSession);
                 yield new CreateRoomResp(
                         isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
@@ -210,7 +192,7 @@ public class GameLobbyEndpoint {
         if (optionalRoomId.isPresent()) {
             Room room = roomHandler.getRoom(optionalRoomId.get());
             synchronized (room) {
-                room.getActiveGameState().getPlayers().remove(playerSession.getPlayerDto());
+                room.getActiveGameState().surrender(playerSession.getPlayerDto());
                 if (room.getNumPlayers() == 0) {
                     roomHandler.removeRoom(room.getId());
                 }

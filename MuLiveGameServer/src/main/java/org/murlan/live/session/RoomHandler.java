@@ -2,6 +2,8 @@ package org.murlan.live.session;
 
 import jakarta.websocket.Session;
 import lombok.NonNull;
+import org.murlan.live.game.logic.GameState;
+import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.dto.RoomDto;
 
 import java.util.List;

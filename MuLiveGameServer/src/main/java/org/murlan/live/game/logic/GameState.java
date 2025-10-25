@@ -1,13 +1,10 @@
-package org.murlan.live.session;
+package org.murlan.live.game.logic;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.murlan.live.game.deck.Card;
+import org.murlan.live.game.GameConstants;
 import org.murlan.live.game.deck.CardCombination;
-import org.murlan.live.game.deck.Deck;
-import org.murlan.live.game.deck.Shuffler;
-import org.murlan.live.game.logic.MovePipeline;
 import org.murlan.live.protocol.dto.PlayerDto;
 
 import java.util.ArrayList;
@@ -15,38 +12,41 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Getter
 @Setter
 @AllArgsConstructor
 public class GameState {
     public static final int MAX_PLAYERS = 4;
-    private static final CardCombination EMPTY_CARD_COMBINATION = new CardCombination();
 
     private PlayerDto currTurnPlayer;
     private State state;
     private List<PlayerDto> players;
     private Map<PlayerDto, Short> score;
     private CardCombination currCardCombination;
+    private Consumer<GameState> onStartGame;
     private Runnable onFinishGame;
 
-    public GameState(State state, PlayerDto player, Runnable onFinishGame) {
+    public GameState(State state, PlayerDto player, Consumer<GameState> onStartGame, Runnable onFinishGame) {
         this.state = state;
         this.players = new ArrayList<>();
         this.players.add(player);
         this.score = new HashMap<>();
+        this.onStartGame = onStartGame;
         this.onFinishGame = onFinishGame;
     }
 
-    public GameState(State state, List<PlayerDto> players, Runnable onFinishGame) {
+    public GameState(State state, List<PlayerDto> players, Consumer<GameState> onStartGame, Runnable onFinishGame) {
         this.state = state;
         this.players = players;
         this.score = new HashMap<>();
+        this.onStartGame = onStartGame;
         this.onFinishGame = onFinishGame;
     }
 
-    public static GameState createFromPrevious(GameState previous) {
-        GameState newGameState = new GameState(State.WAITING, previous.getPlayers(), previous.getOnFinishGame());
+    public static GameState fromPrevious(GameState previous) {
+        GameState newGameState = new GameState(State.WAITING, previous.getPlayers(), previous.getOnStartGame(), previous.getOnFinishGame());
         newGameState.startGame();
         return newGameState;
     }
@@ -76,7 +76,7 @@ public class GameState {
         if (!MovePipeline.validate(cardCombination)) {
             return false;
         }
-        boolean isNotFirstMove = this.currCardCombination != EMPTY_CARD_COMBINATION;
+        boolean isNotFirstMove = this.currCardCombination != GameConstants.EMPTY_CARD_COMBINATION;
         if (isNotFirstMove && (this.currCardCombination.isEqualStrength(cardCombination) || this.currCardCombination.isStrongerThan(cardCombination))) {
             return false;
         }
@@ -114,9 +114,10 @@ public class GameState {
 
         PlayerDto playerToSurrender = optionalPlayerToSurrender.get();
         this.players.remove(playerToSurrender);
-        this.score.put(playerToSurrender, (short)-1);
+
+        this.score.put(playerToSurrender, GameConstants.SCORE_PENALTY_SURRENDER);
         for (PlayerDto remainingPlayer : this.players) {
-            this.score.put(remainingPlayer, (short)1);
+            this.score.put(remainingPlayer, GameConstants.SCORE_REMAINING_PLAYERS);
         }
         finishGame();
 
@@ -125,15 +126,10 @@ public class GameState {
 
     // TODO: More logic to take into account (first game of room and later on the other ones)
     public synchronized void startGame() {
-        this.state = State.PLAYING;
-        this.currCardCombination = EMPTY_CARD_COMBINATION;
-
-        // Shuffle and assign decks to each player
-        List<Deck> decks = Shuffler.shuffle(players.size());
-        for (int i = 0; i < players.size(); i++) {
-            players.get(i).setDeck(decks.get(i));
+        if (!State.WAITING.equals(this.state)) {
+            return;
         }
-        this.currTurnPlayer = findPlayerWithCardCombination(new CardCombination(Card.THREE_OF_SPADES));
+        onStartGame.accept(this);
     }
 
     private void nextTurn() {
@@ -164,7 +160,7 @@ public class GameState {
         onFinishGame.run();
     }
 
-    private PlayerDto findPlayerWithCardCombination(CardCombination cardCombination) {
+    public PlayerDto findPlayerWithCardCombination(CardCombination cardCombination) {
         return this.players.stream()
                 .filter(p -> p.getDeck().contains(cardCombination))
                 .findAny()

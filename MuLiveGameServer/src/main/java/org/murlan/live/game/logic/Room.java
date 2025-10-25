@@ -1,14 +1,21 @@
-package org.murlan.live.session;
+package org.murlan.live.game.logic;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.murlan.live.game.GameConstants;
+import org.murlan.live.game.deck.Card;
+import org.murlan.live.game.deck.CardCombination;
+import org.murlan.live.game.deck.Deck;
+import org.murlan.live.game.deck.Shuffler;
 import org.murlan.live.protocol.dto.PlayerDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Setter
@@ -23,20 +30,21 @@ public class Room {
     private final short totalScoreToWin;
     private List<GameState> gameStates;
     private final PlayerDto owner;
-    private Runnable onFinishGame;
+    private final GameStateFactory gameStateFactory;
 
-    public void newGameState(Runnable onFinishGame) {
-        this.gameStates = List.of(new GameState(GameState.State.WAITING, owner, onFinishGame));
+    public void newGameState() {
+        GameState gameState = gameStateFactory.createGameState(this);
+        this.gameStates = List.of(gameState);
     }
 
     public boolean addPlayer(PlayerDto player) {
         return getActiveGameState().addPlayer(player);
     }
 
-    public synchronized void startNewGameFromPreviousGame() {
+    public void startNewGameFromPreviousGame() {
         GameState lastGameState = getActiveGameState();
         if (GameState.State.FINISHED.equals(lastGameState.getState())) {
-            this.gameStates.add(GameState.createFromPrevious(lastGameState));
+            this.gameStates.add(GameState.fromPrevious(lastGameState));
         }
     }
 
@@ -44,8 +52,8 @@ public class Room {
         return gameStates.getLast();
     }
 
-    public int getTotalGamesPlayed() {
-        return gameStates.isEmpty() ? 0 : gameStates.size() - 1;
+    public int getTotalGames() {
+        return gameStates.size();
     }
 
     public Map<PlayerDto, Short> getTotalScores() {
