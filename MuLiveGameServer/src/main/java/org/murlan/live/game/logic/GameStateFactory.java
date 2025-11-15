@@ -1,6 +1,5 @@
 package org.murlan.live.game.logic;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.murlan.live.game.GameConstants;
 import org.murlan.live.game.deck.Card;
@@ -31,20 +30,21 @@ public class GameStateFactory {
                 players.get(i).setDeck(decks.get(i));
             }
 
-            if (room.getTotalGames() == 0) {
+            if (room.getTotalPlayedGames() == 0) {
                 gameState.setCurrTurnPlayer(gameState.findPlayerWithCardCombination(new CardCombination(Card.THREE_OF_SPADES)));
             } else {
-
+                boolean loserContainsBothJokers = gameState.getPrevLoser().getDeck().contains(new CardCombination(Card.BLACK_JOKER, Card.RED_JOKER));
+                gameState.setCurrTurnPlayer(loserContainsBothJokers ? gameState.getPrevWinner() : gameState.getPrevLoser());
             }
         };
 
         Runnable onFinishGame = () -> {
-            Optional<PlayerDto> optionalWinnerPlayer = room.getTotalScores().entrySet().stream()
+            Optional<PlayerDto> optionalFinalWinner = room.getTotalScores().entrySet().stream()
                     .filter(s -> s.getValue() >= room.getTotalScoreToWin())
                     .map(Map.Entry::getKey)
                     .findAny();
 
-            if (optionalWinnerPlayer.isPresent()) {
+            if (optionalFinalWinner.isPresent()) {
                 try {
                     roomRESTClient.saveRoom(room);
                 } catch (IOException | InterruptedException e) {
@@ -52,15 +52,15 @@ public class GameStateFactory {
                 }
             } else {
                 Map<PlayerDto, Short> previousScore = room.getActiveGameState().getScore();
-                PlayerDto firstPlayer = previousScore.entrySet().stream()
+                PlayerDto winner = previousScore.entrySet().stream()
                         .max(Map.Entry.comparingByValue())
                         .orElseThrow(() -> new IllegalStateException(""))
                         .getKey();
-                PlayerDto lastPlayer = previousScore.entrySet().stream()
+                PlayerDto loser = previousScore.entrySet().stream()
                         .min(Map.Entry.comparingByValue())
                         .orElseThrow(() -> new IllegalStateException(""))
                         .getKey();
-                room.startNewGameFromPreviousGame();
+                room.startNewGameFromPreviousGame(winner, loser);
             }
         };
 

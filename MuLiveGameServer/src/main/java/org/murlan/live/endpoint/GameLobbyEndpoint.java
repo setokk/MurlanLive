@@ -118,7 +118,7 @@ public class GameLobbyEndpoint {
             case GameStateReq gameStateReq -> {
                 GameStateDto gameStateDto = new GameStateDto(
                         room.getActiveGameState().getState().ordinal(),
-                        room.getTotalGames(),
+                        room.getTotalPlayedGames(),
                         room.getActiveGameState().getCurrTurnPlayer(),
                         room.getActiveGameState().getPlayers(),
                         room.getActiveGameState().getCurrCardCombination().toMessage(config.getProtocol_list_delimiter()),

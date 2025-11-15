@@ -1,6 +1,7 @@
 package org.murlan.live.game.logic;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.murlan.live.game.GameConstants;
@@ -16,6 +17,7 @@ import java.util.function.Consumer;
 
 @Getter
 @Setter
+@Builder(setterPrefix = "with")
 @AllArgsConstructor
 public class GameState {
     public static final int MAX_PLAYERS = 4;
@@ -27,6 +29,8 @@ public class GameState {
     private CardCombination currCardCombination;
     private Consumer<GameState> onStartGame;
     private Runnable onFinishGame;
+    private PlayerDto prevWinner;
+    private PlayerDto prevLoser;
 
     public GameState(State state, PlayerDto player, Consumer<GameState> onStartGame, Runnable onFinishGame) {
         this.state = state;
@@ -37,16 +41,16 @@ public class GameState {
         this.onFinishGame = onFinishGame;
     }
 
-    public GameState(State state, List<PlayerDto> players, Consumer<GameState> onStartGame, Runnable onFinishGame) {
-        this.state = state;
-        this.players = players;
-        this.score = new HashMap<>();
-        this.onStartGame = onStartGame;
-        this.onFinishGame = onFinishGame;
-    }
-
-    public static GameState fromPrevious(GameState previous) {
-        GameState newGameState = new GameState(State.WAITING, previous.getPlayers(), previous.getOnStartGame(), previous.getOnFinishGame());
+    public static GameState fromPrevious(GameState previous, PlayerDto winner, PlayerDto loser) {
+        GameState newGameState = GameState.builder()
+                .withState(State.WAITING)
+                .withPlayers(previous.getPlayers())
+                .withScore(HashMap.newHashMap(MAX_PLAYERS))
+                .withOnStartGame(previous.getOnStartGame())
+                .withOnFinishGame(previous.getOnFinishGame())
+                .withPrevWinner(winner)
+                .withPrevLoser(loser)
+                .build();
         newGameState.startGame();
         return newGameState;
     }
@@ -124,12 +128,19 @@ public class GameState {
         return true;
     }
 
-    // TODO: More logic to take into account (first game of room and later on the other ones)
     public synchronized void startGame() {
         if (!State.WAITING.equals(this.state)) {
             return;
         }
         onStartGame.accept(this);
+    }
+
+    private void finishGame() {
+        if (State.FINISHED.equals(this.state)) {
+            return;
+        }
+        this.state = State.FINISHED;
+        onFinishGame.run();
     }
 
     private void nextTurn() {
@@ -147,17 +158,6 @@ public class GameState {
 
     private boolean isNotPlayerTurn(PlayerDto player) {
         return !player.equals(this.currTurnPlayer);
-    }
-
-    private void finishGame() {
-        if (State.FINISHED.equals(this.state)) {
-            return;
-        }
-        this.state = State.FINISHED;
-        if (players.size() != MAX_PLAYERS) {
-            return; // Surrender has occurred
-        }
-        onFinishGame.run();
     }
 
     public PlayerDto findPlayerWithCardCombination(CardCombination cardCombination) {

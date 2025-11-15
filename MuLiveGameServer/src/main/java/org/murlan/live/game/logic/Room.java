@@ -26,18 +26,17 @@ public class Room {
     private final GameStateFactory gameStateFactory;
 
     public void newGameState() {
-        GameState gameState = gameStateFactory.createGameState(this);
-        this.gameStates = List.of(gameState);
+        this.gameStates = List.of(gameStateFactory.createGameState(this));
     }
 
     public boolean addPlayer(PlayerDto player) {
         return getActiveGameState().addPlayer(player);
     }
 
-    public void startNewGameFromPreviousGame() {
-        GameState lastGameState = getActiveGameState();
-        if (GameState.State.FINISHED.equals(lastGameState.getState())) {
-            this.gameStates.add(GameState.fromPrevious(lastGameState));
+    public void startNewGameFromPreviousGame(PlayerDto winner, PlayerDto loser) {
+        GameState prevGameState = getActiveGameState();
+        if (GameState.State.FINISHED.equals(prevGameState.getState())) {
+            this.getGameStates().add(GameState.fromPrevious(prevGameState, winner, loser));
         }
     }
 
@@ -45,8 +44,8 @@ public class Room {
         return gameStates.getLast();
     }
 
-    public int getTotalGames() {
-        return gameStates.size();
+    public int getTotalPlayedGames() {
+        return gameStates.size() - 1;
     }
 
     public Map<PlayerDto, Short> getTotalScores() {
