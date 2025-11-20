@@ -14,9 +14,23 @@ config/name="MuLiveUI"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[debug]
+
+settings/stdout/print_fps=true
+
 [dotnet]
 
 project/assembly_name="MuLiveUI"
+
+[editor]
+
+movie_writer/fps=180
+
+[importer_defaults]
+
+animation_library={
+&"animation/fps": 60.0
+}
 
 [rendering]
 
