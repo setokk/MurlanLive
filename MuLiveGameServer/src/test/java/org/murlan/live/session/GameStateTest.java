@@ -22,13 +22,13 @@ public class GameStateTest extends TestCase {
 
         CardCombination initialCardCombination = new CardCombination(Card.THREE_OF_SPADES);
         initialCardCombination.setType(CardCombinationType.SINGLE_CARD);
-        GameState gameState = new GameState(
-                currPlayer,
-                GameState.State.PLAYING,
-                List.of(currPlayer, otherPlayer),
-                new HashMap<>(),
-                initialCardCombination
-        );
+        GameState gameState = GameState.builder()
+                .withCurrTurnPlayer(currPlayer)
+                .withState(GameState.State.PLAYING)
+                .withPlayers(List.of(currPlayer, otherPlayer))
+                .withScore(HashMap.newHashMap(4))
+                .withCurrCardCombination(initialCardCombination)
+                .build();
 
         boolean isFirstMoveSuccessful = gameState.playHand(currPlayer, new CardCombination(Card.FIVE_OF_CLUBS));
         assertTrue(isFirstMoveSuccessful);
@@ -45,13 +45,13 @@ public class GameStateTest extends TestCase {
 
         CardCombination initialCardCombination = new CardCombination(Card.THREE_OF_SPADES, Card.THREE_OF_CLUBS);
         initialCardCombination.setType(CardCombinationType.DOUBLE_CARDS);
-        GameState gameState = new GameState(
-                currPlayer,
-                GameState.State.PLAYING,
-                List.of(currPlayer, otherPlayer),
-                new HashMap<>(),
-                initialCardCombination
-        );
+        GameState gameState = GameState.builder()
+                .withCurrTurnPlayer(currPlayer)
+                .withState(GameState.State.PLAYING)
+                .withPlayers(List.of(currPlayer, otherPlayer))
+                .withScore(HashMap.newHashMap(4))
+                .withCurrCardCombination(initialCardCombination)
+                .build();
 
         List<Card> currCardsToPlay = getListOfCards(Card.TWO_OF_CLUBS, Card.TWO_OF_DIAMONDS);
         List<Card> otherCardsToPlay = getListOfCards(Card.TWO_OF_SPADES, Card.TWO_OF_HEARTS);
@@ -71,13 +71,13 @@ public class GameStateTest extends TestCase {
 
         CardCombination initialCardCombination = new CardCombination(Card.THREE_OF_SPADES, Card.THREE_OF_CLUBS, Card.THREE_OF_HEARTS);
         initialCardCombination.setType(CardCombinationType.TRIPLE_CARDS);
-        GameState gameState = new GameState(
-                currPlayer,
-                GameState.State.PLAYING,
-                List.of(currPlayer, otherPlayer),
-                new HashMap<>(),
-                initialCardCombination
-        );
+        GameState gameState = GameState.builder()
+                .withCurrTurnPlayer(currPlayer)
+                .withState(GameState.State.PLAYING)
+                .withPlayers(List.of(currPlayer, otherPlayer))
+                .withScore(HashMap.newHashMap(4))
+                .withCurrCardCombination(initialCardCombination)
+                .build();
 
         List<Card> currCardsToPlay = getListOfCards(Card.FIVE_OF_SPADES, Card.FIVE_OF_CLUBS, Card.FIVE_OF_HEARTS);
         List<Card> otherCardsToPlay = getListOfCards(Card.TWO_OF_SPADES, Card.TWO_OF_HEARTS);

@@ -26,14 +26,12 @@ public class PlayerController {
 
     @PostMapping("/login")
     public ResponseEntity<String> loginPlayer(@RequestBody @Valid LoginPlayerRequest request) {
-        request.validate();
         PlayerDto playerDto = playerService.loginPlayer(request.getUsername(), request.getPassword());
         return ResponseEntity.ok(JwtUtils.generateJWT(playerDto));
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> registerPlayer(@RequestBody @Valid RegisterPlayerRequest request) {
-        request.validate();
         PlayerDto playerDto = playerService.registerPlayer(request.getUsername(), request.getPassword());
         return ResponseEntity.ok(JwtUtils.generateJWT(playerDto));
     }

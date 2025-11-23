@@ -8,12 +8,4 @@ public class CreateRoomRequest implements IRequest {
     @NotNull(message = "[CreateRoomRequest]: roomId cannot be null")
     @NotEmpty(message = "[CreateRoomRequest]: roomId cannot be empty")
     private String roomId;
-
-    @NotNull(message = "[CreateRoomRequest]: roomId cannot be null")
-    @NotEmpty(message = "[CreateRoomRequest]: roomId cannot be empty")
-    private String roomId;
-
-    @NotNull(message = "[CreateRoomRequest]: roomId cannot be null")
-    @NotEmpty(message = "[CreateRoomRequest]: roomId cannot be empty")
-    private String roomId;
 }

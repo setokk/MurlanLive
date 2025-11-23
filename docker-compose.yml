@@ -2,7 +2,7 @@ version: "3.8"
 services:
   db:
     container_name: "mulive-db"
-    image: postgres
+    image: postgres:17.0
     ports:
       - "5432:5432"
     volumes:

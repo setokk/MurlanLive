@@ -6,15 +6,15 @@ import org.murlan.um.error.BusinessLogicException;
  * This interface <b>should</b> be implemented by all classes that represent the request bodies of all endpoints.
  * <br/><br/>
  * It provides an easy way for request data to be validated
- * just by implementing {@link #preValidate()} and {@link #postValidate()} methods.
+ * by implementing {@link #preValidate()} and {@link #postValidate()} methods.
  * <br/><br/>
- * <b>NOTE:</b> This class should only be used for simple validations.
- * For service based validations, please see {@link IValidator}
+ * <b>NOTE:</b> This class should only be used for validations that are not supported by {@link jakarta.validation.constraints}.
  */
 public interface IRequest {
     default void validate() throws BusinessLogicException {
         preValidate();
         postValidate(); // Request body validation was successful, proceed with post validation actions
+        System.out.println(IRequest.class.getCanonicalName());
     }
 
     /**
