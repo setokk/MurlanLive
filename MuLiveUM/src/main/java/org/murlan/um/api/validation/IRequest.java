@@ -14,7 +14,6 @@ public interface IRequest {
     default void validate() throws BusinessLogicException {
         preValidate();
         postValidate(); // Request body validation was successful, proceed with post validation actions
-        System.out.println(IRequest.class.getCanonicalName());
     }
 
     /**
