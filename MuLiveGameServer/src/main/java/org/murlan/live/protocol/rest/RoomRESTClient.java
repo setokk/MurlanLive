@@ -1,6 +1,5 @@
 package org.murlan.live.protocol.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.murlan.live.game.logic.Room;
 
@@ -18,9 +17,9 @@ public class RoomRESTClient {
         this.objectMapper = objectMapper;
     }
 
-    public boolean saveRoom(Room room) throws IOException, InterruptedException {
+    public boolean create(Room room) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(room)))
+                .PUT(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(room)))
                 .build();
         httpClient.send(request, HttpResponse.BodyHandlers.discarding());
         return true;

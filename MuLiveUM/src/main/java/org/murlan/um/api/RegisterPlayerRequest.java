@@ -4,11 +4,11 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.murlan.um.api.validation.IValidatable;
+import org.murlan.um.api.validation.IRequest;
 
 @Getter
 @AllArgsConstructor
-public class RegisterPlayerRequest implements IValidatable {
+public class RegisterPlayerRequest implements IRequest {
     @NotNull(message = "[RegisterPlayerRequest]: username field is mandatory")
     @NotEmpty(message = "[RegisterPlayerRequest]: username field cannot be empty")
     private String username;

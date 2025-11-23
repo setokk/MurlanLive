@@ -46,7 +46,7 @@ public class GameStateFactory {
 
             if (optionalFinalWinner.isPresent()) {
                 try {
-                    roomRESTClient.saveRoom(room);
+                    roomRESTClient.create(room);
                 } catch (IOException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }

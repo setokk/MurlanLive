@@ -9,6 +9,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class PlayerRESTClient {
+    private static final String ENDPOINT = "/api/player";
     private final HttpClient httpClient;
     private final ProtocolConfig config;
 
@@ -19,7 +20,7 @@ public class PlayerRESTClient {
 
     public boolean validateJwt(String jwt) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(config.getProtocol_um_server_host() + "/api/players/validateJwt"))
+                .uri(URI.create(config.getProtocol_um_server_host() + ENDPOINT + "/validateJwt"))
                 .header("Authorization", "Bearer " + jwt)
                 .GET()
                 .build();

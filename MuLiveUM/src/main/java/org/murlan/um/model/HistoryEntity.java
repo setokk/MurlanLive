@@ -1,5 +1,6 @@
 package org.murlan.um.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -18,4 +19,10 @@ import org.murlan.um.model.pk.HistoryPK;
 public class HistoryEntity {
     @EmbeddedId
     private HistoryPK id;
+
+    @Column(name = "total_score", nullable = false)
+    private long totalScore;
+
+    @Column(name = "is_winner")
+    private boolean isWinner;
 }

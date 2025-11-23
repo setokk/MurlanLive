@@ -11,7 +11,7 @@ import org.murlan.um.error.BusinessLogicException;
  * <b>NOTE:</b> This class should only be used for simple validations.
  * For service based validations, please see {@link IValidator}
  */
-public interface IValidatable {
+public interface IRequest {
     default void validate() throws BusinessLogicException {
         preValidate();
         postValidate(); // Request body validation was successful, proceed with post validation actions
@@ -21,7 +21,7 @@ public interface IValidatable {
      * Checks for basic errors (empty lists, field lengths etc.)
      * @throws BusinessLogicException if any error in the request body was detected
      */
-    default void preValidate() throws BusinessLogicException {
+    private void preValidate() throws BusinessLogicException {
     }
 
     /**
@@ -34,10 +34,6 @@ public interface IValidatable {
      * </ul>
      * @throws BusinessLogicException if any error in the values themselves was found (ex. value does not exist for enum)
      */
-    default void postValidate() throws BusinessLogicException {
-    }
-
-    default String errorPrefix() {
-        return "[" + getClass().getSimpleName() + "]:";
+    private void postValidate() throws BusinessLogicException {
     }
 }

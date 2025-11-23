@@ -41,5 +41,5 @@ CREATE TABLE IF NOT EXISTS history(
     player_id BIGINT NOT NULL,
     room_id BIGINT NOT NULL,
     total_score BIGINT NOT NULL,
-    is_win BOOLEAN NOT NULL
+    is_winner BOOLEAN NOT NULL
 );
