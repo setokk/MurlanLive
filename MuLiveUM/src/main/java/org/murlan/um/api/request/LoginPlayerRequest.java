@@ -1,10 +1,10 @@
-package org.murlan.um.api;
+package org.murlan.um.api.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.murlan.um.api.validation.IRequest;
+import org.murlan.um.api.request.validation.IRequest;
 
 @Getter
 @AllArgsConstructor

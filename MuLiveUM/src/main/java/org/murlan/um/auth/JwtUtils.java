@@ -2,7 +2,7 @@ package org.murlan.um.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.murlan.um.model.dto.PlayerDto;
+import org.murlan.um.api.dto.PlayerDto;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.KeyGenerator;

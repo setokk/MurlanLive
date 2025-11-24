@@ -1,13 +1,13 @@
 package org.murlan.live.game.logic;
 
 import org.murlan.live.game.deck.CardCombination;
-import org.murlan.live.game.logic.classifier.CardCombinationClassifier00;
-import org.murlan.live.game.logic.classifier.CardCombinationClassifier01;
-import org.murlan.live.game.logic.classifier.CardCombinationClassifier02;
-import org.murlan.live.game.logic.classifier.CardCombinationClassifier03;
-import org.murlan.live.game.logic.classifier.CardCombinationClassifier04;
-import org.murlan.live.game.logic.classifier.CardCombinationClassifier05;
-import org.murlan.live.game.logic.classifier.ICardCombinationClassifier;
+import org.murlan.live.game.classifier.CardCombinationClassifier00;
+import org.murlan.live.game.classifier.CardCombinationClassifier01;
+import org.murlan.live.game.classifier.CardCombinationClassifier02;
+import org.murlan.live.game.classifier.CardCombinationClassifier03;
+import org.murlan.live.game.classifier.CardCombinationClassifier04;
+import org.murlan.live.game.classifier.CardCombinationClassifier05;
+import org.murlan.live.game.classifier.ICardCombinationClassifier;
 
 import java.util.HashSet;
 

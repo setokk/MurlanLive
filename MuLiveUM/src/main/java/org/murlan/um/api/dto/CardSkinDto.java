@@ -1,4 +1,4 @@
-package org.murlan.um.model.dto;
+package org.murlan.um.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

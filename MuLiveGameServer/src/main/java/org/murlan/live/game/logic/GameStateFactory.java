@@ -21,7 +21,7 @@ public class GameStateFactory {
 
     public GameState createGameState(Room room) {
         Consumer<GameState> onStartGame = (gameState) -> {
-            gameState.setState(GameState.State.PLAYING);
+            gameState.setState(gameState.isFromPrevious() ? GameState.State.GIVING_CARDS : GameState.State.PLAYING);
             gameState.setCurrCardCombination(GameConstants.EMPTY_CARD_COMBINATION);
 
             List<PlayerDto> players = gameState.getPlayers();
@@ -30,7 +30,7 @@ public class GameStateFactory {
                 players.get(i).setDeck(decks.get(i));
             }
 
-            if (room.getTotalPlayedGames() == 0) {
+            if (room.getTotalFinishedGames() == 0) {
                 gameState.setCurrTurnPlayer(gameState.findPlayerWithCardCombination(new CardCombination(Card.THREE_OF_SPADES)));
             } else {
                 boolean loserContainsBothJokers = gameState.getPrevLoser().getDeck().contains(new CardCombination(Card.BLACK_JOKER, Card.RED_JOKER));
@@ -46,7 +46,7 @@ public class GameStateFactory {
 
             if (optionalFinalWinner.isPresent()) {
                 try {
-                    roomRESTClient.create(room);
+                    roomRESTClient.createRoom(room);
                 } catch (IOException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }

@@ -1,6 +1,5 @@
 package org.murlan.live.endpoint;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnError;
 import jakarta.websocket.OnMessage;
@@ -9,6 +8,8 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.murlan.live.endpoint.session.PlayerSession;
+import org.murlan.live.endpoint.session.RoomHandler;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.logic.GameStateFactory;
 import org.murlan.live.game.logic.Room;
@@ -19,6 +20,8 @@ import org.murlan.live.protocol.api.CreateRoomReq;
 import org.murlan.live.protocol.api.CreateRoomResp;
 import org.murlan.live.protocol.api.GameStateReq;
 import org.murlan.live.protocol.api.GameStateResp;
+import org.murlan.live.protocol.api.GiveCardReq;
+import org.murlan.live.protocol.api.GiveCardResp;
 import org.murlan.live.protocol.api.JoinRoomReq;
 import org.murlan.live.protocol.api.JoinRoomResp;
 import org.murlan.live.protocol.api.PassReq;
@@ -41,8 +44,7 @@ import org.murlan.live.protocol.rest.PlayerRESTClient;
 import org.murlan.live.protocol.rest.RoomRESTClient;
 import org.murlan.live.protocol.util.Generator;
 import org.murlan.live.protocol.util.Parser;
-import org.murlan.live.session.PlayerSession;
-import org.murlan.live.session.RoomHandler;
+import org.murlan.live.util.MLObjectMapper;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -61,7 +63,7 @@ public class GameLobbyEndpoint {
     private static final ProtocolConfig config = ConfigProvider.getProtocolConfig();
     private static final Parser parser = new Parser(config);
     private static final Generator generator = new Generator(config);
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final MLObjectMapper objectMapper = new MLObjectMapper();
     private static final EndpointHelper endpointHelper = new EndpointHelper(parser, generator);
     private static final RoomHandler roomHandler = new RoomHandler();
     private static final PlayerRESTClient playerRESTClient = new PlayerRESTClient(config);
@@ -118,7 +120,7 @@ public class GameLobbyEndpoint {
             case GameStateReq gameStateReq -> {
                 GameStateDto gameStateDto = new GameStateDto(
                         room.getActiveGameState().getState().ordinal(),
-                        room.getTotalPlayedGames(),
+                        room.getTotalFinishedGames(),
                         room.getActiveGameState().getCurrTurnPlayer(),
                         room.getActiveGameState().getPlayers(),
                         room.getActiveGameState().getCurrCardCombination().toMessage(config.getProtocol_list_delimiter()),
@@ -169,6 +171,13 @@ public class GameLobbyEndpoint {
                 yield new CreateRoomResp(
                         isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
                         objectMapper.writeValueAsString(new RoomDto(newRoom.getId(), newRoom.getName(), newRoom.getNumPlayers()))
+                );
+            }
+            case GiveCardReq giveCardReq -> {
+                PlayerDto receivingPlayer = new PlayerDto(giveCardReq.getReceivingPlayerId());
+                boolean isSuccessful = room.getActiveGameState().giveCard(giveCardReq.getCard(), player, receivingPlayer);
+                yield new GiveCardResp(
+                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR
                 );
             }
             default -> throw new IllegalStateException("Unexpected request: " + req);

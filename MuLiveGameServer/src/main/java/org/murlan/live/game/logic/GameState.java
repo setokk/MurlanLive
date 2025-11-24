@@ -1,11 +1,14 @@
 package org.murlan.live.game.logic;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.murlan.live.game.GameConstants;
+import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
+import org.murlan.live.game.deck.Rank;
 import org.murlan.live.protocol.dto.PlayerDto;
 
 import java.util.ArrayList;
@@ -20,17 +23,16 @@ import java.util.function.Consumer;
 @Builder(setterPrefix = "with")
 @AllArgsConstructor
 public class GameState {
-    public static final int MAX_PLAYERS = 4;
-
-    private PlayerDto currTurnPlayer;
+    @JsonIgnore private PlayerDto currTurnPlayer;
     private State state;
     private List<PlayerDto> players;
     private Map<PlayerDto, Short> score;
     private CardCombination currCardCombination;
-    private Consumer<GameState> onStartGame;
-    private Runnable onFinishGame;
+    @JsonIgnore private Consumer<GameState> onStartGame;
+    @JsonIgnore private Runnable onFinishGame;
     private PlayerDto prevWinner;
     private PlayerDto prevLoser;
+    private short givenCardsCount;
 
     public GameState(State state, PlayerDto player, Consumer<GameState> onStartGame, Runnable onFinishGame) {
         this.state = state;
@@ -45,7 +47,7 @@ public class GameState {
         GameState newGameState = GameState.builder()
                 .withState(State.WAITING)
                 .withPlayers(previous.getPlayers())
-                .withScore(HashMap.newHashMap(MAX_PLAYERS))
+                .withScore(HashMap.newHashMap(GameConstants.MAX_PLAYERS))
                 .withOnStartGame(previous.getOnStartGame())
                 .withOnFinishGame(previous.getOnFinishGame())
                 .withPrevWinner(winner)
@@ -55,12 +57,16 @@ public class GameState {
         return newGameState;
     }
 
+    public boolean isFromPrevious() {
+        return prevLoser != null && prevWinner != null;
+    }
+
     public synchronized boolean addPlayer(PlayerDto player) {
-        if (players.size() == MAX_PLAYERS) {
+        if (players.size() == GameConstants.MAX_PLAYERS) {
             return false;
         }
         this.players.add(player);
-        if (players.size() == MAX_PLAYERS) {
+        if (players.size() == GameConstants.MAX_PLAYERS) {
             startGame();
         }
         return true;
@@ -88,7 +94,7 @@ public class GameState {
         this.currTurnPlayer.getDeck().removeCards(cardCombination);
         this.currCardCombination = cardCombination;
         if (this.currTurnPlayer.getDeck().isEmpty()) {
-            this.score.put(this.currTurnPlayer, (short) (MAX_PLAYERS - this.score.size() - 1));
+            this.score.put(this.currTurnPlayer, (short) (GameConstants.MAX_PLAYERS - this.score.size() - 1));
         }
         nextTurn();
 
@@ -128,6 +134,46 @@ public class GameState {
         return true;
     }
 
+    public synchronized boolean giveCard(Card card, PlayerDto player, PlayerDto receivingPlayer) {
+        if (this.state != State.GIVING_CARDS) {
+            return false;
+        }
+        if (!isFromPrevious()) {
+            return false;
+        }
+        if (!player.getDeck().contains(new CardCombination(card))) {
+            return false;
+        }
+
+        PlayerDto actualReceivingPlayer = this.players.stream()
+                .filter(receivingPlayer::equals)
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("Receiving player not found"));
+
+        if (player.equals(prevWinner) && card.hasBiggerRankThan(Card.TEN_OF_SPADES)) {
+            return false;
+        } else if (player.equals(prevLoser)) {
+            Rank highestRank = player.getDeck().getCards()
+                    .stream()
+                    .max(new Card.CardComparator())
+                    .orElseThrow(() -> new IllegalStateException("No max card found"))
+                    .rank();
+            if (!highestRank.equals(card.rank())) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+
+        player.getDeck().removeCard(card);
+        actualReceivingPlayer.getDeck().addCard(card);
+        if (++this.givenCardsCount == 2) {
+            this.state = State.PLAYING;
+        }
+
+        return true;
+    }
+
     public synchronized void startGame() {
         if (!State.WAITING.equals(this.state)) {
             return;
@@ -150,7 +196,7 @@ public class GameState {
             nextTurnIndex = (nextTurnIndex + 1) % players.size();
             this.currTurnPlayer = players.get(nextTurnIndex);
         }
-        if (this.score.size() == MAX_PLAYERS - 1) {
+        if (this.score.size() == GameConstants.MAX_PLAYERS - 1) {
             this.score.put(this.currTurnPlayer, (short)0);
             finishGame();
         }
@@ -169,6 +215,7 @@ public class GameState {
 
     public enum State {
         WAITING,
+        GIVING_CARDS,
         PLAYING,
         FINISHED
     }

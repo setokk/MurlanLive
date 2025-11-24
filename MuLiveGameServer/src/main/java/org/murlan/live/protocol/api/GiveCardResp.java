@@ -10,14 +10,14 @@ import org.murlan.live.protocol.config.ProtocolConfig;
 @Setter
 @Getter
 @AllArgsConstructor
-public final class JoinRoomResp implements Resp {
+public final class GiveCardResp implements Resp {
     private ResponseStatus responseStatus;
 
     @Override
     public String toMessage(ProtocolConfig config) {
         return String.join(config.getProtocol_delimiter(),
-                ClientEvent.JOIN_ROOM.id(),
-                responseStatus.toString()
+                ClientEvent.GIVE_CARD.id(),
+                getResponseStatus().toString()
         );
     }
 }

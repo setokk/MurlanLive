@@ -4,7 +4,6 @@ import io.jsonwebtoken.lang.Assert;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Singular;
 
 import java.util.ArrayList;
@@ -29,6 +28,11 @@ public class Deck {
 
     public void addCards(List<Card> cards) {
         this.cards.addAll(cards);
+    }
+
+    public void removeCard(Card card) {
+        Assert.notNull(card, "card must not be null");
+        this.cards.remove(card);
     }
 
     public void removeCards(Card... cards) {

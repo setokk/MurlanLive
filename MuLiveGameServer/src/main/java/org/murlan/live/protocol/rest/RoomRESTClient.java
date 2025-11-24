@@ -1,7 +1,8 @@
 package org.murlan.live.protocol.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.glassfish.grizzly.http.util.HttpStatus;
 import org.murlan.live.game.logic.Room;
+import org.murlan.live.util.MLObjectMapper;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
@@ -10,18 +11,18 @@ import java.net.http.HttpResponse;
 
 public class RoomRESTClient {
     private final HttpClient httpClient;
-    private final ObjectMapper objectMapper;
+    private final MLObjectMapper objectMapper;
 
-    public RoomRESTClient(ObjectMapper objectMapper) {
+    public RoomRESTClient(MLObjectMapper objectMapper) {
         this.httpClient = HttpClient.newHttpClient();
         this.objectMapper = objectMapper;
     }
 
-    public boolean create(Room room) throws IOException, InterruptedException {
+    public boolean createRoom(Room room) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .PUT(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(room)))
                 .build();
-        httpClient.send(request, HttpResponse.BodyHandlers.discarding());
-        return true;
+        var response = httpClient.send(request, HttpResponse.BodyHandlers.discarding());
+        return response.statusCode() == HttpStatus.OK_200.getStatusCode();
     }
 }

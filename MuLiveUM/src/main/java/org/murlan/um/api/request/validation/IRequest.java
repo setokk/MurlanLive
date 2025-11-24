@@ -1,4 +1,4 @@
-package org.murlan.um.api.validation;
+package org.murlan.um.api.request.validation;
 
 import org.murlan.um.error.BusinessLogicException;
 
@@ -8,7 +8,7 @@ import org.murlan.um.error.BusinessLogicException;
  * It provides an easy way for request data to be validated
  * by implementing {@link #preValidate()} and {@link #postValidate()} methods.
  * <br/><br/>
- * <b>NOTE:</b> This class should only be used for validations that are not supported by {@link jakarta.validation.constraints}.
+ * <b>NOTE:</b> This class methods should only be used for validations that are not supported by {@link jakarta.validation.constraints}.
  */
 public interface IRequest {
     default void validate() throws BusinessLogicException {

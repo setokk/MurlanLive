@@ -27,7 +27,7 @@ public interface Req {
      * <br/>
      * <b>IMPORTANT:</b> Always use it before assigning fields in the request constructors.
      * @param messageParts the message parts that have been split
-     * @throws InvalidDataException when there is a request body error (different length than expected)
+     * @throws InvalidDataException when there is a request body error
      */
     default void validate(String[] messageParts) throws InvalidDataException {
         if (messageParts.length != startIndex() + numOfFields()) {

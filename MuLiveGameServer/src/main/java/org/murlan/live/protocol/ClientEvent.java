@@ -3,6 +3,7 @@ package org.murlan.live.protocol;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.murlan.live.protocol.api.CreateRoomReq;
+import org.murlan.live.protocol.api.GiveCardReq;
 import org.murlan.live.protocol.api.JoinRoomReq;
 import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ProtocolConfig;
@@ -62,7 +63,12 @@ public enum ClientEvent {
     /**
      * Indicates that a client wants to create a new room.
      */
-    CREATE_ROOM(CreateRoomReq::new);
+    CREATE_ROOM(CreateRoomReq::new),
+
+    /**
+     * Indicates that a player (winner or loser from previous game) wants to give a card to the other.
+     */
+    GIVE_CARD(GiveCardReq::new);
 
     private final ReqFactory reqFactory;
 

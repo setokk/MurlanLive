@@ -1,4 +1,4 @@
-package org.murlan.um.api.validation;
+package org.murlan.um.api.request.validation;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

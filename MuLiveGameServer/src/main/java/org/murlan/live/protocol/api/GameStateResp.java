@@ -10,7 +10,7 @@ import org.murlan.live.protocol.ResponseStatus;
 @Setter
 @Getter
 @AllArgsConstructor
-public class GameStateResp implements Resp {
+public final class GameStateResp implements Resp {
     private ResponseStatus responseStatus;
     private String gameStateJson;
 

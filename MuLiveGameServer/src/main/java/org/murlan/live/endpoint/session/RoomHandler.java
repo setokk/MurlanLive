@@ -1,4 +1,4 @@
-package org.murlan.live.session;
+package org.murlan.live.endpoint.session;
 
 import jakarta.websocket.Session;
 import lombok.NonNull;

@@ -1,5 +1,6 @@
 package org.murlan.live.protocol.rest;
 
+import org.glassfish.grizzly.http.util.HttpStatus;
 import org.murlan.live.protocol.config.ProtocolConfig;
 
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class PlayerRESTClient {
-    private static final String ENDPOINT = "/api/player";
+    private static final String ENDPOINT = "/api/players";
     private final HttpClient httpClient;
     private final ProtocolConfig config;
 
@@ -26,6 +27,6 @@ public class PlayerRESTClient {
                 .build();
 
         HttpResponse<Void> response = httpClient.send(request, HttpResponse.BodyHandlers.discarding());
-        return response.statusCode() == 200;
+        return response.statusCode() == HttpStatus.OK_200.getStatusCode();
     }
 }

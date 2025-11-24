@@ -1,4 +1,4 @@
-package org.murlan.live.game.logic.classifier;
+package org.murlan.live.game.classifier;
 
 import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;

@@ -10,7 +10,7 @@ import org.murlan.live.protocol.ResponseStatus;
 @Setter
 @Getter
 @AllArgsConstructor
-public class SurrenderResp implements Resp {
+public final class SurrenderResp implements Resp {
     private ResponseStatus responseStatus;
 
     @Override

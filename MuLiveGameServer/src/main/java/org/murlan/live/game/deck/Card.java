@@ -90,7 +90,7 @@ public enum Card {
     }
 
     public boolean hasSmallerRankThan(Card card) {
-        return !hasBiggerRankThan(card);
+        return this.rank.ordinal() < card.rank.ordinal();
     }
 
     public static Card fromOrdinal(int ordinal) {
@@ -112,14 +112,14 @@ public enum Card {
         return suit;
     }
 
-    static class CardComparator implements Comparator<Card> {
+   public static class CardComparator implements Comparator<Card> {
         @Override
         public int compare(Card o1, Card o2) {
             return o1.rank().ordinal() - o2.rank().ordinal();
         }
     }
 
-    static class KolorComparator implements Comparator<Card> {
+    public static class KolorComparator implements Comparator<Card> {
         @Override
         public int compare(Card o1, Card o2) {
             return o1.ordinal() - o2.ordinal();

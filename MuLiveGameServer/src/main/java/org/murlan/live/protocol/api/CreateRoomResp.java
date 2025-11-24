@@ -10,7 +10,7 @@ import org.murlan.live.protocol.config.ProtocolConfig;
 @Setter
 @Getter
 @AllArgsConstructor
-public class CreateRoomResp implements Resp {
+public final class CreateRoomResp implements Resp {
     private ResponseStatus responseStatus;
     private String createdRoomJson;
 

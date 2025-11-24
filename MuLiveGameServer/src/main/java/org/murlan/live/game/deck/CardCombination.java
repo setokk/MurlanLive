@@ -1,5 +1,6 @@
 package org.murlan.live.game.deck;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,8 +17,8 @@ public class CardCombination {
     private final List<Card> cards;
     private List<Card> kolorSortCards;
     private CardCombinationType type;
-    private static final Card.CardComparator ASC_COMPARATOR = new Card.CardComparator();
-    private static final Card.KolorComparator KOLOR_COMPARATOR = new Card.KolorComparator();
+    @JsonIgnore private static final Card.CardComparator ASC_COMPARATOR = new Card.CardComparator();
+    @JsonIgnore private static final Card.KolorComparator KOLOR_COMPARATOR = new Card.KolorComparator();
 
     public CardCombination(List<Card> cards) {
         this.cards = cards;

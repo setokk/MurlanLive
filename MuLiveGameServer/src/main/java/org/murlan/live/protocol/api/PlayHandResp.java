@@ -10,7 +10,7 @@ import org.murlan.live.protocol.ResponseStatus;
 @Setter
 @Getter
 @AllArgsConstructor
-public class PlayHandResp implements Resp {
+public final class PlayHandResp implements Resp {
     private ResponseStatus responseStatus;
 
     @Override

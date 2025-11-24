@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.murlan.live.game.deck.Deck;
 
 import java.util.Objects;
@@ -16,15 +15,16 @@ import java.util.Objects;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class PlayerDto {
     private long id;
     private String username;
     private String creationDate;
-    @JsonIgnore
-    private String jwt;
-    @JsonIgnore
-    private Deck deck;
+    @JsonIgnore private String jwt;
+    @JsonIgnore private Deck deck;
+
+    public PlayerDto(long id) {
+        this.id = id;
+    }
 
     public PlayerDto(long id, String username, String creationDate, String jwt) {
         this.id = id;
@@ -47,5 +47,10 @@ public class PlayerDto {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(id);
     }
 }

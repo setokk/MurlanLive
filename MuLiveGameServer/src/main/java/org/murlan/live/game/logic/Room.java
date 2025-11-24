@@ -1,5 +1,9 @@
 package org.murlan.live.game.logic;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -13,17 +17,19 @@ import java.util.stream.Collectors;
 
 @Setter
 @Getter
+@Builder(setterPrefix = "with")
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Room {
     private final String id;
     private final String name;
     private final boolean isPublic;
-    private final String passcode;
-    private final LocalDateTime creationDate;
+    @JsonIgnore private final String passcode;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") private final LocalDateTime creationDate;
     private final short totalScoreToWin;
     private List<GameState> gameStates;
     private final PlayerDto owner;
-    private final GameStateFactory gameStateFactory;
+    @JsonIgnore private final GameStateFactory gameStateFactory;
 
     public void newGameState() {
         this.gameStates = List.of(gameStateFactory.createGameState(this));
@@ -40,12 +46,17 @@ public class Room {
         }
     }
 
+    @JsonIgnore
     public GameState getActiveGameState() {
         return gameStates.getLast();
     }
 
-    public int getTotalPlayedGames() {
-        return gameStates.size() - 1;
+    public int getTotalFinishedGames() {
+        if (GameState.State.FINISHED.equals(getActiveGameState().getState())) {
+            return gameStates.size();
+        } else {
+            return gameStates.size() - 1;
+        }
     }
 
     public Map<PlayerDto, Short> getTotalScores() {

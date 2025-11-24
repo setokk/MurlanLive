@@ -1,4 +1,4 @@
-package org.murlan.um.model.dto;
+package org.murlan.um.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -14,10 +14,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public final class RoomDto {
+public final class PlayerDto {
     private long id;
+    private String username;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    private LocalDateTime startDate;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    private LocalDateTime endDate;
+    private LocalDateTime creationDate;
 }
