@@ -67,7 +67,7 @@ public class GameLobbyEndpoint {
     private static final EndpointHelper endpointHelper = new EndpointHelper(parser, generator);
     private static final RoomHandler roomHandler = new RoomHandler();
     private static final PlayerRESTClient playerRESTClient = new PlayerRESTClient(config);
-    private static final RoomRESTClient roomRESTClient = new RoomRESTClient(objectMapper);
+    private static final RoomRESTClient roomRESTClient = new RoomRESTClient(config, objectMapper);
 
     @OnOpen
     public void onOpen(Session session) throws IOException, InterruptedException {

@@ -20,7 +20,7 @@ public interface IRequest {
      * Checks for basic errors (empty lists, field lengths etc.)
      * @throws BusinessLogicException if any error in the request body was detected
      */
-    private void preValidate() throws BusinessLogicException {
+    default void preValidate() throws BusinessLogicException {
     }
 
     /**
@@ -33,6 +33,6 @@ public interface IRequest {
      * </ul>
      * @throws BusinessLogicException if any error in the values themselves was found (ex. value does not exist for enum)
      */
-    private void postValidate() throws BusinessLogicException {
+    default void postValidate() throws BusinessLogicException {
     }
 }

@@ -7,6 +7,13 @@ import org.springframework.stereotype.Component;
 @Component
 public final class RoomMapper {
     public CreateRoomParam toParam(CreateRoomRequest request) {
-        return null;
+        return new CreateRoomParam(
+                request.getId(),
+                request.getName(),
+                request.getIsPublic(),
+                request.getTotalScoreToWin(),
+                request.getGameStates(),
+                request.getOwner()
+        );
     }
 }

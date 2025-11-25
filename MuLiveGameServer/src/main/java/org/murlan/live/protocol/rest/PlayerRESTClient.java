@@ -22,6 +22,7 @@ public class PlayerRESTClient {
     public boolean validateJwt(String jwt) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(config.getProtocol_um_server_host() + ENDPOINT + "/validateJwt"))
+                .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + jwt)
                 .GET()
                 .build();

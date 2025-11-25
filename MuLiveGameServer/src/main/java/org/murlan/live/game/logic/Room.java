@@ -2,6 +2,7 @@ package org.murlan.live.game.logic;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 public class Room {
     private final String id;
     private final String name;
-    private final boolean isPublic;
+    @JsonProperty("isPublic") private final boolean isPublic;
     @JsonIgnore private final String passcode;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") private final LocalDateTime creationDate;
     private final short totalScoreToWin;

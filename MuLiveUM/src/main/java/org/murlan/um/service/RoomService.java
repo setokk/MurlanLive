@@ -16,6 +16,7 @@ public class RoomService {
     }
 
     public RoomDto createRoom(CreateRoomParam param) {
-
+        System.out.println(param);
+        return new RoomDto();
     }
 }

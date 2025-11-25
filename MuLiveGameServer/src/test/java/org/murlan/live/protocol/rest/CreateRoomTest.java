@@ -1,0 +1,75 @@
+package org.murlan.live.protocol.rest;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.murlan.live.game.logic.GameState;
+import org.murlan.live.game.logic.Room;
+import org.murlan.live.protocol.config.ConfigProvider;
+import org.murlan.live.protocol.config.ProtocolConfig;
+import org.murlan.live.protocol.dto.PlayerDto;
+import org.murlan.live.util.MLObjectMapper;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+public class CreateRoomTest {
+    private ProtocolConfig config;
+    private RoomRESTClient restClient;
+    private MLObjectMapper objectMapper;
+
+    @Before
+    public void setUp() {
+        this.config = ConfigProvider.getProtocolConfig();
+        this.restClient = new RoomRESTClient(config, new MLObjectMapper());
+        this.objectMapper = new MLObjectMapper();
+    }
+
+    @Test
+    public void printRoomJson() throws IOException, InterruptedException {
+        Room room = prepareRoom();
+        System.out.println("------Saving room:------");
+        System.out.println(objectMapper.writeValueAsString(room));
+        System.out.println("------Making REST call to /api/rooms/create");
+        boolean isSuccessful = restClient.createRoom(room);
+        System.out.println("------Finished REST call to /api/rooms/create");
+        Assert.assertTrue(isSuccessful);
+    }
+
+    public Room prepareRoom() {
+        PlayerDto owner = new PlayerDto(1L, "Player1", LocalDateTime.now().toString(), "JWT1");
+        List<PlayerDto> players = List.of(
+                owner,
+                new PlayerDto(2L, "Player2", LocalDateTime.now().toString(), "JWT2"),
+                new PlayerDto(3L, "Player3", LocalDateTime.now().toString(), "JWT3"),
+                new PlayerDto(4L, "Player4", LocalDateTime.now().toString(), "JWT4")
+        );
+        Map<PlayerDto, Short> score = HashMap.newHashMap(players.size());
+        for (int i = 0; i < players.size(); i++) {
+            score.put(players.get(i), (short) (players.size() - i - 1));
+        }
+        List<GameState> gameStates = List.of(
+                GameState.builder()
+                        .withState(GameState.State.FINISHED)
+                        .withPlayers(players)
+                        .withScore(score)
+                        .build()
+        );
+
+        return Room.builder()
+                .withId(UUID.randomUUID().toString())
+                .withName("Room 1")
+                .withIsPublic(true)
+                .withCreationDate(LocalDateTime.now())
+                .withTotalScoreToWin((short) 21)
+                .withOwner(owner)
+                .withPasscode("passcode")
+                .withGameStates(gameStates)
+                .build();
+    }
+}

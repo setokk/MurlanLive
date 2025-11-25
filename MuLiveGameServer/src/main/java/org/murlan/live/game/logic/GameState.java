@@ -27,7 +27,7 @@ public class GameState {
     private State state;
     private List<PlayerDto> players;
     private Map<PlayerDto, Short> score;
-    private CardCombination currCardCombination;
+    @JsonIgnore private CardCombination currCardCombination;
     @JsonIgnore private Consumer<GameState> onStartGame;
     @JsonIgnore private Runnable onFinishGame;
     private PlayerDto prevWinner;

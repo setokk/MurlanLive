@@ -15,8 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public final class PlayerDto {
-    private long id;
+    private Long id;
     private String username;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime creationDate;
 }
