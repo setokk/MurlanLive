@@ -5,7 +5,7 @@ LABEL authors="setokk"
 COPY src /mulive-game-server/src
 COPY pom.xml /mulive-game-server
 
-RUN mvn -f /mulive-game-server/pom.xml package
+RUN mvn -f /mulive-game-server/pom.xml package -DskipTests
 
 # Package stage
 FROM eclipse-temurin:21

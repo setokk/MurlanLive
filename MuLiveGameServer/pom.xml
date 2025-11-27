@@ -50,9 +50,9 @@
 
         <!-- YAML Parser -->
         <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>2.2</version>
+            <groupId>org.snakeyaml</groupId>
+            <artifactId>snakeyaml-engine</artifactId>
+            <version>2.7</version>
         </dependency>
 
         <!-- Jackson for JSON Parsing -->

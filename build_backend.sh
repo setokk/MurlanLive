@@ -18,7 +18,8 @@ List of available options:
 END
 )
 
-POSTGRES_DB="mulive"
+source build_backend.env.sh
+
 MIGRATION_SQL_SCRIPTS="./MuLiveUM/src/main/resources/migration"
 BUILD_GAMESERVER=true
 BUILD_UMSERVER=true
@@ -64,5 +65,15 @@ if [ $DROP_CREATE_DB = true ]; then
   for script in "${sql_scripts[@]}"; do
     echo -e "Executing SQL script: ${script}"
     docker exec -it mulive-db psql -U postgres -d "${POSTGRES_DB}" --set ON_ERROR_QUIT=1 -f "migration/${script}"
+  done
+
+  # After running DB scripts, check if umserver is to be built.
+  # If it is, stop and start again in order for SpringBoot to start-up with the updated DB
+  for service in "${SERVICES_TO_BUILD[@]}"; do
+      if [[ "$service" == "umserver" ]]; then
+          docker stop mulive-umserver
+          docker start mulive-umserver
+          break
+      fi
   done
 fi
