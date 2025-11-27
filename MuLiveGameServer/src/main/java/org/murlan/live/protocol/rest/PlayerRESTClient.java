@@ -2,6 +2,7 @@ package org.murlan.live.protocol.rest;
 
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.murlan.live.protocol.config.ProtocolConfig;
+import org.murlan.live.protocol.dto.PlayerDto;
 
 import java.io.IOException;
 import java.net.URI;
@@ -29,5 +30,29 @@ public class PlayerRESTClient {
 
         HttpResponse<Void> response = httpClient.send(request, HttpResponse.BodyHandlers.discarding());
         return response.statusCode() == HttpStatus.OK_200.getStatusCode();
+    }
+
+    public HttpResponse<String> registerPlayer(PlayerDto playerDto) throws InterruptedException, IOException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(config.getProtocol_um_server_host() + ENDPOINT + "/register"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(
+                        String.format("{\"username\":\"%s\",\"password\":\"%s\"}", playerDto.getUsername(), playerDto.getUsername())
+                ))
+                .build();
+
+        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    public HttpResponse<String> loginPlayer(PlayerDto playerDto) throws InterruptedException, IOException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(config.getProtocol_um_server_host() + ENDPOINT + "/login"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(
+                        String.format("{\"username\":\"%s\",\"password\":\"%s\"}", playerDto.getUsername(), playerDto.getUsername())
+                ))
+                .build();
+
+        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
     }
 }

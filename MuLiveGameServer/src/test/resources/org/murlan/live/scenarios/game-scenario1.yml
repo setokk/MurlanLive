@@ -1,0 +1,12 @@
+name: Test correct starting player (THREE_OF_SPADES)
+players:
+  - player1
+  - player2
+  - player3
+  - player4
+room_owner: player1
+
+moves:
+  - type: GAME_STATE
+    issuer: player1
+    data:
