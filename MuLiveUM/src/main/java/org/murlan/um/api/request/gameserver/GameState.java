@@ -17,13 +17,4 @@ public final class GameState {
 
     @NotNull(message = "[CreateRoomRequest]: score cannot be null")
     private Map<PlayerDto, Short> score;
-
-    @NotNull(message = "[CreateRoomRequest]: prevWinner cannot be null")
-    private PlayerDto prevWinner;
-
-    @NotNull(message = "[CreateRoomRequest]: prevLoser cannot be null")
-    private PlayerDto prevLoser;
-
-    @NotNull(message = "[CreateRoomRequest]: givenCardsCount cannot be null")
-    private Short givenCardsCount;
 }

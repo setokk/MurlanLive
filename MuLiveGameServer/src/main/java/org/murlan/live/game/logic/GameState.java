@@ -30,9 +30,9 @@ public class GameState {
     @JsonIgnore private CardCombination currCardCombination;
     @JsonIgnore private Consumer<GameState> onStartGame;
     @JsonIgnore private Runnable onFinishGame;
-    private PlayerDto prevWinner;
-    private PlayerDto prevLoser;
-    private short givenCardsCount;
+    @JsonIgnore private PlayerDto prevWinner;
+    @JsonIgnore private PlayerDto prevLoser;
+    @JsonIgnore private short givenCardsCount;
 
     public GameState(State state, PlayerDto player, Consumer<GameState> onStartGame, Runnable onFinishGame) {
         this.state = state;
