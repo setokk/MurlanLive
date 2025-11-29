@@ -13,9 +13,11 @@ import org.murlan.live.protocol.dto.PlayerDto;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 @Getter
@@ -24,6 +26,7 @@ import java.util.function.Consumer;
 @AllArgsConstructor
 public class GameState {
     @JsonIgnore private PlayerDto currTurnPlayer;
+    @JsonIgnore private boolean shouldCurrTurnPlayerUseThreeOfSpades;
     private State state;
     private List<PlayerDto> players;
     private Map<PlayerDto, Short> score;
@@ -32,7 +35,7 @@ public class GameState {
     @JsonIgnore private Runnable onFinishGame;
     @JsonIgnore private PlayerDto prevWinner;
     @JsonIgnore private PlayerDto prevLoser;
-    @JsonIgnore private short givenCardsCount;
+    @JsonIgnore private Set<PlayerDto> givenCards = HashSet.newHashSet(2);
 
     public GameState(State state, PlayerDto player, Consumer<GameState> onStartGame, Runnable onFinishGame) {
         this.state = state;
@@ -87,8 +90,13 @@ public class GameState {
         if (!MovePipeline.validate(cardCombination)) {
             return false;
         }
-        boolean isNotFirstMove = this.currCardCombination != GameConstants.EMPTY_CARD_COMBINATION;
-        if (isNotFirstMove && (this.currCardCombination.isEqualStrength(cardCombination) || this.currCardCombination.isStrongerThan(cardCombination))) {
+
+        boolean isFirstMove = this.currCardCombination == GameConstants.EMPTY_CARD_COMBINATION;
+        if (isFirstMove && shouldCurrTurnPlayerUseThreeOfSpades && !cardCombination.getCards().contains(Card.THREE_OF_SPADES)) {
+            return false;
+        }
+
+        if (!isFirstMove && (this.currCardCombination.isEqualStrength(cardCombination) || this.currCardCombination.isStrongerThan(cardCombination))) {
             return false;
         }
 
@@ -128,7 +136,7 @@ public class GameState {
 
         this.score.put(playerToSurrender, GameConstants.SCORE_PENALTY_SURRENDER);
         for (PlayerDto remainingPlayer : this.players) {
-            this.score.put(remainingPlayer, GameConstants.SCORE_REMAINING_PLAYERS);
+            this.score.put(remainingPlayer, GameConstants.SCORE_REMAINING_PLAYERS_AFTER_SURRENDER);
         }
         finishGame();
 
@@ -139,10 +147,10 @@ public class GameState {
         if (this.state != State.GIVING_CARDS) {
             return false;
         }
-        if (!isFromPrevious()) {
+        if (!player.getDeck().contains(new CardCombination(card))) {
             return false;
         }
-        if (!player.getDeck().contains(new CardCombination(card))) {
+        if (givenCards.contains(player)) { // player has already given a card
             return false;
         }
 
@@ -151,9 +159,9 @@ public class GameState {
                 .findAny()
                 .orElseThrow(() -> new IllegalStateException("Receiving player not found"));
 
-        if (player.equals(prevWinner) && card.hasBiggerRankThan(Card.TEN_OF_SPADES)) {
+        if (prevWinner.equals(player) && card.hasBiggerRankThan(Card.TEN_OF_SPADES)) {
             return false;
-        } else if (player.equals(prevLoser)) {
+        } else if (prevLoser.equals(player)) {
             Rank highestRank = player.getDeck().getCards()
                     .stream()
                     .max(new Card.CardComparator())
@@ -168,7 +176,9 @@ public class GameState {
 
         player.getDeck().removeCard(card);
         actualReceivingPlayer.getDeck().addCard(card);
-        if (++this.givenCardsCount == 2) {
+
+        givenCards.add(player);
+        if (givenCards.size() == 2) {
             this.state = State.PLAYING;
         }
 
@@ -212,6 +222,10 @@ public class GameState {
                 .filter(p -> p.getDeck().contains(cardCombination))
                 .findAny()
                 .orElseThrow(() -> new IllegalStateException("No player found with card combination " + cardCombination));
+    }
+
+    public boolean prevLoserContainsBothJokers() {
+        return isFromPrevious() && getPrevLoser().getDeck().contains(new CardCombination(Card.BLACK_JOKER, Card.RED_JOKER));
     }
 
     public enum State {

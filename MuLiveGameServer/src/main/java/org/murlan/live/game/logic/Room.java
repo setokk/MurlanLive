@@ -48,7 +48,7 @@ public class Room {
     }
 
     @JsonIgnore
-    public GameState getActiveGameState() {
+    public synchronized GameState getActiveGameState() {
         return gameStates.getLast();
     }
 
