@@ -20,4 +20,6 @@ public final class RoomDto {
     private LocalDateTime creationDate;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime finishedDate;
+    private short numPlayers;
+    
 }

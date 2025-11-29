@@ -14,8 +14,8 @@ import java.util.List;
 public class GameStateDto {
     private int state;
     private int totalGamesPlayed;
-    private PlayerDto currTurnPlayer;
-    private List<PlayerDto> players;
+    private Player currTurnPlayer;
+    private List<Player> players;
     private String currCardCombination;
     private String deck;
 }

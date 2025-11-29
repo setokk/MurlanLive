@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.murlan.live.game.logic.GameState;
 import org.murlan.live.game.logic.Room;
-import org.murlan.live.protocol.dto.PlayerDto;
+import org.murlan.live.protocol.dto.Player;
 import org.murlan.live.util.MLObjectMapper;
 
 import java.time.LocalDateTime;
@@ -28,14 +28,14 @@ public class ObjectMapperTest {
     }
 
     public Room prepareRoom() {
-        PlayerDto owner = new PlayerDto(1L, "Player1", LocalDateTime.now().toString(), "JWT1");
-        List<PlayerDto> players = List.of(
+        Player owner = new Player(1L, "Player1", LocalDateTime.now().toString(), "JWT1");
+        List<Player> players = List.of(
                 owner,
-                new PlayerDto(2L, "Player2", LocalDateTime.now().toString(), "JWT2"),
-                new PlayerDto(3L, "Player3", LocalDateTime.now().toString(), "JWT3"),
-                new PlayerDto(4L, "Player4", LocalDateTime.now().toString(), "JWT4")
+                new Player(2L, "Player2", LocalDateTime.now().toString(), "JWT2"),
+                new Player(3L, "Player3", LocalDateTime.now().toString(), "JWT3"),
+                new Player(4L, "Player4", LocalDateTime.now().toString(), "JWT4")
         );
-        Map<PlayerDto, Short> score = HashMap.newHashMap(players.size());
+        Map<Player, Short> score = HashMap.newHashMap(players.size());
         for (int i = 0; i < players.size(); i++) {
             score.put(players.get(i), (short) (players.size() - i - 1));
         }

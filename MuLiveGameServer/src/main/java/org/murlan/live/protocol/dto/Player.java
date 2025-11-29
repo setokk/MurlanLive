@@ -15,18 +15,18 @@ import java.util.Objects;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlayerDto {
+public class Player {
     private long id;
     private String username;
     private String creationDate;
     @JsonIgnore private String jwt;
     @JsonIgnore private Deck deck;
 
-    public PlayerDto(long id) {
+    public Player(long id) {
         this.id = id;
     }
 
-    public PlayerDto(long id, String username, String creationDate, String jwt) {
+    public Player(long id, String username, String creationDate, String jwt) {
         this.id = id;
         this.username = username;
         this.creationDate = creationDate;
@@ -41,8 +41,8 @@ public class PlayerDto {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        PlayerDto playerDto = (PlayerDto) o;
-        return id == playerDto.id;
+        Player player = (Player) o;
+        return id == player.id;
     }
 
     @Override

@@ -37,7 +37,7 @@ import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ConfigProvider;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.dto.GameStateDto;
-import org.murlan.live.protocol.dto.PlayerDto;
+import org.murlan.live.protocol.dto.Player;
 import org.murlan.live.protocol.dto.RoomDto;
 import org.murlan.live.protocol.jwt.JwtUtils;
 import org.murlan.live.protocol.rest.PlayerRESTClient;
@@ -79,8 +79,8 @@ public class GameLobbyEndpoint {
             session.close();
             return;
         }
-        PlayerDto playerDto = JwtUtils.decodeJWT(jwt);
-        if (playerDto.isInvalid()) {
+        Player player = JwtUtils.decodeJWT(jwt);
+        if (player.isInvalid()) {
             endpointHelper.sendErrorMessage(session, new GenericErrorResp("Invalid JWT"));
             session.close();
             return;
@@ -90,7 +90,7 @@ public class GameLobbyEndpoint {
             session.close();
             return;
         }
-        roomHandler.addSession(new PlayerSession(session, playerDto));
+        roomHandler.addSession(new PlayerSession(session, player));
 
         LOGGER.info("Connection with sessionId: {} established!", session.getId());
     }
@@ -114,7 +114,7 @@ public class GameLobbyEndpoint {
         }
 
         PlayerSession playerSession = optionalPlayerSession.get();
-        PlayerDto player = playerSession.getPlayerDto();
+        Player player = playerSession.getPlayer();
         Room room = roomHandler.getPlayerRoom(playerSession);
         Resp resp = switch (req) {
             case GameStateReq gameStateReq -> {
@@ -162,7 +162,7 @@ public class GameLobbyEndpoint {
                         createRoomReq.getPasscode(),
                         LocalDateTime.now(),
                         createRoomReq.getTotalScoreToWin(),
-                        playerSession.getPlayerDto(),
+                        playerSession.getPlayer(),
                         new GameStateFactory(roomRESTClient)
                 );
                 newRoom.newGameState();
@@ -174,7 +174,7 @@ public class GameLobbyEndpoint {
                 );
             }
             case GiveCardReq giveCardReq -> {
-                PlayerDto receivingPlayer = new PlayerDto(giveCardReq.getReceivingPlayerId());
+                Player receivingPlayer = new Player(giveCardReq.getReceivingPlayerId());
                 boolean isSuccessful = room.getActiveGameState().giveCard(giveCardReq.getCard(), player, receivingPlayer);
                 yield new GiveCardResp(
                         isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR
@@ -201,7 +201,7 @@ public class GameLobbyEndpoint {
         if (optionalRoomId.isPresent()) {
             Room room = roomHandler.getRoom(optionalRoomId.get());
             synchronized (room) {
-                room.getActiveGameState().surrender(playerSession.getPlayerDto());
+                room.getActiveGameState().surrender(playerSession.getPlayer());
                 if (room.getNumPlayers() == 0) {
                     roomHandler.removeRoom(room.getId());
                 }

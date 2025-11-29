@@ -6,7 +6,7 @@ import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.deck.Deck;
 import org.murlan.live.game.deck.Shuffler;
-import org.murlan.live.protocol.dto.PlayerDto;
+import org.murlan.live.protocol.dto.Player;
 import org.murlan.live.protocol.rest.RoomRESTClient;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class GameStateFactory {
             gameState.setState(loserContainsBothJokers ? GameState.State.GIVING_CARDS : GameState.State.PLAYING);
             gameState.setCurrCardCombination(GameConstants.EMPTY_CARD_COMBINATION);
 
-            List<PlayerDto> players = gameState.getPlayers();
+            List<Player> players = gameState.getPlayers();
             List<Deck> decks = Shuffler.shuffle(players.size());
             for (int i = 0; i < players.size(); i++) {
                 players.get(i).setDeck(decks.get(i));
@@ -40,7 +40,7 @@ public class GameStateFactory {
         };
 
         Runnable onFinishGame = () -> {
-            Optional<PlayerDto> optionalFinalWinner = room.getTotalScores().entrySet().stream()
+            Optional<Player> optionalFinalWinner = room.getTotalScores().entrySet().stream()
                     .filter(s -> s.getValue() >= room.getTotalScoreToWin())
                     .map(Map.Entry::getKey)
                     .findAny();
@@ -52,12 +52,12 @@ public class GameStateFactory {
                     throw new RuntimeException(e);
                 }
             } else {
-                Map<PlayerDto, Short> previousScore = room.getActiveGameState().getScore();
-                PlayerDto winner = previousScore.entrySet().stream()
+                Map<Player, Short> previousScore = room.getActiveGameState().getScore();
+                Player winner = previousScore.entrySet().stream()
                         .max(Map.Entry.comparingByValue())
                         .orElseThrow(() -> new IllegalStateException(""))
                         .getKey();
-                PlayerDto loser = previousScore.entrySet().stream()
+                Player loser = previousScore.entrySet().stream()
                         .min(Map.Entry.comparingByValue())
                         .orElseThrow(() -> new IllegalStateException(""))
                         .getKey();

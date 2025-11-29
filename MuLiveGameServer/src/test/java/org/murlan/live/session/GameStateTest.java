@@ -6,7 +6,7 @@ import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.deck.CardCombinationType;
 import org.murlan.live.game.deck.Deck;
 import org.murlan.live.game.logic.GameState;
-import org.murlan.live.protocol.dto.PlayerDto;
+import org.murlan.live.protocol.dto.Player;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 
 public class GameStateTest extends TestCase {
     public void testPlayHand_SameRankSingle() {
-        PlayerDto currPlayer = new PlayerDto(1L, "currPlayer", "ignored", "currPlayer");
-        PlayerDto otherPlayer = new PlayerDto(2L, "otherPlayer", "ignored", "otherPlayer");
+        Player currPlayer = new Player(1L, "currPlayer", "ignored", "currPlayer");
+        Player otherPlayer = new Player(2L, "otherPlayer", "ignored", "otherPlayer");
         currPlayer.setDeck(new Deck(getListOfCards(Card.FIVE_OF_CLUBS, Card.FIVE_OF_DIAMONDS)));
         otherPlayer.setDeck(new Deck(getListOfCards(Card.FIVE_OF_SPADES, Card.FIVE_OF_HEARTS)));
 
@@ -38,8 +38,8 @@ public class GameStateTest extends TestCase {
     }
 
     public void testPlayHand_SameRankDouble() {
-        PlayerDto currPlayer = new PlayerDto(1L, "currPlayer", "ignored", "currPlayer");
-        PlayerDto otherPlayer = new PlayerDto(2L, "otherPlayer", "ignored", "otherPlayer");
+        Player currPlayer = new Player(1L, "currPlayer", "ignored", "currPlayer");
+        Player otherPlayer = new Player(2L, "otherPlayer", "ignored", "otherPlayer");
         currPlayer.setDeck(new Deck(getListOfCards(Card.TWO_OF_CLUBS, Card.TWO_OF_DIAMONDS, Card.TEN_OF_DIAMONDS)));
         otherPlayer.setDeck(new Deck(getListOfCards(Card.TWO_OF_SPADES, Card.TWO_OF_HEARTS, Card.TEN_OF_HEARTS)));
 
@@ -64,8 +64,8 @@ public class GameStateTest extends TestCase {
     }
 
     public void testPlayHand_TripleWithDoubleCard() {
-        PlayerDto currPlayer = new PlayerDto(1L, "currPlayer", "ignored", "currPlayer");
-        PlayerDto otherPlayer = new PlayerDto(2L, "otherPlayer", "ignored", "otherPlayer");
+        Player currPlayer = new Player(1L, "currPlayer", "ignored", "currPlayer");
+        Player otherPlayer = new Player(2L, "otherPlayer", "ignored", "otherPlayer");
         currPlayer.setDeck(new Deck(getListOfCards(Card.FIVE_OF_SPADES, Card.FIVE_OF_CLUBS, Card.FIVE_OF_HEARTS, Card.ACE_OF_CLUBS)));
         otherPlayer.setDeck(new Deck(getListOfCards(Card.TWO_OF_SPADES, Card.TWO_OF_HEARTS, Card.JACK_OF_CLUBS)));
 

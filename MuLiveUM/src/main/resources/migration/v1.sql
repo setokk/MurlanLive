@@ -18,7 +18,8 @@ CREATE SEQUENCE IF NOT EXISTS player_seq
 CREATE TABLE IF NOT EXISTS card_skin(
     id BIGINT NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
-    total_required_score BIGINT NOT NULL
+    total_score_required BIGINT NOT NULL,
+    combined_sha TEXT NOT NULL
 );
 
 --
@@ -33,17 +34,6 @@ CREATE TABLE IF NOT EXISTS room(
     finished_date TIMESTAMP NOT NULL,
     num_players SMALLINT NOT NULL,
     owner_player_id BIGINT NOT NULL
-);
-
---
--- history Table
---
-CREATE TABLE IF NOT EXISTS history(
-    player_id BIGINT NOT NULL,
-    room_id TEXT NOT NULL,
-    total_score BIGINT NOT NULL,
-    is_winner BOOLEAN NOT NULL,
-    PRIMARY KEY (player_id, room_id)
 );
 
 --
@@ -74,6 +64,7 @@ CREATE TABLE IF NOT EXISTS score(
 --
 CREATE TABLE IF NOT EXISTS score_total(
     score SMALLINT NOT NULL,
+    is_winner BOOLEAN NOT NULL,
     player_id BIGINT NOT NULL,
     game_state_id BIGINT NOT NULL,
     PRIMARY KEY (player_id, game_state_id)

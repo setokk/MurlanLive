@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.murlan.live.protocol.config.ConfigProvider;
 import org.murlan.live.protocol.config.ProtocolConfig;
-import org.murlan.live.protocol.dto.PlayerDto;
+import org.murlan.live.protocol.dto.Player;
 import org.murlan.live.protocol.jwt.JwtUtils;
 import org.murlan.live.protocol.rest.PlayerRESTClient;
 import org.snakeyaml.engine.v2.api.Load;
@@ -36,7 +36,7 @@ public class LiveGameTest {
 
     private void executeGameScenario(int scenarioId) throws IOException, InterruptedException {
         GameScenario gameScenario = loadGameScenario(scenarioId);
-        List<PlayerDto> players = registerOrLoginPlayers(gameScenario.getPlayers());
+        List<Player> players = registerOrLoginPlayers(gameScenario.getPlayers());
         players.forEach(player -> {
             System.out.println(player.getUsername() + ": " + player.getJwt());
         });
@@ -50,13 +50,13 @@ public class LiveGameTest {
         return new ObjectMapper().convertValue(yamlMap, GameScenario.class);
     }
 
-    private List<PlayerDto> registerOrLoginPlayers(List<String> usernames) throws IOException, InterruptedException {
-        List<PlayerDto> players = new ArrayList<>(usernames.size());
+    private List<Player> registerOrLoginPlayers(List<String> usernames) throws IOException, InterruptedException {
+        List<Player> players = new ArrayList<>(usernames.size());
         for (String username : usernames) {
-            PlayerDto playerDto = PlayerDto.builder().username(username).build();
-            HttpResponse<String> response = playerRESTClient.registerPlayer(playerDto);
+            Player player = Player.builder().username(username).build();
+            HttpResponse<String> response = playerRESTClient.registerPlayer(player);
             if (HttpStatus.CONFLICT_409.getStatusCode() == response.statusCode()) {
-                response = playerRESTClient.loginPlayer(playerDto);
+                response = playerRESTClient.loginPlayer(player);
             }
             players.add(JwtUtils.decodeJWT(response.body()));
         }

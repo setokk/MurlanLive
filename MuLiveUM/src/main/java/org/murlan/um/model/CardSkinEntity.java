@@ -35,6 +35,9 @@ public class CardSkinEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "total_required_score", updatable = false, nullable = false)
-    private Long totalRequiredScore;
+    @Column(name = "total_score_required", updatable = false, nullable = false)
+    private Long totalScoreRequired;
+
+    @Column(name = "combined_sha", updatable = false, nullable = false)
+    private String combinedSHA;
 }

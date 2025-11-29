@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.murlan.live.protocol.dto.PlayerDto;
+import org.murlan.live.protocol.dto.Player;
 
 import java.util.Objects;
 
@@ -15,11 +15,7 @@ import java.util.Objects;
 @NoArgsConstructor
 public class PlayerSession {
     private Session session;
-    private PlayerDto playerDto;
-
-    public static PlayerSession fromSession(Session session) {
-        return new PlayerSession(session, null);
-    }
+    private Player player;
 
     @Override
     public boolean equals(Object o) {

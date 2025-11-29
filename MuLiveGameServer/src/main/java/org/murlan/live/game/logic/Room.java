@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.murlan.live.protocol.dto.PlayerDto;
+import org.murlan.live.protocol.dto.Player;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,18 +29,18 @@ public class Room {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") private final LocalDateTime creationDate;
     private final short totalScoreToWin;
     private List<GameState> gameStates;
-    private final PlayerDto owner;
+    private final Player owner;
     @JsonIgnore private final GameStateFactory gameStateFactory;
 
     public void newGameState() {
         this.gameStates = List.of(gameStateFactory.createGameState(this));
     }
 
-    public boolean addPlayer(PlayerDto player) {
+    public boolean addPlayer(Player player) {
         return getActiveGameState().addPlayer(player);
     }
 
-    public void startNewGameFromPreviousGame(PlayerDto winner, PlayerDto loser) {
+    public void startNewGameFromPreviousGame(Player winner, Player loser) {
         GameState prevGameState = getActiveGameState();
         if (GameState.State.FINISHED.equals(prevGameState.getState())) {
             this.getGameStates().add(GameState.fromPrevious(prevGameState, winner, loser));
@@ -61,7 +61,7 @@ public class Room {
         }
     }
 
-    public Map<PlayerDto, Short> getTotalScores() {
+    public Map<Player, Short> getTotalScores() {
         return gameStates.stream()
                 .map(GameState::getScore)
                 .flatMap(s -> s.entrySet().stream())

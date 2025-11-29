@@ -9,7 +9,7 @@ import org.murlan.live.game.GameConstants;
 import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.deck.Rank;
-import org.murlan.live.protocol.dto.PlayerDto;
+import org.murlan.live.protocol.dto.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,19 +25,19 @@ import java.util.function.Consumer;
 @Builder(setterPrefix = "with")
 @AllArgsConstructor
 public class GameState {
-    @JsonIgnore private PlayerDto currTurnPlayer;
+    @JsonIgnore private Player currTurnPlayer;
     @JsonIgnore private boolean shouldCurrTurnPlayerUseThreeOfSpades;
     private State state;
-    private List<PlayerDto> players;
-    private Map<PlayerDto, Short> score;
+    private List<Player> players;
+    private Map<Player, Short> score;
     @JsonIgnore private CardCombination currCardCombination;
     @JsonIgnore private Consumer<GameState> onStartGame;
     @JsonIgnore private Runnable onFinishGame;
-    @JsonIgnore private PlayerDto prevWinner;
-    @JsonIgnore private PlayerDto prevLoser;
-    @JsonIgnore private Set<PlayerDto> givenCards = HashSet.newHashSet(2);
+    @JsonIgnore private Player prevWinner;
+    @JsonIgnore private Player prevLoser;
+    @JsonIgnore private Set<Player> givenCards = HashSet.newHashSet(2);
 
-    public GameState(State state, PlayerDto player, Consumer<GameState> onStartGame, Runnable onFinishGame) {
+    public GameState(State state, Player player, Consumer<GameState> onStartGame, Runnable onFinishGame) {
         this.state = state;
         this.players = new ArrayList<>();
         this.players.add(player);
@@ -46,7 +46,7 @@ public class GameState {
         this.onFinishGame = onFinishGame;
     }
 
-    public static GameState fromPrevious(GameState previous, PlayerDto winner, PlayerDto loser) {
+    public static GameState fromPrevious(GameState previous, Player winner, Player loser) {
         GameState newGameState = GameState.builder()
                 .withState(State.WAITING)
                 .withPlayers(previous.getPlayers())
@@ -65,7 +65,7 @@ public class GameState {
         return prevLoser != null && prevWinner != null;
     }
 
-    public synchronized boolean addPlayer(PlayerDto player) {
+    public synchronized boolean addPlayer(Player player) {
         if (players.size() == GameConstants.MAX_PLAYERS) {
             return false;
         }
@@ -77,7 +77,7 @@ public class GameState {
     }
 
 
-    public synchronized boolean playHand(PlayerDto player, CardCombination cardCombination) {
+    public synchronized boolean playHand(Player player, CardCombination cardCombination) {
         if (this.state != State.PLAYING) {
             return false;
         }
@@ -110,7 +110,7 @@ public class GameState {
         return true;
     }
 
-    public synchronized boolean pass(PlayerDto player) {
+    public synchronized boolean pass(Player player) {
         if (this.state != State.PLAYING) {
             return false;
         }
@@ -122,20 +122,20 @@ public class GameState {
         return true;
     }
 
-    public synchronized boolean surrender(PlayerDto player) {
+    public synchronized boolean surrender(Player player) {
         if (this.state != State.PLAYING) {
             return false;
         }
-        Optional<PlayerDto> optionalPlayerToSurrender = this.players.stream().filter(player::equals).findAny();
+        Optional<Player> optionalPlayerToSurrender = this.players.stream().filter(player::equals).findAny();
         if (optionalPlayerToSurrender.isEmpty()) {
             return false;
         }
 
-        PlayerDto playerToSurrender = optionalPlayerToSurrender.get();
+        Player playerToSurrender = optionalPlayerToSurrender.get();
         this.players.remove(playerToSurrender);
 
         this.score.put(playerToSurrender, GameConstants.SCORE_PENALTY_SURRENDER);
-        for (PlayerDto remainingPlayer : this.players) {
+        for (Player remainingPlayer : this.players) {
             this.score.put(remainingPlayer, GameConstants.SCORE_REMAINING_PLAYERS_AFTER_SURRENDER);
         }
         finishGame();
@@ -143,7 +143,7 @@ public class GameState {
         return true;
     }
 
-    public synchronized boolean giveCard(Card card, PlayerDto player, PlayerDto receivingPlayer) {
+    public synchronized boolean giveCard(Card card, Player player, Player receivingPlayer) {
         if (this.state != State.GIVING_CARDS) {
             return false;
         }
@@ -154,7 +154,7 @@ public class GameState {
             return false;
         }
 
-        PlayerDto actualReceivingPlayer = this.players.stream()
+        Player actualReceivingPlayer = this.players.stream()
                 .filter(receivingPlayer::equals)
                 .findAny()
                 .orElseThrow(() -> new IllegalStateException("Receiving player not found"));
@@ -213,11 +213,11 @@ public class GameState {
         }
     }
 
-    private boolean isNotPlayerTurn(PlayerDto player) {
+    private boolean isNotPlayerTurn(Player player) {
         return !player.equals(this.currTurnPlayer);
     }
 
-    public PlayerDto findPlayerWithCardCombination(CardCombination cardCombination) {
+    public Player findPlayerWithCardCombination(CardCombination cardCombination) {
         return this.players.stream()
                 .filter(p -> p.getDeck().contains(cardCombination))
                 .findAny()

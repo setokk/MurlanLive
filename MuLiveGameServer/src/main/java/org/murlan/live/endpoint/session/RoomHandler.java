@@ -17,7 +17,7 @@ public class RoomHandler {
     private final ConcurrentHashMap<String, Room> roomIdToRoomMap = new ConcurrentHashMap<>();
 
     public void addSession(@NonNull PlayerSession playerSession) {
-        jwtToSessionMap.putIfAbsent(playerSession.getPlayerDto().getJwt(), playerSession);
+        jwtToSessionMap.putIfAbsent(playerSession.getPlayer().getJwt(), playerSession);
     }
 
     public Optional<PlayerSession> getSession(@NonNull Session session) {
@@ -27,7 +27,7 @@ public class RoomHandler {
     }
 
     public Optional<String> removeSession(@NonNull PlayerSession playerSession) {
-        jwtToSessionMap.remove(playerSession.getPlayerDto().getJwt());
+        jwtToSessionMap.remove(playerSession.getPlayer().getJwt());
         return Optional.ofNullable(sessionToRoomIdMap.remove(playerSession));
     }
 
@@ -36,8 +36,8 @@ public class RoomHandler {
     }
 
     public void linkSessionWithRoom(@NonNull PlayerSession playerSession, @NonNull String roomId) {
-        if (!jwtToSessionMap.containsKey(playerSession.getPlayerDto().getJwt())) {
-            throw new RuntimeException("Player session with JWT " + playerSession.getPlayerDto().getJwt() + " not found");
+        if (!jwtToSessionMap.containsKey(playerSession.getPlayer().getJwt())) {
+            throw new RuntimeException("Player session with JWT " + playerSession.getPlayer().getJwt() + " not found");
         }
         sessionToRoomIdMap.putIfAbsent(playerSession, roomId);
     }
@@ -93,7 +93,7 @@ public class RoomHandler {
             return false;
         }
 
-        boolean isSuccessful = room.addPlayer(playerSession.getPlayerDto());
+        boolean isSuccessful = room.addPlayer(playerSession.getPlayer());
         if (isSuccessful) {
             linkSessionWithRoom(playerSession, roomId);
             return true;

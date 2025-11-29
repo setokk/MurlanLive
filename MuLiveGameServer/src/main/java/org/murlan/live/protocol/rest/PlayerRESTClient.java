@@ -2,7 +2,7 @@ package org.murlan.live.protocol.rest;
 
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.murlan.live.protocol.config.ProtocolConfig;
-import org.murlan.live.protocol.dto.PlayerDto;
+import org.murlan.live.protocol.dto.Player;
 
 import java.io.IOException;
 import java.net.URI;
@@ -32,24 +32,24 @@ public class PlayerRESTClient {
         return response.statusCode() == HttpStatus.OK_200.getStatusCode();
     }
 
-    public HttpResponse<String> registerPlayer(PlayerDto playerDto) throws InterruptedException, IOException {
+    public HttpResponse<String> registerPlayer(Player player) throws InterruptedException, IOException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(config.getProtocol_um_server_host() + ENDPOINT + "/register"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(
-                        String.format("{\"username\":\"%s\",\"password\":\"%s\"}", playerDto.getUsername(), playerDto.getUsername())
+                        String.format("{\"username\":\"%s\",\"password\":\"%s\"}", player.getUsername(), player.getUsername())
                 ))
                 .build();
 
         return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    public HttpResponse<String> loginPlayer(PlayerDto playerDto) throws InterruptedException, IOException {
+    public HttpResponse<String> loginPlayer(Player player) throws InterruptedException, IOException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(config.getProtocol_um_server_host() + ENDPOINT + "/login"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(
-                        String.format("{\"username\":\"%s\",\"password\":\"%s\"}", playerDto.getUsername(), playerDto.getUsername())
+                        String.format("{\"username\":\"%s\",\"password\":\"%s\"}", player.getUsername(), player.getUsername())
                 ))
                 .build();
 
