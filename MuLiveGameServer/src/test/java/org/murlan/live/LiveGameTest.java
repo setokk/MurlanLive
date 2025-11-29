@@ -37,7 +37,9 @@ public class LiveGameTest {
     private void executeGameScenario(int scenarioId) throws IOException, InterruptedException {
         GameScenario gameScenario = loadGameScenario(scenarioId);
         List<PlayerDto> players = registerOrLoginPlayers(gameScenario.getPlayers());
-
+        players.forEach(player -> {
+            System.out.println(player.getUsername() + ": " + player.getJwt());
+        });
     }
 
     private GameScenario loadGameScenario(int scenarioId) {

@@ -5,8 +5,3 @@ players:
   - player3
   - player4
 room_owner: player1
-
-moves:
-  - type: GAME_STATE
-    issuer: player1
-    data:
