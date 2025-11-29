@@ -14,9 +14,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Embeddable
-public class HistoryPK {
+public class ScorePK {
     @Column(name = "player_id", updatable = false, nullable = false)
     private Long playerId;
-    @Column(name = "room_id", updatable = false, nullable = false)
-    private String roomId;
+    @Column(name = "game_state_id", updatable = false, nullable = false)
+    private Long gameStateId;
 }

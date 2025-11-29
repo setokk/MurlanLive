@@ -33,6 +33,7 @@ public class PlayerDto {
         this.jwt = jwt;
     }
 
+    @JsonIgnore
     public boolean isInvalid() {
         return jwt == null;
     }

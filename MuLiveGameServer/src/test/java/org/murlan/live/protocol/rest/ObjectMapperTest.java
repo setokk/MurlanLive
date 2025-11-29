@@ -1,9 +1,6 @@
 package org.murlan.live.protocol.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Before;
 import org.junit.Test;
 import org.murlan.live.game.logic.GameState;
@@ -23,8 +20,6 @@ public class ObjectMapperTest {
     @Before
     public void setUp() {
         this.objectMapper = new MLObjectMapper();
-        this.objectMapper.registerModule(new JavaTimeModule());
-        this.objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_INDEX);
     }
 
     @Test
@@ -45,6 +40,11 @@ public class ObjectMapperTest {
             score.put(players.get(i), (short) (players.size() - i - 1));
         }
         List<GameState> gameStates = List.of(
+                GameState.builder()
+                        .withState(GameState.State.FINISHED)
+                        .withPlayers(players)
+                        .withScore(score)
+                        .build(),
                 GameState.builder()
                         .withState(GameState.State.FINISHED)
                         .withPlayers(players)

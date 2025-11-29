@@ -11,6 +11,7 @@ import org.murlan.um.error.BusinessLogicException;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @AllArgsConstructor
@@ -31,7 +32,14 @@ public class CreateRoomRequest implements IRequest {
 
     @NotNull(message = "[CreateRoomRequest]: gameStates cannot be null")
     @NotEmpty(message = "[CreateRoomRequest]: gameStates cannot be empty")
-    private List<GameState> gameStates;
+    private final List<GameState> gameStates;
+
+    @NotNull(message = "[CreateRoomRequest]: totalScores cannot be null")
+    @NotEmpty(message = "[CreateRoomRequest]: totalScores cannot be empty")
+    private final Map<String, Short> totalScores;
+
+    @NotNull(message = "[CreateRoomRequest]: numPlayers cannot be null")
+    private final Short numPlayers;
 
     @NotNull(message = "[CreateRoomRequest]: owner cannot be null")
     private final PlayerDto owner;

@@ -10,5 +10,5 @@ import java.util.List;
 
 public interface HistoryRepository extends JpaRepository<HistoryEntity, HistoryPK> {
     @Query(value = "SELECT h FROM HistoryEntity h WHERE h.id.roomId=:roomId")
-    List<HistoryEntity> findHistoriesByRoomId(@Param("roomId") Long roomId);
+    List<HistoryEntity> findHistoriesByRoomId(@Param("roomId") String roomId);
 }

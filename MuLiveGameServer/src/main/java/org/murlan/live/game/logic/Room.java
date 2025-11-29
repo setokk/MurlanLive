@@ -52,6 +52,7 @@ public class Room {
         return gameStates.getLast();
     }
 
+    @JsonIgnore
     public int getTotalFinishedGames() {
         if (GameState.State.FINISHED.equals(getActiveGameState().getState())) {
             return gameStates.size();

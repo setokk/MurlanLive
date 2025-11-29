@@ -57,6 +57,7 @@ public class GameState {
         return newGameState;
     }
 
+    @JsonIgnore
     public boolean isFromPrevious() {
         return prevLoser != null && prevWinner != null;
     }

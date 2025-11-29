@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public final class RoomDto {
     private long id;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    private LocalDateTime startDate;
+    private LocalDateTime creationDate;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    private LocalDateTime endDate;
+    private LocalDateTime finishedDate;
 }

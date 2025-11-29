@@ -24,19 +24,6 @@ ALTER TABLE ONLY history
 END IF;
 END $$;
 
--- Primary key constraint history_pkey
-DO $$
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM information_schema.table_constraints
-        WHERE table_name = 'history'
-        AND constraint_name = 'history_pkey'
-    ) THEN
-ALTER TABLE ONLY history
-    ADD CONSTRAINT history_pkey PRIMARY KEY (player_id, room_id);
-END IF;
-END $$;
-
 -- Foreign key constraint fk_room_player
 DO $$
 BEGIN
