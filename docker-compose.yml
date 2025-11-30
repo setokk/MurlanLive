@@ -25,7 +25,8 @@ services:
       JDBC_DATASOURCE_URL: "${JDBC_DATASOURCE_URL}"
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      MULIVE_GAMESERVER_SECRET_KEY: "${MULIVE_GAMESERVER_SECRET_KEY}"
+      MULIVE_GAMESERVER_SECRET_HEADER: "${MULIVE_GAMESERVER_SECRET_HEADER}"
+      MULIVE_GAMESERVER_SECRET_HEADER_VAL: "${MULIVE_GAMESERVER_SECRET_HEADER_VAL}"
 
   # Game Server Service:
   # Responsible for handling real-time communication with clients based on game logic
@@ -36,6 +37,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "45600:45600"
+    environment:
+      MULIVE_GAMESERVER_SECRET_HEADER: "${MULIVE_GAMESERVER_SECRET_HEADER}"
+      MULIVE_GAMESERVER_SECRET_HEADER_VAL: "${MULIVE_GAMESERVER_SECRET_HEADER_VAL}"
 
 volumes:
   pg_um_data:

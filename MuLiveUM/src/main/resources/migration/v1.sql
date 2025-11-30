@@ -66,6 +66,6 @@ CREATE TABLE IF NOT EXISTS score_total(
     score SMALLINT NOT NULL,
     is_winner BOOLEAN NOT NULL,
     player_id BIGINT NOT NULL,
-    game_state_id BIGINT NOT NULL,
-    PRIMARY KEY (player_id, game_state_id)
+    room_id TEXT NOT NULL,
+    PRIMARY KEY (player_id, room_id)
 );

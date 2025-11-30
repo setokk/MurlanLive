@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.murlan.live.protocol.dto.Player;
 
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class JwtUtils {
         return new Player(
                 Long.parseLong(map.get("id").toString()),
                 map.get("username").toString(),
-                map.get("creationDate").toString(),
+                LocalDateTime.parse(map.get("creationDate").toString()),
                 jwt
         );
     }

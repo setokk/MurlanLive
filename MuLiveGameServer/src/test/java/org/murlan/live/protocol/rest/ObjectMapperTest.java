@@ -28,12 +28,12 @@ public class ObjectMapperTest {
     }
 
     public Room prepareRoom() {
-        Player owner = new Player(1L, "Player1", LocalDateTime.now().toString(), "JWT1");
+        Player owner = new Player(1L, "Player1", LocalDateTime.now(), "JWT1");
         List<Player> players = List.of(
                 owner,
-                new Player(2L, "Player2", LocalDateTime.now().toString(), "JWT2"),
-                new Player(3L, "Player3", LocalDateTime.now().toString(), "JWT3"),
-                new Player(4L, "Player4", LocalDateTime.now().toString(), "JWT4")
+                new Player(2L, "Player2", LocalDateTime.now(), "JWT2"),
+                new Player(3L, "Player3", LocalDateTime.now(), "JWT3"),
+                new Player(4L, "Player4", LocalDateTime.now(), "JWT4")
         );
         Map<Player, Short> score = HashMap.newHashMap(players.size());
         for (int i = 0; i < players.size(); i++) {

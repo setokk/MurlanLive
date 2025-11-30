@@ -2,6 +2,7 @@ package org.murlan.um.config;
 
 import lombok.RequiredArgsConstructor;
 import org.murlan.um.auth.JwtAuthFilter;
+import org.murlan.um.config.interceptor.MLHeaderInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -21,6 +23,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfig implements WebMvcConfigurer {
     private final JwtAuthFilter jwtAuthFilter;
+    private final MLHeaderInterceptor interceptor;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -32,10 +35,17 @@ public class SecurityConfig implements WebMvcConfigurer {
         registry.addMapping("/**");
     }
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(interceptor)
+                .addPathPatterns("/api/rooms/create");
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST,
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST,
                                 "/api/players/register",
                                 "/api/players/login",
                                 "/api/rooms/create")

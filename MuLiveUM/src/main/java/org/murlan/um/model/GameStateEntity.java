@@ -10,16 +10,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.murlan.um.core.logic.GameStateEnum;
 
+import java.util.List;
+
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -40,6 +45,9 @@ public class GameStateEntity {
 
     @Enumerated(EnumType.ORDINAL)
     private GameStateEnum state;
+
+    @OneToMany(mappedBy = "gameState", fetch = FetchType.LAZY)
+    private List<ScoreEntity> scores;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")

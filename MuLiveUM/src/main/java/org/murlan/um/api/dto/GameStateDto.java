@@ -1,20 +1,29 @@
-package org.murlan.um.api.request.gameserver;
+package org.murlan.um.api.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import org.murlan.um.api.dto.PlayerDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.Map;
 
-public final class GameState {
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public final class GameStateDto {
     @NotNull(message = "[CreateRoomRequest]: state cannot be null")
-    private Short state;
+    private Integer state;
 
     @NotNull(message = "[CreateRoomRequest]: players cannot be null")
     @NotEmpty(message = "[CreateRoomRequest]: players cannot be empty")
     private List<PlayerDto> players;
 
     @NotNull(message = "[CreateRoomRequest]: score cannot be null")
-    private Map<PlayerDto, Short> score;
+    private Map<String, Short> score;
 }

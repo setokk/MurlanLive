@@ -1,5 +1,6 @@
 package org.murlan.um.api.request.validation;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.murlan.um.error.BusinessLogicException;
 
 /**
@@ -10,6 +11,7 @@ import org.murlan.um.error.BusinessLogicException;
  * <br/><br/>
  * <b>NOTE:</b> This class methods should only be used for validations that are not supported by {@link jakarta.validation.constraints}.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public interface IRequest {
     default void validate() throws BusinessLogicException {
         preValidate();

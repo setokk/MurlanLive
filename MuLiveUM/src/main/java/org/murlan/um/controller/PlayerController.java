@@ -19,23 +19,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/players")
 public class PlayerController {
     private final PlayerService playerService;
-    private final PlayerMapper mapper;
+    private final PlayerMapper playerMapper;
 
     @Autowired
-    public PlayerController(PlayerService playerService, PlayerMapper mapper) {
+    public PlayerController(PlayerService playerService, PlayerMapper playerMapper) {
         this.playerService = playerService;
-        this.mapper = mapper;
+        this.playerMapper = playerMapper;
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> loginPlayer(@RequestBody @Valid LoginPlayerRequest request) {
-        PlayerDto playerDto = playerService.loginPlayer(mapper.toParam(request));
+        PlayerDto playerDto = playerService.loginPlayer(playerMapper.toParam(request));
         return ResponseEntity.ok(JwtUtils.generateJWT(playerDto));
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> registerPlayer(@RequestBody @Valid RegisterPlayerRequest request) {
-        PlayerDto playerDto = playerService.registerPlayer(mapper.toParam(request));
+        PlayerDto playerDto = playerService.registerPlayer(playerMapper.toParam(request));
         return ResponseEntity.ok(JwtUtils.generateJWT(playerDto));
     }
 

@@ -19,5 +19,6 @@ public class ProtocolConfig {
     private String protocol_delimiter;
     private String protocol_list_delimiter;
     private String protocol_um_server_host;
-    private String mulive_gameserver_secret_key;
+    private String mulive_gameserver_secret_header;
+    private String mulive_gameserver_secret_header_val;
 }

@@ -23,13 +23,13 @@ public class RoomRESTClient {
         this.objectMapper = objectMapper;
     }
 
-    public boolean createRoom(Room room) throws IOException, InterruptedException {
+    public HttpResponse<String> createRoom(Room room) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(room)))
                 .header("Content-Type", "application/json")
+                .header(config.getMulive_gameserver_secret_header(), config.getMulive_gameserver_secret_header_val())
                 .uri(URI.create(config.getProtocol_um_server_host() + ENDPOINT + "/create"))
                 .build();
-        var response = httpClient.send(request, HttpResponse.BodyHandlers.discarding());
-        return response.statusCode() == HttpStatus.OK_200.getStatusCode();
+        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
     }
 }

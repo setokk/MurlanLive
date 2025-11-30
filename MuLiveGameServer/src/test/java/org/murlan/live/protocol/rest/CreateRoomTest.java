@@ -1,5 +1,6 @@
 package org.murlan.live.protocol.rest;
 
+import org.glassfish.grizzly.http.util.HttpStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.murlan.live.protocol.dto.Player;
 import org.murlan.live.util.MLObjectMapper;
 
 import java.io.IOException;
+import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -35,28 +37,49 @@ public class CreateRoomTest {
         System.out.println("------Saving room:------");
         System.out.println(objectMapper.writeValueAsString(room));
         System.out.println("------Making REST call to /api/rooms/create");
-        boolean isSuccessful = restClient.createRoom(room);
+        HttpResponse<String> response = restClient.createRoom(room);
         System.out.println("------Finished REST call to /api/rooms/create");
-        Assert.assertTrue(isSuccessful);
+        System.out.println(response);
+        Assert.assertTrue(HttpStatus.OK_200.getStatusCode() == response.statusCode());
     }
 
     public Room prepareRoom() {
-        Player owner = new Player(1L, "Player1", LocalDateTime.now().toString(), "JWT1");
+        Player owner = new Player(1L, "Player1", LocalDateTime.now(), "JWT1");
         List<Player> players = List.of(
                 owner,
-                new Player(2L, "Player2", LocalDateTime.now().toString(), "JWT2"),
-                new Player(3L, "Player3", LocalDateTime.now().toString(), "JWT3"),
-                new Player(4L, "Player4", LocalDateTime.now().toString(), "JWT4")
+                new Player(2L, "Player2", LocalDateTime.now(), "JWT2"),
+                new Player(3L, "Player3", LocalDateTime.now(), "JWT3"),
+                new Player(4L, "Player4", LocalDateTime.now(), "JWT4")
         );
         Map<Player, Short> score = HashMap.newHashMap(players.size());
         for (int i = 0; i < players.size(); i++) {
             score.put(players.get(i), (short) (players.size() - i - 1));
         }
+        Map<Player, Short> score2 = HashMap.newHashMap(players.size());
+        for (int i = 0; i < players.size(); i++) {
+            score2.put(players.get(i), (short) (i + 1));
+        }
+        Map<Player, Short> score3 = HashMap.newHashMap(players.size());
+        score3.put(players.get(0), (short) 2);
+        score3.put(players.get(1), (short) 4);
+        score3.put(players.get(2), (short) 1);
+        score3.put(players.get(3), (short) 3);
+
         List<GameState> gameStates = List.of(
                 GameState.builder()
                         .withState(GameState.State.FINISHED)
                         .withPlayers(players)
                         .withScore(score)
+                        .build(),
+                GameState.builder()
+                        .withState(GameState.State.FINISHED)
+                        .withPlayers(players)
+                        .withScore(score3)
+                        .build(),
+                GameState.builder()
+                        .withState(GameState.State.FINISHED)
+                        .withPlayers(players)
+                        .withScore(score2)
                         .build()
         );
 

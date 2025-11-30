@@ -49,3 +49,29 @@ ALTER TABLE ONLY score
     ADD CONSTRAINT fk_score_player FOREIGN KEY (player_id) REFERENCES player(id);
 END IF;
 END $$;
+
+-- Foreign key constraint fk_score_total_room
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE table_name = 'score_total'
+        AND constraint_name = 'fk_score_total_room'
+    ) THEN
+ALTER TABLE ONLY score_total
+    ADD CONSTRAINT fk_score_total_room FOREIGN KEY (room_id) REFERENCES room(id);
+END IF;
+END $$;
+
+-- Foreign key constraint fk_score_total_player
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE table_name = 'score_total'
+        AND constraint_name = 'fk_score_total_player'
+    ) THEN
+ALTER TABLE ONLY score_total
+    ADD CONSTRAINT fk_score_total_player FOREIGN KEY (player_id) REFERENCES player(id);
+END IF;
+END $$;

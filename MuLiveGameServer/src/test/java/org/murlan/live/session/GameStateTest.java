@@ -8,6 +8,7 @@ import org.murlan.live.game.deck.Deck;
 import org.murlan.live.game.logic.GameState;
 import org.murlan.live.protocol.dto.Player;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -15,8 +16,8 @@ import java.util.stream.Collectors;
 
 public class GameStateTest extends TestCase {
     public void testPlayHand_SameRankSingle() {
-        Player currPlayer = new Player(1L, "currPlayer", "ignored", "currPlayer");
-        Player otherPlayer = new Player(2L, "otherPlayer", "ignored", "otherPlayer");
+        Player currPlayer = new Player(1L, "currPlayer", LocalDateTime.now(), "currPlayer");
+        Player otherPlayer = new Player(2L, "otherPlayer", LocalDateTime.now(), "otherPlayer");
         currPlayer.setDeck(new Deck(getListOfCards(Card.FIVE_OF_CLUBS, Card.FIVE_OF_DIAMONDS)));
         otherPlayer.setDeck(new Deck(getListOfCards(Card.FIVE_OF_SPADES, Card.FIVE_OF_HEARTS)));
 
@@ -38,8 +39,8 @@ public class GameStateTest extends TestCase {
     }
 
     public void testPlayHand_SameRankDouble() {
-        Player currPlayer = new Player(1L, "currPlayer", "ignored", "currPlayer");
-        Player otherPlayer = new Player(2L, "otherPlayer", "ignored", "otherPlayer");
+        Player currPlayer = new Player(1L, "currPlayer", LocalDateTime.now(), "currPlayer");
+        Player otherPlayer = new Player(2L, "otherPlayer", LocalDateTime.now(), "otherPlayer");
         currPlayer.setDeck(new Deck(getListOfCards(Card.TWO_OF_CLUBS, Card.TWO_OF_DIAMONDS, Card.TEN_OF_DIAMONDS)));
         otherPlayer.setDeck(new Deck(getListOfCards(Card.TWO_OF_SPADES, Card.TWO_OF_HEARTS, Card.TEN_OF_HEARTS)));
 
@@ -64,8 +65,8 @@ public class GameStateTest extends TestCase {
     }
 
     public void testPlayHand_TripleWithDoubleCard() {
-        Player currPlayer = new Player(1L, "currPlayer", "ignored", "currPlayer");
-        Player otherPlayer = new Player(2L, "otherPlayer", "ignored", "otherPlayer");
+        Player currPlayer = new Player(1L, "currPlayer", LocalDateTime.now(), "currPlayer");
+        Player otherPlayer = new Player(2L, "otherPlayer", LocalDateTime.now(), "otherPlayer");
         currPlayer.setDeck(new Deck(getListOfCards(Card.FIVE_OF_SPADES, Card.FIVE_OF_CLUBS, Card.FIVE_OF_HEARTS, Card.ACE_OF_CLUBS)));
         otherPlayer.setDeck(new Deck(getListOfCards(Card.TWO_OF_SPADES, Card.TWO_OF_HEARTS, Card.JACK_OF_CLUBS)));
 

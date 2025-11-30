@@ -9,6 +9,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -29,6 +31,9 @@ public class RoomEntity {
 
     @Column(name = "name", updatable = false, nullable = false)
     private String name;
+
+    @Column(name = "is_public", updatable = false, nullable = false)
+    private Boolean isPublic;
 
     @Column(name = "total_score_to_win", updatable = false, nullable = false)
     private Short totalScoreToWin;
