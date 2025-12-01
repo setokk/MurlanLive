@@ -39,6 +39,7 @@ public final class RoomMapper {
     public RoomDto toDto(RoomEntity entity) {
         return RoomDto.builder()
                 .id(entity.getId())
+                .name(entity.getName())
                 .creationDate(entity.getCreationDate())
                 .finishedDate(entity.getFinishedDate())
                 .numPlayers(entity.getNumPlayers())

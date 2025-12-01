@@ -51,6 +51,9 @@ public class RoomEntity {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<GameStateEntity> gameStates;
 
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ScoreTotalEntity> totalScores;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_player_id")
     private PlayerEntity owner;

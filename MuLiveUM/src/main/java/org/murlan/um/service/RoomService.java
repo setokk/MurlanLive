@@ -1,5 +1,6 @@
 package org.murlan.um.service;
 
+import org.murlan.um.api.dto.PlayerDto;
 import org.murlan.um.api.dto.RoomDto;
 import org.murlan.um.model.GameStateEntity;
 import org.murlan.um.model.RoomEntity;
@@ -13,6 +14,10 @@ import org.murlan.um.service.mapper.ScoreMapper;
 import org.murlan.um.service.mapper.ScoreTotalMapper;
 import org.murlan.um.service.param.room.CreateRoomParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +29,10 @@ public class RoomService {
     private final RoomMapper roomMapper;
     private final GameStateMapper gameStateMapper;
     private final ScoreTotalMapper scoreTotalMapper;
+    private final AuthService authService;
+
+    @Value("${mulive.pagination.size}")
+    private int pageSize;
 
     @Autowired
     public RoomService(
@@ -31,13 +40,15 @@ public class RoomService {
             ScoreTotalRepository scoreTotalRepository,
             RoomMapper roomMapper,
             GameStateMapper gameStateMapper,
-            ScoreTotalMapper scoreTotalMapper
+            ScoreTotalMapper scoreTotalMapper,
+            AuthService authService
     ) {
         this.roomRepository = roomRepository;
         this.scoreTotalRepository = scoreTotalRepository;
         this.roomMapper = roomMapper;
         this.gameStateMapper = gameStateMapper;
         this.scoreTotalMapper = scoreTotalMapper;
+        this.authService = authService;
     }
 
     public RoomDto createRoom(CreateRoomParam param) {
@@ -58,5 +69,17 @@ public class RoomService {
         scoreTotalRepository.saveAll(totalScores);
 
         return roomMapper.toDto(savedRoom);
+    }
+
+    public List<RoomDto> getRooms(int pageNumber) {
+        Pageable pageable = PageRequest.of(
+                pageNumber, pageSize,
+                Sort.by("creationDate").descending()
+        );
+        PlayerDto playerDto = authService.getAuthenticatedUser();
+        return roomRepository.findRoomsByPlayerId(playerDto.getId(), pageable)
+                .stream()
+                .map(roomMapper::toDto)
+                .toList();
     }
 }
