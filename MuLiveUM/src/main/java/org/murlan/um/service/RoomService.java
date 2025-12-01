@@ -46,6 +46,7 @@ public class RoomService {
                 .toList();
 
         RoomEntity room = roomMapper.toEntity(param, gameStates);
+        gameStates.forEach(gs -> gs.setRoom(room));
         RoomEntity savedRoom = roomRepository.save(room);
 
         List<ScoreTotalEntity> totalScores = param.totalScores().entrySet().stream()

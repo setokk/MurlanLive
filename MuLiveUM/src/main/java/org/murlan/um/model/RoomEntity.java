@@ -1,5 +1,6 @@
 package org.murlan.um.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -47,7 +48,7 @@ public class RoomEntity {
     @Column(name = "num_players", updatable = false, nullable = false)
     private Short numPlayers;
 
-    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<GameStateEntity> gameStates;
 
     @OneToOne(fetch = FetchType.LAZY)

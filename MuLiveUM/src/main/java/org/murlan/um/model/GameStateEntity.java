@@ -1,5 +1,6 @@
 package org.murlan.um.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -46,10 +47,10 @@ public class GameStateEntity {
     @Enumerated(EnumType.ORDINAL)
     private GameStateEnum state;
 
-    @OneToMany(mappedBy = "gameState", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "gameState", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ScoreEntity> scores;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room_id", nullable = false)
     private RoomEntity room;
 }
