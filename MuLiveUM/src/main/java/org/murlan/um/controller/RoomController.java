@@ -43,11 +43,17 @@ public class RoomController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RoomDto>> getRooms(@RequestParam(name = "pageNumber") int pageNumber) {
+    public ResponseEntity<List<RoomDto>> getRooms(
+            @RequestParam(name = "pageNumber") int pageNumber,
+            @RequestParam(name = "playerId") long playerId
+    ) {
         if (pageNumber < 0) {
             throw new BusinessLogicException(HttpStatus.BAD_REQUEST, "pageNumber query parameter cannot be < 0");
         }
-        List<RoomDto> rooms = roomService.getRooms(pageNumber);
+        if (playerId < 0) {
+            throw new BusinessLogicException(HttpStatus.BAD_REQUEST, "playerId query parameter cannot be < 0");
+        }
+        List<RoomDto> rooms = roomService.getRooms(pageNumber, playerId);
         return ResponseEntity.ok(rooms);
     }
 }

@@ -1,16 +1,13 @@
 package org.murlan.um.service;
 
-import org.murlan.um.api.dto.PlayerDto;
 import org.murlan.um.api.dto.RoomDto;
 import org.murlan.um.model.GameStateEntity;
 import org.murlan.um.model.RoomEntity;
-import org.murlan.um.model.ScoreEntity;
 import org.murlan.um.model.ScoreTotalEntity;
 import org.murlan.um.repository.RoomRepository;
 import org.murlan.um.repository.ScoreTotalRepository;
 import org.murlan.um.service.mapper.GameStateMapper;
 import org.murlan.um.service.mapper.RoomMapper;
-import org.murlan.um.service.mapper.ScoreMapper;
 import org.murlan.um.service.mapper.ScoreTotalMapper;
 import org.murlan.um.service.param.room.CreateRoomParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,13 +68,12 @@ public class RoomService {
         return roomMapper.toDto(savedRoom);
     }
 
-    public List<RoomDto> getRooms(int pageNumber) {
+    public List<RoomDto> getRooms(int pageNumber, long playerId) {
         Pageable pageable = PageRequest.of(
                 pageNumber, pageSize,
                 Sort.by("creationDate").descending()
         );
-        PlayerDto playerDto = authService.getAuthenticatedUser();
-        return roomRepository.findRoomsByPlayerId(playerDto.getId(), pageable)
+        return roomRepository.findRoomsByPlayerId(playerId, pageable)
                 .stream()
                 .map(roomMapper::toDto)
                 .toList();
