@@ -2,10 +2,12 @@ package org.murlan.live.endpoint.session;
 
 import jakarta.websocket.Session;
 import lombok.NonNull;
+import org.murlan.live.game.GameConstants;
 import org.murlan.live.game.logic.GameState;
 import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.dto.RoomDto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 public class RoomHandler {
     private final ConcurrentHashMap<String, PlayerSession> jwtToSessionMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<PlayerSession, String> sessionToRoomIdMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, List<PlayerSession>> roomIdToSessionMap = new ConcurrentHashMap<>(); // for efficient retrieval of players in a room
     private final ConcurrentHashMap<String, Room> roomIdToRoomMap = new ConcurrentHashMap<>();
 
     public void addSession(@NonNull PlayerSession playerSession) {
@@ -28,7 +31,12 @@ public class RoomHandler {
 
     public Optional<String> removeSession(@NonNull PlayerSession playerSession) {
         jwtToSessionMap.remove(playerSession.getPlayer().getJwt());
-        return Optional.ofNullable(sessionToRoomIdMap.remove(playerSession));
+        String roomId = sessionToRoomIdMap.remove(playerSession);
+        if (roomId == null) {
+            return Optional.empty();
+        }
+        roomIdToSessionMap.get(roomId).remove(playerSession);
+        return Optional.of(roomId);
     }
 
     public boolean jwtSessionExists(@NonNull String jwt) {
@@ -40,6 +48,8 @@ public class RoomHandler {
             throw new RuntimeException("Player session with JWT " + playerSession.getPlayer().getJwt() + " not found");
         }
         sessionToRoomIdMap.putIfAbsent(playerSession, roomId);
+        roomIdToSessionMap.putIfAbsent(roomId, new ArrayList<>(GameConstants.MAX_PLAYERS));
+        roomIdToSessionMap.get(roomId).add(playerSession);
     }
 
     public boolean createRoom(@NonNull Room room, @NonNull PlayerSession playerSession) {
@@ -93,13 +103,7 @@ public class RoomHandler {
             return false;
         }
 
-        boolean isSuccessful = room.addPlayer(playerSession.getPlayer());
-        if (isSuccessful) {
-            linkSessionWithRoom(playerSession, roomId);
-            return true;
-        } else {
-            return false;
-        }
+        return room.addPlayer(playerSession.getPlayer());
     }
 
     public List<RoomDto> getAvailableRooms() {
@@ -117,5 +121,9 @@ public class RoomHandler {
         }
         linkSessionWithRoom(playerSession, roomId);
         return true;
+    }
+
+    public synchronized List<PlayerSession> getPlayersInRoom(String roomId) {
+        return roomIdToSessionMap.get(roomId);
     }
 }

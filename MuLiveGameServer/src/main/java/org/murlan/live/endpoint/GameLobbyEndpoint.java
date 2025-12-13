@@ -22,6 +22,10 @@ import org.murlan.live.protocol.api.GameStateReq;
 import org.murlan.live.protocol.api.GameStateResp;
 import org.murlan.live.protocol.api.GiveCardReq;
 import org.murlan.live.protocol.api.GiveCardResp;
+import org.murlan.live.protocol.api.InformGiveCardResp;
+import org.murlan.live.protocol.api.InformPassResp;
+import org.murlan.live.protocol.api.InformPlayHandResp;
+import org.murlan.live.protocol.api.InformSurrenderResp;
 import org.murlan.live.protocol.api.JoinRoomReq;
 import org.murlan.live.protocol.api.JoinRoomResp;
 import org.murlan.live.protocol.api.PassReq;
@@ -116,6 +120,8 @@ public class GameLobbyEndpoint {
         PlayerSession playerSession = optionalPlayerSession.get();
         Player player = playerSession.getPlayer();
         Room room = roomHandler.getPlayerRoom(playerSession);
+
+        Resp informResp = null;
         Resp resp = switch (req) {
             case GameStateReq gameStateReq -> {
                 GameStateDto gameStateDto = new GameStateDto(
@@ -136,14 +142,23 @@ public class GameLobbyEndpoint {
             }
             case PlayHandReq playHandReq -> {
                 boolean isSuccessful = room.getActiveGameState().playHand(player, playHandReq.getCardCombination());
+                if (isSuccessful) {
+                    informResp = new InformPlayHandResp(ResponseStatus.OK, player.getId(), playHandReq.getCardCombination());
+                }
                 yield new PlayHandResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case PassReq passReq -> {
                 boolean isSuccessful = room.getActiveGameState().pass(player);
+                if (isSuccessful) {
+                    informResp = new InformPassResp(ResponseStatus.OK, player.getId());
+                }
                 yield new PassResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case SurrenderReq surrenderReq -> {
                 boolean isSuccessful = room.getActiveGameState().surrender(player);
+                if (isSuccessful) {
+                    informResp = new InformSurrenderResp(ResponseStatus.OK, player.getId());
+                }
                 yield new SurrenderResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case AvailableRoomsReq availableRoomsReq -> {
@@ -168,6 +183,7 @@ public class GameLobbyEndpoint {
                 newRoom.newGameState();
 
                 boolean isSuccessful = roomHandler.createRoom(newRoom, playerSession);
+
                 yield new CreateRoomResp(
                         isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
                         objectMapper.writeValueAsString(new RoomDto(newRoom.getId(), newRoom.getName(), newRoom.getNumPlayers()))
@@ -176,6 +192,9 @@ public class GameLobbyEndpoint {
             case GiveCardReq giveCardReq -> {
                 Player receivingPlayer = new Player(giveCardReq.getReceivingPlayerId());
                 boolean isSuccessful = room.getActiveGameState().giveCard(giveCardReq.getCard(), player, receivingPlayer);
+                if (isSuccessful) {
+                    informResp = new InformGiveCardResp(ResponseStatus.OK, player.getId(), receivingPlayer.getId(), giveCardReq.getCard());
+                }
                 yield new GiveCardResp(
                         isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR
                 );
@@ -187,6 +206,8 @@ public class GameLobbyEndpoint {
         if (!responseString.isEmpty()) {
             session.getBasicRemote().sendText(responseString);
         }
+
+        endpointHelper.informPlayers(informResp, playerSession, roomHandler.getPlayersInRoom(room.getId()));
     }
 
     @OnClose
