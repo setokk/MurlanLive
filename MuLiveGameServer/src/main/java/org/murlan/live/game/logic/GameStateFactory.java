@@ -44,6 +44,12 @@ public class GameStateFactory {
             } else {
                 gameState.setCurrTurnPlayer(gameState.prevLoserContainsBothJokers() ? gameState.getPrevWinner() : gameState.getPrevLoser());
             }
+
+            try {
+                endpointHelper.informPlayers(new InformGameStartResp(ResponseStatus.OK), null, roomHandler.getPlayersInRoom(room.getId()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         };
 
         Runnable onFinishGame = () -> {

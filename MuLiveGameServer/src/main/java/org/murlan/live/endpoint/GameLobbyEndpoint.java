@@ -172,7 +172,7 @@ public class GameLobbyEndpoint {
                 if (isSuccessful) {
                     Room joinedRoom = roomHandler.getRoom(joinRoomReq.getRoomId());
                     if (joinedRoom.getNumPlayers() == GameConstants.MAX_PLAYERS) {
-                        informResp = new InformGameStartResp(ResponseStatus.OK);
+                        session.getBasicRemote().sendText(generator.generateMessage(new InformGameStartResp(ResponseStatus.OK)));
                     }
                 }
                 yield new JoinRoomResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
@@ -191,7 +191,6 @@ public class GameLobbyEndpoint {
                 newRoom.newGameState();
 
                 boolean isSuccessful = roomHandler.createRoom(newRoom, playerSession);
-
                 yield new CreateRoomResp(
                         isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
                         objectMapper.writeValueAsString(new RoomDto(newRoom.getId(), newRoom.getName(), newRoom.getNumPlayers()))
