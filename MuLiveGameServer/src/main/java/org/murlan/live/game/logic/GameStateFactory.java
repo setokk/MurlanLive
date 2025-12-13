@@ -1,11 +1,16 @@
 package org.murlan.live.game.logic;
 
 import lombok.RequiredArgsConstructor;
+import org.murlan.live.endpoint.EndpointHelper;
+import org.murlan.live.endpoint.session.RoomHandler;
 import org.murlan.live.game.GameConstants;
 import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.deck.Deck;
 import org.murlan.live.game.deck.Shuffler;
+import org.murlan.live.protocol.ResponseStatus;
+import org.murlan.live.protocol.api.InformGameFinishResp;
+import org.murlan.live.protocol.api.InformGameStartResp;
 import org.murlan.live.protocol.dto.Player;
 import org.murlan.live.protocol.rest.RoomRESTClient;
 
@@ -18,6 +23,8 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class GameStateFactory {
     private final RoomRESTClient roomRESTClient;
+    private final EndpointHelper endpointHelper;
+    private final RoomHandler roomHandler;
 
     public GameState createGameState(Room room) {
         Consumer<GameState> onStartGame = (gameState) -> {
@@ -62,6 +69,12 @@ public class GameStateFactory {
                         .orElseThrow(() -> new IllegalStateException(""))
                         .getKey();
                 room.startNewGameFromPreviousGame(winner, loser);
+            }
+
+            try {
+                endpointHelper.informPlayers(new InformGameFinishResp(ResponseStatus.OK), null, roomHandler.getPlayersInRoom(room.getId()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         };
 

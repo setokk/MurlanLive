@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.murlan.live.endpoint.session.PlayerSession;
 import org.murlan.live.endpoint.session.RoomHandler;
+import org.murlan.live.game.GameConstants;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.logic.GameStateFactory;
 import org.murlan.live.game.logic.Room;
@@ -22,6 +23,7 @@ import org.murlan.live.protocol.api.GameStateReq;
 import org.murlan.live.protocol.api.GameStateResp;
 import org.murlan.live.protocol.api.GiveCardReq;
 import org.murlan.live.protocol.api.GiveCardResp;
+import org.murlan.live.protocol.api.InformGameStartResp;
 import org.murlan.live.protocol.api.InformGiveCardResp;
 import org.murlan.live.protocol.api.InformPassResp;
 import org.murlan.live.protocol.api.InformPlayHandResp;
@@ -167,6 +169,12 @@ public class GameLobbyEndpoint {
             }
             case JoinRoomReq joinRoomReq -> {
                 boolean isSuccessful = roomHandler.joinRoom(joinRoomReq.getRoomId(), joinRoomReq.getPasscode(), playerSession);
+                if (isSuccessful) {
+                    Room joinedRoom = roomHandler.getRoom(joinRoomReq.getRoomId());
+                    if (joinedRoom.getNumPlayers() == GameConstants.MAX_PLAYERS) {
+                        informResp = new InformGameStartResp(ResponseStatus.OK);
+                    }
+                }
                 yield new JoinRoomResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case CreateRoomReq createRoomReq -> {
@@ -178,7 +186,7 @@ public class GameLobbyEndpoint {
                         LocalDateTime.now(),
                         createRoomReq.getTotalScoreToWin(),
                         playerSession.getPlayer(),
-                        new GameStateFactory(roomRESTClient)
+                        new GameStateFactory(roomRESTClient, endpointHelper, roomHandler)
                 );
                 newRoom.newGameState();
 
