@@ -69,6 +69,7 @@ public class RoomHandler {
     }
 
     public Room removeRoom(@NonNull String roomId) {
+        roomIdToSessionMap.remove(roomId);
         return roomIdToRoomMap.remove(roomId);
     }
 

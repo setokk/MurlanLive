@@ -44,12 +44,12 @@ public class CreateRoomTest {
     }
 
     public Room prepareRoom() {
-        Player owner = new Player(1L, "Player1", LocalDateTime.now(), "JWT1");
+        Player owner = new Player(1L, "player1", LocalDateTime.now(), "JWT1");
         List<Player> players = List.of(
                 owner,
-                new Player(2L, "Player2", LocalDateTime.now(), "JWT2"),
-                new Player(3L, "Player3", LocalDateTime.now(), "JWT3"),
-                new Player(4L, "Player4", LocalDateTime.now(), "JWT4")
+                new Player(2L, "player2", LocalDateTime.now(), "JWT2"),
+                new Player(3L, "player3", LocalDateTime.now(), "JWT3"),
+                new Player(4L, "player4", LocalDateTime.now(), "JWT4")
         );
         Map<Player, Short> score = HashMap.newHashMap(players.size());
         for (int i = 0; i < players.size(); i++) {

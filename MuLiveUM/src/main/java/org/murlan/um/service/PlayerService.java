@@ -45,4 +45,10 @@ public class PlayerService {
         PlayerEntity savedPlayer = playerRepository.save(new PlayerEntity(param.username(), passwordEncoder.encode(param.password()), LocalDateTime.now()));
         return new PlayerDto(savedPlayer.getId(), savedPlayer.getUsername(), savedPlayer.getCreatedDate());
     }
+
+    public PlayerDto getPlayer(long playerId) {
+        PlayerEntity player = playerRepository.findById(playerId)
+                .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Player with id: " + playerId + " not found"));
+        return new PlayerDto(player.getId(), player.getUsername(), player.getCreatedDate());
+    }
 }

@@ -10,6 +10,7 @@ import org.murlan.um.service.mapper.PlayerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,5 +43,11 @@ public class PlayerController {
     @GetMapping("/validateJwt")
     public ResponseEntity<?> validateJwt() {
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PlayerDto> getPlayer(@PathVariable(name = "id") long playerId) {
+        PlayerDto playerDto = playerService.getPlayer(playerId);
+        return ResponseEntity.ok(playerDto);
     }
 }

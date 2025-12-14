@@ -1,6 +1,7 @@
 package org.murlan.um.controller;
 
 import jakarta.validation.Valid;
+import org.murlan.um.api.dto.RoomDetailsDto;
 import org.murlan.um.api.dto.RoomDto;
 import org.murlan.um.api.request.CreateRoomRequest;
 import org.murlan.um.error.BusinessLogicException;
@@ -38,8 +39,9 @@ public class RoomController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getRoom(@PathVariable(name = "id") String roomId) {
-        return ResponseEntity.ok("RoomDetails: " + roomId);
+    public ResponseEntity<RoomDetailsDto> getRoom(@PathVariable(name = "id") String roomId) {
+        RoomDetailsDto roomDetailsDto = roomService.getRoomDetails(roomId);
+        return ResponseEntity.ok(roomDetailsDto);
     }
 
     @GetMapping

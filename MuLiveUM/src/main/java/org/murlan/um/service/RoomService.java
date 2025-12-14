@@ -1,6 +1,8 @@
 package org.murlan.um.service;
 
+import org.murlan.um.api.dto.RoomDetailsDto;
 import org.murlan.um.api.dto.RoomDto;
+import org.murlan.um.error.BusinessLogicException;
 import org.murlan.um.model.GameStateEntity;
 import org.murlan.um.model.RoomEntity;
 import org.murlan.um.model.ScoreTotalEntity;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,7 +63,7 @@ public class RoomService {
         List<ScoreTotalEntity> totalScores = param.totalScores().entrySet().stream()
                 .map(totalScore -> {
                     boolean isWinner = totalScore.getValue() >= savedRoom.getTotalScoreToWin();
-                    return scoreTotalMapper.toEntity(totalScore, savedRoom.getId(), isWinner);
+                    return scoreTotalMapper.toEntity(totalScore, savedRoom, isWinner);
                 })
                 .toList();
         scoreTotalRepository.saveAll(totalScores);
@@ -77,5 +80,11 @@ public class RoomService {
                 .stream()
                 .map(roomMapper::toDto)
                 .toList();
+    }
+
+    public RoomDetailsDto getRoomDetails(String roomId) {
+        RoomEntity room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Room with id: " + roomId + " not found"));
+        return roomMapper.toDetailsDto(room);
     }
 }
