@@ -115,6 +115,10 @@ public class RoomHandler {
                 .collect(Collectors.toList());
     }
 
+    public List<Room> getAllRooms() {
+        return roomIdToRoomMap.values().stream().toList();
+    }
+
     public synchronized boolean joinRoom(@NonNull String roomId, @NonNull String passcode, @NonNull PlayerSession playerSession) {
         boolean isJoinSuccessful = addPlayerToRoom(roomId, passcode, playerSession);
         if (!isJoinSuccessful) {

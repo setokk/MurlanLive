@@ -75,6 +75,20 @@ public class GameLobbyEndpoint {
     private static final PlayerRESTClient playerRESTClient = new PlayerRESTClient(config);
     private static final RoomRESTClient roomRESTClient = new RoomRESTClient(config, objectMapper);
 
+    static {
+        // Save rooms if any shutdown happens to the game server, no matter the state they are in.
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            for (Room room : roomHandler.getAllRooms()) {
+                try {
+                    roomRESTClient.createRoom(room);
+                } catch (IOException | InterruptedException e) {
+                    LOGGER.error("Could not save room with id: {}", room.getId());
+                    LOGGER.error(e);
+                }
+            }
+        }));
+    }
+
     @OnOpen
     public void onOpen(Session session) throws IOException, InterruptedException {
         LOGGER.info("New connection with sessionId: {}", session.getId());
