@@ -29,7 +29,6 @@ public class RoomService {
     private final RoomMapper roomMapper;
     private final GameStateMapper gameStateMapper;
     private final ScoreTotalMapper scoreTotalMapper;
-    private final AuthService authService;
 
     @Value("${mulive.pagination.size}")
     private int pageSize;
@@ -40,15 +39,13 @@ public class RoomService {
             ScoreTotalRepository scoreTotalRepository,
             RoomMapper roomMapper,
             GameStateMapper gameStateMapper,
-            ScoreTotalMapper scoreTotalMapper,
-            AuthService authService
+            ScoreTotalMapper scoreTotalMapper
     ) {
         this.roomRepository = roomRepository;
         this.scoreTotalRepository = scoreTotalRepository;
         this.roomMapper = roomMapper;
         this.gameStateMapper = gameStateMapper;
         this.scoreTotalMapper = scoreTotalMapper;
-        this.authService = authService;
     }
 
     public RoomDto createRoom(CreateRoomParam param) {

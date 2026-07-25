@@ -71,13 +71,27 @@ public class EndpointHelper {
                                 ResponseStatus.OK,
                                 informGiveCardResp.getOriginPlayerId(),
                                 informGiveCardResp.getTargetPlayerId(),
-                                null
+                                null,
+                                informGiveCardResp.haveBothPlayersGivenCards()
                         );
                         playerSession.getSession().getBasicRemote().sendText(generator.generateMessage(hiddenInformGiveCardResp));
                     }
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + resp);
             }
+        }
+
+        notifyPlayersIfGameShouldStart(resp, playerSessionsInRoom);
+    }
+
+    private void notifyPlayersIfGameShouldStart(Resp resp, List<PlayerSession> playerSessionsInRoom) throws IOException {
+        if (!(resp instanceof InformGiveCardResp informGiveCardResp && !informGiveCardResp.haveBothPlayersGivenCards())) {
+            return;
+        }
+
+        for (PlayerSession playerSession : playerSessionsInRoom) {
+            String informStartGameMessage = generator.generateMessage(new InformGameStartResp(ResponseStatus.OK));
+            playerSession.getSession().getBasicRemote().sendText(informStartGameMessage);
         }
     }
 }

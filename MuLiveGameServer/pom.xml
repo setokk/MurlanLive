@@ -12,7 +12,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <log4j.version>2.24.3</log4j.version>
+        <log4j.version>2.25.4</log4j.version>
         <lombok.version>1.18.36</lombok.version>
     </properties>
 
@@ -113,7 +113,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.murlan.live.Main</mainClass>
+                            <mainClass>org.murlan.live.WebSocketApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

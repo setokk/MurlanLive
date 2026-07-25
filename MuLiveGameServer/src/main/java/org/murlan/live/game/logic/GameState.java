@@ -25,11 +25,12 @@ import java.util.function.Consumer;
 @Builder(setterPrefix = "with")
 @AllArgsConstructor
 public class GameState {
-    @JsonIgnore private Player currTurnPlayer;
-    @JsonIgnore private boolean shouldCurrTurnPlayerUseThreeOfSpades;
     private State state;
     private List<Player> players;
     private Map<Player, Short> score;
+
+    @JsonIgnore private Player currTurnPlayer;
+    @JsonIgnore private boolean shouldCurrTurnPlayerUseThreeOfSpades;
     @JsonIgnore private CardCombination currCardCombination;
     @JsonIgnore private Consumer<GameState> onStartGame;
     @JsonIgnore private Runnable onFinishGame;
@@ -226,6 +227,10 @@ public class GameState {
 
     public boolean prevLoserContainsBothJokers() {
         return isFromPrevious() && getPrevLoser().getDeck().contains(new CardCombination(Card.BLACK_JOKER, Card.RED_JOKER));
+    }
+
+    public boolean haveBothPlayersGivenCards() {
+        return getGivenCards().size() == 2;
     }
 
     public enum State {

@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public class ConfigProvider {
     private static ProtocolConfig protocolConfig;
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static ProtocolConfig getProtocolConfig() {
         if (protocolConfig == null) {

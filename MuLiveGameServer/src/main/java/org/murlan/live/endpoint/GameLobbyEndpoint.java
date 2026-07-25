@@ -61,7 +61,7 @@ import java.util.UUID;
 
 @ServerEndpoint(value = "/game-lobby")
 public class GameLobbyEndpoint {
-    private static final Logger LOGGER = LogManager.getLogger(GameLobbyEndpoint.class);
+    private static final Logger log = LogManager.getLogger(GameLobbyEndpoint.class);
 
     /**
      * Shared state between sessions
@@ -82,8 +82,8 @@ public class GameLobbyEndpoint {
                 try {
                     roomRESTClient.createRoom(room);
                 } catch (IOException | InterruptedException e) {
-                    LOGGER.error("Could not save room with id: {}", room.getId());
-                    LOGGER.error(e);
+                    log.error("Could not save room with id: {}", room.getId());
+                    log.error(e);
                 }
             }
         }));
@@ -91,7 +91,7 @@ public class GameLobbyEndpoint {
 
     @OnOpen
     public void onOpen(Session session) throws IOException, InterruptedException {
-        LOGGER.info("New connection with sessionId: {}", session.getId());
+        log.info("New connection with sessionId: {}", session.getId());
 
         String jwt = endpointHelper.getAndCheckQueryParam("jwt", session.getQueryString()).orElse("");
         if (!playerRESTClient.validateJwt(jwt)) {
@@ -112,12 +112,12 @@ public class GameLobbyEndpoint {
         }
         roomHandler.addSession(new PlayerSession(session, player));
 
-        LOGGER.info("Connection with sessionId: {} established!", session.getId());
+        log.info("Connection with sessionId: {} established!", session.getId());
     }
 
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
-        LOGGER.info("From {{}}, received message: {}", session.getId(), message);
+        log.info("From {{}}, received message: {}", session.getId(), message);
 
         Req req;
         try {
@@ -214,7 +214,10 @@ public class GameLobbyEndpoint {
                 Player receivingPlayer = new Player(giveCardReq.getReceivingPlayerId());
                 boolean isSuccessful = room.getActiveGameState().giveCard(giveCardReq.getCard(), player, receivingPlayer);
                 if (isSuccessful) {
-                    informResp = new InformGiveCardResp(ResponseStatus.OK, player.getId(), receivingPlayer.getId(), giveCardReq.getCard());
+                    informResp = new InformGiveCardResp(ResponseStatus.OK,
+                            player.getId(), receivingPlayer.getId(), giveCardReq.getCard(),
+                            room.getActiveGameState().haveBothPlayersGivenCards()
+                    );
                 }
                 yield new GiveCardResp(
                         isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR
@@ -249,11 +252,11 @@ public class GameLobbyEndpoint {
                 }
             }
         }
-        LOGGER.info("Connection with sessionId: {} closed", session.getId());
+        log.info("Connection with sessionId: {} closed", session.getId());
     }
 
     @OnError
     public void onError(Session session, Throwable throwable) throws IOException {
-        LOGGER.error("Error", throwable);
+        log.error("Error", throwable);
     }
 }
