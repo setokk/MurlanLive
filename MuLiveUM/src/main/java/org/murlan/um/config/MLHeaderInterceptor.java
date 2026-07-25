@@ -1,4 +1,4 @@
-package org.murlan.um.config.interceptor;
+package org.murlan.um.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,10 +16,7 @@ public class MLHeaderInterceptor implements HandlerInterceptor {
     private String gameServerSecretHeaderVal;
 
     @Override
-    public boolean preHandle(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String headerValue = request.getHeader(gameServerSecretHeader);
 
         if (headerValue == null || !headerValue.equals(gameServerSecretHeaderVal)) {

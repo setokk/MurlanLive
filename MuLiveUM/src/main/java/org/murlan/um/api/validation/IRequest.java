@@ -1,4 +1,4 @@
-package org.murlan.um.api.request.validation;
+package org.murlan.um.api.validation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.murlan.um.error.BusinessLogicException;

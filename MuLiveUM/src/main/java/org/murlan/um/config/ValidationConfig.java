@@ -1,6 +1,6 @@
 package org.murlan.um.config;
 
-import org.murlan.um.api.request.validation.IRequestValidator;
+import org.murlan.um.api.validation.IRequestValidator;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.Validator;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

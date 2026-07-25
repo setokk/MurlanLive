@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.murlan.um.api.dto.PlayerDto;
 import org.murlan.um.api.dto.GameStateDto;
-import org.murlan.um.api.request.validation.IRequest;
+import org.murlan.um.api.validation.IRequest;
 import org.murlan.um.error.BusinessLogicException;
 import org.springframework.http.HttpStatus;
 

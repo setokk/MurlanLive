@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.murlan.um.api.request.validation.IRequest;
+import org.murlan.um.api.validation.IRequest;
 
 @Getter
 public class LoginPlayerRequest implements IRequest {

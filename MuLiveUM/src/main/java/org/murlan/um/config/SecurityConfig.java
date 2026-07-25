@@ -2,7 +2,6 @@ package org.murlan.um.config;
 
 import lombok.RequiredArgsConstructor;
 import org.murlan.um.auth.JwtAuthFilter;
-import org.murlan.um.config.interceptor.MLHeaderInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
