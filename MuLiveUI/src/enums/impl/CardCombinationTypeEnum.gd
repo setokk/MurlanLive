@@ -1,4 +1,4 @@
-class_name CardCombinationType
+class_name CardCombinationTypeEnum
 
 static var SINGLE_CARD: _CardCombinationType = _CardCombinationType.new(0);
 static var DOUBLE_CARDS: _CardCombinationType = _CardCombinationType.new(1);

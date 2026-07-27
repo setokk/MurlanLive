@@ -1,4 +1,4 @@
-class_name Rank
+class_name RankEnum
 
 static var THREE: _Rank = _Rank.new("3", 0);
 static var FOUR: _Rank = _Rank.new("4", 1);

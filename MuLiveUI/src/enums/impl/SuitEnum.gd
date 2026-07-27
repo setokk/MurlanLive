@@ -1,4 +1,4 @@
-class_name Suit
+class_name SuitEnum
 
 static var HEARTS: _Suit = _Suit.new("H", 0);
 static var DIAMONDS: _Suit = _Suit.new("D", 1);

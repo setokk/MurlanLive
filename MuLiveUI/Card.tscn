@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://bvu11ilqfcyuu"]
+
+[ext_resource type="Texture2D" uid="uid://b3r143j55a1wa" path="res://assets/images/decks/0/_poster.png" id="1_dd2wi"]
+[ext_resource type="Script" uid="uid://dh6s4fyx0u08f" path="res://Card.gd" id="1_hael8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u4fkt"]
+size = Vector2(228, 319)
+
+[node name="Card" type="Area2D"]
+script = ExtResource("1_hael8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(115, 161.5)
+shape = SubResource("RectangleShape2D_u4fkt")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(114.375, 160.658)
+scale = Vector2(0.313786, 0.313786)
+texture = ExtResource("1_dd2wi")
