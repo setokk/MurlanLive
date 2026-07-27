@@ -4,16 +4,16 @@
 [ext_resource type="Script" uid="uid://dh6s4fyx0u08f" path="res://Card.gd" id="1_hael8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u4fkt"]
-size = Vector2(228, 319)
+size = Vector2(100, 143)
 
 [node name="Card" type="Area2D"]
 script = ExtResource("1_hael8")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(115, 161.5)
+position = Vector2(51, 71.5)
 shape = SubResource("RectangleShape2D_u4fkt")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(114.375, 160.658)
-scale = Vector2(0.313786, 0.313786)
+position = Vector2(51, 71.6374)
+scale = Vector2(0.139918, 0.139918)
 texture = ExtResource("1_dd2wi")

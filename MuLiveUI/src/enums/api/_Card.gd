@@ -27,11 +27,11 @@ func has_bigger_rank_for_kolor_than(other: _Card) -> bool:
 	var rank: _Rank = self.rank();
 	var otherRank: _Rank = other.rank();
 
-	var bigger_or_equal_three: bool = rank == Rank.THREE or rank.ordinal() > Rank.THREE.ordinal();
+	var bigger_or_equal_three: bool = rank == RankEnum.THREE or rank.ordinal() > RankEnum.THREE.ordinal();
 	match otherRank:
-		Rank.ACE:
-			return rank == Rank.TWO or bigger_or_equal_three;
-		Rank.TWO:
+		RankEnum.ACE:
+			return rank == RankEnum.TWO or bigger_or_equal_three;
+		RankEnum.TWO:
 			return bigger_or_equal_three;
 		_:
 			return rank.ordinal() > otherRank.ordinal();
