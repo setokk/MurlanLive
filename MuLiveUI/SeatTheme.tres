@@ -1,0 +1,40 @@
+[gd_resource type="Theme" format=3 uid="uid://dcg0tqtvbome4"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_iwpck"]
+load_path = "res://.godot/imported/seat-icon-greyscale-no-bg.png-516b6b23bc608d4d0007d4b202c7e487.ctex"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iwpck"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ud1i"]
+bg_color = Color(0.7643998, 0.6730441, 0.55201083, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.6069303, 0.5215317, 0.3987878, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+corner_detail = 10
+
+[resource]
+Button/colors/icon_focus_color = Color(0.52156866, 0.105882354, 0.08235294, 1)
+Button/colors/icon_hover_color = Color(0.52156866, 0.105882354, 0.08235294, 1)
+Button/colors/icon_hover_pressed_color = Color(0.52156866, 0.105882354, 0.08235294, 1)
+Button/colors/icon_normal_color = Color(0.52055997, 0.10578302, 0.08343088, 1)
+Button/colors/icon_pressed_color = Color(0.52156866, 0.105882354, 0.08235294, 1)
+Button/font_sizes/font_size = 16
+Button/icons/icon = SubResource("CompressedTexture2D_iwpck")
+Button/styles/disabled = null
+Button/styles/focus = null
+Button/styles/hover = SubResource("StyleBoxFlat_iwpck")
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_iwpck")
+Button/styles/normal = SubResource("StyleBoxFlat_iwpck")
+Button/styles/pressed = SubResource("StyleBoxFlat_iwpck")
+MarginContainer/constants/margin_bottom = 5
+MarginContainer/constants/margin_left = 5
+MarginContainer/constants/margin_right = 5
+MarginContainer/constants/margin_top = 5
+Panel/styles/panel = SubResource("StyleBoxFlat_8ud1i")

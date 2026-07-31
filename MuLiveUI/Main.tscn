@@ -1,8 +1,354 @@
-[gd_scene load_steps=2 format=3 uid="uid://dgxlmxq4gm0y8"]
+[gd_scene format=3 uid="uid://dgxlmxq4gm0y8"]
 
-[ext_resource type="Script" uid="uid://d4c8sfgawrmxs" path="res://CardManager.gd" id="2_uu6xs"]
+[ext_resource type="Script" uid="uid://bim5gkgjstal4" path="res://Main.gd" id="1_trn2v"]
+[ext_resource type="Script" uid="uid://dogwu3dr7uwoo" path="res://TableArea.gd" id="2_cm0pq"]
+[ext_resource type="Script" uid="uid://dxslq5o4btfi4" path="res://CardManager.gd" id="2_uu6xs"]
+[ext_resource type="Texture2D" uid="uid://btrvc406r2yhu" path="res://assets/images/bg-greyscale-2.png" id="3_03owx"]
+[ext_resource type="Texture2D" uid="uid://bjw3lhin5r21w" path="res://assets/images/table-greyscale.png" id="4_trn2v"]
+[ext_resource type="Script" uid="uid://c6ptpi4mx4pr6" path="res://OpponentHand.gd" id="5_fos0i"]
+[ext_resource type="Theme" uid="uid://dcg0tqtvbome4" path="res://SeatTheme.tres" id="5_wkp8b"]
+[ext_resource type="Script" uid="uid://b7my26juihu56" path="res://PlayedCards.gd" id="6_3dxm6"]
+[ext_resource type="Script" uid="uid://idmxcl4kxeli" path="res://Deck.gd" id="6_wkp8b"]
+[ext_resource type="Script" uid="uid://k68075chkxlf" path="res://ButtonsContainer.gd" id="7_lgr22"]
+[ext_resource type="Script" uid="uid://dtfikuha72pje" path="res://HandPlaceholder.gd" id="10_20pc6"]
 
-[node name="Main" type="Node2D"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_03owx"]
+bg_color = Color(0, 0, 0, 0.36078432)
 
-[node name="CardManager" type="Node2D" parent="."]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_trn2v"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_03owx"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wkp8b"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5vvyt"]
+
+[sub_resource type="GDScript" id="GDScript_20pc6"]
+script/source = "extends Control
+
+@onready var player_hand = $HandArea/MarginContainer/HandPlaceholder
+@onready var buttons_container = $ButtonsContainer
+
+func _ready():
+	#buttons_container.play_hand_requested.connect(player_hand.play_hand)
+	#buttons_container.pass_requested.connect(player_hand.pass_turn)
+	pass
+"
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c6i3y"]
+
+[node name="Main" type="Control" unique_id=2028910291]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_trn2v")
+
+[node name="CardManager" type="Node2D" parent="." unique_id=1774645172]
 script = ExtResource("2_uu6xs")
+
+[node name="Game" type="Control" parent="." unique_id=2078135671]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="Game" unique_id=1514150480]
+self_modulate = Color(0.9982837, 0.97095054, 0.8121808, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_03owx")
+expand_mode = 1
+
+[node name="TopArea" type="Control" parent="Game" unique_id=844685329]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 0.06
+
+[node name="PanelContainer" type="PanelContainer" parent="Game/TopArea" unique_id=748819294]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_03owx")
+
+[node name="MiddleArea" type="Control" parent="Game" unique_id=1263363356]
+layout_mode = 1
+anchor_top = 0.1
+anchor_right = 1.0
+anchor_bottom = 0.7
+
+[node name="LeftArea" type="Control" parent="Game/MiddleArea" unique_id=1036582323]
+layout_mode = 1
+anchor_right = 0.2
+anchor_bottom = 1.0
+
+[node name="TableArea" type="Control" parent="Game/MiddleArea" unique_id=194865701]
+layout_mode = 1
+anchor_left = 0.2
+anchor_right = 0.8
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_cm0pq")
+
+[node name="TableLayout" type="Control" parent="Game/MiddleArea/TableArea" unique_id=1494630736]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_wkp8b")
+
+[node name="Table" type="TextureRect" parent="Game/MiddleArea/TableArea/TableLayout" unique_id=1613491373]
+modulate = Color(0.21960784, 0.20392157, 0.19215687, 1)
+layout_mode = 0
+offset_left = 34.560013
+offset_top = 14.608078
+offset_right = 656.64
+offset_bottom = 374.1919
+texture = ExtResource("4_trn2v")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Deck" type="Node2D" parent="Game/MiddleArea/TableArea/TableLayout" unique_id=1468376333]
+script = ExtResource("6_wkp8b")
+
+[node name="Seat1" type="Panel" parent="Game/MiddleArea/TableArea/TableLayout" unique_id=1097612424]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Game/MiddleArea/TableArea/TableLayout/Seat1" unique_id=1698150474]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="Game/MiddleArea/TableArea/TableLayout/Seat1/MarginContainer" unique_id=521782311]
+layout_mode = 2
+expand_icon = true
+
+[node name="Seat2" type="Panel" parent="Game/MiddleArea/TableArea/TableLayout" unique_id=519630610]
+visible = false
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Game/MiddleArea/TableArea/TableLayout/Seat2" unique_id=640659095]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="Game/MiddleArea/TableArea/TableLayout/Seat2/MarginContainer" unique_id=1389967049]
+layout_mode = 2
+expand_icon = true
+
+[node name="Seat3" type="Panel" parent="Game/MiddleArea/TableArea/TableLayout" unique_id=1494142839]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Game/MiddleArea/TableArea/TableLayout/Seat3" unique_id=2144396323]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="Game/MiddleArea/TableArea/TableLayout/Seat3/MarginContainer" unique_id=14964312]
+layout_mode = 2
+expand_icon = true
+
+[node name="Seat4" type="Panel" parent="Game/MiddleArea/TableArea/TableLayout" unique_id=268412100]
+visible = false
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Game/MiddleArea/TableArea/TableLayout/Seat4" unique_id=301315811]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="Game/MiddleArea/TableArea/TableLayout/Seat4/MarginContainer" unique_id=426889748]
+layout_mode = 2
+expand_icon = true
+
+[node name="Seat5" type="Panel" parent="Game/MiddleArea/TableArea/TableLayout" unique_id=467711218]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Game/MiddleArea/TableArea/TableLayout/Seat5" unique_id=1766039457]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="Game/MiddleArea/TableArea/TableLayout/Seat5/MarginContainer" unique_id=1628644796]
+layout_mode = 2
+expand_icon = true
+
+[node name="Seat6" type="Panel" parent="Game/MiddleArea/TableArea/TableLayout" unique_id=1290168907]
+visible = false
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Game/MiddleArea/TableArea/TableLayout/Seat6" unique_id=2079934784]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="Game/MiddleArea/TableArea/TableLayout/Seat6/MarginContainer" unique_id=758804425]
+layout_mode = 2
+expand_icon = true
+
+[node name="Seat7" type="Panel" parent="Game/MiddleArea/TableArea/TableLayout" unique_id=1440698993]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Game/MiddleArea/TableArea/TableLayout/Seat7" unique_id=104310671]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="Game/MiddleArea/TableArea/TableLayout/Seat7/MarginContainer" unique_id=1623660386]
+layout_mode = 2
+expand_icon = true
+
+[node name="Seat8" type="Panel" parent="Game/MiddleArea/TableArea/TableLayout" unique_id=1558447515]
+visible = false
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Game/MiddleArea/TableArea/TableLayout/Seat8" unique_id=851085459]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="Game/MiddleArea/TableArea/TableLayout/Seat8/MarginContainer" unique_id=1134331295]
+layout_mode = 2
+expand_icon = true
+
+[node name="OpponentHand3" type="Panel" parent="Game/MiddleArea/TableArea/TableLayout" unique_id=1345496176]
+layout_mode = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_trn2v")
+script = ExtResource("5_fos0i")
+
+[node name="OpponentHand5" type="Panel" parent="Game/MiddleArea/TableArea/TableLayout" unique_id=732558483]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_03owx")
+script = ExtResource("5_fos0i")
+
+[node name="OpponentHand7" type="Panel" parent="Game/MiddleArea/TableArea/TableLayout" unique_id=2044600792]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_wkp8b")
+script = ExtResource("5_fos0i")
+
+[node name="PlayedCards" type="Panel" parent="Game/MiddleArea/TableArea/TableLayout" unique_id=1668633692]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_5vvyt")
+script = ExtResource("6_3dxm6")
+
+[node name="RightArea" type="Control" parent="Game/MiddleArea" unique_id=1098722960]
+layout_mode = 1
+anchor_left = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="BottomArea" type="Control" parent="Game" unique_id=528425924]
+layout_mode = 1
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource("GDScript_20pc6")
+
+[node name="HandArea" type="PanelContainer" parent="Game/BottomArea" unique_id=1974860604]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.01
+anchor_top = 0.05
+anchor_right = 0.71
+anchor_bottom = 0.95
+
+[node name="MarginContainer" type="MarginContainer" parent="Game/BottomArea/HandArea" unique_id=162582433]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="HandPlaceholder" type="Panel" parent="Game/BottomArea/HandArea/MarginContainer" unique_id=1006228406 node_paths=PackedStringArray("deck")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_c6i3y")
+script = ExtResource("10_20pc6")
+deck = NodePath("../../../../MiddleArea/TableArea/TableLayout/Deck")
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="Game/BottomArea" unique_id=1009792602]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.75
+anchor_right = 0.9
+anchor_bottom = 1.0
+alignment = 1
+script = ExtResource("7_lgr22")
+
+[node name="PlayButton" type="Button" parent="Game/BottomArea/ButtonsContainer" unique_id=1872924930]
+layout_mode = 2
+tooltip_text = "Play Hand"
+text = "Play Hand"
+
+[node name="PassButton" type="Button" parent="Game/BottomArea/ButtonsContainer" unique_id=238525304]
+layout_mode = 2
+tooltip_text = "Play Hand"
+text = "Pass"

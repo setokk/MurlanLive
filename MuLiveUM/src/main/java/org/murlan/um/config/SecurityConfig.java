@@ -21,6 +21,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig implements WebMvcConfigurer {
+    private final RequestLoggingFilter requestLoggingFilter;
     private final JwtAuthFilter jwtAuthFilter;
     private final MuliveHeaderInterceptor interceptor;
 
@@ -53,6 +54,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(STATELESS))
+                .addFilterBefore(requestLoggingFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

@@ -1,3 +1,4 @@
 .idea
 MuLiveGameServer/wait-for-it.sh
 MuLiveUM/wait-for-it.sh
+MuLiveUI/**.tmp
