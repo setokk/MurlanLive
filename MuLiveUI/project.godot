@@ -8,16 +8,33 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="MuLiveUI"
 run/main_scene="uid://dgxlmxq4gm0y8"
-config/features=PackedStringArray("4.4", "GL Compatibility")
+config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+ProtocolConfigProvider="*res://globals/ProtocolConfigProvider.gd"
+CardTextureLoader="*res://globals/CardTextureLoader.gd"
+PlayerRESTClient="*res://globals/rest/PlayerRESTClient.gd"
+RoomRESTClient="*res://globals/rest/RoomRESTClient.gd"
+WebSocketClient="*res://globals/WebSocketClient.gd"
 
 [debug]
 
 settings/stdout/print_fps=true
+
+[display]
+
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [dotnet]
 
@@ -27,6 +44,10 @@ project/assembly_name="MuLiveUI"
 
 movie_writer/fps=180
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/yaml/plugin.cfg")
+
 [importer_defaults]
 
 animation_library={
@@ -35,5 +56,6 @@ animation_library={
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=2
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"

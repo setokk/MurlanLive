@@ -14,6 +14,12 @@ func _init(rank: _Rank, suit: _Suit, ordinal: int) -> void:
 func rank() -> _Rank:
 	return self._rank;
 
+func id() -> String:
+	return self._id;
+
+func ordinal() -> int:
+	return self._ordinal;
+
 func suit() -> _Suit:
 	return self._suit;
 
