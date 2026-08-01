@@ -22,7 +22,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfig implements WebMvcConfigurer {
     private final JwtAuthFilter jwtAuthFilter;
-    private final MLHeaderInterceptor interceptor;
+    private final MuliveHeaderInterceptor interceptor;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

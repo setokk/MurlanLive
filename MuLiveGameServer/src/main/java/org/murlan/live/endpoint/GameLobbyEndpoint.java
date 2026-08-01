@@ -38,7 +38,6 @@ import org.murlan.live.protocol.api.Req;
 import org.murlan.live.protocol.api.Resp;
 import org.murlan.live.protocol.api.SurrenderReq;
 import org.murlan.live.protocol.api.SurrenderResp;
-import org.murlan.live.protocol.api.error.GenericErrorResp;
 import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ConfigProvider;
 import org.murlan.live.protocol.config.ProtocolConfig;
@@ -91,23 +90,20 @@ public class GameLobbyEndpoint {
 
     @OnOpen
     public void onOpen(Session session) throws IOException, InterruptedException {
-        log.info("New connection with sessionId: {}", session.getId());
+        log.info("Incoming connection request with sessionId: {}", session.getId());
 
         String jwt = endpointHelper.getAndCheckQueryParam("jwt", session.getQueryString()).orElse("");
         if (!playerRESTClient.validateJwt(jwt)) {
-            endpointHelper.sendErrorMessage(session, new GenericErrorResp("Forbidden"));
-            session.close();
+            endpointHelper.closeWithErrorMessage(session, MuliveCloseReason.FORBIDDEN);
             return;
         }
         Player player = JwtUtils.decodeJWT(jwt);
         if (player.isInvalid()) {
-            endpointHelper.sendErrorMessage(session, new GenericErrorResp("Invalid JWT"));
-            session.close();
+            endpointHelper.closeWithErrorMessage(session, MuliveCloseReason.INVALID_JWT);
             return;
         }
         if (roomHandler.jwtSessionExists(jwt)) {
-            endpointHelper.sendErrorMessage(session, new GenericErrorResp("JWT session already exists"));
-            session.close();
+            endpointHelper.closeWithErrorMessage(session, MuliveCloseReason.JWT_SESSION_ALREADY_EXISTS);
             return;
         }
         roomHandler.addSession(new PlayerSession(session, player));
@@ -123,13 +119,13 @@ public class GameLobbyEndpoint {
         try {
             req = parser.parse(message);
         } catch (InvalidDataException e) {
-            endpointHelper.sendErrorMessage(session, new GenericErrorResp("Request body error"));
+            endpointHelper.closeWithErrorMessage(session, MuliveCloseReason.REQUEST_BODY_ERROR);
             return;
         }
 
         Optional<PlayerSession> optionalPlayerSession = roomHandler.getSession(session);
         if (optionalPlayerSession.isEmpty()) {
-            endpointHelper.sendErrorMessage(session, new GenericErrorResp("No active session found for sessionId: " + session.getId()));
+            endpointHelper.closeWithErrorMessage(session, MuliveCloseReason.NO_ACTIVE_SESSION);
             return;
         }
 
@@ -235,7 +231,7 @@ public class GameLobbyEndpoint {
     }
 
     @OnClose
-    public void onClose(Session session) {
+    public void onClose(Session session) throws IOException {
         Optional<PlayerSession> optionalPlayerSession = roomHandler.getSession(session);
         if (optionalPlayerSession.isEmpty()) {
             return;
@@ -258,5 +254,12 @@ public class GameLobbyEndpoint {
     @OnError
     public void onError(Session session, Throwable throwable) throws IOException {
         log.error("Error", throwable);
+        if (session != null && session.isOpen()) {
+            try {
+                session.close();
+            } catch (IOException e) {
+                log.error("Failed to close session", e);
+            }
+        }
     }
 }

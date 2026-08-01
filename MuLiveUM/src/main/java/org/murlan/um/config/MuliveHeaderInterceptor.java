@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
-public class MLHeaderInterceptor implements HandlerInterceptor {
+public class MuliveHeaderInterceptor implements HandlerInterceptor {
     @Value("${mulive.gameserver.secret.header}")
     private String gameServerSecretHeader;
 

@@ -1,7 +1,10 @@
 package org.murlan.live.endpoint;
 
+import jakarta.websocket.CloseReason;
 import jakarta.websocket.Session;
 import lombok.AllArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.murlan.live.endpoint.session.PlayerSession;
 import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.api.InformGameFinishResp;
@@ -11,7 +14,6 @@ import org.murlan.live.protocol.api.InformPassResp;
 import org.murlan.live.protocol.api.InformPlayHandResp;
 import org.murlan.live.protocol.api.InformSurrenderResp;
 import org.murlan.live.protocol.api.Resp;
-import org.murlan.live.protocol.api.error.GenericErrorResp;
 import org.murlan.live.protocol.util.Generator;
 import org.murlan.live.protocol.util.Parser;
 
@@ -22,12 +24,15 @@ import java.util.Optional;
 
 @AllArgsConstructor
 public class EndpointHelper {
+    private static final Logger log = LogManager.getLogger(EndpointHelper.class);
+
     private final Parser parser;
     private final Generator generator;
 
-    public void sendErrorMessage(Session session, GenericErrorResp resp) throws IOException {
-        String errorMessage = generator.generateMessage(resp);
-        session.getBasicRemote().sendText(errorMessage);
+    public void closeWithErrorMessage(Session session, MuliveCloseReason closeReason) throws IOException {
+        log.info("Rejecting connection with sessionId: {}, with reason: {}", session.getId(), closeReason.getMessage());
+
+        session.close(closeReason.create());
     }
 
     public Optional<String> getAndCheckQueryParam(String key, String queryParamString) {
