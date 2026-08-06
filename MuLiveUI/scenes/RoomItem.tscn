@@ -1,0 +1,260 @@
+[gd_scene format=3 uid="uid://ce8bbqr5wercy"]
+
+[ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_8vuc5"]
+[ext_resource type="Script" uid="uid://ci5g2c338j8pb" path="res://RoomItem.gd" id="2_m58g5"]
+[ext_resource type="Script" uid="uid://b34nj7n8toybh" path="res://JoinButton.gd" id="5_mgixa"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wu61n"]
+bg_color = Color(1, 1, 1, 1)
+border_color = Color(0, 0, 0, 1)
+shadow_color = Color(0, 0, 0, 1)
+shadow_size = 5
+shadow_offset = Vector2(3, 3)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1lysh"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6cc1s"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m58g5"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8ud1i"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sghm5"]
+bg_color = Color(0.8980392, 0.27058825, 0.20784314, 1)
+border_width_left = 4
+border_width_top = 2
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+
+[node name="RoomItem" type="Control" unique_id=184008985]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 3
+anchor_right = 1.0
+anchor_bottom = 0.3
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_8vuc5")
+script = ExtResource("2_m58g5")
+
+[node name="Panel" type="Panel" parent="." unique_id=998730380]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wu61n")
+
+[node name="Panel" type="Panel" parent="Panel" unique_id=1431131177]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.04
+anchor_top = 0.1
+anchor_right = 0.96
+anchor_bottom = 0.9
+theme_override_styles/panel = SubResource("StyleBoxEmpty_1lysh")
+
+[node name="RoomAvailabilityContainer" type="HBoxContainer" parent="Panel/Panel" unique_id=1694903364]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.8
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Panel/Panel/RoomAvailabilityContainer" unique_id=167667996]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch_mode = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer" unique_id=1617360980]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6cc1s")
+
+[node name="Seat" type="Panel" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer/PanelContainer" unique_id=1185274201]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m58g5")
+
+[node name="SeatOrUserIcon" type="TextureButton" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer/PanelContainer/Seat" unique_id=1892238923]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.8
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="UsernameLabel" type="Label" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer/PanelContainer/Seat" unique_id=1180325383]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 12
+text = "killer69"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AspectRatioContainer2" type="AspectRatioContainer" parent="Panel/Panel/RoomAvailabilityContainer" unique_id=1526757439]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch_mode = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer2" unique_id=514070908]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6cc1s")
+
+[node name="Seat" type="Panel" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer2/PanelContainer" unique_id=374018975]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m58g5")
+
+[node name="SeatOrUserIcon" type="TextureButton" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer2/PanelContainer/Seat" unique_id=935456651]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.8
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="UsernameLabel" type="Label" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer2/PanelContainer/Seat" unique_id=1167517813]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 12
+text = "killer69"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AspectRatioContainer3" type="AspectRatioContainer" parent="Panel/Panel/RoomAvailabilityContainer" unique_id=2061509085]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch_mode = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer3" unique_id=211245732]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6cc1s")
+
+[node name="Seat" type="Panel" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer3/PanelContainer" unique_id=1229790441]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m58g5")
+
+[node name="SeatOrUserIcon" type="TextureButton" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer3/PanelContainer/Seat" unique_id=379510378]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.8
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="UsernameLabel" type="Label" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer3/PanelContainer/Seat" unique_id=1631994291]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 12
+text = "killer69"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AspectRatioContainer4" type="AspectRatioContainer" parent="Panel/Panel/RoomAvailabilityContainer" unique_id=861170176]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch_mode = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer4" unique_id=1761487196]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6cc1s")
+
+[node name="Seat" type="Panel" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer4/PanelContainer" unique_id=569275245]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m58g5")
+
+[node name="SeatOrUserIcon" type="TextureButton" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer4/PanelContainer/Seat" unique_id=131441100]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.8
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="UsernameLabel" type="Label" parent="Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer4/PanelContainer/Seat" unique_id=2046849734]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 12
+text = "killer69"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="Panel/Panel" unique_id=1757423703]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_8ud1i")
+
+[node name="JoinButton" type="Button" parent="Panel/Panel/Panel" unique_id=1014301597]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.3
+anchor_right = 1.0
+anchor_bottom = 0.7
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_sghm5")
+text = "Join Room"
+expand_icon = true
+script = ExtResource("5_mgixa")

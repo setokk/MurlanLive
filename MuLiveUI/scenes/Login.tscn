@@ -1,0 +1,197 @@
+[gd_scene format=3 uid="uid://ddnjbtxpnierp"]
+
+[ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_jbclg"]
+[ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_xpxjw"]
+[ext_resource type="Theme" uid="uid://bqn3ljfdspx6i" path="res://themes/LoginTheme.tres" id="3_na214"]
+[ext_resource type="Script" uid="uid://dugpo3hevhr53" path="res://LoginSignupInfo.gd" id="4_7hd5n"]
+[ext_resource type="Script" uid="uid://cuww2yf6w3bpx" path="res://LoginSignupButtons.gd" id="5_ft2vs"]
+[ext_resource type="Script" uid="uid://cw77pls2wgca7" path="res://MessageContainer.gd" id="6_egi27"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pgobs"]
+bg_color = Color(0.8980392, 0.27058825, 0.20784314, 1)
+border_width_left = 2
+border_width_top = 1
+border_width_right = 2
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jbclg"]
+bg_color = Color(0.5348032, 0.123425655, 0.08523319, 1)
+border_width_left = 2
+border_width_top = 1
+border_width_right = 2
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xpxjw"]
+bg_color = Color(0.7436663, 0.19260594, 0.14184436, 1)
+border_width_left = 2
+border_width_top = 1
+border_width_right = 2
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6cc1s"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7hd5n"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ft2vs"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8ud1i"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_743nf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5tuhn"]
+
+[node name="Login" type="Control" unique_id=58579888]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_jbclg")
+
+[node name="Background" parent="." unique_id=2002749364 instance=ExtResource("2_xpxjw")]
+layout_mode = 1
+anchors_preset = 15
+
+[node name="LoginPanel" type="PanelContainer" parent="." unique_id=1988950992]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.35
+anchor_top = 0.1
+anchor_right = 0.65
+anchor_bottom = 0.65
+theme = ExtResource("3_na214")
+
+[node name="MarginContainer" type="MarginContainer" parent="LoginPanel" unique_id=2038080629]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 50
+
+[node name="LoginSignupInfo" type="VBoxContainer" parent="LoginPanel/MarginContainer" unique_id=1629308152]
+layout_mode = 2
+script = ExtResource("4_7hd5n")
+
+[node name="Label" type="Label" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=2118485535]
+layout_mode = 2
+text = "Welcome to Murlan!"
+
+[node name="MarginContainer3" type="MarginContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=1151944136]
+layout_mode = 2
+theme_override_constants/margin_top = 8
+
+[node name="Username" type="LineEdit" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=825852046]
+layout_mode = 2
+placeholder_text = "Username"
+clear_button_enabled = true
+
+[node name="MarginContainer" type="MarginContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=724790553]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+
+[node name="Password" type="LineEdit" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=466938253]
+layout_mode = 2
+placeholder_text = "Password"
+emoji_menu_enabled = false
+clear_button_enabled = true
+caret_blink = true
+caret_blink_interval = 0.5
+secret = true
+secret_character = "*"
+
+[node name="RememberInfoContainer" type="HBoxContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=571387075]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/separation = 6
+alignment = 2
+
+[node name="Label" type="Label" parent="LoginPanel/MarginContainer/LoginSignupInfo/RememberInfoContainer" unique_id=1467958042]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "Remember me"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="RememberInfoCheckbox" type="CheckBox" parent="LoginPanel/MarginContainer/LoginSignupInfo/RememberInfoContainer" unique_id=1998148867]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+icon_alignment = 1
+expand_icon = true
+
+[node name="MarginContainer2" type="MarginContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=1045742524]
+layout_mode = 2
+theme_override_constants/margin_top = 25
+
+[node name="LoginSignupButtons" type="VBoxContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=848076722]
+layout_mode = 2
+script = ExtResource("5_ft2vs")
+
+[node name="LoginButton" type="Button" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons" unique_id=2011992809]
+custom_minimum_size = Vector2(140, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_pgobs")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_jbclg")
+theme_override_styles/hover = SubResource("StyleBoxFlat_xpxjw")
+text = "Login"
+
+[node name="MarginContainer3" type="MarginContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons" unique_id=1180125916]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+
+[node name="Button" type="Button" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons" unique_id=1218924468]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0.36207703, 0.36207703, 0.362077, 1)
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxEmpty_6cc1s")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_7hd5n")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_ft2vs")
+text = "I forgot my password"
+
+[node name="MarginContainer2" type="MarginContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons" unique_id=2120585079]
+layout_mode = 2
+theme_override_constants/margin_top = 40
+
+[node name="SignupContainer" type="HBoxContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons" unique_id=1041393184]
+layout_mode = 2
+alignment = 2
+
+[node name="Label" type="Label" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons/SignupContainer" unique_id=213834597]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Don't have an account?"
+
+[node name="SignupButton" type="Button" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons/SignupContainer" unique_id=653932228]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.08235294, 0.003921569, 0.3254902, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 1, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxEmpty_8ud1i")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_743nf")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_5tuhn")
+text = "Sign Up"
+
+[node name="MessageContainer" type="CenterContainer" parent="." unique_id=1509949399]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("6_egi27")
+
+[node name="RandomMessage" type="Label" parent="MessageContainer" unique_id=1167725336]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1

@@ -21,11 +21,12 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+SceneManager="*res://globals/SceneManager.gd"
 ProtocolConfigProvider="*res://globals/ProtocolConfigProvider.gd"
 CardTextureLoader="*res://globals/CardTextureLoader.gd"
 PlayerRESTClient="*res://globals/rest/PlayerRESTClient.gd"
 RoomRESTClient="*res://globals/rest/RoomRESTClient.gd"
-WebSocketClient="*res://globals/WebSocketClient.gd"
+WebSocketClient="*res://globals/ws/WebSocketClient.gd"
 
 [debug]
 

@@ -1,0 +1,79 @@
+[gd_resource type="Theme" format=3 uid="uid://bqn3ljfdspx6i"]
+
+[ext_resource type="Texture2D" uid="uid://bxnqs7xa4gr81" path="res://assets/images/checkbox-checked.svg" id="1_glcpc"]
+[ext_resource type="Texture2D" uid="uid://b0tibommhhwmd" path="res://assets/images/checkbox-unchecked.svg" id="2_pgobs"]
+[ext_resource type="Texture2D" uid="uid://ovimrk3nmtqy" path="res://assets/images/clear-icon.svg" id="3_pgobs"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pgobs"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l3fg6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pmojk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3kxvg"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1yh37"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b84ar"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l3fg6"]
+bg_color = Color(0, 0, 0, 1)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 0.7490196)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jsytl"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ud1i"]
+bg_color = Color(1, 0.9336541, 0.92926246, 1)
+border_width_left = 5
+border_width_top = 2
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+corner_detail = 5
+shadow_offset = Vector2(2, 2)
+
+[resource]
+CheckBox/constants/h_separation = 0
+CheckBox/font_sizes/font_size = 10
+CheckBox/icons/checked = ExtResource("1_glcpc")
+CheckBox/icons/checked_disabled = null
+CheckBox/icons/radio_checked = null
+CheckBox/icons/radio_checked_disabled = null
+CheckBox/icons/radio_unchecked = null
+CheckBox/icons/radio_unchecked_disabled = null
+CheckBox/icons/unchecked = ExtResource("2_pgobs")
+CheckBox/icons/unchecked_disabled = null
+CheckBox/styles/focus = null
+CheckBox/styles/hover = SubResource("StyleBoxEmpty_pgobs")
+CheckBox/styles/hover_mirrored = SubResource("StyleBoxEmpty_l3fg6")
+CheckBox/styles/hover_pressed = SubResource("StyleBoxEmpty_pmojk")
+CheckBox/styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_3kxvg")
+CheckBox/styles/pressed = SubResource("StyleBoxEmpty_1yh37")
+CheckBox/styles/pressed_mirrored = SubResource("StyleBoxEmpty_b84ar")
+Label/colors/font_color = Color(0, 0, 0, 1)
+LineEdit/colors/caret_color = Color(0, 0, 0, 1)
+LineEdit/colors/font_color = Color(0, 0, 0, 1)
+LineEdit/colors/font_placeholder_color = Color(0, 0, 0, 0.6)
+LineEdit/font_sizes/font_size = 14
+LineEdit/icons/clear = ExtResource("3_pgobs")
+LineEdit/styles/focus = SubResource("StyleBoxFlat_l3fg6")
+LineEdit/styles/normal = SubResource("StyleBoxFlat_jsytl")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_8ud1i")

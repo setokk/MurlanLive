@@ -4,7 +4,7 @@ class_name PlayerHand
 
 @export var deck: Node2D
 
-const CARD_SCENE: Resource = preload("res://Card.tscn")
+const CARD_SCENE: Resource = preload("res://scenes/Card.tscn")
 const CARD_WIDTH: float = 730.0
 const CARD_HEIGHT: float = 1024.0
 
