@@ -1,0 +1,167 @@
+[gd_scene format=3 uid="uid://c127j2awg5s3w"]
+
+[ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_qbi84"]
+[ext_resource type="Script" uid="uid://beiwtcwa75q0y" path="res://Lobby.gd" id="2_oeg6l"]
+[ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://Scenes/Background.tscn" id="3_1yh37"]
+[ext_resource type="Script" uid="uid://cxxbwt06uh3gj" path="res://RoomButtonsContainer.gd" id="4_jp1kc"]
+[ext_resource type="Theme" uid="uid://bqn3ljfdspx6i" path="res://themes/LoginTheme.tres" id="5_oeg6l"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_psoro"]
+bg_color = Color(1, 1, 1, 1)
+border_color = Color(0, 0, 0, 1)
+shadow_color = Color(0, 0, 0, 1)
+shadow_size = 5
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f6xq5"]
+bg_color = Color(0.87058824, 0.6784314, 0.23921569, 1)
+border_color = Color(0, 0, 0, 1)
+shadow_color = Color(0, 0, 0, 1)
+shadow_size = 5
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6cc1s"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_17p60"]
+bg_color = Color(0.8980392, 0.27058825, 0.20784314, 1)
+border_width_left = 3
+border_width_top = 2
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_743nf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_borux"]
+
+[node name="Lobby" type="Control" unique_id=1053421366]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_qbi84")
+script = ExtResource("2_oeg6l")
+
+[node name="Background" parent="." unique_id=2002749364 instance=ExtResource("3_1yh37")]
+layout_mode = 1
+anchors_preset = 15
+
+[node name="LobbyPanel" type="Panel" parent="." unique_id=973502729]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_styles/panel = SubResource("StyleBoxFlat_psoro")
+
+[node name="RoomsInfo" type="Panel" parent="LobbyPanel" unique_id=926852970]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f6xq5")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LobbyPanel/RoomsInfo" unique_id=195166437]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LobbyLabel" type="Label" parent="LobbyPanel/RoomsInfo/VBoxContainer" unique_id=559563631]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 42
+text = "Lobby"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="LobbyPanel/RoomsInfo/VBoxContainer" unique_id=1606039710]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_6cc1s")
+
+[node name="RoomButtonsContainer" type="HBoxContainer" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel" unique_id=1510470809]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02
+anchor_right = 0.5
+anchor_bottom = 0.8
+grow_vertical = 2
+script = ExtResource("4_jp1kc")
+
+[node name="JoinRandomRoom" type="Button" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/RoomButtonsContainer" unique_id=284069281]
+layout_mode = 2
+theme_override_constants/outline_size = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_17p60")
+text = "Join Random Room"
+
+[node name="MarginContainer" type="MarginContainer" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/RoomButtonsContainer" unique_id=480878768]
+layout_mode = 2
+theme_override_constants/margin_right = 5
+
+[node name="CreateRoom" type="Button" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/RoomButtonsContainer" unique_id=66647745]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_17p60")
+text = "Create A Room"
+
+[node name="PanelContainer" type="PanelContainer" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel" unique_id=1936458549]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_743nf")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/PanelContainer" unique_id=940523046]
+layout_mode = 2
+size_flags_vertical = 0
+alignment = 2
+
+[node name="ShowAllRoomsLabel" type="Label" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/PanelContainer/HBoxContainer" unique_id=570390243]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 12
+text = "Show All Rooms"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CheckBox" type="CheckBox" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/PanelContainer/HBoxContainer" unique_id=1324638536]
+propagate_maximum_size = true
+layout_mode = 2
+theme = ExtResource("5_oeg6l")
+alignment = 2
+
+[node name="RoomScrollContainer" type="ScrollContainer" parent="LobbyPanel" unique_id=145816144]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.2
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_borux")
+
+[node name="MarginContainer" type="MarginContainer" parent="LobbyPanel/RoomScrollContainer" unique_id=1944271219]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="RoomList" type="VBoxContainer" parent="LobbyPanel/RoomScrollContainer/MarginContainer" unique_id=1901756246]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 15

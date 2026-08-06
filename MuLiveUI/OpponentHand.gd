@@ -1,6 +1,6 @@
 extends Panel
 
-const HIDDEN_CARD_SCENE: PackedScene = preload("res://HiddenCard.tscn")
+const HIDDEN_CARD_SCENE: PackedScene = preload("res://scenes/HiddenCard.tscn")
 
 const CARD_WIDTH: float = 730.0
 const CARD_HEIGHT: float = 1024.0

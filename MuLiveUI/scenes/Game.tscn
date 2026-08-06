@@ -1,0 +1,337 @@
+[gd_scene format=3 uid="uid://f8in7s47ipg4"]
+
+[ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_71axn"]
+[ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_dahhg"]
+[ext_resource type="Script" uid="uid://dogwu3dr7uwoo" path="res://TableArea.gd" id="3_3so38"]
+[ext_resource type="Theme" uid="uid://dcg0tqtvbome4" path="res://themes/SeatTheme.tres" id="4_3cx6b"]
+[ext_resource type="Texture2D" uid="uid://b8df7a4o34kvg" path="res://assets/images/table.png" id="5_qy1jj"]
+[ext_resource type="Script" uid="uid://idmxcl4kxeli" path="res://Deck.gd" id="6_acvyw"]
+[ext_resource type="Script" uid="uid://c6ptpi4mx4pr6" path="res://OpponentHand.gd" id="7_alh3a"]
+[ext_resource type="Script" uid="uid://b7my26juihu56" path="res://PlayedCards.gd" id="8_4q8tf"]
+[ext_resource type="Script" uid="uid://dtfikuha72pje" path="res://HandPlaceholder.gd" id="9_x3xnh"]
+[ext_resource type="Script" uid="uid://k68075chkxlf" path="res://ButtonsContainer.gd" id="10_8r6kd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_trn2v"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_03owx"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wkp8b"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5vvyt"]
+
+[sub_resource type="GDScript" id="GDScript_20pc6"]
+script/source = "extends Control
+
+@onready var player_hand = $HandArea/MarginContainer/HandPlaceholder
+@onready var buttons_container = $ButtonsContainer
+
+func _ready():
+	#buttons_container.play_hand_requested.connect(player_hand.play_hand)
+	#buttons_container.pass_requested.connect(player_hand.pass_turn)
+	pass
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3xj3m"]
+bg_color = Color(0.87058824, 0.6784314, 0.23921569, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c6i3y"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_17p60"]
+bg_color = Color(0.8980392, 0.27058825, 0.20784314, 1)
+border_width_left = 3
+border_width_top = 2
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[node name="Game" type="Control" unique_id=684905153]
+z_index = -1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_71axn")
+
+[node name="Background" parent="." unique_id=2002749364 instance=ExtResource("2_dahhg")]
+layout_mode = 1
+anchors_preset = 15
+
+[node name="TopArea" type="CenterContainer" parent="." unique_id=1090870034]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.75
+
+[node name="LeftArea" type="Control" parent="TopArea" unique_id=829091859]
+layout_mode = 2
+
+[node name="TableArea" type="Control" parent="TopArea" unique_id=863065479]
+layout_mode = 2
+script = ExtResource("3_3so38")
+
+[node name="TableLayout" type="Control" parent="TopArea/TableArea" unique_id=324252698]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_3cx6b")
+
+[node name="Table" type="TextureRect" parent="TopArea/TableArea/TableLayout" unique_id=747679814]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -311.04
+offset_top = -179.7919
+offset_right = 311.04
+offset_bottom = 179.7919
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_qy1jj")
+expand_mode = 1
+
+[node name="Deck" type="Node2D" parent="TopArea/TableArea/TableLayout" unique_id=1762135531]
+script = ExtResource("6_acvyw")
+
+[node name="Seat1" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=584993701]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=1987879458]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat1/MarginContainer" unique_id=1805753504]
+layout_mode = 2
+expand_icon = true
+
+[node name="Seat2" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=626159648]
+visible = false
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=194752233]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat2/MarginContainer" unique_id=1916250730]
+layout_mode = 2
+expand_icon = true
+
+[node name="Seat3" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=958436974]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1054102629]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat3/MarginContainer" unique_id=1355531687]
+layout_mode = 2
+expand_icon = true
+
+[node name="Seat4" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1819555050]
+visible = false
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1957413069]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat4/MarginContainer" unique_id=549117171]
+layout_mode = 2
+expand_icon = true
+
+[node name="Seat5" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1097438276]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat5" unique_id=975228647]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat5/MarginContainer" unique_id=1463195644]
+layout_mode = 2
+expand_icon = true
+
+[node name="Seat6" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=12469673]
+visible = false
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat6" unique_id=1303793556]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat6/MarginContainer" unique_id=1282977433]
+layout_mode = 2
+expand_icon = true
+
+[node name="Seat7" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1642946871]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat7" unique_id=713122948]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat7/MarginContainer" unique_id=1358954904]
+layout_mode = 2
+expand_icon = true
+
+[node name="Seat8" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1486275831]
+visible = false
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat8" unique_id=779894851]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat8/MarginContainer" unique_id=30942106]
+layout_mode = 2
+expand_icon = true
+
+[node name="OpponentHand3" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1267263257]
+layout_mode = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_trn2v")
+script = ExtResource("7_alh3a")
+
+[node name="OpponentHand5" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=454168365]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_03owx")
+script = ExtResource("7_alh3a")
+
+[node name="OpponentHand7" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=246364564]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_wkp8b")
+script = ExtResource("7_alh3a")
+
+[node name="PlayedCards" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=452367580]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_5vvyt")
+script = ExtResource("8_4q8tf")
+
+[node name="RightArea" type="Control" parent="TopArea" unique_id=2095940113]
+layout_mode = 2
+
+[node name="BottomArea" type="Control" parent="." unique_id=732581692]
+layout_mode = 1
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource("GDScript_20pc6")
+
+[node name="HandArea" type="PanelContainer" parent="BottomArea" unique_id=1394942407]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.01
+anchor_top = 0.05
+anchor_right = 0.71
+anchor_bottom = 0.95
+theme_override_styles/panel = SubResource("StyleBoxFlat_3xj3m")
+
+[node name="MarginContainer" type="MarginContainer" parent="BottomArea/HandArea" unique_id=1686990007]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="HandPlaceholder" type="Panel" parent="BottomArea/HandArea/MarginContainer" unique_id=299893312 node_paths=PackedStringArray("deck")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_c6i3y")
+script = ExtResource("9_x3xnh")
+deck = NodePath("../../../../TopArea/TableArea/TableLayout/Deck")
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="BottomArea" unique_id=1690199426]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.75
+anchor_right = 0.9
+anchor_bottom = 1.0
+theme_override_constants/separation = 10
+alignment = 1
+script = ExtResource("10_8r6kd")
+
+[node name="PlayButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=768235351]
+layout_mode = 2
+tooltip_text = "Play Hand"
+theme_override_styles/normal = SubResource("StyleBoxFlat_17p60")
+text = "Play Hand"
+
+[node name="PassButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=1608814664]
+layout_mode = 2
+tooltip_text = "Play Hand"
+theme_override_styles/normal = SubResource("StyleBoxFlat_17p60")
+text = "Pass"

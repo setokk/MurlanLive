@@ -1,7 +1,7 @@
 extends Node
 
-signal login_completed(success: bool, jwt: String)
-signal register_completed(success: bool, jwt: String)
+signal login_completed(response_status: int, jwt: String)
+signal register_completed(response_status: int, jwt: String)
 
 var config: ProtocolConfig = ProtocolConfigProvider.get_config()
 var login_http := HTTPRequest.new()
@@ -42,18 +42,8 @@ func register(username: String, password: String) -> void:
 
 func _on_login_completed(result, response_code, headers, body):
 	var jwt: String = body.get_string_from_utf8()
-	
-	if response_code == 200:
-		login_completed.emit(true, jwt)
-	else:
-		push_error("Error while trying to login, response_code: %d, body: %s" % [response_code, body])
-		login_completed.emit(false, "")
+	login_completed.emit(response_code, jwt)
 
 func _on_register_completed(result, response_code, headers, body):
 	var jwt: String = body.get_string_from_utf8()
-	
-	if response_code == 200:
-		register_completed.emit(true, jwt)
-	else:
-		push_error("Error while trying to register, response_code: %d, body: %s" % [response_code, body])
-		register_completed.emit(false, "")
+	register_completed.emit(response_code, jwt)

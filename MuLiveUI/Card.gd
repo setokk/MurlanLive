@@ -13,6 +13,7 @@ var original_position: Vector2
 var value: _Card
 
 func _ready() -> void:
+	CardTextureLoader.load_card_textures()
 	original_position = position
 	
 

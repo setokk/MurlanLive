@@ -4,6 +4,8 @@ var config: ProtocolConfig = ProtocolConfigProvider.get_config()
 var socket: WebSocketPeer = WebSocketPeer.new()
 var connected: bool = false
 
+signal available_rooms_resp
+
 func play_hand() -> bool:
 	return false
 

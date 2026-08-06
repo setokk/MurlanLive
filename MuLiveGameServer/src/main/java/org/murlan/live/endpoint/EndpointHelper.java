@@ -14,7 +14,6 @@ import org.murlan.live.protocol.api.InformPassResp;
 import org.murlan.live.protocol.api.InformPlayHandResp;
 import org.murlan.live.protocol.api.InformPlayerLeaveRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLostConnectionResp;
-import org.murlan.live.protocol.api.InformSurrenderResp;
 import org.murlan.live.protocol.api.Resp;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.util.Generator;
@@ -54,11 +53,6 @@ public class EndpointHelper {
                 }
                 case InformGameFinishResp informGameFinishResp -> playerSession.getSession().getBasicRemote().sendText(message);
                 case InformPlayHandResp informPlayHandResp -> {
-                    if (!playerSession.equals(originPlayer)) {
-                        playerSession.getSession().getBasicRemote().sendText(message);
-                    }
-                }
-                case InformSurrenderResp informSurrenderResp -> {
                     if (!playerSession.equals(originPlayer)) {
                         playerSession.getSession().getBasicRemote().sendText(message);
                     }

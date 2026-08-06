@@ -1,0 +1,10 @@
+[gd_resource type="Theme" format=3 uid="uid://ds8a0br1b0g6w"]
+
+[ext_resource type="FontFile" uid="uid://xajh4irc3qeb" path="res://assets/fonts/BarberChop.otf" id="1_f6xq5"]
+
+[resource]
+Button/colors/font_color = Color(1, 0.8745098, 0.8666667, 1)
+Button/fonts/font = ExtResource("1_f6xq5")
+Label/colors/font_color = Color(0.21176471, 0.015686275, 0, 1)
+Label/fonts/font = ExtResource("1_f6xq5")
+LineEdit/fonts/font = ExtResource("1_f6xq5")

@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://dgxlmxq4gm0y8"]
+
+[ext_resource type="Script" uid="uid://5gt4skdokr15" path="res://Main.gd" id="1_trn2v"]
+[ext_resource type="PackedScene" uid="uid://dlcax4o11ecqq" path="res://scenes/TopBar.tscn" id="2_r0du0"]
+[ext_resource type="PackedScene" uid="uid://dwdsdol33d0u8" path="res://scenes/Home.tscn" id="4_cm0pq"]
+
+[node name="Main" type="Control" unique_id=2028910291]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_trn2v")
+
+[node name="TopBar" parent="." unique_id=852744569 instance=ExtResource("2_r0du0")]
+layout_mode = 1
+
+[node name="Content" type="Control" parent="." unique_id=730908201]
+layout_mode = 1
+anchor_top = 0.08
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Home" parent="Content" unique_id=1878373394 instance=ExtResource("4_cm0pq")]
+layout_mode = 1

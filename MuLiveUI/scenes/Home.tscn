@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://dwdsdol33d0u8"]
+
+[ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_biidh"]
+[ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_maaha"]
+[ext_resource type="Texture2D" uid="uid://ccoumswmy0atv" path="res://assets/images/Screenshot_2026-08-11_003142-removebg-preview.png" id="3_biidh"]
+
+[node name="Home" type="Control" unique_id=1878373394]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_biidh")
+
+[node name="Background" parent="." unique_id=2002749364 instance=ExtResource("2_maaha")]
+layout_mode = 1
+
+[node name="MainScreen" type="Control" parent="." unique_id=1378734640]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainScreen" unique_id=636666822]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource("3_biidh")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="MainScreen" unique_id=1548052381]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.3
+anchor_right = 0.1
+anchor_bottom = 0.3
+offset_right = 373.0
+offset_bottom = 58.0
+theme_override_colors/font_color = Color(0.8980392, 0.27058825, 0.20784314, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 15
+theme_override_font_sizes/font_size = 70
+text = "Play Murlan Live!"
+horizontal_alignment = 1
+vertical_alignment = 1

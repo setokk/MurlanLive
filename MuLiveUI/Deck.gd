@@ -1,6 +1,6 @@
 extends Node2D
 
-const CARD_SCENE: PackedScene = preload("res://Card.tscn")
+const CARD_SCENE: PackedScene = preload("res://scenes/Card.tscn")
 
 const DECK_SIZE: int = 54
 
