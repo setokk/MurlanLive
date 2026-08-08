@@ -2,7 +2,7 @@ extends Panel
 
 class_name PlayerHand
 
-@export var hand: Node2D
+@export var deck: Node2D
 
 const CARD_SCENE: Resource = preload("res://Card.tscn")
 const CARD_WIDTH: float = 730.0
@@ -278,20 +278,20 @@ func receive_card(card: Card, start_position: Vector2) -> void:
 
 func deal_card_from_deck() -> void:
 
-	if hand == null:
+	if deck == null:
 		print("PlayerHand: Deck is not assigned!")
 		return
 
 	if cards.size() >= MAX_CARDS:
 		return
 
-	var card: Card = hand.draw_card()
+	var card: Card = deck.draw_card()
 
 	if card == null:
 		print("PlayerHand: Deck is empty!")
 		return
 
-	var start_position: Vector2 = hand.global_position
+	var start_position: Vector2 = deck.global_position
 
 	await receive_card(
 		card,

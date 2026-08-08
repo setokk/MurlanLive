@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cy118aa1luiv4"]
 
-[ext_resource type="Texture2D" uid="uid://b3r143j55a1wa" path="res://assets/images/hands/0/_poster.png" id="1_216co"]
+[ext_resource type="Texture2D" uid="uid://b3r143j55a1wa" path="res://assets/images/decks/0/_poster.png" id="1_216co"]
 [ext_resource type="Script" uid="uid://bouqqcpbhxi6u" path="res://HiddenCard.gd" id="1_qor6m"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8ud1i"]

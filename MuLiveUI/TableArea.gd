@@ -17,7 +17,7 @@ extends Control
 @onready var opponent_hand5: Panel = $TableLayout/OpponentHand5
 @onready var opponent_hand7: Panel = $TableLayout/OpponentHand7
 
-@onready var hand: Node2D = $TableLayout/Deck
+@onready var deck: Node2D = $TableLayout/Deck
 
 @onready var played_cards: Panel = $TableLayout/PlayedCards
 
@@ -194,52 +194,52 @@ func place_seat(
 func setup_deck() -> void:
 	
 	var table_size: Vector2 = table_frame.size
-	hand.create_deck(table_size)
+	deck.create_deck(table_size)
 	var table_center: Vector2 = (
 		table_frame.position
 		+ table_frame.size / 2.0
 	)
-	hand.position = table_center
+	deck.position = table_center
 		
 	
 func deal_test_round() -> void:
 
-	while not hand.deck_cards.is_empty():
+	while not deck.deck_cards.is_empty():
 
 		# Seat 1
-		var card1: Card = hand.draw_card()
+		var card1: Card = deck.draw_card()
 
 		if card1:
 			await player_hand.receive_card(
 				card1,
-				hand.global_position
+				deck.global_position
 			)
 
 		# Seat 3
-		var card3: Card = hand.draw_card()
+		var card3: Card = deck.draw_card()
 
 		if card3:
 			await opponent_hand3.receive_card(
 				card3,
-				hand.global_position
+				deck.global_position
 			)
 
 		# Seat 5
-		var card5: Card = hand.draw_card()
+		var card5: Card = deck.draw_card()
 
 		if card5:
 			await opponent_hand5.receive_card(
 				card5,
-				hand.global_position
+				deck.global_position
 			)
 
 		# Seat 7
-		var card7: Card = hand.draw_card()
+		var card7: Card = deck.draw_card()
 
 		if card7:
 			await opponent_hand7.receive_card(
 				card7,
-				hand.global_position
+				deck.global_position
 			)
 	
 func get_hand_card_global_position(hand: Panel) -> Vector2:

@@ -5,7 +5,7 @@ class_name Card
 @onready var sprite: Sprite2D = $Sprite2D
 
 const CARD_BACK_TEXTURE: Texture2D = preload(
-	"res://assets/images/hands/0/_poster.png"
+	"res://assets/images/decks/0/_poster.png"
 )
 
 var selected: bool = false
