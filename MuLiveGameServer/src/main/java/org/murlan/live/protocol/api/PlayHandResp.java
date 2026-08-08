@@ -1,5 +1,7 @@
 package org.murlan.live.protocol.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +16,7 @@ public final class PlayHandResp implements Resp {
     private ResponseStatus responseStatus;
 
     @Override
-    public String toMessage(ProtocolConfig config) {
+    public String toMessage(ProtocolConfig config, ObjectMapper objectMapper) throws JsonProcessingException {
         return String.join(config.getProtocol_delimiter(),
                 ClientEvent.PLAY_HAND.id(),
                 getResponseStatus().toString()

@@ -23,10 +23,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class Room {
-    private final String id;
+    private String id;
     private final String name;
     @JsonProperty("isPublic") private final boolean isPublic;
-    @JsonIgnore private final String passcode;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") private final LocalDateTime creationDate;
     private final short totalScoreToWin;
     private List<GameState> gameStates;
@@ -44,7 +43,8 @@ public class Room {
     public void startNewGameFromPreviousGame(Player winner, Player loser) {
         GameState prevGameState = getActiveGameState();
         if (GameState.State.FINISHED.equals(prevGameState.getState())) {
-            this.getGameStates().add(GameState.fromPrevious(prevGameState, winner, loser));
+            gameStates.add(GameState.fromPrevious(prevGameState, winner, loser));
+            getActiveGameState().startGame();
         }
     }
 
@@ -73,8 +73,12 @@ public class Room {
                 ));
     }
 
+    public List<Player> getPlayers() {
+        return getActiveGameState().getPlayers();
+    }
+
     public int getNumPlayers() {
-        return getActiveGameState().getPlayers().size();
+        return getPlayers().size();
     }
 
     @Override

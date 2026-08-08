@@ -1,6 +1,6 @@
 class_name CardCombination
 
-## GDScript port of org.murlan.live.game.deck.CardCombination.
+## GDScript port of org.murlan.live.game.hand.CardCombination.
 ## Represents a set of cards a player is attempting to play (or has played),
 ## along with the classification (type) assigned to it by MovePipeline.
 

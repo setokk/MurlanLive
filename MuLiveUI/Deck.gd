@@ -22,7 +22,7 @@ func _ready() -> void:
 
 func create_deck(table_size: Vector2) -> void:
 
-	# Remove anything already in the deck.
+	# Remove anything already in the hand.
 	for card in deck_cards:
 		if is_instance_valid(card):
 			card.queue_free()
@@ -69,6 +69,6 @@ func draw_card() -> Card:
 	# Take the top card.
 	var card: Card = deck_cards.pop_back()
 
-	# Remove it from the deck.
+	# Remove it from the hand.
 	# remove_child(card)
 	return card

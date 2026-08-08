@@ -1,5 +1,6 @@
 package org.murlan.live.protocol.api;
 
+import org.murlan.live.game.GameConstants;
 import org.murlan.live.protocol.api.error.InvalidDataException;
 
 import static org.murlan.live.protocol.util.Parser.MIN_NUM_VALUES;
@@ -33,5 +34,12 @@ public interface Req {
         if (messageParts.length != startIndex() + numOfFields()) {
             throw new InvalidDataException();
         }
+    }
+
+    /**
+     * Post validates for business logic purposes (length of a field, max numeric field etc.)
+     * @throws InvalidDataException when the request violates any specified business rule.
+     */
+    default void postValidate() throws InvalidDataException {
     }
 }

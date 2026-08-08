@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.murlan.live.game.deck.Deck;
+import org.murlan.live.game.deck.Hand;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -22,7 +22,7 @@ public class Player {
     private String username;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") private LocalDateTime creationDate;
     @JsonIgnore private String jwt;
-    @JsonIgnore private Deck deck;
+    @JsonIgnore private Hand hand;
 
     public Player(long id) {
         this.id = id;

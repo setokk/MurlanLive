@@ -328,11 +328,11 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 10
 
-[node name="HandPlaceholder" type="Panel" parent="Game/BottomArea/HandArea/MarginContainer" unique_id=1006228406 node_paths=PackedStringArray("deck")]
+[node name="HandPlaceholder" type="Panel" parent="Game/BottomArea/HandArea/MarginContainer" unique_id=1006228406 node_paths=PackedStringArray("hand")]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_c6i3y")
 script = ExtResource("10_20pc6")
-deck = NodePath("../../../../MiddleArea/TableArea/TableLayout/Deck")
+hand = NodePath("../../../../MiddleArea/TableArea/TableLayout/Deck")
 
 [node name="ButtonsContainer" type="VBoxContainer" parent="Game/BottomArea" unique_id=1009792602]
 layout_mode = 1

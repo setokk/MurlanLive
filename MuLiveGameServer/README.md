@@ -11,7 +11,7 @@ Symbol | Description
 --- | ---
 $ | Indicates the delimiter (see *protocol_delimiter* in [protocol_config.yml](https://github.com/setokk/MurlanLive/blob/main/MuLiveGameServer/src/main/resources/org/murlan/live/protocol-config.yml)).
 _ | Indicates the list delimiter (see *protocol_list_delimiter* in [protocol_config.yml](https://github.com/setokk/MurlanLive/blob/main/MuLiveGameServer/src/main/resources/org/murlan/live/protocol-config.yml)).
-card_combination | A combination of card ordinals (see [Card.java](https://github.com/setokk/MurlanLive/blob/main/MuLiveGameServer/src/main/java/org/murlan/live/game/deck/Card.java) and [CardCombination.java](https://github.com/setokk/MurlanLive/blob/main/MuLiveGameServer/src/main/java/org/murlan/live/game/deck/CardCombination.java)).
+card_combination | A combination of card ordinals (see [Card.java](https://github.com/setokk/MurlanLive/blob/main/MuLiveGameServer/src/main/java/org/murlan/live/game/hand/Card.java) and [CardCombination.java](https://github.com/setokk/MurlanLive/blob/main/MuLiveGameServer/src/main/java/org/murlan/live/game/hand/CardCombination.java)).
 response_status | Indicates if a client event message was successful/valid (200=OK, 999=ERROR).
 
 ## Connection and Authentication
@@ -34,15 +34,15 @@ C1 | PLAY_HAND |<card_combination> | "C1$5_7", "C1$0_4_8_12_16", "C1$52"
 C2 | PASS | N/A | "C2"
 C3 | SURRENDER | N/A | "C3"
 C4 | AVAILABLE_ROOMS | N/A | "C4"
-C5 | JOIN_ROOM | <room_id>$<passcode> | "C5$3eyu548-32423h-aflcr$apassword5"
-C6 | CREATE_ROOM | <room_name>$<is_public>$<passcode> | "C6$Room 1$true$doesntMatter", "C6$MyRoom$false$passcodeMATTERSHere"
+C5 | JOIN_ROOM | <room_id>| "C5$3eyu548-32423h-aflcr"
+C6 | CREATE_ROOM | <room_name>$<is_public> | "C6$Room 1$true$doesntMatter", "C6$MyRoom$false"
 
 *For more information, see [ClientEvent.java](https://github.com/setokk/MurlanLive/blob/main/MuLiveGameServer/src/main/java/org/murlan/live/protocol/ClientEvent.java).*
 
 ### Client Event Responses Table
 ID | Action | Body | Response Examples
 --- | --- | --- | ---
-C0 | GAME_STATE | <response_status>$<[GameStateDto(JSON)](https://github.com/setokk/MurlanLive/blob/main/MuLiveGameServer/src/main/java/org/murlan/live/protocol/dto/GameStateDto.java)> | "C0$200${"status":0,"currTurnPlayer":null,"players":[],"currCardCombination":"2_3","deck":"52_53_1_5_6"}"
+C0 | GAME_STATE | <response_status>$<[GameStateDto(JSON)](https://github.com/setokk/MurlanLive/blob/main/MuLiveGameServer/src/main/java/org/murlan/live/protocol/dto/GameStateDto.java)> | "C0$200${"status":0,"currTurnPlayer":null,"players":[],"currCardCombination":"2_3","hand":"52_53_1_5_6"}"
 C1 | PLAY_HAND |<response_status> | "C1$200", "C1$999"
 C2 | PASS | <response_status> | "C2$200", "C2$999"
 C3 | SURRENDER | <response_status> | "C3$200", "C3$999"

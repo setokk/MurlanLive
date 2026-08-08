@@ -10,6 +10,7 @@ import org.murlan.live.protocol.dto.RoomDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -52,16 +53,18 @@ public class RoomHandler {
         roomIdToSessionMap.get(roomId).add(playerSession);
     }
 
-    public boolean createRoom(@NonNull Room room, @NonNull PlayerSession playerSession) {
-        if (roomExists(room.getId())) {
-            return false;
-        }
+    public RoomDto createRoom(@NonNull Room room, @NonNull PlayerSession playerSession) {
         if (isPlayerInRoom(playerSession)) {
-            return false;
+            return RoomDto.invalid();
         }
+
+        room.setId(UUID.randomUUID().toString());
+        room.newGameState();
+
         roomIdToRoomMap.put(room.getId(), room);
         linkSessionWithRoom(playerSession, room.getId());
-        return true;
+
+        return new RoomDto(room.getId(), room.getName(), room.getPlayers());
     }
 
     public Room getRoom(@NonNull String roomId) {
@@ -89,7 +92,7 @@ public class RoomHandler {
         return sessionToRoomIdMap.containsKey(playerSession);
     }
 
-    public synchronized boolean addPlayerToRoom(@NonNull String roomId, String passcode, @NonNull PlayerSession playerSession) {
+    public synchronized boolean addPlayerToRoom(@NonNull String roomId, @NonNull PlayerSession playerSession) {
         if (!roomExists(roomId)) {
             return false;
         }
@@ -100,9 +103,6 @@ public class RoomHandler {
         if (!GameState.State.WAITING.equals(room.getActiveGameState().getState())) {
             return false;
         }
-        if (!room.isPublic() && !room.getPasscode().equals(passcode)) {
-            return false;
-        }
 
         return room.addPlayer(playerSession.getPlayer());
     }
@@ -111,7 +111,7 @@ public class RoomHandler {
         return roomIdToRoomMap.values()
                 .stream()
                 .filter(Room::isPublic)
-                .map(room -> new RoomDto(room.getId(), room.getName(), room.getNumPlayers()))
+                .map(room -> new RoomDto(room.getId(), room.getName(), room.getPlayers()))
                 .collect(Collectors.toList());
     }
 
@@ -119,8 +119,8 @@ public class RoomHandler {
         return roomIdToRoomMap.values().stream().toList();
     }
 
-    public synchronized boolean joinRoom(@NonNull String roomId, @NonNull String passcode, @NonNull PlayerSession playerSession) {
-        boolean isJoinSuccessful = addPlayerToRoom(roomId, passcode, playerSession);
+    public synchronized boolean joinRoom(@NonNull String roomId, @NonNull PlayerSession playerSession) {
+        boolean isJoinSuccessful = addPlayerToRoom(roomId, playerSession);
         if (!isJoinSuccessful) {
             return false;
         }

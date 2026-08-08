@@ -5,16 +5,16 @@ import junit.framework.TestCase;
 import java.util.Arrays;
 import java.util.List;
 
-public class DeckTest extends TestCase {
+public class HandTest extends TestCase {
 
     public void testContains() {
         List<Card> sameCards = Arrays.asList(Card.FIVE_OF_HEARTS, Card.FIVE_OF_SPADES);
 
         CardCombination cardCombination = new CardCombination(sameCards);
-        Deck deck = new Deck();
-        deck.addCards(sameCards);
+        Hand hand = new Hand();
+        hand.addCards(sameCards);
 
-        assertTrue(deck.contains(cardCombination));
+        assertTrue(hand.contains(cardCombination));
     }
 
     public void testNotContains() {
@@ -22,10 +22,10 @@ public class DeckTest extends TestCase {
         List<Card> actualOwnedCards = Arrays.asList(Card.FIVE_OF_HEARTS, Card.ACE_OF_CLUBS);
 
         CardCombination cardCombination = new CardCombination(cardsToBePlayed);
-        Deck deck = new Deck();
-        deck.addCards(actualOwnedCards);
+        Hand hand = new Hand();
+        hand.addCards(actualOwnedCards);
 
-        assertFalse(deck.contains(cardCombination));
+        assertFalse(hand.contains(cardCombination));
     }
 
     public void testContains_2() {
@@ -33,9 +33,9 @@ public class DeckTest extends TestCase {
         List<Card> actualOwnedCards = Arrays.asList(Card.FIVE_OF_HEARTS, Card.FIVE_OF_SPADES, Card.ACE_OF_CLUBS);
 
         CardCombination cardCombination = new CardCombination(cardsToBePlayed);
-        Deck deck = new Deck();
-        deck.addCards(actualOwnedCards);
+        Hand hand = new Hand();
+        hand.addCards(actualOwnedCards);
 
-        assertTrue(deck.contains(cardCombination));
+        assertTrue(hand.contains(cardCombination));
     }
 }

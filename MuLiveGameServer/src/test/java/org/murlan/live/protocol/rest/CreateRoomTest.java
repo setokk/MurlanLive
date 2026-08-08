@@ -90,7 +90,6 @@ public class CreateRoomTest {
                 .withCreationDate(LocalDateTime.now())
                 .withTotalScoreToWin((short) 21)
                 .withOwner(owner)
-                .withPasscode("passcode")
                 .withGameStates(gameStates)
                 .build();
     }
