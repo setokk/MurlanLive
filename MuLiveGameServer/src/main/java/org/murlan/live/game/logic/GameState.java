@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -36,7 +37,7 @@ public class GameState {
     @JsonIgnore private Runnable onFinishGame;
     @JsonIgnore private Player prevWinner;
     @JsonIgnore private Player prevLoser;
-    @JsonIgnore private Set<Player> givenCards = HashSet.newHashSet(2);
+    @JsonIgnore private Set<Player> givenCards = HashSet.newHashSet(0);
 
     public GameState(State state, Player player, Consumer<GameState> onStartGame, Runnable onFinishGame) {
         this.state = state;
@@ -48,7 +49,7 @@ public class GameState {
     }
 
     public static GameState fromPrevious(GameState previous, Player winner, Player loser) {
-        GameState newGameState = GameState.builder()
+        return GameState.builder()
                 .withState(State.WAITING)
                 .withPlayers(previous.getPlayers())
                 .withScore(HashMap.newHashMap(GameConstants.MAX_PLAYERS))
@@ -57,8 +58,6 @@ public class GameState {
                 .withPrevWinner(winner)
                 .withPrevLoser(loser)
                 .build();
-        newGameState.startGame();
-        return newGameState;
     }
 
     @JsonIgnore
@@ -85,7 +84,7 @@ public class GameState {
         if (isNotPlayerTurn(player)) {
             return false;
         }
-        if (!this.currTurnPlayer.getDeck().contains(cardCombination)) {
+        if (!this.currTurnPlayer.getHand().contains(cardCombination)) {
             return false;
         }
         if (!MovePipeline.validate(cardCombination)) {
@@ -101,9 +100,9 @@ public class GameState {
             return false;
         }
 
-        this.currTurnPlayer.getDeck().removeCards(cardCombination);
+        this.currTurnPlayer.getHand().removeCards(cardCombination);
         this.currCardCombination = cardCombination;
-        if (this.currTurnPlayer.getDeck().isEmpty()) {
+        if (this.currTurnPlayer.getHand().isEmpty()) {
             this.score.put(this.currTurnPlayer, (short) (GameConstants.MAX_PLAYERS - this.score.size() - 1));
         }
         nextTurn();
@@ -148,7 +147,7 @@ public class GameState {
         if (this.state != State.GIVING_CARDS) {
             return false;
         }
-        if (!player.getDeck().contains(new CardCombination(card))) {
+        if (!player.getHand().contains(new CardCombination(card))) {
             return false;
         }
         if (givenCards.contains(player)) { // player has already given a card
@@ -163,7 +162,7 @@ public class GameState {
         if (prevWinner.equals(player) && card.hasBiggerRankThan(Card.TEN_OF_SPADES)) {
             return false;
         } else if (prevLoser.equals(player)) {
-            Rank highestRank = player.getDeck().getCards()
+            Rank highestRank = player.getHand().getCards()
                     .stream()
                     .max(new Card.CardComparator())
                     .orElseThrow(() -> new IllegalStateException("No max card found"))
@@ -175,11 +174,11 @@ public class GameState {
             return false;
         }
 
-        player.getDeck().removeCard(card);
-        actualReceivingPlayer.getDeck().addCard(card);
+        player.getHand().removeCard(card);
+        actualReceivingPlayer.getHand().addCard(card);
 
         givenCards.add(player);
-        if (givenCards.size() == 2) {
+        if (haveBothPlayersGivenCards()) {
             this.state = State.PLAYING;
         }
 
@@ -187,7 +186,7 @@ public class GameState {
     }
 
     public synchronized void startGame() {
-        if (!State.WAITING.equals(this.state)) {
+        if (!State.WAITING.equals(this.state) && !State.GIVING_CARDS.equals(this.state)) {
             return;
         }
         onStartGame.accept(this);
@@ -204,7 +203,7 @@ public class GameState {
     private void nextTurn() {
         int nextTurnIndex = (players.indexOf(currTurnPlayer) + 1) % players.size();
         this.currTurnPlayer = players.get(nextTurnIndex);
-        while (this.currTurnPlayer.getDeck().isEmpty()) {
+        while (this.currTurnPlayer.getHand().isEmpty()) {
             nextTurnIndex = (nextTurnIndex + 1) % players.size();
             this.currTurnPlayer = players.get(nextTurnIndex);
         }
@@ -220,17 +219,22 @@ public class GameState {
 
     public Player findPlayerWithCardCombination(CardCombination cardCombination) {
         return this.players.stream()
-                .filter(p -> p.getDeck().contains(cardCombination))
+                .filter(p -> p.getHand().contains(cardCombination))
                 .findAny()
                 .orElseThrow(() -> new IllegalStateException("No player found with card combination " + cardCombination));
     }
 
     public boolean prevLoserContainsBothJokers() {
-        return isFromPrevious() && getPrevLoser().getDeck().contains(new CardCombination(Card.BLACK_JOKER, Card.RED_JOKER));
+        return isFromPrevious() && getPrevLoser().getHand().contains(new CardCombination(Card.BLACK_JOKER, Card.RED_JOKER));
     }
 
     public boolean haveBothPlayersGivenCards() {
         return getGivenCards().size() == 2;
+    }
+
+    public Map<Long, Short> getNumOfCardsPerPlayerId() {
+        return players.stream()
+                .collect(Collectors.toMap(Player::getId, p -> (short) p.getHand().size()));
     }
 
     public enum State {

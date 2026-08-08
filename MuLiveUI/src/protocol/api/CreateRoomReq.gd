@@ -5,13 +5,11 @@ extends Req
 
 var room_name: String
 var is_public: bool
-var passcode: String
 var total_score_to_win: int
 
-func _init(room_name: String, is_public: bool, passcode: String, total_score_to_win: int) -> void:
+func _init(room_name: String, is_public: bool, total_score_to_win: int) -> void:
 	self.room_name = room_name
 	self.is_public = is_public
-	self.passcode = passcode
 	self.total_score_to_win = total_score_to_win
 
 ## Mirrors CreateRoomReq#validate(String[]): the server rejects requests
@@ -25,6 +23,5 @@ func to_message(config: ProtocolConfig) -> String:
 		ClientEvent.id(ClientEvent.Value.CREATE_ROOM),
 		room_name,
 		str(is_public),
-		passcode,
 		str(total_score_to_win),
 	].join(config.protocol_delimiter)

@@ -1,5 +1,7 @@
 package org.murlan.live.protocol.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,11 +19,11 @@ public final class InformPlayHandResp implements Resp {
     private CardCombination cardCombination;
 
     @Override
-    public String toMessage(ProtocolConfig config) {
+    public String toMessage(ProtocolConfig config, ObjectMapper objectMapper) throws JsonProcessingException {
         return String.join(
                 config.getProtocol_delimiter(),
                 ServerEvent.INFORM_PLAY_HAND.id(),
-                responseStatus.toString(),
+                getResponseStatus().toString(),
                 String.valueOf(playerId),
                 cardCombination.toMessage(config.getProtocol_list_delimiter())
         );

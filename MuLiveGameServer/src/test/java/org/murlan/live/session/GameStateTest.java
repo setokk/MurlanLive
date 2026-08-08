@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.deck.CardCombinationType;
-import org.murlan.live.game.deck.Deck;
+import org.murlan.live.game.deck.Hand;
 import org.murlan.live.game.logic.GameState;
 import org.murlan.live.protocol.dto.Player;
 
@@ -18,8 +18,8 @@ public class GameStateTest extends TestCase {
     public void testPlayHand_SameRankSingle() {
         Player currPlayer = new Player(1L, "currPlayer", LocalDateTime.now(), "currPlayer");
         Player otherPlayer = new Player(2L, "otherPlayer", LocalDateTime.now(), "otherPlayer");
-        currPlayer.setDeck(new Deck(getListOfCards(Card.FIVE_OF_CLUBS, Card.FIVE_OF_DIAMONDS)));
-        otherPlayer.setDeck(new Deck(getListOfCards(Card.FIVE_OF_SPADES, Card.FIVE_OF_HEARTS)));
+        currPlayer.setHand(new Hand(getListOfCards(Card.FIVE_OF_CLUBS, Card.FIVE_OF_DIAMONDS)));
+        otherPlayer.setHand(new Hand(getListOfCards(Card.FIVE_OF_SPADES, Card.FIVE_OF_HEARTS)));
 
         CardCombination initialCardCombination = new CardCombination(Card.THREE_OF_SPADES);
         initialCardCombination.setType(CardCombinationType.SINGLE_CARD);
@@ -41,8 +41,8 @@ public class GameStateTest extends TestCase {
     public void testPlayHand_SameRankDouble() {
         Player currPlayer = new Player(1L, "currPlayer", LocalDateTime.now(), "currPlayer");
         Player otherPlayer = new Player(2L, "otherPlayer", LocalDateTime.now(), "otherPlayer");
-        currPlayer.setDeck(new Deck(getListOfCards(Card.TWO_OF_CLUBS, Card.TWO_OF_DIAMONDS, Card.TEN_OF_DIAMONDS)));
-        otherPlayer.setDeck(new Deck(getListOfCards(Card.TWO_OF_SPADES, Card.TWO_OF_HEARTS, Card.TEN_OF_HEARTS)));
+        currPlayer.setHand(new Hand(getListOfCards(Card.TWO_OF_CLUBS, Card.TWO_OF_DIAMONDS, Card.TEN_OF_DIAMONDS)));
+        otherPlayer.setHand(new Hand(getListOfCards(Card.TWO_OF_SPADES, Card.TWO_OF_HEARTS, Card.TEN_OF_HEARTS)));
 
         CardCombination initialCardCombination = new CardCombination(Card.THREE_OF_SPADES, Card.THREE_OF_CLUBS);
         initialCardCombination.setType(CardCombinationType.DOUBLE_CARDS);
@@ -67,8 +67,8 @@ public class GameStateTest extends TestCase {
     public void testPlayHand_TripleWithDoubleCard() {
         Player currPlayer = new Player(1L, "currPlayer", LocalDateTime.now(), "currPlayer");
         Player otherPlayer = new Player(2L, "otherPlayer", LocalDateTime.now(), "otherPlayer");
-        currPlayer.setDeck(new Deck(getListOfCards(Card.FIVE_OF_SPADES, Card.FIVE_OF_CLUBS, Card.FIVE_OF_HEARTS, Card.ACE_OF_CLUBS)));
-        otherPlayer.setDeck(new Deck(getListOfCards(Card.TWO_OF_SPADES, Card.TWO_OF_HEARTS, Card.JACK_OF_CLUBS)));
+        currPlayer.setHand(new Hand(getListOfCards(Card.FIVE_OF_SPADES, Card.FIVE_OF_CLUBS, Card.FIVE_OF_HEARTS, Card.ACE_OF_CLUBS)));
+        otherPlayer.setHand(new Hand(getListOfCards(Card.TWO_OF_SPADES, Card.TWO_OF_HEARTS, Card.JACK_OF_CLUBS)));
 
         CardCombination initialCardCombination = new CardCombination(Card.THREE_OF_SPADES, Card.THREE_OF_CLUBS, Card.THREE_OF_HEARTS);
         initialCardCombination.setType(CardCombinationType.TRIPLE_CARDS);

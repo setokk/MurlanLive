@@ -10,8 +10,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.murlan.live.endpoint.session.PlayerSession;
 import org.murlan.live.endpoint.session.RoomHandler;
-import org.murlan.live.game.GameConstants;
-import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.logic.GameStateFactory;
 import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.ResponseStatus;
@@ -23,7 +21,6 @@ import org.murlan.live.protocol.api.GameStateReq;
 import org.murlan.live.protocol.api.GameStateResp;
 import org.murlan.live.protocol.api.GiveCardReq;
 import org.murlan.live.protocol.api.GiveCardResp;
-import org.murlan.live.protocol.api.InformGameStartResp;
 import org.murlan.live.protocol.api.InformGiveCardResp;
 import org.murlan.live.protocol.api.InformPassResp;
 import org.murlan.live.protocol.api.InformPlayHandResp;
@@ -53,7 +50,6 @@ import org.murlan.live.util.MLObjectMapper;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -66,11 +62,14 @@ public class GameLobbyEndpoint {
      * Shared state between sessions
      */
     private static final ProtocolConfig config = ConfigProvider.getProtocolConfig();
-    private static final Parser parser = new Parser(config);
-    private static final Generator generator = new Generator(config);
     private static final MLObjectMapper objectMapper = new MLObjectMapper();
-    private static final EndpointHelper endpointHelper = new EndpointHelper(parser, generator);
+
+    private static final Parser parser = new Parser(config);
+    private static final Generator generator = new Generator(config, objectMapper);
+
+    private static final EndpointHelper endpointHelper = new EndpointHelper(parser, generator, config);
     private static final RoomHandler roomHandler = new RoomHandler();
+
     private static final PlayerRESTClient playerRESTClient = new PlayerRESTClient(config);
     private static final RoomRESTClient roomRESTClient = new RoomRESTClient(config, objectMapper);
 
@@ -136,17 +135,7 @@ public class GameLobbyEndpoint {
         Resp informResp = null;
         Resp resp = switch (req) {
             case GameStateReq gameStateReq -> {
-                GameStateDto gameStateDto = new GameStateDto(
-                        room.getActiveGameState().getState().ordinal(),
-                        room.getTotalFinishedGames(),
-                        room.getActiveGameState().getCurrTurnPlayer(),
-                        room.getActiveGameState().getPlayers(),
-                        room.getActiveGameState().getCurrCardCombination().toMessage(config.getProtocol_list_delimiter()),
-                        new CardCombination(player.getDeck() != null
-                                ? player.getDeck().getCards()
-                                : Collections.emptyList()
-                        ).toMessage(config.getProtocol_list_delimiter())
-                );
+                GameStateDto gameStateDto = GameStateDto.from(room, player, config);
                 yield new GameStateResp(
                         ResponseStatus.OK,
                         objectMapper.writeValueAsString(gameStateDto)
@@ -175,35 +164,26 @@ public class GameLobbyEndpoint {
             }
             case AvailableRoomsReq availableRoomsReq -> {
                 List<RoomDto> availableRooms = roomHandler.getAvailableRooms();
-                yield new AvailableRoomsResp(ResponseStatus.OK, objectMapper.writeValueAsString(availableRooms));
+                yield new AvailableRoomsResp(ResponseStatus.OK, availableRooms);
             }
             case JoinRoomReq joinRoomReq -> {
-                boolean isSuccessful = roomHandler.joinRoom(joinRoomReq.getRoomId(), joinRoomReq.getPasscode(), playerSession);
-                if (isSuccessful) {
-                    Room joinedRoom = roomHandler.getRoom(joinRoomReq.getRoomId());
-                    if (joinedRoom.getNumPlayers() == GameConstants.MAX_PLAYERS) {
-                        session.getBasicRemote().sendText(generator.generateMessage(new InformGameStartResp(ResponseStatus.OK)));
-                    }
-                }
+                boolean isSuccessful = roomHandler.joinRoom(joinRoomReq.getRoomId(), playerSession);
                 yield new JoinRoomResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case CreateRoomReq createRoomReq -> {
                 Room newRoom = new Room(
-                        UUID.randomUUID().toString(),
                         createRoomReq.getRoomName(),
                         createRoomReq.isPublic(),
-                        createRoomReq.getPasscode(),
                         LocalDateTime.now(),
                         createRoomReq.getTotalScoreToWin(),
                         playerSession.getPlayer(),
-                        new GameStateFactory(roomRESTClient, endpointHelper, roomHandler)
+                        new GameStateFactory(roomRESTClient, endpointHelper, roomHandler, config)
                 );
-                newRoom.newGameState();
 
-                boolean isSuccessful = roomHandler.createRoom(newRoom, playerSession);
+                RoomDto roomDto = roomHandler.createRoom(newRoom, playerSession);
                 yield new CreateRoomResp(
-                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
-                        objectMapper.writeValueAsString(new RoomDto(newRoom.getId(), newRoom.getName(), newRoom.getNumPlayers()))
+                        roomDto.isValid() ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        roomDto
                 );
             }
             case GiveCardReq giveCardReq -> {
@@ -227,7 +207,9 @@ public class GameLobbyEndpoint {
             session.getBasicRemote().sendText(responseString);
         }
 
-        endpointHelper.informPlayers(informResp, playerSession, roomHandler.getPlayersInRoom(room.getId()));
+        if (room != null) {
+            endpointHelper.informPlayers(informResp, playerSession, roomHandler.getPlayersInRoom(room.getId()));
+        }
     }
 
     @OnClose

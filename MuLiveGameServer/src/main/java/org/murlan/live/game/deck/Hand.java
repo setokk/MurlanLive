@@ -12,11 +12,11 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @Builder
-public class Deck {
+public class Hand {
     @Singular("withCard")
     private List<Card> cards;
 
-    public Deck() {
+    public Hand() {
         this.cards = new ArrayList<>();
     }
 
@@ -66,5 +66,9 @@ public class Deck {
 
     public boolean isEmpty() {
         return this.cards.isEmpty();
+    }
+
+    public int size() {
+        return cards.size();
     }
 }

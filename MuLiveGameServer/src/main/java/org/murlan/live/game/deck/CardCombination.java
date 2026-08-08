@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,11 @@ public class CardCombination {
 
     public CardCombination(Card... cards) {
         this.cards = Arrays.asList(cards);
+        this.cards.sort(ASC_COMPARATOR);
+    }
+
+    public CardCombination(Hand hand) {
+        this.cards = hand != null ? hand.getCards() : Collections.emptyList();
         this.cards.sort(ASC_COMPARATOR);
     }
 
