@@ -8,10 +8,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.murlan.live.endpoint.EndpointHelper;
+import org.murlan.live.game.deck.Card;
+import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.protocol.dto.Player;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -32,15 +34,16 @@ public class Room {
     private final Player owner;
     @JsonIgnore private final GameStateFactory gameStateFactory;
 
-    public void newGameState() {
-        this.gameStates = List.of(gameStateFactory.createGameState(this));
+    public void initialGameState() {
+        this.gameStates = new ArrayList<>();
+        this.gameStates.add(gameStateFactory.createGameState(this));
     }
 
-    public boolean addPlayer(Player player) {
+    public synchronized boolean addPlayer(Player player) {
         return getActiveGameState().addPlayer(player);
     }
 
-    public void startNewGameFromPreviousGame(Player winner, Player loser) {
+    public synchronized void startNewGameFromPreviousGame(Player winner, Player loser) {
         GameState prevGameState = getActiveGameState();
         if (GameState.State.FINISHED.equals(prevGameState.getState())) {
             gameStates.add(GameState.fromPrevious(prevGameState, winner, loser));
@@ -54,15 +57,15 @@ public class Room {
     }
 
     @JsonIgnore
-    public int getTotalFinishedGames() {
+    public synchronized int getTotalFinishedGames() {
         if (GameState.State.FINISHED.equals(getActiveGameState().getState())) {
             return gameStates.size();
         } else {
-            return gameStates.size() - 1;
+            return Math.max(0, gameStates.size() - 1);
         }
     }
 
-    public Map<Player, Short> getTotalScores() {
+    public synchronized Map<Player, Short> getTotalScores() {
         return gameStates.stream()
                 .map(GameState::getScore)
                 .flatMap(s -> s.entrySet().stream())
@@ -73,12 +76,20 @@ public class Room {
                 ));
     }
 
-    public List<Player> getPlayers() {
+    public synchronized List<Player> getPlayers() {
         return getActiveGameState().getPlayers();
     }
 
-    public int getNumPlayers() {
-        return getPlayers().size();
+    public synchronized boolean playHand(Player player, CardCombination cardCombination) {
+        return getActiveGameState().playHand(player, cardCombination);
+    }
+
+    public synchronized boolean pass(Player player) {
+        return getActiveGameState().pass(player);
+    }
+
+    public synchronized boolean giveCard(Card card, Player player, Player receivingPlayer) {
+        return getActiveGameState().giveCard(card, player, receivingPlayer);
     }
 
     @Override

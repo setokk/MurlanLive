@@ -12,6 +12,8 @@ import org.murlan.live.protocol.api.InformGameStartResp;
 import org.murlan.live.protocol.api.InformGiveCardResp;
 import org.murlan.live.protocol.api.InformPassResp;
 import org.murlan.live.protocol.api.InformPlayHandResp;
+import org.murlan.live.protocol.api.InformPlayerLeaveRoomResp;
+import org.murlan.live.protocol.api.InformPlayerLostConnectionResp;
 import org.murlan.live.protocol.api.InformSurrenderResp;
 import org.murlan.live.protocol.api.Resp;
 import org.murlan.live.protocol.config.ProtocolConfig;
@@ -80,6 +82,8 @@ public class EndpointHelper {
                         playerSession.getSession().getBasicRemote().sendText(generator.generateMessage(hiddenInformGiveCardResp));
                     }
                 }
+                case InformPlayerLeaveRoomResp informPlayerLeaveRoomResp -> playerSession.getSession().getBasicRemote().sendText(message);
+                case InformPlayerLostConnectionResp informPlayerLostConnectionResp -> playerSession.getSession().getBasicRemote().sendText(message);
                 default -> throw new IllegalStateException("Unexpected value: " + resp);
             }
         }

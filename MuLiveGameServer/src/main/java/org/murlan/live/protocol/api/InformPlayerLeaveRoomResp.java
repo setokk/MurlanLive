@@ -5,21 +5,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.murlan.live.protocol.config.ProtocolConfig;
-import org.murlan.live.protocol.ClientEvent;
 import org.murlan.live.protocol.ResponseStatus;
+import org.murlan.live.protocol.ServerEvent;
+import org.murlan.live.protocol.config.ProtocolConfig;
 
 @Setter
 @Getter
 @AllArgsConstructor
-public final class SurrenderResp implements Resp {
+public class InformPlayerLeaveRoomResp implements Resp {
     private ResponseStatus responseStatus;
+    private long playerId;
 
     @Override
     public String toMessage(ProtocolConfig config, ObjectMapper objectMapper) throws JsonProcessingException {
         return String.join(config.getProtocol_delimiter(),
-                ClientEvent.SURRENDER.id(),
-                getResponseStatus().toString()
+                ServerEvent.INFORM_PLAYER_LEAVE_ROOM.id(),
+                getResponseStatus().toString(),
+                String.valueOf(playerId)
         );
     }
 }

@@ -30,21 +30,43 @@ public class RoomHandler {
                 .findAny();
     }
 
-    public Optional<String> removeSession(@NonNull PlayerSession playerSession) {
-        jwtToSessionMap.remove(playerSession.getPlayer().getJwt());
+    public Optional<List<PlayerSession>> removeSession(@NonNull PlayerSession playerSession, boolean hasPlayerLostConnection) {
         String roomId = sessionToRoomIdMap.remove(playerSession);
         if (roomId == null) {
             return Optional.empty();
         }
-        roomIdToSessionMap.get(roomId).remove(playerSession);
-        return Optional.of(roomId);
+
+        Room room = roomIdToRoomMap.get(roomId);
+        if (room == null) {
+            return Optional.empty();
+        }
+
+        synchronized (room) {
+            roomIdToSessionMap.get(roomId).remove(playerSession);
+
+            // if game has not started yet (initial state where not all players have joined
+            // do not remove room.
+            // remove room and player sessions ONLY in the case of active game
+            if (GameState.State.WAITING.equals(room.getActiveGameState().getState())) {
+                return Optional.ofNullable(roomIdToSessionMap.get(roomId));
+            }
+
+            room.getActiveGameState().handlePlayerNotInRoom(playerSession.getPlayer(), hasPlayerLostConnection);
+
+            List<PlayerSession> playersInRoom = removeRoom(roomId);
+            for (PlayerSession otherPlayerSession : playersInRoom) {
+                sessionToRoomIdMap.remove(otherPlayerSession);
+            }
+
+            return Optional.of(playersInRoom);
+        }
     }
 
     public boolean jwtSessionExists(@NonNull String jwt) {
         return jwtToSessionMap.containsKey(jwt);
     }
 
-    public void linkSessionWithRoom(@NonNull PlayerSession playerSession, @NonNull String roomId) {
+    private void linkSessionWithRoom(@NonNull PlayerSession playerSession, @NonNull String roomId) {
         if (!jwtToSessionMap.containsKey(playerSession.getPlayer().getJwt())) {
             throw new RuntimeException("Player session with JWT " + playerSession.getPlayer().getJwt() + " not found");
         }
@@ -59,7 +81,7 @@ public class RoomHandler {
         }
 
         room.setId(UUID.randomUUID().toString());
-        room.newGameState();
+        room.initialGameState();
 
         roomIdToRoomMap.put(room.getId(), room);
         linkSessionWithRoom(playerSession, room.getId());
@@ -71,9 +93,10 @@ public class RoomHandler {
         return roomIdToRoomMap.get(roomId);
     }
 
-    public Room removeRoom(@NonNull String roomId) {
-        roomIdToSessionMap.remove(roomId);
-        return roomIdToRoomMap.remove(roomId);
+    public List<PlayerSession> removeRoom(@NonNull String roomId) {
+        List<PlayerSession> playersInRoom = roomIdToSessionMap.remove(roomId);
+        roomIdToRoomMap.remove(roomId);
+        return playersInRoom;
     }
 
     public Room getPlayerRoom(@NonNull PlayerSession playerSession) {
@@ -84,22 +107,15 @@ public class RoomHandler {
         return roomIdToRoomMap.get(roomId);
     }
 
-    public boolean roomExists(@NonNull String roomId) {
-        return roomIdToRoomMap.containsKey(roomId);
-    }
-
     public boolean isPlayerInRoom(@NonNull PlayerSession playerSession) {
         return sessionToRoomIdMap.containsKey(playerSession);
     }
 
-    public synchronized boolean addPlayerToRoom(@NonNull String roomId, @NonNull PlayerSession playerSession) {
-        if (!roomExists(roomId)) {
-            return false;
-        }
+    public boolean addPlayerToRoom(@NonNull Room room, @NonNull PlayerSession playerSession) {
         if (isPlayerInRoom(playerSession)) {
             return false;
         }
-        Room room = getRoom(roomId);
+
         if (!GameState.State.WAITING.equals(room.getActiveGameState().getState())) {
             return false;
         }
@@ -119,16 +135,23 @@ public class RoomHandler {
         return roomIdToRoomMap.values().stream().toList();
     }
 
-    public synchronized boolean joinRoom(@NonNull String roomId, @NonNull PlayerSession playerSession) {
-        boolean isJoinSuccessful = addPlayerToRoom(roomId, playerSession);
-        if (!isJoinSuccessful) {
+    public boolean joinRoom(@NonNull String roomId, @NonNull PlayerSession playerSession) {
+        Room room = getRoom(roomId);
+        if (room == null) {
             return false;
         }
-        linkSessionWithRoom(playerSession, roomId);
-        return true;
+
+        synchronized (room) {
+            boolean isJoinSuccessful = addPlayerToRoom(room, playerSession);
+            if (!isJoinSuccessful) {
+                return false;
+            }
+            linkSessionWithRoom(playerSession, roomId);
+            return true;
+        }
     }
 
-    public synchronized List<PlayerSession> getPlayersInRoom(String roomId) {
+    public List<PlayerSession> getPlayersInRoom(String roomId) {
         return roomIdToSessionMap.get(roomId);
     }
 }
