@@ -10,11 +10,13 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ServerEvent {
     INFORM_PLAY_HAND(),
-    INFORM_SURRENDER(),
     INFORM_PASS(),
     INFORM_GIVE_CARD(),
     INFORM_GAME_START(),
-    INFORM_GAME_FINISH();
+    INFORM_GAME_FINISH(),
+    INFORM_PLAYER_JOIN_ROOM(),
+    INFORM_PLAYER_LEAVE_ROOM(),
+    INFORM_PLAYER_LOST_CONNECTION();
 
     public String id() {
         return "S" + ordinal();

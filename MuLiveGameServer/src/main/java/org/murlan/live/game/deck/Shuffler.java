@@ -14,6 +14,15 @@ public class Shuffler {
      *
      */
     public static List<Hand> shuffle(int numParts) {
+        List<Hand> hands;
+        do {
+            hands = dealRandomly(numParts);
+        } while (!hasRequiredCondition(hands));
+
+        return hands;
+    }
+
+    private static List<Hand> dealRandomly(int numParts) {
         List<Card> shuffledCards = new ArrayList<>(Arrays.asList(Card.values())); // Deep copy to not mutate original values() array
         Collections.shuffle(shuffledCards, new Random());
 
@@ -27,5 +36,20 @@ public class Shuffler {
             hand.addCard(shuffledCards.get(i));
         }
         return hands;
+    }
+
+    /**
+     * Checks if all hands have <b>at least one</b> card with rank <= Rank.TEN.
+     * </br>
+     * While the probability of this not happening is really low,
+     * we need to make sure this does not happen in any game (due to our murlan rules).
+     * @param shuffledHands the shuffled hands.
+     * @return true if all hands have <b>at least one</b> card with rank <= Rank.TEN, otherwise returns false.
+     */
+    private static boolean hasRequiredCondition(List<Hand> shuffledHands) {
+        return shuffledHands.stream()
+                .allMatch(hand -> hand.getCards().stream()
+                        .anyMatch(card -> card.hasSmallerOrEqualRank(Rank.TEN))
+                );
     }
 }

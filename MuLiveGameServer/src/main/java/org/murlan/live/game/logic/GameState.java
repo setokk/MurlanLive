@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -35,26 +38,33 @@ public class GameState {
     @JsonIgnore private CardCombination currCardCombination;
     @JsonIgnore private Consumer<GameState> onStartGame;
     @JsonIgnore private Runnable onFinishGame;
+    @JsonIgnore private Consumer<GameState> onTurnTimeout;
     @JsonIgnore private Player prevWinner;
     @JsonIgnore private Player prevLoser;
     @JsonIgnore private Set<Player> givenCards = HashSet.newHashSet(0);
 
-    public GameState(State state, Player player, Consumer<GameState> onStartGame, Runnable onFinishGame) {
+    /* Turn timer */
+    @JsonIgnore private ScheduledExecutorService scheduler;
+    @JsonIgnore private ScheduledFuture<?> turnTimer;
+
+    public GameState(State state, Player player, Consumer<GameState> onStartGame, Runnable onFinishGame, Consumer<GameState> onTurnTimeout) {
         this.state = state;
         this.players = new ArrayList<>();
         this.players.add(player);
         this.score = new HashMap<>();
         this.onStartGame = onStartGame;
         this.onFinishGame = onFinishGame;
+        this.onTurnTimeout = onTurnTimeout;
     }
 
     public static GameState fromPrevious(GameState previous, Player winner, Player loser) {
         return GameState.builder()
                 .withState(State.WAITING)
-                .withPlayers(previous.getPlayers())
+                .withPlayers(new ArrayList<>(previous.getPlayers()))
                 .withScore(HashMap.newHashMap(GameConstants.MAX_PLAYERS))
                 .withOnStartGame(previous.getOnStartGame())
                 .withOnFinishGame(previous.getOnFinishGame())
+                .withOnTurnTimeout(previous.getOnTurnTimeout())
                 .withPrevWinner(winner)
                 .withPrevLoser(loser)
                 .build();
@@ -65,7 +75,7 @@ public class GameState {
         return prevLoser != null && prevWinner != null;
     }
 
-    public synchronized boolean addPlayer(Player player) {
+    public boolean addPlayer(Player player) {
         if (players.size() == GameConstants.MAX_PLAYERS) {
             return false;
         }
@@ -77,7 +87,7 @@ public class GameState {
     }
 
 
-    public synchronized boolean playHand(Player player, CardCombination cardCombination) {
+    public boolean playHand(Player player, CardCombination cardCombination) {
         if (this.state != State.PLAYING) {
             return false;
         }
@@ -110,7 +120,7 @@ public class GameState {
         return true;
     }
 
-    public synchronized boolean pass(Player player) {
+    public boolean pass(Player player) {
         if (this.state != State.PLAYING) {
             return false;
         }
@@ -122,28 +132,7 @@ public class GameState {
         return true;
     }
 
-    public synchronized boolean surrender(Player player) {
-        if (this.state != State.PLAYING) {
-            return false;
-        }
-        Optional<Player> optionalPlayerToSurrender = this.players.stream().filter(player::equals).findAny();
-        if (optionalPlayerToSurrender.isEmpty()) {
-            return false;
-        }
-
-        Player playerToSurrender = optionalPlayerToSurrender.get();
-        this.players.remove(playerToSurrender);
-
-        this.score.put(playerToSurrender, GameConstants.SCORE_PENALTY_SURRENDER);
-        for (Player remainingPlayer : this.players) {
-            this.score.put(remainingPlayer, GameConstants.SCORE_REMAINING_PLAYERS_AFTER_SURRENDER);
-        }
-        finishGame();
-
-        return true;
-    }
-
-    public synchronized boolean giveCard(Card card, Player player, Player receivingPlayer) {
+    public boolean giveCard(Card card, Player player, Player receivingPlayer) {
         if (this.state != State.GIVING_CARDS) {
             return false;
         }
@@ -159,7 +148,7 @@ public class GameState {
                 .findAny()
                 .orElseThrow(() -> new IllegalStateException("Receiving player not found"));
 
-        if (prevWinner.equals(player) && card.hasBiggerRankThan(Card.TEN_OF_SPADES)) {
+        if (prevWinner.equals(player) && card.hasBiggerRank(Rank.TEN)) {
             return false;
         } else if (prevLoser.equals(player)) {
             Rank highestRank = player.getHand().getCards()
@@ -180,12 +169,35 @@ public class GameState {
         givenCards.add(player);
         if (haveBothPlayersGivenCards()) {
             this.state = State.PLAYING;
+            cancelTurnTimer();
         }
 
         return true;
     }
 
-    public synchronized void startGame() {
+    public void handlePlayerNotInRoom(Player player, boolean hasLostConnection) {
+        Optional<Player> optionalPlayer = this.players.stream().filter(player::equals).findAny();
+        if (optionalPlayer.isEmpty()) {
+            return;
+        }
+
+        if (state == State.PLAYING) {
+            short scorePenalty = hasLostConnection
+                    ? GameConstants.SCORE_PENALTY_LOST_CONNECTION
+                    : GameConstants.SCORE_PENALTY_LEAVE_ROOM;
+
+            short scoreRemainingPlayers = hasLostConnection
+                    ? GameConstants.SCORE_REMAINING_PLAYERS_AFTER_LOST_CONNECTION
+                    : GameConstants.SCORE_REMAINING_PLAYERS_AFTER_LEAVE_ROOM;
+
+            for (Player remainingPlayer : this.players) {
+                this.score.put(remainingPlayer, scoreRemainingPlayers);
+            }
+            this.score.put(optionalPlayer.get(), scorePenalty);
+        }
+    }
+
+    public void startGame() {
         if (!State.WAITING.equals(this.state) && !State.GIVING_CARDS.equals(this.state)) {
             return;
         }
@@ -196,6 +208,9 @@ public class GameState {
         if (State.FINISHED.equals(this.state)) {
             return;
         }
+
+        cancelTurnTimer();
+
         this.state = State.FINISHED;
         onFinishGame.run();
     }
@@ -208,8 +223,10 @@ public class GameState {
             this.currTurnPlayer = players.get(nextTurnIndex);
         }
         if (this.score.size() == GameConstants.MAX_PLAYERS - 1) {
-            this.score.put(this.currTurnPlayer, (short)0);
+            this.score.put(this.currTurnPlayer, (short) 0);
             finishGame();
+        } else {
+            startTurnTimer();
         }
     }
 
@@ -230,6 +247,23 @@ public class GameState {
 
     public boolean haveBothPlayersGivenCards() {
         return getGivenCards().size() == 2;
+    }
+
+    public void startTurnTimer() {
+        cancelTurnTimer();
+
+        turnTimer = scheduler.schedule(
+                () -> onTurnTimeout.accept(this),
+                GameConstants.TURN_DURATION_SECONDS,
+                TimeUnit.SECONDS
+        );
+    }
+
+    private void cancelTurnTimer() {
+        if (turnTimer != null) {
+            turnTimer.cancel(false);
+            turnTimer = null;
+        }
     }
 
     public Map<Long, Short> getNumOfCardsPerPlayerId() {

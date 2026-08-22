@@ -80,17 +80,25 @@ public enum Card {
         return this.rank.ordinal() > card.rank.ordinal();
     }
 
+    public boolean hasRank(Rank rank) {
+        return this.rank.ordinal() == rank.ordinal();
+    }
+
+    public boolean hasBiggerRank(Rank rank) {
+        return this.rank.ordinal() > rank.ordinal();
+    }
+
+    public boolean hasSmallerOrEqualRank(Rank rank) {
+        return this.rank.ordinal() <= rank.ordinal();
+    }
+
     public boolean hasBiggerRankForKolorThan(Card card) {
-        boolean isBiggerThanOrEqualToThree = this.rank.equals(Rank.THREE) || this.hasBiggerRankThan(Card.THREE_OF_SPADES);
+        boolean isBiggerThanOrEqualToThree = this.hasRank(Rank.THREE) || this.hasBiggerRank(Rank.THREE);
         return switch (card.rank()) {
-            case ACE -> this.rank.equals(Rank.TWO) || isBiggerThanOrEqualToThree;
+            case ACE -> hasRank(Rank.TWO) || isBiggerThanOrEqualToThree;
             case TWO -> isBiggerThanOrEqualToThree;
             default -> this.hasBiggerRankThan(card);
         };
-    }
-
-    public boolean hasSmallerRankThan(Card card) {
-        return this.rank.ordinal() < card.rank.ordinal();
     }
 
     public static Card fromOrdinal(int ordinal) {

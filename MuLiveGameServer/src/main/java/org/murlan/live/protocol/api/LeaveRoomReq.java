@@ -5,8 +5,11 @@ import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ProtocolConfig;
 
 @Getter
-public final class SurrenderReq implements Req {
-    public SurrenderReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException {
+public class LeaveRoomReq implements Req {
+    private final String roomId;
+
+    public LeaveRoomReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException {
         validate(messageParts);
+        roomId = messageParts[startIndex()];
     }
 }

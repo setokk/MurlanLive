@@ -12,15 +12,14 @@ import org.murlan.live.protocol.config.ProtocolConfig;
 @Setter
 @Getter
 @AllArgsConstructor
-public final class InformSurrenderResp implements Resp {
+public class InformPlayerLostConnectionResp implements Resp {
     private ResponseStatus responseStatus;
     private long playerId;
 
     @Override
     public String toMessage(ProtocolConfig config, ObjectMapper objectMapper) throws JsonProcessingException {
-        return String.join(
-                config.getProtocol_delimiter(),
-                ServerEvent.INFORM_SURRENDER.id(),
+        return String.join(config.getProtocol_delimiter(),
+                ServerEvent.INFORM_PLAYER_LOST_CONNECTION.id(),
                 getResponseStatus().toString(),
                 String.valueOf(playerId)
         );
