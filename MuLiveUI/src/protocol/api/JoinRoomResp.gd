@@ -3,11 +3,11 @@ extends Resp
 
 ## GDScript port of org.murlan.live.protocol.api.JoinRoomResp.
 
-func _init(response_status: ResponseStatus.Value) -> void:
-	self.response_status = response_status
+func num_of_fields() -> int:
+	return 1
 
-func to_message(config: ProtocolConfig) -> String:
-	return [
-		ClientEvent.id(ClientEvent.Value.JOIN_ROOM),
-		ResponseStatus.to_message(response_status),
-	].join(config.protocol_delimiter)
+func _init(message_parts: PackedStringArray, _config: ProtocolConfig) -> void:
+	if not validate(message_parts):
+		push_error("JoinRoomResp: invalid message %s" % [message_parts])
+		return
+	response_status = message_parts[start_index()].to_int()

@@ -3,15 +3,14 @@ extends Resp
 
 ## GDScript port of org.murlan.live.protocol.api.GameStateResp.
 
-var game_state_json: String
+var game_state_json: String = ""
 
-func _init(response_status: ResponseStatus.Value, game_state_json: String) -> void:
-	self.response_status = response_status
-	self.game_state_json = game_state_json
+func num_of_fields() -> int:
+	return 2
 
-func to_message(config: ProtocolConfig) -> String:
-	return [
-		ClientEvent.id(ClientEvent.Value.GAME_STATE),
-		ResponseStatus.to_message(response_status),
-		game_state_json,
-	].join(config.protocol_delimiter)
+func _init(message_parts: PackedStringArray, _config: ProtocolConfig) -> void:
+	if not validate(message_parts):
+		push_error("GameStateResp: invalid message %s" % [message_parts])
+		return
+	response_status = message_parts[start_index()].to_int()
+	game_state_json = message_parts[start_index() + 1]

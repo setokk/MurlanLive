@@ -1,16 +1,17 @@
 class_name Req
 
-## GDScript port of org.murlan.live.protocol.api.Req.
+## GDScript port of org.murlan.live.protocol.api.Req -- inverted for the
+## client.
 ##
-## In Java, Req implementations are constructed by the *server* by parsing an
-## incoming message's parts. On the Godot client, requests flow the other
-## way: you construct a Req with real values and serialize it with
-## to_message(config) to get the string to send over the socket.
+## In Java, Req is implemented by the server: it's parsed out of an
+## incoming client message, and Resp is what the server serializes with
+## toMessage() to send back. On the Godot client the roles are reversed --
+## WE build and serialize Req objects to send to the server, so
+## to_message() (the old Resp.java responsibility) lives here instead.
 ##
-## Subclasses must override to_message(config); field order inside the
-## joined message must match the order the server's constructor expects
-## (see the corresponding *Req.java class under
-## org.murlan.live.protocol.api).
+## The parsing-related default methods Java put on Req (startIndex,
+## numOfFields, validate, postValidate) have moved to Resp.gd, since on the
+## client it's incoming Resp messages that need to be parsed.
 
 func to_message(_config: ProtocolConfig) -> String:
 	push_error("to_message() not implemented")

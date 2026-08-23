@@ -13,7 +13,7 @@ func _init(card_combination: CardCombination) -> void:
 	self.card_combination = card_combination
 
 func to_message(config: ProtocolConfig) -> String:
-	return [
+	return config.protocol_delimiter.join([
 		ClientEvent.id(ClientEvent.Value.PLAY_HAND),
 		card_combination.to_message(config.protocol_list_delimiter),
-	].join(config.protocol_delimiter)
+	])

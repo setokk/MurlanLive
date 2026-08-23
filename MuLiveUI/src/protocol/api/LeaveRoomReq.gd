@@ -1,7 +1,7 @@
-class_name JoinRoomReq
+class_name LeaveRoomReq
 extends Req
 
-## GDScript port of org.murlan.live.protocol.api.JoinRoomReq.
+## GDScript port of org.murlan.live.protocol.api.LeaveRoomReq
 
 var room_id: String
 
@@ -10,6 +10,6 @@ func _init(room_id: String) -> void:
 
 func to_message(config: ProtocolConfig) -> String:
 	return config.protocol_delimiter.join([
-		ClientEvent.id(ClientEvent.Value.JOIN_ROOM),
+		ClientEvent.id(ClientEvent.Value.LEAVE_ROOM),
 		room_id,
 	])
