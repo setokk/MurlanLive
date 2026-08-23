@@ -7,15 +7,11 @@ extends Control
 @onready var seat2: Panel = $TableLayout/Seat2
 @onready var seat3: Panel = $TableLayout/Seat3
 @onready var seat4: Panel = $TableLayout/Seat4
-@onready var seat5: Panel = $TableLayout/Seat5
-@onready var seat6: Panel = $TableLayout/Seat6
-@onready var seat7: Panel = $TableLayout/Seat7
-@onready var seat8: Panel = $TableLayout/Seat8
 
 @onready var player_hand: Panel = $"../../BottomArea/HandArea/MarginContainer/HandPlaceholder"
+@onready var opponent_hand2: Panel = $TableLayout/OpponentHand2
 @onready var opponent_hand3: Panel = $TableLayout/OpponentHand3
-@onready var opponent_hand5: Panel = $TableLayout/OpponentHand5
-@onready var opponent_hand7: Panel = $TableLayout/OpponentHand7
+@onready var opponent_hand4: Panel = $TableLayout/OpponentHand4
 
 @onready var deck: Node2D = $TableLayout/Deck
 
@@ -68,6 +64,7 @@ func _on_play_pressed() -> void:
 func calculate_initial_layout() -> void:
 	var table_rect: Rect2 = table_frame.get_rect()
 
+	@warning_ignore("unused_variable")
 	var table_width: float = table_rect.size.x
 	var table_height: float = table_rect.size.y
 
@@ -87,11 +84,7 @@ func calculate_initial_layout() -> void:
 		seat1,
 		seat2,
 		seat3,
-		seat4,
-		seat5,
-		seat6,
-		seat7,
-		seat8
+		seat4
 	]
 
 	for seat in seats:
@@ -122,63 +115,27 @@ func calculate_initial_layout() -> void:
 		seat2,
 		Vector2(
 			table_left,
-			table_bottom
-		),
-		Vector2(-0.8, 1.0)
-	)
-
-	place_seat(
-		seat3,
-		Vector2(
-			table_left,
 			(table_top + table_bottom) / 2.0
 		),
 		Vector2(0.4, 0.5)
 	)
 
 	place_seat(
-		seat4,
-		Vector2(
-			table_left,
-			table_top
-		),
-		Vector2(-0.8, 0.0)
-	)
-
-	place_seat(
-		seat5,
+		seat3,
 		Vector2(
 			(table_left + table_right) / 2.0,
 			table_top
 		),
 		Vector2(0.5, 0.35)
 	)
-
+	
 	place_seat(
-		seat6,
-		Vector2(
-			table_right,
-			table_top
-		),
-		Vector2(1.8, 0.0)
-	)
-
-	place_seat(
-		seat7,
+		seat4,
 		Vector2(
 			table_right,
 			(table_top + table_bottom) / 2.0
 		),
 		Vector2(0.6, 0.5)
-	)
-
-	place_seat(
-		seat8,
-		Vector2(
-			table_right,
-			table_bottom
-		),
-		Vector2(1.8, 1.0)
 	)
 
 func place_seat(
@@ -215,6 +172,15 @@ func deal_test_round() -> void:
 				deck.global_position
 			)
 
+		# Seat 2
+		var card2: Card = deck.draw_card()
+
+		if card2:
+			await opponent_hand2.receive_card(
+				card2,
+				deck.global_position
+			)
+
 		# Seat 3
 		var card3: Card = deck.draw_card()
 
@@ -224,21 +190,12 @@ func deal_test_round() -> void:
 				deck.global_position
 			)
 
-		# Seat 5
-		var card5: Card = deck.draw_card()
+		# Seat 4
+		var card4: Card = deck.draw_card()
 
-		if card5:
-			await opponent_hand5.receive_card(
-				card5,
-				deck.global_position
-			)
-
-		# Seat 7
-		var card7: Card = deck.draw_card()
-
-		if card7:
-			await opponent_hand7.receive_card(
-				card7,
+		if card4:
+			await opponent_hand4.receive_card(
+				card4,
 				deck.global_position
 			)
 	
@@ -267,28 +224,28 @@ func get_hand_card_global_position(hand: Panel) -> Vector2:
 func setup_opponent_hands() -> void:
 	var table_size: Vector2 = table_frame.size
 
+	opponent_hand2.setup(table_size)
 	opponent_hand3.setup(table_size)
-	opponent_hand5.setup(table_size)
-	opponent_hand7.setup(table_size)
+	opponent_hand4.setup(table_size)
 	
-	opponent_hand3.rotation_degrees = 90.0
+	opponent_hand2.rotation_degrees = 90.0
 	place_hand_relative_to_seat(
-		opponent_hand3,
-		seat3,
+		opponent_hand2,
+		seat2,
 		Vector2(1.4, 0.0)
 	)
 
-	opponent_hand5.rotation_degrees = 180.0
+	opponent_hand3.rotation_degrees = 180.0
 	place_hand_relative_to_seat(
-		opponent_hand5,
-		seat5,
+		opponent_hand3,
+		seat3,
 		Vector2(0.0, 1.4)
 	)
 
-	opponent_hand7.rotation_degrees = -90.0
+	opponent_hand4.rotation_degrees = -90.0
 	place_hand_relative_to_seat(
-		opponent_hand7,
-		seat7,
+		opponent_hand4,
+		seat4,
 		Vector2(-1.4, 0.0)
 	)
 	

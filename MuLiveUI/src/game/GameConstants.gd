@@ -10,4 +10,4 @@ const SCORE_PENALTY_LOST_CONNECTION: int = 0
 const SCORE_REMAINING_PLAYERS_AFTER_LOST_CONNECTION: int = 0
 const TURN_DURATION_SECONDS: int = 45
 
-static var EMPTY_CARD_COMBINATION: CardCombination = CardCombination.new()
+static var EMPTY_CARD_COMBINATION: CardCombination = CardCombination.new([])

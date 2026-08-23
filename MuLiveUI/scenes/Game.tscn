@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://f8in7s47ipg4"]
 
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_71axn"]
+[ext_resource type="Script" uid="uid://bcbfynfy6xwie" path="res://scenes/Game.gd" id="2_3xj3m"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_dahhg"]
 [ext_resource type="Script" uid="uid://dogwu3dr7uwoo" path="res://TableArea.gd" id="3_3so38"]
 [ext_resource type="Theme" uid="uid://dcg0tqtvbome4" path="res://themes/SeatTheme.tres" id="4_3cx6b"]
@@ -62,6 +63,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_71axn")
+script = ExtResource("2_3xj3m")
 
 [node name="Background" parent="." unique_id=2002749364 instance=ExtResource("2_dahhg")]
 layout_mode = 1
@@ -127,7 +129,6 @@ layout_mode = 2
 expand_icon = true
 
 [node name="Seat2" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=626159648]
-visible = false
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 0
 offset_right = 40.0
@@ -164,7 +165,6 @@ layout_mode = 2
 expand_icon = true
 
 [node name="Seat4" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1819555050]
-visible = false
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 0
 offset_right = 40.0
@@ -182,93 +182,19 @@ grow_vertical = 2
 layout_mode = 2
 expand_icon = true
 
-[node name="Seat5" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1097438276]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat5" unique_id=975228647]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat5/MarginContainer" unique_id=1463195644]
-layout_mode = 2
-expand_icon = true
-
-[node name="Seat6" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=12469673]
-visible = false
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat6" unique_id=1303793556]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat6/MarginContainer" unique_id=1282977433]
-layout_mode = 2
-expand_icon = true
-
-[node name="Seat7" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1642946871]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat7" unique_id=713122948]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat7/MarginContainer" unique_id=1358954904]
-layout_mode = 2
-expand_icon = true
-
-[node name="Seat8" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1486275831]
-visible = false
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat8" unique_id=779894851]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat8/MarginContainer" unique_id=30942106]
-layout_mode = 2
-expand_icon = true
-
-[node name="OpponentHand3" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1267263257]
+[node name="OpponentHand2" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1267263257]
 layout_mode = 0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_trn2v")
 script = ExtResource("7_alh3a")
 
-[node name="OpponentHand5" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=454168365]
+[node name="OpponentHand3" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=454168365]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_03owx")
 script = ExtResource("7_alh3a")
 
-[node name="OpponentHand7" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=246364564]
+[node name="OpponentHand4" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=246364564]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0

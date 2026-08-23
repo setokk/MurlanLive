@@ -1,9 +1,10 @@
 extends Node
 
-	
-func show_scene(scene: PackedScene) -> void:
+var content: Control 
 
-	var content: Control = get_tree().root.find_child(
+func show_scene(scene: PackedScene) -> Node:
+
+	content = get_tree().root.find_child(
 		"Content",
 		true,
 		false
@@ -11,14 +12,12 @@ func show_scene(scene: PackedScene) -> void:
 
 	if content == null:
 		push_error("SceneManager: Content node not found.")
-		return
+		return null
 
 	for child in content.get_children():
 		child.queue_free()
 
-	var new_scene: Node = scene.instantiate()
-
-	content.add_child(new_scene)
+	return scene.instantiate()
 
 
 func get_top_bar() -> Control:
@@ -35,16 +34,21 @@ func show_login() -> void:
 	if top_bar:
 		top_bar.set_mode(top_bar.TopBarMode.LOGIN)
 
-	show_scene(preload("res://scenes/Login.tscn"))
+	content.add_child(show_scene(preload("res://scenes/Login.tscn")))
 	
 func show_lobby() -> void:
 	var top_bar: Control = get_top_bar()
 	if top_bar:
 		top_bar.set_mode(top_bar.TopBarMode.LOBBY)
-	show_scene(preload("res://scenes/Lobby.tscn"))
 	
-func show_game() -> void:
+	content.add_child(show_scene(preload("res://scenes/Lobby.tscn")))
+	
+func show_game(room: Dictionary) -> void:
 	var top_bar: Control = get_top_bar()
 	if top_bar:
 		top_bar.set_mode(top_bar.TopBarMode.GAME)
-	show_scene(preload("res://scenes/Game.tscn"))
+
+	var game_scene : Game = show_scene(preload("res://scenes/Game.tscn"))
+	game_scene.room = room
+	content.add_child(game_scene)
+	

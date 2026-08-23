@@ -8,16 +8,21 @@ const ROOM_ITEM_SCENE: PackedScene = preload("res://scenes/RoomItem.tscn")
 
 func _ready() -> void:
 	room_buttons_container.random_join_requested.connect(_on_random_join_pressed)
+	room_buttons_container.create_room_requested.connect(_on_create_requested)
+	WebSocketClient.create_room_resp.connect(_on_create_completed)
+	
 	show_all_rooms.toggled.connect(_on_show_all_rooms_toggled)
 	
 	WebSocketClient.available_rooms_resp.connect(populate_rooms)
 	WebSocketClient.send_message(AvailableRoomsReq.new())
+	
 
 	update_room_visibility()
 
 func _on_random_join_pressed() -> void:
 	# TODO: Check if there are available rooms first
-	SceneManager.show_game()
+	#SceneManager.show_game()
+	pass
 
 func populate_rooms(resp: AvailableRoomsResp) -> void:
 	var available_rooms: Array = resp.available_rooms
@@ -26,9 +31,7 @@ func populate_rooms(resp: AvailableRoomsResp) -> void:
 		var room_item: RoomItem = (
 			ROOM_ITEM_SCENE.instantiate()
 		)
-		room_item.room_id = available_rooms[i].id
-		room_item.total_score_to_win = 21
-		room_item.players = available_rooms[i].players
+		room_item.room = available_rooms[i]
 		
 		room_list.add_child(room_item)
 
@@ -49,3 +52,9 @@ func update_room_visibility() -> void:
 			room.visible = true
 		else:
 			room.visible = not room.is_full()
+
+func _on_create_requested() -> void: 
+	WebSocketClient.send_message(CreateRoomReq.new("Nigga Room", true, 21))
+	
+func _on_create_completed(resp: CreateRoomResp) -> void:
+	SceneManager.show_game(resp.room)

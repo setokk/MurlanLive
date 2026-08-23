@@ -2,29 +2,30 @@ extends Control
 
 class_name RoomItem
 
-@onready var join_button: Button = $AspectRatioContainer/Panel/Panel/Panel/JoinButton
+@onready var join_button: Button = $Panel/Panel/Panel/JoinButton
 
 @onready var seats: Array[Control] = [
-	$AspectRatioContainer/Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer/PanelContainer/Seat,
-	$AspectRatioContainer/Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer2/PanelContainer/Seat,
-	$AspectRatioContainer/Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer3/PanelContainer/Seat,
-	$AspectRatioContainer/Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer4/PanelContainer/Seat
+	$Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer/PanelContainer/Seat,
+	$Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer2/PanelContainer/Seat,
+	$Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer3/PanelContainer/Seat,
+	$Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer4/PanelContainer/Seat
 ]
 
 const USER_ICON: Texture2D = preload("res://assets/images/user-icon.png")
 const EMPTY_SEAT_ICON: Texture2D = preload("res://assets/images/seat-icon-greyscale-no-bg.png")
 
-var room_id: String
-var players: Array
-var total_score_to_win: int
+var room : Dictionary
 
 func _ready() -> void:
+	join_button.pressed.connect(_on_join_pressed)
 	prepare_room_item()
 
 func prepare_room_item() -> void:
+	var room_id = room.id
+	var players = room.players
+	
 	# At least one player must be present.
 	var player_count: int = players.size()
-
 	var occupied_seats: Array[int] = []
 	occupied_seats.append(0)
 
@@ -42,7 +43,8 @@ func prepare_room_item() -> void:
 		update_seat(
 			seats[i],
 			is_occupied,
-			i
+			i,
+			players
 		)
 	
 	update_join_button()
@@ -51,7 +53,8 @@ func prepare_room_item() -> void:
 func update_seat(
 	seat: Control,
 	is_occupied: bool,
-	seat_index: int
+	seat_index: int,
+	players
 ) -> void:
 	var username_label: Label = (
 		seat.get_node("UsernameLabel")
@@ -97,7 +100,10 @@ func is_full() -> bool:
 	return get_player_count() >= seats.size()
 
 
-
 func update_join_button() -> void:
 
 	join_button.disabled = is_full()
+	
+	
+func _on_join_pressed() -> void:
+	SceneManager.show_game(room)

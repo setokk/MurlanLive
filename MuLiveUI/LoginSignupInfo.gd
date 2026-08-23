@@ -23,6 +23,8 @@ func _on_login_pressed() -> void:
 func _on_login_completed(response_status: int, jwt: String):
 	if response_status == 200:
 		print("Logged in!")
+		PlayerSession.username = username_input.text
+		PlayerSession.jwt = jwt
 		
 		WebSocketClient.connect_to_ws(jwt)
 		await WebSocketClient.connection_established

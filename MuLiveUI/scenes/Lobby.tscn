@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://c127j2awg5s3w"]
 
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_qbi84"]
-[ext_resource type="Script" uid="uid://bjrp1twxhdl6p" path="res://Lobby.gd" id="2_oeg6l"]
+[ext_resource type="Script" uid="uid://beiwtcwa75q0y" path="res://Lobby.gd" id="2_oeg6l"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="3_1yh37"]
-[ext_resource type="Script" uid="uid://c5c0ntqx2ry6w" path="res://RoomButtonsContainer.gd" id="4_jp1kc"]
+[ext_resource type="Script" uid="uid://cxxbwt06uh3gj" path="res://RoomButtonsContainer.gd" id="4_jp1kc"]
 [ext_resource type="Theme" uid="uid://bqn3ljfdspx6i" path="res://themes/LoginTheme.tres" id="5_oeg6l"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_psoro"]
@@ -163,5 +163,5 @@ theme_override_constants/margin_bottom = 10
 [node name="RoomList" type="VBoxContainer" parent="LobbyPanel/RoomScrollContainer/MarginContainer" unique_id=1901756246]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 4
+size_flags_vertical = 0
 theme_override_constants/separation = 15

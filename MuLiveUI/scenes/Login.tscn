@@ -164,7 +164,7 @@ theme_override_constants/margin_top = 40
 
 [node name="SignupContainer" type="HBoxContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons" unique_id=1041393184]
 layout_mode = 2
-alignment = 2
+alignment = 1
 
 [node name="Label" type="Label" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons/SignupContainer" unique_id=213834597]
 layout_mode = 2
