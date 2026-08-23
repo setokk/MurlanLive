@@ -9,7 +9,9 @@ const ROOM_ITEM_SCENE: PackedScene = preload("res://scenes/RoomItem.tscn")
 func _ready() -> void:
 	room_buttons_container.random_join_requested.connect(_on_random_join_pressed)
 	show_all_rooms.toggled.connect(_on_show_all_rooms_toggled)
-	populate_test_rooms()
+	
+	WebSocketClient.available_rooms_resp.connect(populate_rooms)
+	WebSocketClient.send_message(AvailableRoomsReq.new())
 
 	update_room_visibility()
 
@@ -17,14 +19,17 @@ func _on_random_join_pressed() -> void:
 	# TODO: Check if there are available rooms first
 	SceneManager.show_game()
 
-func populate_test_rooms() -> void:
-
-	for i in range(8):
-
+func populate_rooms(resp: AvailableRoomsResp) -> void:
+	var available_rooms: Array = resp.available_rooms
+	
+	for i in range(available_rooms.size()):
 		var room_item: RoomItem = (
 			ROOM_ITEM_SCENE.instantiate()
 		)
-
+		room_item.room_id = available_rooms[i].id
+		room_item.total_score_to_win = 21
+		room_item.players = available_rooms[i].players
+		
 		room_list.add_child(room_item)
 
 func _on_show_all_rooms_toggled(_button_pressed: bool) -> void:

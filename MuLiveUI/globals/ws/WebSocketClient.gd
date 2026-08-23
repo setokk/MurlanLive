@@ -6,6 +6,8 @@ var connected: bool = false
 var generator: Generator = Generator.new(config)
 var parser: Parser = Parser.new(config)
 
+signal connection_established
+
 # Server Events
 signal inform_play_hand_resp(resp: InformPlayHandResp)
 signal inform_pass_resp(resp: InformPassResp)
@@ -47,10 +49,6 @@ var resp_signal_handlers: Dictionary[String, Callable] = {
 }
 
 func send_message(req: Req) -> bool:
-	if not connected:
-		push_error("WebSocket is not open")
-		return false
-
 	socket.send_text(generator.generate_message(req))
 	return true
 
@@ -97,7 +95,10 @@ func _process(_delta):
 
 	var state = socket.get_ready_state()
 	if state == WebSocketPeer.STATE_OPEN:
-		connected = true
+		if not connected:
+			connection_established.emit()
+			connected = true
+		
 		while socket.get_available_packet_count():
 			handle_server_inform_resp()
 	elif state == WebSocketPeer.STATE_CLOSING:

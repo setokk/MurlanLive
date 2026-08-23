@@ -18,25 +18,26 @@ func _init(config: ProtocolConfig) -> void:
 	self.config = config
 
 func parse(message: String) -> Resp:
-	var message_parts: Array[String] = message.split(config.protocol_delimiter)
+	var message_parts: PackedStringArray = message.split(config.protocol_delimiter)
 	if message_parts.size() < MIN_NUM_VALUES:
 		push_error("Invalid message: %s" % message)
 		return null
 
 	var event_id: String = message_parts[0]
 
+	var resp: Resp
+	
 	var client_event := ClientEvent.from_id(event_id)
 	if client_event != -1:
-		var resp: Resp = ClientEvent.RESP_FACTORIES[client_event].call(message_parts, config)
+		resp = ClientEvent.RESP_FACTORIES[client_event].call(message_parts, config)
 		resp.event_id = ClientEvent.id(client_event)
 
 	var server_event := ServerEvent.from_id(event_id)
 	if server_event != -1:
-		var resp: Resp = ServerEvent.RESP_FACTORIES[server_event].call(message_parts, config)
+		resp = ServerEvent.RESP_FACTORIES[server_event].call(message_parts, config)
 		resp.event_id = ServerEvent.id(server_event)
 
-	push_error("Unknown event %s" % event_id)
-	return null
+	return resp
 
 func parse_query_params(query_string: String) -> Dictionary:
 	var query_params := {}

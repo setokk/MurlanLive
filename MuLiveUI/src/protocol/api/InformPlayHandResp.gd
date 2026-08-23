@@ -24,9 +24,9 @@ static func _parse_card_combination(raw: String, config: ProtocolConfig) -> Card
 	var cards: Array[_Card] = []
 	for individual_card in individual_cards:
 		if not individual_card.is_valid_int():
-			return CardCombination.new()
+			return CardCombination.new([])
 		var card: _Card = CardEnum.new().from_ordinal(individual_card.to_int())
 		if card == null:
-			return CardCombination.new()
+			return CardCombination.new([])
 		cards.append(card)
 	return CardCombination.new(cards)

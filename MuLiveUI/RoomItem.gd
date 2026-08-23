@@ -2,45 +2,30 @@ extends Control
 
 class_name RoomItem
 
-
-@onready var join_button: Button = $Panel/Panel/Panel/JoinButton
+@onready var join_button: Button = $AspectRatioContainer/Panel/Panel/Panel/JoinButton
 
 @onready var seats: Array[Control] = [
-	$Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer/PanelContainer/Seat,
-	$Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer2/PanelContainer/Seat,
-	$Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer3/PanelContainer/Seat,
-	$Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer4/PanelContainer/Seat
+	$AspectRatioContainer/Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer/PanelContainer/Seat,
+	$AspectRatioContainer/Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer2/PanelContainer/Seat,
+	$AspectRatioContainer/Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer3/PanelContainer/Seat,
+	$AspectRatioContainer/Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer4/PanelContainer/Seat
 ]
-
 
 const USER_ICON: Texture2D = preload("res://assets/images/user-icon.png")
 const EMPTY_SEAT_ICON: Texture2D = preload("res://assets/images/seat-icon-greyscale-no-bg.png")
 
-
-var usernames: Array[String] = [
-	"Alex",
-	"Maria",
-	"John",
-	"Bob",
-	"Nick",
-	"Anna",
-	"Chris",
-	"George"
-]
-
+var room_id: String
+var players: Array
+var total_score_to_win: int
 
 func _ready() -> void:
-	randomize_room()
+	prepare_room_item()
 
-
-func randomize_room() -> void:
-
+func prepare_room_item() -> void:
 	# At least one player must be present.
-	var player_count: int = randi_range(1, 4)
+	var player_count: int = players.size()
 
 	var occupied_seats: Array[int] = []
-
-	# First seat is always occupied.
 	occupied_seats.append(0)
 
 	# Randomly choose the remaining occupied seats.
@@ -52,7 +37,6 @@ func randomize_room() -> void:
 		
 	# Update every seat.
 	for i in range(seats.size()):
-
 		var is_occupied: bool = occupied_seats.has(i)
 
 		update_seat(
@@ -69,7 +53,6 @@ func update_seat(
 	is_occupied: bool,
 	seat_index: int
 ) -> void:
-
 	var username_label: Label = (
 		seat.get_node("UsernameLabel")
 	)
@@ -79,17 +62,14 @@ func update_seat(
 	)
 
 	if is_occupied:
-
 		icon.texture_normal = USER_ICON
 
 		username_label.text = (
-			usernames[randi_range(0, usernames.size() - 1)]
+			players[seat_index].username
 		)
 
 		username_label.visible = true
-
 	else:
-
 		icon.texture_normal = EMPTY_SEAT_ICON
 		icon.modulate = Color()
 		username_label.text = ""
