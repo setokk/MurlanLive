@@ -165,6 +165,7 @@ public class GameLobbyEndpoint {
             case JoinRoomReq joinRoomReq -> {
                 boolean isSuccessful = roomHandler.joinRoom(joinRoomReq.getRoomId(), playerSession);
                 if (isSuccessful) {
+                    room = roomHandler.getPlayerRoom(playerSession);
                     informResp = new InformPlayerJoinRoomResp(ResponseStatus.OK, playerSession.getPlayer());
                 }
                 yield new JoinRoomResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
