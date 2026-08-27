@@ -3,10 +3,10 @@ extends Control
 @onready var table_layout: Control = $TableLayout
 @onready var table_frame: TextureRect = $TableLayout/Table
 
-@onready var seat1: Panel = $TableLayout/Seat1
-@onready var seat2: Panel = $TableLayout/Seat2
-@onready var seat3: Panel = $TableLayout/Seat3
-@onready var seat4: Panel = $TableLayout/Seat4
+@onready var seat1: VBoxContainer = $TableLayout/Seat1
+@onready var seat2: VBoxContainer = $TableLayout/Seat2
+@onready var seat3: VBoxContainer = $TableLayout/Seat3
+@onready var seat4: VBoxContainer = $TableLayout/Seat4
 
 @onready var player_hand: Panel = $"../../BottomArea/HandArea/MarginContainer/HandPlaceholder"
 @onready var opponent_hand2: Panel = $TableLayout/OpponentHand2
@@ -80,7 +80,7 @@ func calculate_initial_layout() -> void:
 		MAX_SEAT_HEIGHT
 	)
 
-	var seats: Array[Panel] = [
+	var seats: Array[VBoxContainer] = [
 		seat1,
 		seat2,
 		seat3,
@@ -139,7 +139,7 @@ func calculate_initial_layout() -> void:
 	)
 
 func place_seat(
-	seat: Panel,
+	seat: VBoxContainer,
 	point: Vector2,
 	pivot: Vector2
 ) -> void:
@@ -251,7 +251,7 @@ func setup_opponent_hands() -> void:
 	
 func place_hand_relative_to_seat(
 	hand: Panel,
-	seat: Panel,
+	seat: VBoxContainer,
 	offset_ratio: Vector2
 ) -> void:
 

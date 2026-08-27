@@ -17,7 +17,8 @@ const EMPTY_SEAT_ICON: Texture2D = preload("res://assets/images/seat-icon-greysc
 var room : Dictionary
 
 func _ready() -> void:
-	join_button.pressed.connect(_on_join_pressed)
+	join_button.pressed.connect(_on_join_requested)
+	WebSocketClient.join_room_resp.connect(_on_join_completed)
 	prepare_room_item()
 
 func prepare_room_item() -> void:
@@ -101,9 +102,13 @@ func is_full() -> bool:
 
 
 func update_join_button() -> void:
-
 	join_button.disabled = is_full()
 	
+func _on_join_requested() -> void:
+	WebSocketClient.send_message(JoinRoomReq.new(room.id))
 	
-func _on_join_pressed() -> void:
-	SceneManager.show_game(room)
+func _on_join_completed(resp : JoinRoomResp) -> void:
+	if resp.response_status == 200:
+		SceneManager.show_game(room)
+	else:
+		print("Cannot join")

@@ -6,6 +6,8 @@ const ROOM_ITEM_SCENE: PackedScene = preload("res://scenes/RoomItem.tscn")
 @onready var show_all_rooms: CheckBox = $LobbyPanel/RoomsInfo/VBoxContainer/Panel/PanelContainer/HBoxContainer/CheckBox
 @onready var room_buttons_container : HBoxContainer = $LobbyPanel/RoomsInfo/VBoxContainer/Panel/RoomButtonsContainer
 
+var refresh_timer: Timer
+
 func _ready() -> void:
 	room_buttons_container.random_join_requested.connect(_on_random_join_pressed)
 	room_buttons_container.create_room_requested.connect(_on_create_requested)
@@ -15,16 +17,27 @@ func _ready() -> void:
 	
 	WebSocketClient.available_rooms_resp.connect(populate_rooms)
 	WebSocketClient.send_message(AvailableRoomsReq.new())
-	
 
+	refresh_timer = Timer.new()
+	refresh_timer.wait_time = 2.0
+	refresh_timer.timeout.connect(request_rooms)
+	add_child(refresh_timer)
+	refresh_timer.start()
+	
 	update_room_visibility()
 
+func request_rooms() -> void:
+	WebSocketClient.send_message(AvailableRoomsReq.new())
+	
 func _on_random_join_pressed() -> void:
 	# TODO: Check if there are available rooms first
 	#SceneManager.show_game()
 	pass
 
 func populate_rooms(resp: AvailableRoomsResp) -> void:
+	for child in room_list.get_children():
+		child.queue_free()
+
 	var available_rooms: Array = resp.available_rooms
 	
 	for i in range(available_rooms.size()):
@@ -54,7 +67,7 @@ func update_room_visibility() -> void:
 			room.visible = not room.is_full()
 
 func _on_create_requested() -> void: 
-	WebSocketClient.send_message(CreateRoomReq.new("Nigga Room", true, 21))
+	WebSocketClient.send_message(CreateRoomReq.new("Room", true, 21))
 	
 func _on_create_completed(resp: CreateRoomResp) -> void:
 	SceneManager.show_game(resp.room)

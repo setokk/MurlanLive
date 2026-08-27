@@ -1,15 +1,15 @@
 [gd_scene format=3 uid="uid://f8in7s47ipg4"]
 
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_71axn"]
-[ext_resource type="Script" uid="uid://bcbfynfy6xwie" path="res://scenes/Game.gd" id="2_3xj3m"]
+[ext_resource type="Script" uid="uid://d2ugnd66ke3bo" path="res://Game.gd" id="2_3xj3m"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_dahhg"]
-[ext_resource type="Script" uid="uid://dogwu3dr7uwoo" path="res://TableArea.gd" id="3_3so38"]
+[ext_resource type="Script" uid="uid://cggmhq3jr6r2l" path="res://TableArea.gd" id="3_3so38"]
 [ext_resource type="Theme" uid="uid://dcg0tqtvbome4" path="res://themes/SeatTheme.tres" id="4_3cx6b"]
 [ext_resource type="Texture2D" uid="uid://b8df7a4o34kvg" path="res://assets/images/table.png" id="5_qy1jj"]
-[ext_resource type="Script" uid="uid://idmxcl4kxeli" path="res://Deck.gd" id="6_acvyw"]
-[ext_resource type="Script" uid="uid://c6ptpi4mx4pr6" path="res://OpponentHand.gd" id="7_alh3a"]
-[ext_resource type="Script" uid="uid://b7my26juihu56" path="res://PlayedCards.gd" id="8_4q8tf"]
-[ext_resource type="Script" uid="uid://dtfikuha72pje" path="res://HandPlaceholder.gd" id="9_x3xnh"]
+[ext_resource type="Script" uid="uid://dfknfovm6tddy" path="res://Deck.gd" id="6_acvyw"]
+[ext_resource type="Script" uid="uid://c3xfjnp81ckek" path="res://OpponentHand.gd" id="7_alh3a"]
+[ext_resource type="Script" uid="uid://d3trjxyp4ubau" path="res://PlayedCards.gd" id="8_4q8tf"]
+[ext_resource type="Script" uid="uid://prjme07f6efi" path="res://HandPlaceholder.gd" id="9_x3xnh"]
 [ext_resource type="Script" uid="uid://k68075chkxlf" path="res://ButtonsContainer.gd" id="10_8r6kd"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_trn2v"]
@@ -110,13 +110,21 @@ expand_mode = 1
 [node name="Deck" type="Node2D" parent="TopArea/TableArea/TableLayout" unique_id=1762135531]
 script = ExtResource("6_acvyw")
 
-[node name="Seat1" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=584993701]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="Seat1" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=1012558803]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=1987879458]
+[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=584993701]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat1/SeatBackGround" unique_id=1987879458]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -124,17 +132,33 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat1/MarginContainer" unique_id=1805753504]
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat1/SeatBackGround/MarginContainer" unique_id=1805753504]
 layout_mode = 2
 expand_icon = true
 
-[node name="Seat2" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=626159648]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=810908013]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 12
+text = "Username"
+horizontal_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=194752233]
+[node name="Seat2" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=920225244]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=1561527569]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat2/SeatBackGround" unique_id=1174522190]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -142,17 +166,33 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat2/MarginContainer" unique_id=1916250730]
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat2/SeatBackGround/MarginContainer" unique_id=1166271077]
 layout_mode = 2
 expand_icon = true
 
-[node name="Seat3" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=958436974]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=1387886828]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 12
+text = "Username"
+horizontal_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1054102629]
+[node name="Seat3" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=1163927510]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=805896516]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat3/SeatBackGround" unique_id=1736450253]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -160,17 +200,33 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat3/MarginContainer" unique_id=1355531687]
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat3/SeatBackGround/MarginContainer" unique_id=1081650788]
 layout_mode = 2
 expand_icon = true
 
-[node name="Seat4" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1819555050]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1528333974]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 12
+text = "Username"
+horizontal_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1957413069]
+[node name="Seat4" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=597073363]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1152925710]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat4/SeatBackGround" unique_id=243502836]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -178,9 +234,17 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat4/MarginContainer" unique_id=549117171]
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat4/SeatBackGround/MarginContainer" unique_id=169839489]
 layout_mode = 2
 expand_icon = true
+
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1920828855]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 12
+text = "Username"
+horizontal_alignment = 1
 
 [node name="OpponentHand2" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1267263257]
 layout_mode = 0
