@@ -14,14 +14,7 @@ const STACK_OFFSET: float = 0.1
 
 var deck_cards: Array[Area2D] = []
 
-func _ready() -> void:
-
-	#create_deck()
-	pass
-
-
 func create_deck(table_size: Vector2) -> void:
-
 	# Remove anything already in the deck.
 	for card in deck_cards:
 		if is_instance_valid(card):
@@ -36,10 +29,6 @@ func create_deck(table_size: Vector2) -> void:
 		var card: Card = CARD_SCENE.instantiate()
 		add_child(card)
 
-		# Give the card its actual value.
-		card.set_value(CardEnum.VALUES[i])
-
-		# Hide the front and show the back.
 		card.set_face_down()
 
 		var target_height: float = table_size.y * CARD_HEIGHT_RATIO
@@ -61,14 +50,10 @@ func create_deck(table_size: Vector2) -> void:
 		# Make sure the top card renders above the others
 		card.z_index = i + 20
 		
-func draw_card() -> Card:
-
+func draw_card(value : int) -> Card:
 	if deck_cards.is_empty():
 		return null
-
-	# Take the top card.
+		
 	var card: Card = deck_cards.pop_back()
-
-	# Remove it from the deck.
-	# remove_child(card)
+	
 	return card

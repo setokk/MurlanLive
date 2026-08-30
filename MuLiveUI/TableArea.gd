@@ -40,13 +40,6 @@ func _ready() -> void:
 	
 	buttons_container.play_hand_requested.connect(_on_play_pressed)
 	#buttons_container.pass_requested.connect(player_hand.pass_turn)
-	
-func _input(event: InputEvent) -> void:
-
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			if event.pressed:
-				deal_test_round()
 
 	# From now on, only scale the whole composition
 	resized.connect(scale_whole_layout) # TODO: Maybe remove this, not needed?
@@ -149,7 +142,6 @@ func place_seat(
 		seat.size.y * pivot.y
 	)
 func setup_deck() -> void:
-	
 	var table_size: Vector2 = table_frame.size
 	deck.create_deck(table_size)
 	var table_center: Vector2 = (
@@ -159,45 +151,72 @@ func setup_deck() -> void:
 	deck.position = table_center
 		
 	
-func deal_test_round() -> void:
+func start_dealing(
+	my_hand: Array[int],
+	card_counts: Dictionary,
+	ordered_players: Array
+) -> void:
 
-	while not deck.deck_cards.is_empty():
+	var remaining_cards: Array[int] = []
 
-		# Seat 1
-		var card1: Card = deck.draw_card()
+	for player in ordered_players:
+		var player_id = str(player["id"])
+		var count: int = int(card_counts[player_id])
 
-		if card1:
-			await player_hand.receive_card(
-				card1,
-				deck.global_position
-			)
+		remaining_cards.append(count)
 
-		# Seat 2
-		var card2: Card = deck.draw_card()
+	var my_card_index := 0
 
-		if card2:
-			await opponent_hand2.receive_card(
-				card2,
-				deck.global_position
-			)
+	while remaining_cards.max() > 0:
 
-		# Seat 3
-		var card3: Card = deck.draw_card()
+		for seat_index in range(remaining_cards.size()):
 
-		if card3:
-			await opponent_hand3.receive_card(
-				card3,
-				deck.global_position
-			)
+			if remaining_cards[seat_index] <= 0:
+				continue
 
-		# Seat 4
-		var card4: Card = deck.draw_card()
+			var card: Card = deck.draw_card()
 
-		if card4:
-			await opponent_hand4.receive_card(
-				card4,
-				deck.global_position
-			)
+			if card == null:
+				return
+
+			match seat_index:
+
+				0:
+					if my_card_index < my_hand.size():
+						card.set_value(
+							CardEnum.VALUES[
+								my_hand[my_card_index]
+							]
+						)
+
+					my_card_index += 1
+
+					await player_hand.receive_card(
+						card,
+						deck.global_position
+					)
+
+				1:
+					await opponent_hand2.receive_card(
+						card,
+						deck.global_position
+					)
+
+				2:
+					await opponent_hand3.receive_card(
+						card,
+						deck.global_position
+					)
+
+				3:
+					await opponent_hand4.receive_card(
+						card,
+						deck.global_position
+					)
+
+			remaining_cards[seat_index] -= 1
+
+			await get_tree().create_timer(0.05).timeout
 	
 func get_hand_card_global_position(hand: Panel) -> Vector2:
 

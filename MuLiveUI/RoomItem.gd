@@ -25,12 +25,10 @@ func prepare_room_item() -> void:
 	var room_id = room.id
 	var players = room.players
 	
-	# At least one player must be present.
 	var player_count: int = players.size()
 	var occupied_seats: Array[int] = []
 	occupied_seats.append(0)
 
-	# Randomly choose the remaining occupied seats.
 	var seat_index: int = 1
 	while seat_index < player_count:
 		if not occupied_seats.has(seat_index):
@@ -81,7 +79,6 @@ func update_seat(
 
 
 func get_player_count() -> int:
-
 	var count: int = 0
 
 	for seat in seats:
@@ -97,9 +94,7 @@ func get_player_count() -> int:
 
 
 func is_full() -> bool:
-
 	return get_player_count() >= seats.size()
-
 
 func update_join_button() -> void:
 	join_button.disabled = is_full()
@@ -110,5 +105,6 @@ func _on_join_requested() -> void:
 func _on_join_completed(resp : JoinRoomResp) -> void:
 	if resp.response_status == 200:
 		SceneManager.show_game(room)
+		print("Joined successfully")
 	else:
 		print("Cannot join")
