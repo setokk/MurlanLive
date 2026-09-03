@@ -54,3 +54,19 @@ def check_game_start(user_table: list, timeout: float = 1.0) -> None:
             print(f"[{username}] DID NOT RECEIVE GAME START EVENT")
 
     print("Finished checking game start events.\n")
+
+    import websocket
+
+
+def clear_pending_messages(ws):
+    ws.settimeout(0.1)
+
+    while True:
+        try:
+            message = ws.recv()
+            print(f"[Ignored] {message}")
+
+        except websocket.WebSocketTimeoutException:
+            break
+
+    ws.settimeout(None)

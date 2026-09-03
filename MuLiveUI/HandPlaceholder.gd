@@ -309,6 +309,7 @@ func is_selection_valid() -> bool:
 
 func play_selected_cards() -> Array[Card]:
 	if not is_selection_valid():
+		print("Your selection is not valid")
 		return []
 
 	var played: Array[Card] = selected_cards.duplicate()

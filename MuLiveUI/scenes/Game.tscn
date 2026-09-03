@@ -91,6 +91,14 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_3cx6b")
 
+[node name="TempCurrentPlayerLabel" type="Label" parent="TopArea/TableArea/TableLayout" unique_id=763149528]
+layout_mode = 0
+offset_left = 294.0
+offset_top = 241.0
+offset_right = 440.0
+offset_bottom = 274.0
+text = "Current player: "
+
 [node name="Table" type="TextureRect" parent="TopArea/TableArea/TableLayout" unique_id=747679814]
 layout_mode = 1
 anchors_preset = 8

@@ -37,22 +37,9 @@ func _ready() -> void:
 	setup_opponent_hands()
 	setup_deck()
 	setup_played_cards()
-	
-	buttons_container.play_hand_requested.connect(_on_play_pressed)
-	#buttons_container.pass_requested.connect(player_hand.pass_turn)
 
 	# From now on, only scale the whole composition
 	resized.connect(scale_whole_layout) # TODO: Maybe remove this, not needed?
-
-func _on_play_pressed() -> void:
-	var cards_to_play: Array[Card] = (
-		player_hand.play_selected_cards()
-	)
-
-	if cards_to_play.is_empty():
-		return
-
-	await played_cards.receive_cards(cards_to_play)
 
 func calculate_initial_layout() -> void:
 	var table_rect: Rect2 = table_frame.get_rect()
@@ -160,7 +147,7 @@ func start_dealing(
 	var remaining_cards: Array[int] = []
 
 	for player in ordered_players:
-		var player_id = str(player["id"])
+		var player_id = str(int(player["id"]))
 		var count: int = int(card_counts[player_id])
 
 		remaining_cards.append(count)
@@ -183,7 +170,7 @@ func start_dealing(
 
 				0:
 					if my_card_index < my_hand.size():
-						card.set_value(
+						await card.set_value(
 							CardEnum.VALUES[
 								my_hand[my_card_index]
 							]

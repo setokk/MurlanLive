@@ -10,5 +10,5 @@ public final class GameConstants {
     public static final short SCORE_PENALTY_LOST_CONNECTION = 0;
     public static final short SCORE_REMAINING_PLAYERS_AFTER_LOST_CONNECTION = 0;
     public static final CardCombination EMPTY_CARD_COMBINATION = new CardCombination();
-    public static final long TURN_DURATION_SECONDS = 45;
+    public static final long TURN_DURATION_SECONDS = 3600;
 }

@@ -2,3 +2,5 @@
 MuLiveGameServer/wait-for-it.sh
 MuLiveUM/wait-for-it.sh
 MuLiveUI/**.tmp
+__pycache__/
+*.py[cod]

@@ -1,11 +1,12 @@
 from users import USERS
-from websocket_game_lobby import connect_user, check_game_start
+from websocket_game_lobby import connect_user, check_game_start, clear_pending_messages
 from login import login_user
 from register import register_user
 from available_rooms import get_available_rooms
-from game_state import get_game_state
 from create_room import create_room
 from join_room import join_room
+from play_hand import play_hand
+import game_state
 
 
 def choose_user(user_table):
@@ -84,6 +85,7 @@ def main():
             print("4. Pick another user")
             print("5. Check game state")
             print("6. Check for game start event")
+            print("7. Play hand")
             print("0. Exit")
 
             choice = input("\nChoice: ").strip()
@@ -102,6 +104,7 @@ def main():
                     room = choose_room(rooms)
                     if room:
                         join_room(room, user["ws"])
+                        continue
                     else:
                         continue
                 else:
@@ -124,12 +127,22 @@ def main():
 
             if choice == "4":
                 user = choose_user(user_table)
+                if user:
+                    clear_pending_messages(user["ws"])
 
             if choice == "5":
-                get_game_state(user["ws"])
+                game_state.get_game_state(user["ws"])
+                continue
 
             if choice == "6":
                 check_game_start(user_table)
+                continue
+
+            if choice == "7":
+                cards = game_state.choose_cards(user)
+                if cards:
+                    play_hand(user["ws"], cards)
+                continue
 
             elif choice == "0":
                 print("Exiting...")

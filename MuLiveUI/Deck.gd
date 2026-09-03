@@ -50,7 +50,7 @@ func create_deck(table_size: Vector2) -> void:
 		# Make sure the top card renders above the others
 		card.z_index = i + 20
 		
-func draw_card(value : int) -> Card:
+func draw_card() -> Card:
 	if deck_cards.is_empty():
 		return null
 		
