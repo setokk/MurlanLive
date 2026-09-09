@@ -5,7 +5,7 @@ from register import register_user
 from available_rooms import get_available_rooms
 from create_room import create_room
 from join_room import join_room
-from play_hand import play_hand
+from play_pass_hand import play_hand, pass_hand
 import game_state
 
 
@@ -86,6 +86,7 @@ def main():
             print("5. Check game state")
             print("6. Check for game start event")
             print("7. Play hand")
+            print("8. Pass hand")
             print("0. Exit")
 
             choice = input("\nChoice: ").strip()
@@ -143,6 +144,9 @@ def main():
                 if cards:
                     play_hand(user["ws"], cards)
                 continue
+
+            if choice == "8":
+                pass_hand(user["ws"])
 
             elif choice == "0":
                 print("Exiting...")

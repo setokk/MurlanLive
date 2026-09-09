@@ -13,25 +13,6 @@
 [ext_resource type="Script" uid="uid://prjme07f6efi" path="res://HandPlaceholder.gd" id="9_x3xnh"]
 [ext_resource type="Script" uid="uid://k68075chkxlf" path="res://ButtonsContainer.gd" id="10_8r6kd"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6cc1s"]
-bg_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-expand_margin_left = 1.0
-expand_margin_top = 1.0
-expand_margin_right = 1.0
-expand_margin_bottom = 1.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_743nf"]
-bg_color = Color(0.13355252, 0.5700833, 0, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 5
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_trn2v"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_03owx"]
@@ -148,14 +129,8 @@ grow_vertical = 2
 alignment = 1
 script = ExtResource("8_2rd6h")
 
-[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=2054377489]
-custom_minimum_size = Vector2(0, 10)
+[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=1351487608]
 layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/background = SubResource("StyleBoxFlat_6cc1s")
-theme_override_styles/fill = SubResource("StyleBoxFlat_743nf")
-step = 0.0
-fill_mode = 1
 show_percentage = false
 
 [node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=1442695590]
@@ -190,7 +165,7 @@ horizontal_alignment = 1
 [node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=1628672719]
 one_shot = true
 
-[node name="Seat2" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=314598374]
+[node name="Seat2" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=1728508544]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -200,26 +175,20 @@ grow_vertical = 2
 alignment = 1
 script = ExtResource("8_2rd6h")
 
-[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=2138635682]
-custom_minimum_size = Vector2(0, 10)
+[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=998756970]
 layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/background = SubResource("StyleBoxFlat_6cc1s")
-theme_override_styles/fill = SubResource("StyleBoxFlat_743nf")
-value = 100.0
-fill_mode = 1
 show_percentage = false
 
-[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=1955441943]
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=285242577]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat2/SeatVisual" unique_id=814611442]
+[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat2/SeatVisual" unique_id=1746739102]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat2/SeatVisual/SeatBackGround" unique_id=865814017]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat2/SeatVisual/SeatBackGround" unique_id=171400088]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -227,11 +196,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat2/SeatVisual/SeatBackGround/MarginContainer" unique_id=1278622029]
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat2/SeatVisual/SeatBackGround/MarginContainer" unique_id=1928559361]
 layout_mode = 2
 expand_icon = true
 
-[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=452909940]
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=1192308050]
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 4
@@ -239,10 +208,10 @@ theme_override_font_sizes/font_size = 12
 text = "Username"
 horizontal_alignment = 1
 
-[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=891695024]
+[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=2144452569]
 one_shot = true
 
-[node name="Seat3" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=1396049796]
+[node name="Seat3" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=2137630723]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -252,26 +221,20 @@ grow_vertical = 2
 alignment = 1
 script = ExtResource("8_2rd6h")
 
-[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=2116991749]
-custom_minimum_size = Vector2(0, 10)
+[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1869493267]
 layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/background = SubResource("StyleBoxFlat_6cc1s")
-theme_override_styles/fill = SubResource("StyleBoxFlat_743nf")
-value = 100.0
-fill_mode = 1
 show_percentage = false
 
-[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1848907168]
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1232222181]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat3/SeatVisual" unique_id=2145380491]
+[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat3/SeatVisual" unique_id=1340903464]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat3/SeatVisual/SeatBackGround" unique_id=554678335]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat3/SeatVisual/SeatBackGround" unique_id=1641365024]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -279,11 +242,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat3/SeatVisual/SeatBackGround/MarginContainer" unique_id=985983823]
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat3/SeatVisual/SeatBackGround/MarginContainer" unique_id=815604274]
 layout_mode = 2
 expand_icon = true
 
-[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=686754813]
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=800074855]
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 4
@@ -291,10 +254,10 @@ theme_override_font_sizes/font_size = 12
 text = "Username"
 horizontal_alignment = 1
 
-[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=944001416]
+[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=808634705]
 one_shot = true
 
-[node name="Seat4" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=1340784702]
+[node name="Seat4" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=881878962]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -304,26 +267,20 @@ grow_vertical = 2
 alignment = 1
 script = ExtResource("8_2rd6h")
 
-[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1711152357]
-custom_minimum_size = Vector2(0, 10)
+[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=807514177]
 layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/background = SubResource("StyleBoxFlat_6cc1s")
-theme_override_styles/fill = SubResource("StyleBoxFlat_743nf")
-value = 100.0
-fill_mode = 1
 show_percentage = false
 
-[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=76929080]
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=685740717]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat4/SeatVisual" unique_id=1436905020]
+[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat4/SeatVisual" unique_id=1972513246]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat4/SeatVisual/SeatBackGround" unique_id=479013874]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat4/SeatVisual/SeatBackGround" unique_id=617502756]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -331,11 +288,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat4/SeatVisual/SeatBackGround/MarginContainer" unique_id=1120352996]
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat4/SeatVisual/SeatBackGround/MarginContainer" unique_id=2070133777]
 layout_mode = 2
 expand_icon = true
 
-[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1030067513]
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1943317460]
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 4
@@ -343,7 +300,7 @@ theme_override_font_sizes/font_size = 12
 text = "Username"
 horizontal_alignment = 1
 
-[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=89062505]
+[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1371786412]
 one_shot = true
 
 [node name="OpponentHand2" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1267263257]

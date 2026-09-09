@@ -23,9 +23,7 @@ enum GameState {
 
 var temp_game_start_flag = true
 
-const USER_ICON: Texture2D = preload("res://assets/images/user-icon.png")
-
-@onready var seats: Array[VBoxContainer] = [
+@onready var seats: Array[Seat] = [
 	$TopArea/TableArea/TableLayout/Seat1,
 	$TopArea/TableArea/TableLayout/Seat2,
 	$TopArea/TableArea/TableLayout/Seat3,
@@ -34,15 +32,19 @@ const USER_ICON: Texture2D = preload("res://assets/images/user-icon.png")
 
 func _ready() -> void:
 	players = room.players
-	# TODO : This resp needs to return the whole room/not use available rooms
 	WebSocketClient.inform_player_join_room_resp.connect(_on_player_joined)
+	# TODO : This resp needs to return the whole room/not use available rooms
 	WebSocketClient.available_rooms_resp.connect(get_room_info)
-	WebSocketClient.inform_play_hand_resp.connect(_on_opponent_played_hand)
 	
-	WebSocketClient.game_state_resp.connect(_on_game_state)
 	#WebSocketClient.inform_game_start_resp.connect(_on_game_start)
+	WebSocketClient.game_state_resp.connect(_on_game_state)
 	$BottomArea/ButtonsContainer.play_hand_requested.connect(_on_play_requested)
 	WebSocketClient.play_hand_resp.connect(_on_play_completed)
+	WebSocketClient.inform_play_hand_resp.connect(_on_opponent_played_hand)
+	$BottomArea/ButtonsContainer.pass_requested.connect(_on_pass_requested)
+	WebSocketClient.pass_resp.connect(_on_pass_completed)
+	WebSocketClient.inform_pass_resp.connect(_on_opponent_passed_hand)
+	
 	display_players()
 	
 func display_players() -> void:
@@ -60,17 +62,8 @@ func display_players() -> void:
 
 	# Fill the seats in order
 	for i in range(min(ordered_players.size(), seats.size())):
-		var player = ordered_players[i]
-
-		var seat: Control = seats[i]
-		var icon: Button = seat.get_node(
-			"SeatBackGround/MarginContainer/SeatIcon"
-		)
-
-		var username: Label = seat.get_node("Username")
-
-		icon.icon = USER_ICON
-		username.text = player.username
+		seats[i].set_player(ordered_players[i])
+		
 
 func _on_player_joined(resp : InformPlayerJoinRoomResp):
 	WebSocketClient.send_message(AvailableRoomsReq.new())
@@ -191,13 +184,22 @@ func _on_play_requested() -> void:
 		PlayHandReq.new(combination)
 	)
 
-func _on_play_completed(resp: PlayHandResp):
+func _on_play_completed(resp: PlayHandResp) -> void:
 	if resp.response_status == 200:
 		var cards_to_play = hand_placeholder.play_selected_cards()
 		await played_cards.receive_cards(cards_to_play)
 		WebSocketClient.send_message(GameStateReq.new())
 	else:
-		print("Invalid selection or not your turn")
+		print("Invalid selection or not your turn. Response: ", resp)
+		
+func _on_pass_requested() -> void:
+	WebSocketClient.send_message(PassReq.new())
+	
+func _on_pass_completed(resp: PassResp) -> void:
+	if resp.response_status == 200:
+		WebSocketClient.send_message(GameStateReq.new())
+	else:
+		print("Error with passing. Response: ", resp)
 
 func _on_opponent_played_hand(resp: InformPlayHandResp):
 	if resp.response_status == 200:
@@ -206,6 +208,13 @@ func _on_opponent_played_hand(resp: InformPlayHandResp):
 		WebSocketClient.send_message(GameStateReq.new())
 	else:
 		print(resp)
+		
+func _on_opponent_passed_hand(resp: InformPassResp):
+	if resp.response_status == 200:
+		WebSocketClient.send_message(GameStateReq.new())
+	else:
+		print(resp)
+		
 					
 func create_cards_from_combination(
 	combination: CardCombination

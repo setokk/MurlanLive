@@ -3,10 +3,10 @@ extends Control
 @onready var table_layout: Control = $TableLayout
 @onready var table_frame: TextureRect = $TableLayout/Table
 
-@onready var seat1: VBoxContainer = $TableLayout/Seat1
-@onready var seat2: VBoxContainer = $TableLayout/Seat2
-@onready var seat3: VBoxContainer = $TableLayout/Seat3
-@onready var seat4: VBoxContainer = $TableLayout/Seat4
+@onready var seat1: Seat = $TableLayout/Seat1
+@onready var seat2: Seat = $TableLayout/Seat2
+@onready var seat3: Seat = $TableLayout/Seat3
+@onready var seat4: Seat = $TableLayout/Seat4
 
 @onready var player_hand: Panel = $"../../BottomArea/HandArea/MarginContainer/HandPlaceholder"
 @onready var opponent_hand2: Panel = $TableLayout/OpponentHand2
