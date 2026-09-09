@@ -99,18 +99,21 @@ public class GameLobbyEndpoint {
             endpointHelper.closeWithErrorMessage(session, MuliveCloseReason.FORBIDDEN);
             return;
         }
+
         Player player = JwtUtils.decodeJWT(jwt);
         if (player.isInvalid()) {
             endpointHelper.closeWithErrorMessage(session, MuliveCloseReason.INVALID_JWT);
             return;
         }
-        if (roomHandler.jwtSessionExists(jwt)) {
+
+        if (roomHandler.isPlayerSessionCurrentlyActive(player)) {
             endpointHelper.closeWithErrorMessage(session, MuliveCloseReason.JWT_SESSION_ALREADY_EXISTS);
             return;
         }
+
         roomHandler.addSession(new PlayerSession(session, player));
 
-        log.info("Connection with sessionId: {} established!", session.getId());
+        log.info("Connection with sessionId: {} established! Player.id = {}, Player.username = {}", session.getId(), player.getId(), player.getUsername());
     }
 
     @OnMessage
@@ -139,10 +142,7 @@ public class GameLobbyEndpoint {
         Resp resp = switch (req) {
             case GameStateReq gameStateReq -> {
                 GameStateDto gameStateDto = GameStateDto.from(room, player, config);
-                yield new GameStateResp(
-                        ResponseStatus.OK,
-                        objectMapper.writeValueAsString(gameStateDto)
-                );
+                yield new GameStateResp(ResponseStatus.OK, gameStateDto);
             }
             case PlayHandReq playHandReq -> {
                 boolean isSuccessful = room.playHand(player, playHandReq.getCardCombination());
@@ -154,7 +154,8 @@ public class GameLobbyEndpoint {
             case PassReq passReq -> {
                 boolean isSuccessful = room.pass(player);
                 if (isSuccessful) {
-                    informResp = new InformPassResp(ResponseStatus.OK, player.getId());
+                    boolean canCurrPlayerPlayAnyHand = room.getActiveGameState().getPassCounter().getCounter() == 0;
+                    informResp = new InformPassResp(ResponseStatus.OK, player.getId(), canCurrPlayerPlayAnyHand);
                 }
                 yield new PassResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }

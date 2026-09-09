@@ -71,6 +71,10 @@ public class CardCombination {
     }
 
     public boolean isWeakerThan(CardCombination other) {
+        if (this.getCards().isEmpty() && !other.getCards().isEmpty()) {
+            return true;
+        }
+
         return switch (this.type) {
             case SINGLE_CARD -> {
                 boolean strongerBySingleCard = other.getType().equals(SINGLE_CARD)
@@ -113,6 +117,10 @@ public class CardCombination {
     }
 
     public boolean isEqualStrength(CardCombination other) {
+        if (this.getCards().isEmpty()) {
+            return false;
+        }
+
         if (!this.type.equals(other.getType())) {
             return false;
         }

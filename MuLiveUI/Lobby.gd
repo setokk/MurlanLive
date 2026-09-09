@@ -17,6 +17,7 @@ func _ready() -> void:
 	show_all_rooms.toggled.connect(_on_show_all_rooms_toggled)
 	
 	WebSocketClient.available_rooms_resp.connect(populate_rooms)
+	WebSocketClient.create_room_resp.connect(_on_create_completed)
 	WebSocketClient.send_message(AvailableRoomsReq.new())
 
 	refresh_timer = Timer.new()

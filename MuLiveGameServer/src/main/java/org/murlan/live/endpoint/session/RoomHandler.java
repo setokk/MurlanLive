@@ -5,6 +5,7 @@ import lombok.NonNull;
 import org.murlan.live.game.GameConstants;
 import org.murlan.live.game.logic.GameState;
 import org.murlan.live.game.logic.Room;
+import org.murlan.live.protocol.dto.Player;
 import org.murlan.live.protocol.dto.RoomDto;
 
 import java.util.ArrayList;
@@ -62,8 +63,8 @@ public class RoomHandler {
         }
     }
 
-    public boolean jwtSessionExists(@NonNull String jwt) {
-        return jwtToSessionMap.containsKey(jwt);
+    public synchronized boolean isPlayerSessionCurrentlyActive(@NonNull Player player) {
+        return jwtToSessionMap.containsValue(new PlayerSession(null, player));
     }
 
     private void linkSessionWithRoom(@NonNull PlayerSession playerSession, @NonNull String roomId) {
@@ -131,7 +132,7 @@ public class RoomHandler {
                 .collect(Collectors.toList());
     }
 
-    public List<Room> getAllRooms() {
+    public synchronized List<Room> getAllRooms() {
         return roomIdToRoomMap.values().stream().toList();
     }
 

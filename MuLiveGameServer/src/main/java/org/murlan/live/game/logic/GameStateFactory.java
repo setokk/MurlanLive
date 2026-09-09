@@ -60,6 +60,9 @@ public class GameStateFactory {
                     gameState.setShouldCurrTurnPlayerUseThreeOfSpades(false);
                 }
 
+                gameState.setPassCounter(new PassCounter(0));
+                gameState.setFirstMove(true);
+
                 GameStateDto gameStateDto = GameStateDto.from(gameState, room, config);
                 try {
                     endpointHelper.informPlayers(new InformGameStartResp(ResponseStatus.OK, gameStateDto), null, roomHandler.getPlayersInRoom(room.getId()));
@@ -123,7 +126,13 @@ public class GameStateFactory {
                     try {
                         Player currTurnPlayer = gameState.getCurrTurnPlayer();
                         gameState.pass(currTurnPlayer);
-                        endpointHelper.informPlayers(new InformPassResp(ResponseStatus.OK, currTurnPlayer.getId()), null, roomHandler.getPlayersInRoom(room.getId()));
+
+                        boolean canCurrPlayerPlayAnyHand = gameState.getPassCounter().getCounter() == 0;
+                        endpointHelper.informPlayers(new InformPassResp(
+                                ResponseStatus.OK,
+                                currTurnPlayer.getId(),
+                                canCurrPlayerPlayAnyHand
+                        ), null, roomHandler.getPlayersInRoom(room.getId()));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

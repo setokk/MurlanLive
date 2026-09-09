@@ -32,6 +32,7 @@ public class GameState {
     private State state;
     private List<Player> players;
     private Map<Player, Short> score;
+    private final long turnDurationInSeconds = GameConstants.TURN_DURATION_SECONDS;
 
     @JsonIgnore private Player currTurnPlayer;
     @JsonIgnore private boolean shouldCurrTurnPlayerUseThreeOfSpades;
@@ -42,6 +43,8 @@ public class GameState {
     @JsonIgnore private Player prevWinner;
     @JsonIgnore private Player prevLoser;
     @JsonIgnore private Set<Player> givenCards = HashSet.newHashSet(0);
+    @JsonIgnore private PassCounter passCounter;
+    @JsonIgnore private boolean isFirstMove;
 
     /* Turn timer */
     @JsonIgnore private ScheduledExecutorService scheduler;
@@ -51,7 +54,7 @@ public class GameState {
         this.state = state;
         this.players = new ArrayList<>();
         this.players.add(player);
-        this.score = new HashMap<>();
+        this.score = HashMap.newHashMap(GameConstants.MAX_PLAYERS);
         this.onStartGame = onStartGame;
         this.onFinishGame = onFinishGame;
         this.onTurnTimeout = onTurnTimeout;
@@ -101,12 +104,11 @@ public class GameState {
             return false;
         }
 
-        boolean isFirstMove = this.currCardCombination == GameConstants.EMPTY_CARD_COMBINATION;
-        if (isFirstMove && shouldCurrTurnPlayerUseThreeOfSpades && !cardCombination.getCards().contains(Card.THREE_OF_SPADES)) {
+        if (this.isFirstMove && shouldCurrTurnPlayerUseThreeOfSpades && !cardCombination.getCards().contains(Card.THREE_OF_SPADES)) {
             return false;
         }
 
-        if (!isFirstMove && (this.currCardCombination.isEqualStrength(cardCombination) || this.currCardCombination.isStrongerThan(cardCombination))) {
+        if (!this.isFirstMove && (this.currCardCombination.isEqualStrength(cardCombination) || this.currCardCombination.isStrongerThan(cardCombination))) {
             return false;
         }
 
@@ -115,6 +117,9 @@ public class GameState {
         if (this.currTurnPlayer.getHand().isEmpty()) {
             this.score.put(this.currTurnPlayer, (short) (GameConstants.MAX_PLAYERS - this.score.size() - 1));
         }
+
+        this.isFirstMove = false;
+
         nextTurn();
 
         return true;
@@ -127,6 +132,13 @@ public class GameState {
         if (isNotPlayerTurn(player)) {
             return false;
         }
+
+        this.passCounter.increment();
+        if (this.passCounter.getCounter() == this.getPlayers().size() - this.score.size()) {
+            this.currCardCombination = GameConstants.EMPTY_CARD_COMBINATION;
+            this.passCounter.reset();
+        }
+
         nextTurn();
 
         return true;
@@ -222,6 +234,7 @@ public class GameState {
             nextTurnIndex = (nextTurnIndex + 1) % players.size();
             this.currTurnPlayer = players.get(nextTurnIndex);
         }
+
         if (this.score.size() == GameConstants.MAX_PLAYERS - 1) {
             this.score.put(this.currTurnPlayer, (short) 0);
             finishGame();
