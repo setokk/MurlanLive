@@ -10,11 +10,15 @@ import lombok.Setter;
 public final class PassCounter {
     private int counter;
 
-    public void reset() {
+    public synchronized void reset() {
         this.counter = 0;
     }
 
-    public void increment() {
+    public synchronized void resetAfterEmptyHand() {
+        this.counter = -1;
+    }
+
+    public synchronized void increment() {
         this.counter++;
     }
 }

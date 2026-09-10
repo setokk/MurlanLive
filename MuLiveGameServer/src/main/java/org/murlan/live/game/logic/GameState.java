@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.murlan.live.game.GameConstants;
 import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 @Builder(setterPrefix = "with")
 @AllArgsConstructor
 public class GameState {
+    private static final Logger log = LogManager.getLogger(GameState.class);
     private State state;
     private List<Player> players;
     private Map<Player, Short> score;
@@ -78,11 +81,13 @@ public class GameState {
         return prevLoser != null && prevWinner != null;
     }
 
-    public boolean addPlayer(Player player) {
+    public boolean addPlayer(Player player, Runnable onSuccess) {
         if (players.size() == GameConstants.MAX_PLAYERS) {
             return false;
         }
         this.players.add(player);
+
+        onSuccess.run();
         if (players.size() == GameConstants.MAX_PLAYERS) {
             startGame();
         }
@@ -114,8 +119,11 @@ public class GameState {
 
         this.currTurnPlayer.getHand().removeCards(cardCombination);
         this.currCardCombination = cardCombination;
+
+        this.passCounter.reset();
         if (this.currTurnPlayer.getHand().isEmpty()) {
             this.score.put(this.currTurnPlayer, (short) (GameConstants.MAX_PLAYERS - this.score.size() - 1));
+            this.passCounter.resetAfterEmptyHand();
         }
 
         this.isFirstMove = false;
@@ -129,12 +137,18 @@ public class GameState {
         if (this.state != State.PLAYING) {
             return false;
         }
+
         if (isNotPlayerTurn(player)) {
             return false;
         }
 
+        if (this.currCardCombination == GameConstants.EMPTY_CARD_COMBINATION) {
+            // a player cannot pass when it is their turn AND they can play whatever they want
+            return false;
+        }
+
         this.passCounter.increment();
-        if (this.passCounter.getCounter() == this.getPlayers().size() - this.score.size()) {
+        if (this.passCounter.getCounter() == this.getPlayers().size() - this.score.size() - 1) {
             this.currCardCombination = GameConstants.EMPTY_CARD_COMBINATION;
             this.passCounter.reset();
         }

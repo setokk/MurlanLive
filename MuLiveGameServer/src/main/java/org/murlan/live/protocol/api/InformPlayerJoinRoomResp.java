@@ -13,7 +13,7 @@ import org.murlan.live.protocol.dto.Player;
 @Setter
 @Getter
 @AllArgsConstructor
-public class InformPlayerJoinRoomResp implements Resp {
+public final class InformPlayerJoinRoomResp implements Resp {
     private ResponseStatus responseStatus;
     private Player player;
 

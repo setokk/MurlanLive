@@ -39,8 +39,8 @@ public class Room {
         this.gameStates.add(gameStateFactory.createGameState(this));
     }
 
-    public synchronized boolean addPlayer(Player player) {
-        return getActiveGameState().addPlayer(player);
+    public synchronized boolean addPlayer(Player player, Runnable onSuccess) {
+        return getActiveGameState().addPlayer(player, onSuccess);
     }
 
     public synchronized void startNewGameFromPreviousGame(Player winner, Player loser) {

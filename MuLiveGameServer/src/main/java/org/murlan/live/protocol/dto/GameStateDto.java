@@ -27,6 +27,7 @@ public class GameStateDto {
     private Map<Long, Short> numOfCardsPerPlayerId;
     private Player prevWinner;
     private Player prevLoser;
+    private long turnDurationInSeconds;
 
     public static GameStateDto from(Room room, Player player, ProtocolConfig config) {
         return GameStateDto.builder()
@@ -39,6 +40,7 @@ public class GameStateDto {
                 .numOfCardsPerPlayerId(room.getActiveGameState().getNumOfCardsPerPlayerId())
                 .prevWinner(room.getActiveGameState().getPrevWinner())
                 .prevLoser(room.getActiveGameState().getPrevLoser())
+                .turnDurationInSeconds(room.getActiveGameState().getTurnDurationInSeconds())
                 .build();
     }
 
@@ -52,6 +54,7 @@ public class GameStateDto {
                 .numOfCardsPerPlayerId(gameState.getNumOfCardsPerPlayerId())
                 .prevWinner(gameState.getPrevWinner())
                 .prevLoser(gameState.getPrevLoser())
+                .turnDurationInSeconds(gameState.getTurnDurationInSeconds())
                 .build();
     }
 }

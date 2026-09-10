@@ -5,7 +5,7 @@ import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ProtocolConfig;
 
 @Getter
-public class LeaveRoomReq implements Req {
+public final class LeaveRoomReq implements Req {
     private final String roomId;
 
     public LeaveRoomReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException {

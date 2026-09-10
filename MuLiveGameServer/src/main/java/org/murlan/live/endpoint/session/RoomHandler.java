@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class RoomHandler {
@@ -31,7 +32,11 @@ public class RoomHandler {
                 .findAny();
     }
 
-    public Optional<List<PlayerSession>> removeSession(@NonNull PlayerSession playerSession, boolean hasPlayerLostConnection) {
+    public Optional<List<PlayerSession>> removeSession(
+            @NonNull PlayerSession playerSession,
+            boolean hasPlayerLostConnection,
+            Consumer<Room> onPlayerLeaveOrDisconnect
+    ) {
         String roomId = sessionToRoomIdMap.remove(playerSession);
         if (roomId == null) {
             return Optional.empty();
@@ -45,14 +50,15 @@ public class RoomHandler {
         synchronized (room) {
             roomIdToSessionMap.get(roomId).remove(playerSession);
 
-            // if game has not started yet (initial state where not all players have joined
-            // do not remove room.
+            // if game has not started yet (initial state where not all players have joined)
+            // do NOT remove room.
             // remove room and player sessions ONLY in the case of active game
             if (GameState.State.WAITING.equals(room.getActiveGameState().getState()) && room.getPlayers().size() > 1) {
                 return Optional.ofNullable(roomIdToSessionMap.get(roomId));
             }
 
             room.getActiveGameState().handlePlayerNotInRoom(playerSession.getPlayer(), hasPlayerLostConnection);
+            onPlayerLeaveOrDisconnect.accept(room);
 
             List<PlayerSession> playersInRoom = removeRoom(roomId);
             for (PlayerSession otherPlayerSession : playersInRoom) {
@@ -113,15 +119,20 @@ public class RoomHandler {
     }
 
     public boolean addPlayerToRoom(@NonNull Room room, @NonNull PlayerSession playerSession) {
-        if (isPlayerInRoom(playerSession)) {
-            return false;
-        }
+        synchronized (room) {
+            if (isPlayerInRoom(playerSession)) {
+                return false;
+            }
 
-        if (!GameState.State.WAITING.equals(room.getActiveGameState().getState())) {
-            return false;
-        }
+            if (!GameState.State.WAITING.equals(room.getActiveGameState().getState())) {
+                return false;
+            }
 
-        return room.addPlayer(playerSession.getPlayer());
+            return room.addPlayer(
+                    playerSession.getPlayer(),
+                    () -> linkSessionWithRoom(playerSession, room.getId())
+            );
+        }
     }
 
     public List<RoomDto> getAvailableRooms() {
@@ -142,14 +153,7 @@ public class RoomHandler {
             return false;
         }
 
-        synchronized (room) {
-            boolean isJoinSuccessful = addPlayerToRoom(room, playerSession);
-            if (!isJoinSuccessful) {
-                return false;
-            }
-            linkSessionWithRoom(playerSession, roomId);
-            return true;
-        }
+        return addPlayerToRoom(room, playerSession);
     }
 
     public List<PlayerSession> getPlayersInRoom(String roomId) {

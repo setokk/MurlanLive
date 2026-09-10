@@ -12,7 +12,7 @@ import org.murlan.live.protocol.config.ProtocolConfig;
 @Setter
 @Getter
 @AllArgsConstructor
-public class InformPassResp implements Resp {
+public final class InformPassResp implements Resp {
     private ResponseStatus responseStatus;
     private long playerId;
     private boolean canCurrPlayerPlayAnyHand;

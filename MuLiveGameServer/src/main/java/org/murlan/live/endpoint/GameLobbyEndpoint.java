@@ -56,6 +56,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Consumer;
 
 @ServerEndpoint(value = "/game-lobby")
 public class GameLobbyEndpoint {
@@ -75,6 +76,14 @@ public class GameLobbyEndpoint {
     private static final PlayerRESTClient playerRESTClient = new PlayerRESTClient(config);
     private static final RoomRESTClient roomRESTClient = new RoomRESTClient(config, objectMapper);
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+
+    private static final Consumer<Room> onPlayerLeaveOrDisconnect = room -> {
+        try {
+            roomRESTClient.createRoom(room);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    };
 
     static {
         // Save rooms if any shutdown happens to the game server, no matter the state they are in.
@@ -167,7 +176,7 @@ public class GameLobbyEndpoint {
                 boolean isSuccessful = roomHandler.joinRoom(joinRoomReq.getRoomId(), playerSession);
                 if (isSuccessful) {
                     room = roomHandler.getPlayerRoom(playerSession);
-                    informResp = new InformPlayerJoinRoomResp(ResponseStatus.OK, playerSession.getPlayer());
+                    informResp = new InformPlayerJoinRoomResp(ResponseStatus.OK, player);
                 }
                 yield new JoinRoomResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
@@ -201,7 +210,7 @@ public class GameLobbyEndpoint {
                 );
             }
             case LeaveRoomReq leaveRoomReq -> {
-                Optional<List<PlayerSession>> playersInRoom = roomHandler.removeSession(playerSession, false);
+                Optional<List<PlayerSession>> playersInRoom = roomHandler.removeSession(playerSession, false, onPlayerLeaveOrDisconnect);
 
                 boolean isSuccessful = playersInRoom.isPresent();
                 if (isSuccessful) {
@@ -234,7 +243,7 @@ public class GameLobbyEndpoint {
         }
         PlayerSession playerSession = optionalPlayerSession.get();
 
-        Optional<List<PlayerSession>> playersInRoom = roomHandler.removeSession(playerSession, true);
+        Optional<List<PlayerSession>> playersInRoom = roomHandler.removeSession(playerSession, true, onPlayerLeaveOrDisconnect);
         if (playersInRoom.isEmpty()) {
             return;
         }

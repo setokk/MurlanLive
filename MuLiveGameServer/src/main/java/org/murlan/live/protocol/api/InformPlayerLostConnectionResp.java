@@ -12,7 +12,7 @@ import org.murlan.live.protocol.config.ProtocolConfig;
 @Setter
 @Getter
 @AllArgsConstructor
-public class InformPlayerLostConnectionResp implements Resp {
+public final class InformPlayerLostConnectionResp implements Resp {
     private ResponseStatus responseStatus;
     private long playerId;
 
