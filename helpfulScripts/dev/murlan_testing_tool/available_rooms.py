@@ -1,10 +1,15 @@
 import json
+import websocket
 
 def get_available_rooms(ws):
     ws.send("C3")
 
     # C3$200$TableWithRooms
-    response = ws.recv()
+    try: 
+        response = ws.recv() 
+    except websocket.WebSocketException as e: 
+        print(f"WebSocket error while getting rooms: {e}") 
+        return []
     parts = response.split("$")
     
     if parts[1] != "200":

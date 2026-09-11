@@ -1,4 +1,4 @@
-import websocket
+import websocket_stuff
 import json
 
 def get_game_state(ws):
@@ -16,7 +16,7 @@ def get_game_state(ws):
         else:
             print("No game state response")
 
-    except websocket.WebSocketTimeoutException:
+    except websocket_stuff.WebSocketTimeoutException:
         print("No game state response")
 
 def get_current_card_combination(ws):

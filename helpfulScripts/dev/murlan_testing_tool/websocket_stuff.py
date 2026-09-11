@@ -1,4 +1,5 @@
 import websocket
+import subprocess
 
 WS_URL = "ws://localhost:45600/game-lobby"
 
@@ -7,13 +8,17 @@ def connect_user(user: dict):
     username = user["user"]["username"]
     jwt = user["jwt"]
 
-    ws = websocket.create_connection(
-        f"{WS_URL}?jwt={jwt}"
-    )
+    try:
+        ws = websocket.create_connection(
+            f"{WS_URL}?jwt={jwt}"
+        )
 
-    print(f"[{username}] WebSocket connected")
+        print(f"[{username}] WebSocket connected")
+        return ws
 
-    return ws
+    except websocket.WebSocketException as e:
+        print(f"[{username}] WebSocket connection failed: {e}")
+        return
 
 def check_game_start(user_table: list, timeout: float = 1.0) -> None:
     print("\nChecking for INFORM_GAME_START responses...")
@@ -55,8 +60,6 @@ def check_game_start(user_table: list, timeout: float = 1.0) -> None:
 
     print("Finished checking game start events.\n")
 
-    import websocket
-
 
 def clear_pending_messages(ws):
     ws.settimeout(0.1)
@@ -70,3 +73,21 @@ def clear_pending_messages(ws):
             break
 
     ws.settimeout(None)
+
+def disconnect_all_users(user_table):
+    # TODO: Change the code back to the below when it's fixed in the backend
+    # for user in user_table:
+    #     ws = user.get("ws")
+
+    #     if ws:
+    #         username = user["user"]["username"]
+
+    #         try:
+    #             ws.close(status=1000, reason="Client exiting")
+    #             print(f"Disconnected {username}")
+    #         except Exception as e:
+    #             print(f"Could not disconnect {username}: {e}")
+    #         finally:
+    #             user["ws"] = None
+    #             print(ws.connected)
+    subprocess.run(["docker", "restart", "mulive-gameserver"])

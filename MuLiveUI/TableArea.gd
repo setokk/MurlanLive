@@ -141,8 +141,16 @@ func setup_deck() -> void:
 func start_dealing(
 	my_hand: Array[int],
 	card_counts: Dictionary,
-	ordered_players: Array
+	players: Array,
+	local_player_index: int
 ) -> void:
+
+	var ordered_players: Array = []
+
+	for i in range(players.size()):
+		ordered_players.append(
+			players[(local_player_index + i) % players.size()]
+		)
 
 	var remaining_cards: Array[int] = []
 
@@ -152,12 +160,9 @@ func start_dealing(
 
 		remaining_cards.append(count)
 
-	var my_card_index := 0
-
+	var my_card_index = 0
 	while remaining_cards.max() > 0:
-
 		for seat_index in range(remaining_cards.size()):
-
 			if remaining_cards[seat_index] <= 0:
 				continue
 
@@ -167,7 +172,6 @@ func start_dealing(
 				return
 
 			match seat_index:
-
 				0:
 					if my_card_index < my_hand.size():
 						await card.set_value(

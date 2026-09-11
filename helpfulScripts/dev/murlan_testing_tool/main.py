@@ -1,5 +1,5 @@
 from users import USERS
-from websocket_game_lobby import connect_user, check_game_start, clear_pending_messages
+from websocket_stuff import connect_user, check_game_start, clear_pending_messages, disconnect_all_users
 from login import login_user
 from register import register_user
 from available_rooms import get_available_rooms
@@ -30,6 +30,7 @@ def choose_user(user_table):
             pass
 
         if choice == "0":
+            disconnect_all_users(user_table)
             return
 
         print("Invalid choice.")
@@ -117,10 +118,13 @@ def main():
                 rooms = get_available_rooms(user["ws"])
                 if rooms:
                     for room in rooms:
-                        for player in room["players"]:
-                            display_players.append(player["username"])
-                        print(f"{room["name"]} : {display_players}")
-                        display_players = []
+                        try:
+                            for player in room["players"]:
+                                display_players.append(player["username"])
+                            print(f"{room["name"]} : {display_players}")
+                            display_players = []
+                        except:
+                            pass
                     continue
                 else:
                     print("No rooms available")
@@ -149,6 +153,7 @@ def main():
                 pass_hand(user["ws"])
 
             elif choice == "0":
+                disconnect_all_users(user_table)
                 print("Exiting...")
                 break
 

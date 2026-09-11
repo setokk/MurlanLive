@@ -6,8 +6,11 @@ const CARD_SCENE: PackedScene = preload("res://scenes/Card.tscn")
 
 var room : Dictionary
 var current_player : Dictionary
+var current_player_seat_index : int
 var players : Array = []
-var ordered_players: Array = []
+var local_player_index: int
+
+var turn_time : float
 
 @onready var hand_placeholder: Panel = $BottomArea/HandArea/MarginContainer/HandPlaceholder
 @onready var play_button: Button = $BottomArea/ButtonsContainer/PlayButton
@@ -48,21 +51,15 @@ func _ready() -> void:
 	display_players()
 	
 func display_players() -> void:
-	ordered_players.clear()
-	# First put the local player in the first position so he then gets seat1
+	local_player_index = 0
 	for player in players:
 		if player.username == PlayerSession.username:
-			ordered_players.append(player)
 			break
+		local_player_index += 1
 
-	# Then put everyone else after them
-	for player in players:
-		if player.username != PlayerSession.username:
-			ordered_players.append(player)
-
-	# Fill the seats in order
-	for i in range(min(ordered_players.size(), seats.size())):
-		seats[i].set_player(ordered_players[i])
+	# Fill the seats in order with local player starting at seats[0]
+	for i in range(min(players.size(), seats.size())):
+		seats[(i-local_player_index)%seats.size()].set_player(players[i])
 		
 
 func _on_player_joined(resp : InformPlayerJoinRoomResp):
@@ -79,11 +76,6 @@ func get_room_info(resp : AvailableRoomsResp) -> void :
 func _on_game_start(resp: InformGameStartResp) -> void:
 	print("Game started")
 	print(resp)
-	var game_state = resp.game_state
-	var my_hand : Array = game_state["hand"].split("_")
-	for i in range(len(my_hand)):
-		my_hand[i] = int(my_hand[i])
-	$TopArea/TableArea.start_dealing(my_hand, game_state["numOfCardsPerPlayerId"], ordered_players)
 
 func _on_game_state(resp: GameStateResp) -> void:
 	# TODO: remove this and add this to inform game start when it gets fixed
@@ -112,9 +104,12 @@ func _on_game_state(resp: GameStateResp) -> void:
 			print("Unexpected data: ", game_state)
 			return
 			
+		turn_time = float(game_state["turnDurationInSeconds"])
 		current_player = game_state["currTurnPlayer"]
 		$TopArea/TableArea/TableLayout/TempCurrentPlayerLabel.text = "Current player: " + current_player["username"]
-
+		current_player_seat_index = find_current_player_seat_index()
+		seats[current_player_seat_index].start_turn(turn_time)
+		
 		var my_hand: Array[int] = []
 
 		for value in game_state["hand"].split("_"):
@@ -123,7 +118,8 @@ func _on_game_state(resp: GameStateResp) -> void:
 		$TopArea/TableArea.start_dealing(
 			my_hand,
 			game_state["numOfCardsPerPlayerId"],
-			ordered_players
+			players,
+			local_player_index
 		)
 		if current_player["username"] != PlayerSession.username:
 			play_button.disabled = true
@@ -154,7 +150,9 @@ func _on_game_state(resp: GameStateResp) -> void:
 			
 		current_player = game_state["currTurnPlayer"]
 		$TopArea/TableArea/TableLayout/TempCurrentPlayerLabel.text = "Current player: " + current_player["username"]
-
+		current_player_seat_index = find_current_player_seat_index()
+		seats[current_player_seat_index].start_turn(turn_time)
+		
 		var my_hand: Array[int] = []
 
 		for value in game_state["hand"].split("_"):
@@ -188,6 +186,7 @@ func _on_play_completed(resp: PlayHandResp) -> void:
 	if resp.response_status == 200:
 		var cards_to_play = hand_placeholder.play_selected_cards()
 		await played_cards.receive_cards(cards_to_play)
+		seats[current_player_seat_index].stop_turn()
 		WebSocketClient.send_message(GameStateReq.new())
 	else:
 		print("Invalid selection or not your turn. Response: ", resp)
@@ -197,6 +196,7 @@ func _on_pass_requested() -> void:
 	
 func _on_pass_completed(resp: PassResp) -> void:
 	if resp.response_status == 200:
+		seats[current_player_seat_index].stop_turn()
 		WebSocketClient.send_message(GameStateReq.new())
 	else:
 		print("Error with passing. Response: ", resp)
@@ -205,12 +205,14 @@ func _on_opponent_played_hand(resp: InformPlayHandResp):
 	if resp.response_status == 200:
 		var cards: Array[Card] = create_cards_from_combination(resp.card_combination)
 		played_cards.receive_cards(cards)
+		seats[current_player_seat_index].stop_turn()
 		WebSocketClient.send_message(GameStateReq.new())
 	else:
 		print(resp)
 		
 func _on_opponent_passed_hand(resp: InformPassResp):
 	if resp.response_status == 200:
+		seats[current_player_seat_index].stop_turn()
 		WebSocketClient.send_message(GameStateReq.new())
 	else:
 		print(resp)
@@ -229,3 +231,9 @@ func create_cards_from_combination(
 		result.append(card)
 
 	return result
+
+func find_current_player_seat_index() -> int:
+	for i in range(seats.size()):
+		if players[i]["username"] == current_player["username"]:
+			return (i-local_player_index)%seats.size()
+	return 0

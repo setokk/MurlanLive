@@ -1,4 +1,4 @@
-import websocket
+import websocket_stuff
 
 def play_hand(ws, cards):
     hand = "_".join(map(str, cards))
