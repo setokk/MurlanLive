@@ -148,6 +148,15 @@ grow_vertical = 2
 alignment = 1
 script = ExtResource("8_2rd6h")
 
+[node name="IsReady" type="Label" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=575236091]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+text = "Not Ready"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=2054377489]
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
@@ -199,6 +208,15 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 script = ExtResource("8_2rd6h")
+
+[node name="IsReady" type="Label" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=1127087839]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+text = "Not Ready"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=2138635682]
 custom_minimum_size = Vector2(0, 10)
@@ -252,6 +270,15 @@ grow_vertical = 2
 alignment = 1
 script = ExtResource("8_2rd6h")
 
+[node name="IsReady" type="Label" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1356193674]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+text = "Not Ready"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=2116991749]
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
@@ -303,6 +330,15 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 script = ExtResource("8_2rd6h")
+
+[node name="IsReady" type="Label" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1801421388]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+text = "Not Ready"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1711152357]
 custom_minimum_size = Vector2(0, 10)
@@ -374,6 +410,15 @@ script = ExtResource("8_4q8tf")
 
 [node name="RightArea" type="Control" parent="TopArea" unique_id=2095940113]
 layout_mode = 2
+
+[node name="TempReadyButton" type="Button" parent="TopArea/RightArea" unique_id=2005863213]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 0
+offset_left = 372.0
+offset_top = -27.0
+offset_right = 526.0
+offset_bottom = 29.0
+text = "Ready"
 
 [node name="BottomArea" type="Control" parent="." unique_id=732581692]
 layout_mode = 1

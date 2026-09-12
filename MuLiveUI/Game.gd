@@ -17,7 +17,8 @@ var turn_time : float
 @onready var pass_button: Button = $BottomArea/ButtonsContainer/PassButton
 @onready var played_cards: Panel = $TopArea/TableArea/TableLayout/PlayedCards
 
-enum GameState {
+@onready var is_ready_button: Button = $TopArea/RightArea/TempReadyButton
+enum GameStateEnum {
 	WAITING,
 	GIVING_CARDS,
 	PLAYING,
@@ -34,9 +35,6 @@ enum GameState {
 func _ready() -> void:
 	players = room.players
 	WebSocketClient.inform_player_join_room_resp.connect(_on_player_joined)
-	# TODO : This resp needs to return the whole room/not use available rooms
-	WebSocketClient.available_rooms_resp.connect(get_room_info)
-	
 	WebSocketClient.inform_game_start_resp.connect(_on_game_start)
 	WebSocketClient.game_state_resp.connect(_on_game_state)
 	$BottomArea/ButtonsContainer.play_hand_requested.connect(_on_play_requested)
@@ -45,6 +43,10 @@ func _ready() -> void:
 	$BottomArea/ButtonsContainer.pass_requested.connect(_on_pass_requested)
 	WebSocketClient.pass_resp.connect(_on_pass_completed)
 	WebSocketClient.inform_pass_resp.connect(_on_opponent_passed_hand)
+	
+	is_ready_button.pressed.connect(_on_ready_pressed)
+	WebSocketClient.ready_resp.connect(_on_ready_completed)
+	WebSocketClient.inform_player_ready_resp.connect(_on_opponent_ready)
 	
 	display_players()
 	
@@ -61,15 +63,7 @@ func display_players() -> void:
 		
 
 func _on_player_joined(resp : InformPlayerJoinRoomResp):
-	WebSocketClient.send_message(AvailableRoomsReq.new())
 	WebSocketClient.send_message(GameStateReq.new())
-
-func get_room_info(resp : AvailableRoomsResp) -> void :
-	for r in resp.available_rooms:
-		if r.id == room.id:
-			players = r.players
-			break
-	display_players()
 
 func _on_game_start(resp: InformGameStartResp) -> void:
 	print("Game started")
@@ -84,7 +78,7 @@ func _on_game_start(resp: InformGameStartResp) -> void:
 	turn_time = float(game_state["turnDurationInSeconds"])
 	current_player = game_state["currTurnPlayer"]
 	$TopArea/TableArea/TableLayout/TempCurrentPlayerLabel.text = "Current player: " + current_player["username"]
-	current_player_seat_index = find_current_player_seat_index()
+	current_player_seat_index = find_player_seat_index(current_player)
 	seats[current_player_seat_index].start_turn(turn_time)
 	
 	var my_hand: Array[int] = []
@@ -106,42 +100,40 @@ func _on_game_start(resp: InformGameStartResp) -> void:
 		pass_button.disabled = false
 
 func _on_game_state(resp: GameStateResp) -> void:
-	var json := JSON.new()
-	var error := json.parse(resp.game_state_json)
-
-	if error != OK:
-		print(
-			"JSON Parse Error: ",
-			json.get_error_message(),
-			" in ",
-			resp.game_state_json,
-			" at line ",
-			json.get_error_line()
-		)
-		return
-
-	var game_state = json.data
+	var game_state = resp.game_state
+	var game_state_status: int = int(game_state["state"])
 
 	if typeof(game_state) != TYPE_DICTIONARY:
 		print("Unexpected data: ", game_state)
 		return
 		
-	current_player = game_state["currTurnPlayer"]
-	$TopArea/TableArea/TableLayout/TempCurrentPlayerLabel.text = "Current player: " + current_player["username"]
-	current_player_seat_index = find_current_player_seat_index()
-	seats[current_player_seat_index].start_turn(turn_time)
-	
-	var my_hand: Array[int] = []
+	match game_state_status:
+		GameStateEnum.WAITING:
+			players = game_state["players"]
+			display_players()
+		GameStateEnum.GIVING_CARDS:
+			pass
+		GameStateEnum.PLAYING:
+			current_player = game_state["currTurnPlayer"]
+			$TopArea/TableArea/TableLayout/TempCurrentPlayerLabel.text = "Current player: " + current_player["username"]
+			current_player_seat_index = find_player_seat_index(current_player)
+			seats[current_player_seat_index].start_turn(turn_time)
+			
+			var my_hand: Array[int] = []
 
-	for value in game_state["hand"].split("_"):
-		my_hand.append(int(value))
+			for value in game_state["hand"].split("_"):
+				my_hand.append(int(value))
 
-	if current_player["username"] != PlayerSession.username:
-		play_button.disabled = true
-		pass_button.disabled = true
-	else:
-		play_button.disabled = false
-		pass_button.disabled = false
+			if current_player["username"] != PlayerSession.username:
+				play_button.disabled = true
+				pass_button.disabled = true
+			else:
+				play_button.disabled = false
+				pass_button.disabled = false
+		GameStateEnum.FINISHED:
+				play_button.disabled = false
+				pass_button.disabled = false
+			
 	
 func _on_play_requested() -> void:
 	var selected_cards: Array[Card] = hand_placeholder.selected_cards
@@ -194,7 +186,9 @@ func _on_opponent_passed_hand(resp: InformPassResp):
 		WebSocketClient.send_message(GameStateReq.new())
 	else:
 		print(resp)
-		
+	
+func _on_opponent_ready(resp: InformPlayerReadyResp):
+	seats[find_player_seat_index(resp.player)].get_node("IsReady").text = "Ready"
 					
 func create_cards_from_combination(
 	combination: CardCombination
@@ -209,9 +203,21 @@ func create_cards_from_combination(
 		result.append(card)
 
 	return result
+	
+func _on_ready_pressed() -> void:
+	WebSocketClient.send_message(ReadyReq.new())
+	
+func _on_ready_completed(resp: ReadyResp):
+	if resp.response_status == 200:
+		seats[0].get_node("IsReady").text = "Ready"
+		print("all good man")
+	else:
+		print("error bruh: ", resp)
 
-func find_current_player_seat_index() -> int:
+func find_player_seat_index(player) -> int:
 	for i in range(seats.size()):
-		if players[i]["username"] == current_player["username"]:
+		if players[i]["username"] == player["username"]:
 			return (i-local_player_index)%seats.size()
 	return 0
+	
+	

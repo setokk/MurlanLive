@@ -3,7 +3,7 @@ extends Resp
 
 ## GDScript port of org.murlan.live.protocol.api.GameStateResp.
 
-var game_state_json: String = ""
+var game_state: Dictionary = {}
 
 func num_of_fields() -> int:
 	return 2
@@ -13,4 +13,5 @@ func _init(message_parts: PackedStringArray, _config: ProtocolConfig) -> void:
 		push_error("GameStateResp: invalid message %s" % [message_parts])
 		return
 	response_status = message_parts[start_index()].to_int()
-	game_state_json = message_parts[start_index() + 1]
+	var parsed: Variant = JSON.parse_string(message_parts[start_index() + 1])
+	game_state = parsed if parsed is Dictionary else {}
