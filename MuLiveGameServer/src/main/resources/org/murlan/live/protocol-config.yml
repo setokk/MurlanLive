@@ -5,5 +5,5 @@ protocol_port: 45600
 protocol_delimiter: "$"
 protocol_list_delimiter: "_"
 protocol_um_server_host: "http://umserver:8080"
-mulive_gameserver_secret_header: "${MULIVE_GAMESERVER_SECRET_HEADER}"
-mulive_gameserver_secret_header_val: "${MULIVE_GAMESERVER_SECRET_HEADER_VAL}"
+mulive_gameserver_secret_header: ${MULIVE_GAMESERVER_SECRET_HEADER}
+mulive_gameserver_secret_header_val: ${MULIVE_GAMESERVER_SECRET_HEADER_VAL}

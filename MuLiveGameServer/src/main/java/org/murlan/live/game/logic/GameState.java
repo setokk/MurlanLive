@@ -32,11 +32,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class GameState {
     private static final Logger log = LogManager.getLogger(GameState.class);
+
     private State state;
     private List<Player> players;
     private Map<Player, Short> score;
-    private final long turnDurationInSeconds = GameConstants.TURN_DURATION_SECONDS;
 
+    @JsonIgnore private final long turnDurationInSeconds = GameConstants.TURN_DURATION_SECONDS;
     @JsonIgnore private Player currTurnPlayer;
     @JsonIgnore private boolean shouldCurrTurnPlayerUseThreeOfSpades;
     @JsonIgnore private CardCombination currCardCombination;

@@ -24,8 +24,6 @@ enum GameState {
 	FINISHED
 }
 
-var temp_game_start_flag = true
-
 @onready var seats: Array[Seat] = [
 	$TopArea/TableArea/TableLayout/Seat1,
 	$TopArea/TableArea/TableLayout/Seat2,
@@ -39,7 +37,7 @@ func _ready() -> void:
 	# TODO : This resp needs to return the whole room/not use available rooms
 	WebSocketClient.available_rooms_resp.connect(get_room_info)
 	
-	#WebSocketClient.inform_game_start_resp.connect(_on_game_start)
+	WebSocketClient.inform_game_start_resp.connect(_on_game_start)
 	WebSocketClient.game_state_resp.connect(_on_game_state)
 	$BottomArea/ButtonsContainer.play_hand_requested.connect(_on_play_requested)
 	WebSocketClient.play_hand_resp.connect(_on_play_completed)
@@ -77,93 +75,73 @@ func _on_game_start(resp: InformGameStartResp) -> void:
 	print("Game started")
 	print(resp)
 
-func _on_game_state(resp: GameStateResp) -> void:
-	# TODO: remove this and add this to inform game start when it gets fixed
-	if temp_game_start_flag:
-		temp_game_start_flag = false
-		print("Game started")
-		print(resp)
+	var game_state = resp.game_state
 
-		var json := JSON.new()
-		var error := json.parse(resp.game_state_json)
-
-		if error != OK:
-			print(
-				"JSON Parse Error: ",
-				json.get_error_message(),
-				" in ",
-				resp.game_state_json,
-				" at line ",
-				json.get_error_line()
-			)
-			return
-
-		var game_state = json.data
-
-		if typeof(game_state) != TYPE_DICTIONARY:
-			print("Unexpected data: ", game_state)
-			return
-			
-		turn_time = float(game_state["turnDurationInSeconds"])
-		current_player = game_state["currTurnPlayer"]
-		$TopArea/TableArea/TableLayout/TempCurrentPlayerLabel.text = "Current player: " + current_player["username"]
-		current_player_seat_index = find_current_player_seat_index()
-		seats[current_player_seat_index].start_turn(turn_time)
+	if typeof(game_state) != TYPE_DICTIONARY:
+		print("Unexpected data: ", game_state)
+		return
 		
-		var my_hand: Array[int] = []
+	turn_time = float(game_state["turnDurationInSeconds"])
+	current_player = game_state["currTurnPlayer"]
+	$TopArea/TableArea/TableLayout/TempCurrentPlayerLabel.text = "Current player: " + current_player["username"]
+	current_player_seat_index = find_current_player_seat_index()
+	seats[current_player_seat_index].start_turn(turn_time)
+	
+	var my_hand: Array[int] = []
 
-		for value in game_state["hand"].split("_"):
-			my_hand.append(int(value))
+	for value in game_state["hand"].split("_"):
+		my_hand.append(int(value))
 
-		$TopArea/TableArea.start_dealing(
-			my_hand,
-			game_state["numOfCardsPerPlayerId"],
-			players,
-			local_player_index
-		)
-		if current_player["username"] != PlayerSession.username:
-			play_button.disabled = true
-			pass_button.disabled = true
-		else:
-			play_button.disabled = false
-			pass_button.disabled = false
+	$TopArea/TableArea.start_dealing(
+		my_hand,
+		game_state["numOfCardsPerPlayerId"],
+		players,
+		local_player_index
+	)
+	if current_player["username"] != PlayerSession.username:
+		play_button.disabled = true
+		pass_button.disabled = true
 	else:
-		var json := JSON.new()
-		var error := json.parse(resp.game_state_json)
+		play_button.disabled = false
+		pass_button.disabled = false
 
-		if error != OK:
-			print(
-				"JSON Parse Error: ",
-				json.get_error_message(),
-				" in ",
-				resp.game_state_json,
-				" at line ",
-				json.get_error_line()
-			)
-			return
+func _on_game_state(resp: GameStateResp) -> void:
+	var json := JSON.new()
+	var error := json.parse(resp.game_state_json)
 
-		var game_state = json.data
+	if error != OK:
+		print(
+			"JSON Parse Error: ",
+			json.get_error_message(),
+			" in ",
+			resp.game_state_json,
+			" at line ",
+			json.get_error_line()
+		)
+		return
 
-		if typeof(game_state) != TYPE_DICTIONARY:
-			print("Unexpected data: ", game_state)
-			return
-			
-		current_player = game_state["currTurnPlayer"]
-		$TopArea/TableArea/TableLayout/TempCurrentPlayerLabel.text = "Current player: " + current_player["username"]
-		current_player_seat_index = find_current_player_seat_index()
-		seats[current_player_seat_index].start_turn(turn_time)
+	var game_state = json.data
+
+	if typeof(game_state) != TYPE_DICTIONARY:
+		print("Unexpected data: ", game_state)
+		return
 		
-		var my_hand: Array[int] = []
+	current_player = game_state["currTurnPlayer"]
+	$TopArea/TableArea/TableLayout/TempCurrentPlayerLabel.text = "Current player: " + current_player["username"]
+	current_player_seat_index = find_current_player_seat_index()
+	seats[current_player_seat_index].start_turn(turn_time)
+	
+	var my_hand: Array[int] = []
 
-		for value in game_state["hand"].split("_"):
-			my_hand.append(int(value))
+	for value in game_state["hand"].split("_"):
+		my_hand.append(int(value))
 
-		if current_player["username"] != PlayerSession.username:
-			play_button.disabled = true
-			pass_button.disabled = true
-		else:
-			play_button.disabled = false
-			pass_button.disabled = false
+	if current_player["username"] != PlayerSession.username:
+		play_button.disabled = true
+		pass_button.disabled = true
+	else:
+		play_button.disabled = false
+		pass_button.disabled = false
 	
 func _on_play_requested() -> void:
 	var selected_cards: Array[Card] = hand_placeholder.selected_cards

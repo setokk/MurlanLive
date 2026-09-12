@@ -147,6 +147,14 @@ public class GameLobbyEndpoint {
         Player player = playerSession.getPlayer();
         Room room = roomHandler.getPlayerRoom(playerSession);
 
+        log.info(
+                "[IN] Processing valid event...\n-> event={}\n\t- playerId={}\n\t- payload={}\n\t- sessionId={}\n",
+                req.getClass().getSimpleName(),
+                player.getId(),
+                message,
+                playerSession.getSession().getId()
+        );
+
         Resp informResp = null;
         Resp resp = switch (req) {
             case GameStateReq gameStateReq -> {
@@ -225,10 +233,7 @@ public class GameLobbyEndpoint {
             default -> throw new IllegalStateException("Unexpected request: " + req);
         };
 
-        String responseString = generator.generateMessage(resp);
-        if (!responseString.isEmpty()) {
-            session.getBasicRemote().sendText(responseString);
-        }
+        endpointHelper.send(resp, playerSession);
 
         if (room != null) {
             endpointHelper.informPlayers(informResp, playerSession, roomHandler.getPlayersInRoom(room.getId()));

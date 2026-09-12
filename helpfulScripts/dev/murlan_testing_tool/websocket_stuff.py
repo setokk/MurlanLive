@@ -75,19 +75,17 @@ def clear_pending_messages(ws):
     ws.settimeout(None)
 
 def disconnect_all_users(user_table):
-    # TODO: Change the code back to the below when it's fixed in the backend
-    # for user in user_table:
-    #     ws = user.get("ws")
+    for user in user_table:
+        ws = user.get("ws")
 
-    #     if ws:
-    #         username = user["user"]["username"]
+        if ws:
+            username = user["user"]["username"]
 
-    #         try:
-    #             ws.close(status=1000, reason="Client exiting")
-    #             print(f"Disconnected {username}")
-    #         except Exception as e:
-    #             print(f"Could not disconnect {username}: {e}")
-    #         finally:
-    #             user["ws"] = None
-    #             print(ws.connected)
-    subprocess.run(["docker", "restart", "mulive-gameserver"])
+            try:
+                ws.close(status=1000, reason="Client exiting")
+                print(f"Disconnected {username}")
+            except Exception as e:
+                print(f"Could not disconnect {username}: {e}")
+            finally:
+                user["ws"] = None
+                print(ws.connected)

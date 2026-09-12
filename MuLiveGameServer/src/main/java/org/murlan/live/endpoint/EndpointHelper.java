@@ -33,14 +33,30 @@ public class EndpointHelper {
     private final Generator generator;
     private final ProtocolConfig config;
 
+    public void send(Resp resp, PlayerSession playerSession) throws IOException {
+        String message = generator.generateMessage(resp);
+        if (message.isEmpty()) {
+            return;
+        }
+
+        log.info(
+                "[OUT]\n-> event={}\n\t- playerId={}\n\t- payload={}\n\t- sessionId={}\n",
+                resp.getClass().getSimpleName(),
+                playerSession.getPlayer().getId(),
+                message,
+                playerSession.getSession().getId()
+        );
+
+        playerSession.getSession().getBasicRemote().sendText(message);
+    }
+
     public void closeWithErrorMessage(Session session, MuliveCloseReason closeReason) throws IOException {
         log.info("Rejecting connection with sessionId: {}, with reason: {}", session.getId(), closeReason.getMessage());
         session.close(closeReason.create());
     }
 
     public void informPlayers(Resp resp, PlayerSession originPlayer, List<PlayerSession> playerSessionsInRoom) throws IOException {
-        String message = generator.generateMessage(resp);
-        if (message.isEmpty()) {
+        if (resp == null) {
             return;
         }
 
@@ -50,22 +66,22 @@ public class EndpointHelper {
                     CardCombination cardCombination = new CardCombination(playerSession.getPlayer().getHand());
                     informGameStartResp.getGameStateDto().setHand(cardCombination.toMessage(config.getProtocol_list_delimiter()));
 
-                    playerSession.getSession().getBasicRemote().sendText(generator.generateMessage(informGameStartResp));
+                    send(informGameStartResp, playerSession);
                 }
-                case InformGameFinishResp informGameFinishResp -> playerSession.getSession().getBasicRemote().sendText(message);
+                case InformGameFinishResp informGameFinishResp -> send(resp, playerSession);
                 case InformPlayHandResp informPlayHandResp -> {
                     if (!playerSession.equals(originPlayer)) {
-                        playerSession.getSession().getBasicRemote().sendText(message);
+                        send(resp, playerSession);
                     }
                 }
                 case InformPassResp informPassResp -> {
                     if (!playerSession.equals(originPlayer)) {
-                        playerSession.getSession().getBasicRemote().sendText(message);
+                        send(resp, playerSession);
                     }
                 }
                 case InformGiveCardResp informGiveCardResp -> {
                     if (informGiveCardResp.getTargetPlayerId() == playerSession.getPlayer().getId()) {
-                        playerSession.getSession().getBasicRemote().sendText(message);
+                        send(resp, playerSession);
                     } else if (!playerSession.equals(originPlayer)) {
                         Resp hiddenInformGiveCardResp = new InformGiveCardResp(
                                 ResponseStatus.OK,
@@ -74,12 +90,12 @@ public class EndpointHelper {
                                 null,
                                 informGiveCardResp.haveBothPlayersGivenCards()
                         );
-                        playerSession.getSession().getBasicRemote().sendText(generator.generateMessage(hiddenInformGiveCardResp));
+                        send(hiddenInformGiveCardResp, playerSession);
                     }
                 }
-                case InformPlayerJoinRoomResp informPlayerJoinRoomResp -> playerSession.getSession().getBasicRemote().sendText(message);
-                case InformPlayerLeaveRoomResp informPlayerLeaveRoomResp -> playerSession.getSession().getBasicRemote().sendText(message);
-                case InformPlayerLostConnectionResp informPlayerLostConnectionResp -> playerSession.getSession().getBasicRemote().sendText(message);
+                case InformPlayerJoinRoomResp informPlayerJoinRoomResp -> send(resp, playerSession);
+                case InformPlayerLeaveRoomResp informPlayerLeaveRoomResp -> send(resp, playerSession);
+                case InformPlayerLostConnectionResp informPlayerLostConnectionResp -> send(resp, playerSession);
                 default -> throw new IllegalStateException("Unexpected value: " + resp);
             }
         }
