@@ -14,6 +14,7 @@ enum Value {
 	INFORM_PLAYER_JOIN_ROOM,
 	INFORM_PLAYER_LEAVE_ROOM,
 	INFORM_PLAYER_LOST_CONNECTION,
+	INFORM_PLAYER_READY,
 }
 
 static var RESP_FACTORIES: Dictionary[int, Callable] = {
@@ -25,6 +26,7 @@ static var RESP_FACTORIES: Dictionary[int, Callable] = {
 	Value.INFORM_PLAYER_JOIN_ROOM: func(parts, config): return InformPlayerJoinRoomResp.new(parts, config),
 	Value.INFORM_PLAYER_LEAVE_ROOM: func(parts, config): return InformPlayerLeaveRoomResp.new(parts, config),
 	Value.INFORM_PLAYER_LOST_CONNECTION: func(parts, config): return InformPlayerLostConnectionResp.new(parts, config),
+	Value.INFORM_PLAYER_READY: func(parts, config): return InformPlayerReadyResp.new(parts, config),
 }
 
 static func create_resp(value: Value, parts: PackedStringArray, config: ProtocolConfig) -> Resp:
