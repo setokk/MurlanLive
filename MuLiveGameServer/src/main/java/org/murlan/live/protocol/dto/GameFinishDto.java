@@ -15,4 +15,5 @@ public class GameFinishDto {
     private Map<Long, Short> scorePerPlayerId;
     private Long winnerPlayerId;
     private Long loserPlayerId;
+    private Player finalWinner;
 }

@@ -27,6 +27,7 @@ import org.murlan.live.protocol.api.InformPlayHandResp;
 import org.murlan.live.protocol.api.InformPlayerJoinRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLeaveRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLostConnectionResp;
+import org.murlan.live.protocol.api.InformPlayerReadyResp;
 import org.murlan.live.protocol.api.JoinRoomReq;
 import org.murlan.live.protocol.api.JoinRoomResp;
 import org.murlan.live.protocol.api.LeaveRoomReq;
@@ -35,6 +36,8 @@ import org.murlan.live.protocol.api.PassReq;
 import org.murlan.live.protocol.api.PassResp;
 import org.murlan.live.protocol.api.PlayHandReq;
 import org.murlan.live.protocol.api.PlayHandResp;
+import org.murlan.live.protocol.api.ReadyReq;
+import org.murlan.live.protocol.api.ReadyResp;
 import org.murlan.live.protocol.api.Req;
 import org.murlan.live.protocol.api.Resp;
 import org.murlan.live.protocol.api.error.InvalidDataException;
@@ -145,7 +148,9 @@ public class GameLobbyEndpoint {
 
         PlayerSession playerSession = optionalPlayerSession.get();
         Player player = playerSession.getPlayer();
+
         Room room = roomHandler.getPlayerRoom(playerSession);
+        boolean isRoomPresent = room != null;
 
         log.info(
                 "[IN] Processing valid event...\n-> event={}\n\t- playerId={}\n\t- payload={}\n\t- sessionId={}\n",
@@ -158,18 +163,24 @@ public class GameLobbyEndpoint {
         Resp informResp = null;
         Resp resp = switch (req) {
             case GameStateReq gameStateReq -> {
-                GameStateDto gameStateDto = GameStateDto.from(room, player, config);
-                yield new GameStateResp(ResponseStatus.OK, gameStateDto);
+                GameStateDto gameStateDto = null;
+                if (isRoomPresent) {
+                    gameStateDto = GameStateDto.from(room, player, config);
+                }
+                yield new GameStateResp(
+                        isRoomPresent ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        gameStateDto
+                );
             }
             case PlayHandReq playHandReq -> {
-                boolean isSuccessful = room.playHand(player, playHandReq.getCardCombination());
+                boolean isSuccessful = isRoomPresent && room.playHand(player, playHandReq.getCardCombination());
                 if (isSuccessful) {
                     informResp = new InformPlayHandResp(ResponseStatus.OK, player.getId(), playHandReq.getCardCombination());
                 }
                 yield new PlayHandResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case PassReq passReq -> {
-                boolean isSuccessful = room.pass(player);
+                boolean isSuccessful = isRoomPresent && room.pass(player);
                 if (isSuccessful) {
                     boolean canCurrPlayerPlayAnyHand = room.getActiveGameState().getPassCounter().getCounter() == 0;
                     informResp = new InformPassResp(ResponseStatus.OK, player.getId(), canCurrPlayerPlayAnyHand);
@@ -206,7 +217,7 @@ public class GameLobbyEndpoint {
             }
             case GiveCardReq giveCardReq -> {
                 Player receivingPlayer = new Player(giveCardReq.getReceivingPlayerId());
-                boolean isSuccessful = room.giveCard(giveCardReq.getCard(), player, receivingPlayer);
+                boolean isSuccessful = isRoomPresent && room.giveCard(giveCardReq.getCard(), player, receivingPlayer);
                 if (isSuccessful) {
                     informResp = new InformGiveCardResp(ResponseStatus.OK,
                             player.getId(), receivingPlayer.getId(), giveCardReq.getCard(),
@@ -218,6 +229,10 @@ public class GameLobbyEndpoint {
                 );
             }
             case LeaveRoomReq leaveRoomReq -> {
+                if (!isRoomPresent) {
+                    yield new LeaveRoomResp(ResponseStatus.ERROR);
+                }
+
                 Optional<List<PlayerSession>> playersInRoom = roomHandler.removeSession(playerSession, false, onPlayerLeaveOrDisconnect);
 
                 boolean isSuccessful = playersInRoom.isPresent();
@@ -227,6 +242,15 @@ public class GameLobbyEndpoint {
                 }
 
                 yield new LeaveRoomResp(
+                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR
+                );
+            }
+            case ReadyReq readyReq -> {
+                boolean isSuccessful = isRoomPresent && room.ready(player);
+                if (isSuccessful) {
+                    informResp = new InformPlayerReadyResp(ResponseStatus.OK, player);
+                }
+                yield new ReadyResp(
                         isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR
                 );
             }

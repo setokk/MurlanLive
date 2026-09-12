@@ -10,6 +10,7 @@ import org.murlan.live.protocol.api.JoinRoomReq;
 import org.murlan.live.protocol.api.LeaveRoomReq;
 import org.murlan.live.protocol.api.PassReq;
 import org.murlan.live.protocol.api.PlayHandReq;
+import org.murlan.live.protocol.api.ReadyReq;
 import org.murlan.live.protocol.api.Req;
 import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ProtocolConfig;
@@ -72,7 +73,12 @@ public enum ClientEvent {
     /**
      * Indicates that a client wants to leave a room.
      */
-    LEAVE_ROOM(LeaveRoomReq::new);
+    LEAVE_ROOM(LeaveRoomReq::new),
+
+    /**
+     * Indicates that a player is ready to play (only the first game of the room).
+     */
+    READY(ReadyReq::new);
 
     private final ReqFactory reqFactory;
 

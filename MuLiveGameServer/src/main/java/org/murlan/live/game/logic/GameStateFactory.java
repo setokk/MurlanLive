@@ -92,17 +92,9 @@ public class GameStateFactory {
                         .map(Map.Entry::getKey)
                         .findAny();
 
-                if (optionalFinalWinner.isPresent()) {
-                    try {
-                        roomRESTClient.createRoom(room);
-                    } catch (IOException | InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                } else {
-                    room.startNewGameFromPreviousGame(winner, loser);
-                }
-
                 try {
+                    boolean isFinalWinner = optionalFinalWinner.isPresent();
+
                     GameFinishDto gameFinishDto = GameFinishDto.builder()
                             .winnerPlayerId(winner.getId())
                             .loserPlayerId(loser.getId())
@@ -112,8 +104,19 @@ public class GameStateFactory {
                                             Map.Entry::getValue)
                                     )
                             )
+                            .finalWinner(isFinalWinner ? optionalFinalWinner.get() : null)
                             .build();
                     endpointHelper.informPlayers(new InformGameFinishResp(ResponseStatus.OK, gameFinishDto), null, roomHandler.getPlayersInRoom(room.getId()));
+
+                    if (isFinalWinner) {
+                        try {
+                            roomRESTClient.createRoom(room);
+                        } catch (IOException | InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    } else {
+                        room.startNewGameFromPreviousGame(winner, loser);
+                    }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

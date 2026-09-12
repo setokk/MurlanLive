@@ -92,6 +92,10 @@ public class Room {
         return getActiveGameState().giveCard(card, player, receivingPlayer);
     }
 
+    public synchronized boolean ready(Player player) {
+        return getActiveGameState().ready(player);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Room room)) return false;

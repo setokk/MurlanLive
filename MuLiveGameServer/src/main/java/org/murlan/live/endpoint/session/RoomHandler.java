@@ -37,7 +37,9 @@ public class RoomHandler {
             boolean hasPlayerLostConnection,
             Consumer<Room> onPlayerLeaveOrDisconnect
     ) {
-        jwtToSessionMap.remove(playerSession.getPlayer().getJwt());
+        if (hasPlayerLostConnection) {
+            jwtToSessionMap.remove(playerSession.getPlayer().getJwt());
+        }
 
         String roomId = sessionToRoomIdMap.remove(playerSession);
         if (roomId == null) {

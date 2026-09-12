@@ -15,6 +15,7 @@ import org.murlan.live.protocol.api.InformPlayHandResp;
 import org.murlan.live.protocol.api.InformPlayerJoinRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLeaveRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLostConnectionResp;
+import org.murlan.live.protocol.api.InformPlayerReadyResp;
 import org.murlan.live.protocol.api.Resp;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.util.Generator;
@@ -96,6 +97,11 @@ public class EndpointHelper {
                 case InformPlayerJoinRoomResp informPlayerJoinRoomResp -> send(resp, playerSession);
                 case InformPlayerLeaveRoomResp informPlayerLeaveRoomResp -> send(resp, playerSession);
                 case InformPlayerLostConnectionResp informPlayerLostConnectionResp -> send(resp, playerSession);
+                case InformPlayerReadyResp informPlayerReadyResp -> {
+                    if (!playerSession.equals(originPlayer)) {
+                        send(resp, playerSession);
+                    }
+                }
                 default -> throw new IllegalStateException("Unexpected value: " + resp);
             }
         }

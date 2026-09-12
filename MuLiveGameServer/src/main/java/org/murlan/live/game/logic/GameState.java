@@ -41,14 +41,17 @@ public class GameState {
     @JsonIgnore private Player currTurnPlayer;
     @JsonIgnore private boolean shouldCurrTurnPlayerUseThreeOfSpades;
     @JsonIgnore private CardCombination currCardCombination;
+
     @JsonIgnore private Consumer<GameState> onStartGame;
     @JsonIgnore private Runnable onFinishGame;
     @JsonIgnore private Consumer<GameState> onTurnTimeout;
+
     @JsonIgnore private Player prevWinner;
     @JsonIgnore private Player prevLoser;
     @JsonIgnore private Set<Player> givenCards = HashSet.newHashSet(0);
     @JsonIgnore private PassCounter passCounter;
     @JsonIgnore private boolean isFirstMove;
+    @JsonIgnore private List<Player> readyPlayers = new ArrayList<>();
 
     /* Turn timer */
     @JsonIgnore private ScheduledExecutorService scheduler;
@@ -74,6 +77,7 @@ public class GameState {
                 .withOnTurnTimeout(previous.getOnTurnTimeout())
                 .withPrevWinner(winner)
                 .withPrevLoser(loser)
+                .withReadyPlayers(previous.getReadyPlayers())
                 .build();
     }
 
@@ -86,12 +90,10 @@ public class GameState {
         if (players.size() == GameConstants.MAX_PLAYERS) {
             return false;
         }
-        this.players.add(player);
 
+        this.players.add(player);
         onSuccess.run();
-        if (players.size() == GameConstants.MAX_PLAYERS) {
-            startGame();
-        }
+
         return true;
     }
 
@@ -202,6 +204,23 @@ public class GameState {
         return true;
     }
 
+    public boolean ready(Player player) {
+        if (this.state != State.WAITING) {
+            return false;
+        }
+
+        if (this.readyPlayers.contains(player)) {
+            return false;
+        }
+
+        this.readyPlayers.add(player);
+        if (this.readyPlayers.size() == GameConstants.MAX_PLAYERS) {
+            startGame();
+        }
+
+        return true;
+    }
+
     public void handlePlayerNotInRoom(Player player, boolean hasLostConnection) {
         Optional<Player> optionalPlayer = this.players.stream().filter(player::equals).findAny();
         if (optionalPlayer.isEmpty()) {
@@ -225,9 +244,6 @@ public class GameState {
     }
 
     public void startGame() {
-        if (!State.WAITING.equals(this.state) && !State.GIVING_CARDS.equals(this.state)) {
-            return;
-        }
         onStartGame.accept(this);
     }
 
