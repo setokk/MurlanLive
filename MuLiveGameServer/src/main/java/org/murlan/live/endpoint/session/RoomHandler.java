@@ -54,6 +54,8 @@ public class RoomHandler {
         synchronized (room) {
             roomIdToSessionMap.get(roomId).remove(playerSession);
 
+            room.getActiveGameState().getPlayers().remove(playerSession.getPlayer());
+
             // if game has not started yet (initial state where not all players have joined)
             // do NOT remove room.
             // remove room and player sessions ONLY in the case of active game
