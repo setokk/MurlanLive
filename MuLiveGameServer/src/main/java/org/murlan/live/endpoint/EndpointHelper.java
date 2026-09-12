@@ -94,8 +94,16 @@ public class EndpointHelper {
                         send(hiddenInformGiveCardResp, playerSession);
                     }
                 }
-                case InformPlayerJoinRoomResp informPlayerJoinRoomResp -> send(resp, playerSession);
-                case InformPlayerLeaveRoomResp informPlayerLeaveRoomResp -> send(resp, playerSession);
+                case InformPlayerJoinRoomResp informPlayerJoinRoomResp ->  {
+                    if (!playerSession.equals(originPlayer)) {
+                        send(resp, playerSession);
+                    }
+                }
+                case InformPlayerLeaveRoomResp informPlayerLeaveRoomResp ->  {
+                    if (!playerSession.equals(originPlayer)) {
+                        send(resp, playerSession);
+                    }
+                }
                 case InformPlayerLostConnectionResp informPlayerLostConnectionResp -> send(resp, playerSession);
                 case InformPlayerReadyResp informPlayerReadyResp -> {
                     if (!playerSession.equals(originPlayer)) {

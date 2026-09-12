@@ -22,6 +22,7 @@ public final class InformPlayerReadyResp implements Resp {
         return String.join(
                 config.getProtocol_delimiter(),
                 ServerEvent.INFORM_PLAYER_READY.id(),
+                getResponseStatus().toString(),
                 objectMapper.writeValueAsString(player)
         );
     }

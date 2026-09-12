@@ -48,7 +48,7 @@ func _ready() -> void:
 	WebSocketClient.ready_resp.connect(_on_ready_completed)
 	WebSocketClient.inform_player_ready_resp.connect(_on_opponent_ready)
 	
-	display_players()
+	WebSocketClient.send_message(GameStateReq.new())
 	
 func display_players() -> void:
 	local_player_index = 0
@@ -62,7 +62,7 @@ func display_players() -> void:
 		seats[(i-local_player_index)%seats.size()].set_player(players[i])
 		
 
-func _on_player_joined(resp : InformPlayerJoinRoomResp):
+func _on_player_joined(resp: InformPlayerJoinRoomResp):
 	WebSocketClient.send_message(GameStateReq.new())
 
 func _on_game_start(resp: InformGameStartResp) -> void:
