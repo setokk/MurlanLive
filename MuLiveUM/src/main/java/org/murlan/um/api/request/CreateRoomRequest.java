@@ -42,9 +42,6 @@ public class CreateRoomRequest implements IRequest {
     @NotEmpty(message = "[CreateRoomRequest]: totalScores cannot be empty")
     private final Map<String, Short> totalScores;
 
-    @NotNull(message = "[CreateRoomRequest]: numPlayers cannot be null")
-    private final Short numPlayers;
-
     @NotNull(message = "[CreateRoomRequest]: owner cannot be null")
     private final PlayerDto owner;
 
@@ -74,7 +71,6 @@ public class CreateRoomRequest implements IRequest {
             @JsonProperty("totalScoreToWin") Short totalScoreToWin,
             @JsonProperty("gameStates") List<GameStateDto> gameStates,
             @JsonProperty("totalScores") Map<String, Short> totalScores,
-            @JsonProperty("numPlayers") Short numPlayers,
             @JsonProperty("owner") PlayerDto owner
     ) {
         this.id = id;
@@ -84,7 +80,6 @@ public class CreateRoomRequest implements IRequest {
         this.totalScoreToWin = totalScoreToWin;
         this.gameStates = gameStates;
         this.totalScores = totalScores;
-        this.numPlayers = numPlayers;
         this.owner = owner;
     }
 }

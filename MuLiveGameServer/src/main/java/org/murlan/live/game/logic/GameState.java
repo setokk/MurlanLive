@@ -274,6 +274,7 @@ public class GameState {
         }
     }
 
+    @JsonIgnore
     private boolean isNotPlayerTurn(Player player) {
         return !player.equals(this.currTurnPlayer);
     }
@@ -289,6 +290,7 @@ public class GameState {
         return isFromPrevious() && getPrevLoser().getHand().contains(new CardCombination(Card.BLACK_JOKER, Card.RED_JOKER));
     }
 
+    @JsonIgnore
     public boolean haveBothPlayersGivenCards() {
         return getGivenCards().size() == 2;
     }
@@ -310,6 +312,7 @@ public class GameState {
         }
     }
 
+    @JsonIgnore
     public Map<Long, Short> getNumOfCardsPerPlayerId() {
         return players.stream()
                 .collect(Collectors.toMap(Player::getId, p -> (short) p.getHand().size()));

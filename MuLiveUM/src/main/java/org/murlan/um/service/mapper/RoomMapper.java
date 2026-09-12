@@ -42,7 +42,7 @@ public final class RoomMapper {
                 request.getTotalScoreToWin(),
                 request.getGameStates(),
                 totalScores,
-                request.getNumPlayers(),
+                (short) totalScores.size(),
                 request.getOwner()
         );
     }
