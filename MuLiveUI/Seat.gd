@@ -6,14 +6,21 @@ const USER_ICON: Texture2D = preload(
 	"res://assets/images/user-icon.png"
 )
 
+const SEAT_ICON: Texture2D = preload(
+	"res://assets/images/seat-icon-greyscale-no-bg.png"
+)
+
 @onready var seat_background: Panel = $SeatVisual/SeatBackGround
 @onready var seat_icon: Button = $SeatVisual/SeatBackGround/MarginContainer/SeatIcon
 @onready var username: Label = $Username
+@onready var is_ready_label: Label = $IsReady
 
 @onready var turn_timer: Timer = $TurnTimer
 @onready var turn_timer_bar: ProgressBar = $TurnTimerBar
 
 func _ready() -> void:
+	username.visible = false
+	is_ready_label.visible = false
 	turn_timer_bar.visible = false
 	turn_timer_bar.min_value = 0.0
 	turn_timer_bar.step = 0.0
@@ -32,7 +39,21 @@ func _process(_delta: float) -> void:
 	if not turn_timer.is_stopped():
 		turn_timer_bar.value = turn_timer.time_left
 
-
 func set_player(player: Dictionary) -> void:
 	seat_icon.icon = USER_ICON
+	username.visible = true
 	username.text = player.username
+	is_ready_label.visible = true
+	is_ready_label.text = "Not Ready"
+
+func remove_player() -> void:
+	seat_icon.icon = SEAT_ICON
+	username.visible = false
+	remove_ready_label()
+	
+func set_ready() -> void:
+	is_ready_label.visible = true
+	is_ready_label.text = "Ready"
+	
+func remove_ready_label() -> void:
+	is_ready_label.visible = false

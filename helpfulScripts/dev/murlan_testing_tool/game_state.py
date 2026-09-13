@@ -7,17 +7,19 @@ def get_game_state(ws):
     #C0$status_response$json
     ws.settimeout(1)
 
-    try:
-        response = ws.recv()
+    while True:
+        try:
+            response = ws.recv()
 
-        if response:
-            print(f"Game State: {response}")
-            return response
-        else:
+            if response:
+                if response.startswith("C0"):
+                    print(f"Game State: {response}")
+                    return response
+            else:
+                print("No game state response")
+
+        except websocket.WebSocketTimeoutException:
             print("No game state response")
-
-    except websocket.WebSocketTimeoutException:
-        print("No game state response")
 
 def get_current_card_combination(ws):
     response = get_game_state(ws)

@@ -1,5 +1,23 @@
 import requests
 
+LOGIN_URL = "http://localhost:8080/api/players/login"
+
+
+def login_user(user):
+    response = requests.post(
+        LOGIN_URL,
+        json=user
+    )
+
+    response.raise_for_status()
+
+    jwt = response.text.strip()
+
+    print(f"[{user["username"]}] logged in successfully")
+
+    return jwt
+
+
 REGISTER_URL = "http://localhost:8080/api/players/register"
 
 
@@ -14,5 +32,3 @@ def register_user(user):
     jwt = response.text.strip()
 
     print(f"[{user["username"]}] registered successfully")
-
-    return jwt

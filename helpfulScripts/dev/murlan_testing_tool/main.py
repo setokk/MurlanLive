@@ -1,11 +1,9 @@
 from users import USERS
 from websocket_stuff import connect_user, check_game_start, clear_pending_messages, disconnect_all_users
-from login import login_user
-from register import register_user
-from available_rooms import get_available_rooms
-from create_room import create_room
-from join_room import join_room
+from login_register import login_user, register_user
+from room_stuff import join_room, leave_room, create_room, get_available_rooms, choose_room
 from play_pass_hand import play_hand, pass_hand
+from ready import declare_ready_to_play
 import game_state
 
 
@@ -35,31 +33,6 @@ def choose_user(user_table):
 
         print("Invalid choice.")
 
-def choose_room(rooms):
-    print("\nChoose room:")
-
-    for i, room in enumerate(rooms, start=1):
-        print(f"{i}. {room["name"]}")
-
-    print("0. Back")
-
-    while True:
-        choice = input("\nChoice: ").strip()
-
-        if choice == "0":
-            break
-
-        try:
-            index = int(choice) - 1
-
-            if 0 <= index < len(rooms):
-                return rooms[index]
-
-        except ValueError:
-            pass
-
-        print("Invalid room choice.")
-
 def main():
     rooms = []
     user_table = []
@@ -88,6 +61,8 @@ def main():
             print("6. Check for game start event")
             print("7. Play hand")
             print("8. Pass hand")
+            print("9. Ready to play")
+            print("10. Leave room")
             print("0. Exit")
 
             choice = input("\nChoice: ").strip()
@@ -151,7 +126,16 @@ def main():
 
             if choice == "8":
                 pass_hand(user["ws"])
+                continue
 
+            if choice == "9":
+                declare_ready_to_play(user["ws"])
+                continue
+
+            if choice == "10":
+                leave_room(user["ws"])
+                continue
+            
             elif choice == "0":
                 disconnect_all_users(user_table)
                 print("Exiting...")

@@ -1,5 +1,4 @@
 import websocket
-import subprocess
 
 WS_URL = "ws://localhost:45600/game-lobby"
 
@@ -88,4 +87,3 @@ def disconnect_all_users(user_table):
                 print(f"Could not disconnect {username}: {e}")
             finally:
                 user["ws"] = None
-                print(ws.connected)
