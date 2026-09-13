@@ -43,7 +43,12 @@ public class GameStateFactory {
             synchronized (room) {
                 boolean loserContainsBothJokers = gameState.prevLoserContainsBothJokers();
 
-                gameState.setState(loserContainsBothJokers ? GameState.State.PLAYING : GameState.State.GIVING_CARDS);
+                if (room.getTotalFinishedGames() == 0) {
+                    gameState.setState(GameState.State.PLAYING);
+                } else {
+                    gameState.setState(loserContainsBothJokers ? GameState.State.PLAYING : GameState.State.GIVING_CARDS);
+                }
+
                 gameState.setCurrCardCombination(GameConstants.EMPTY_CARD_COMBINATION);
                 gameState.setScheduler(scheduler);
 
