@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import org.murlan.um.api.request.LoginPlayerRequest;
 import org.murlan.um.api.request.RegisterPlayerRequest;
 import org.murlan.um.auth.JwtUtils;
-import org.murlan.um.api.dto.PlayerDto;
+import org.murlan.um.model.dto.PlayerDto;
 import org.murlan.um.service.PlayerService;
 import org.murlan.um.service.mapper.PlayerMapper;
 import org.springframework.beans.factory.annotation.Autowired;

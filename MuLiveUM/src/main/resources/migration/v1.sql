@@ -69,3 +69,16 @@ CREATE TABLE IF NOT EXISTS score_total(
     room_id TEXT NOT NULL,
     PRIMARY KEY (player_id, room_id)
 );
+
+--
+-- hand_layout_configuration Table
+--
+CREATE TABLE IF NOT EXISTS hand_layout_configuration(
+    id BIGINT NOT NULL PRIMARY KEY,
+    hand_layouts JSONB NOT NULL,
+    player_id BIGINT NOT NULL
+);
+CREATE SEQUENCE IF NOT EXISTS hand_layout_configuration
+    START WITH 1
+    INCREMENT BY 1
+    NO CYCLE;

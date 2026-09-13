@@ -1,7 +1,7 @@
 package org.murlan.um.service;
 
-import org.murlan.um.api.dto.RoomDetailsDto;
-import org.murlan.um.api.dto.RoomDto;
+import org.murlan.um.model.dto.RoomDetailsDto;
+import org.murlan.um.model.dto.RoomDto;
 import org.murlan.um.error.BusinessLogicException;
 import org.murlan.um.model.GameStateEntity;
 import org.murlan.um.model.RoomEntity;
@@ -11,7 +11,7 @@ import org.murlan.um.repository.ScoreTotalRepository;
 import org.murlan.um.service.mapper.GameStateMapper;
 import org.murlan.um.service.mapper.RoomMapper;
 import org.murlan.um.service.mapper.ScoreTotalMapper;
-import org.murlan.um.service.param.room.CreateRoomParam;
+import org.murlan.um.service.param.CreateRoomParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class RoomService {
     private final RoomMapper roomMapper;
     private final GameStateMapper gameStateMapper;
     private final ScoreTotalMapper scoreTotalMapper;
+    private final AuthService authService;
 
     @Value("${mulive.pagination.size}")
     private int pageSize;
@@ -39,15 +41,18 @@ public class RoomService {
             ScoreTotalRepository scoreTotalRepository,
             RoomMapper roomMapper,
             GameStateMapper gameStateMapper,
-            ScoreTotalMapper scoreTotalMapper
+            ScoreTotalMapper scoreTotalMapper,
+            AuthService authService
     ) {
         this.roomRepository = roomRepository;
         this.scoreTotalRepository = scoreTotalRepository;
         this.roomMapper = roomMapper;
         this.gameStateMapper = gameStateMapper;
         this.scoreTotalMapper = scoreTotalMapper;
+        this.authService = authService;
     }
 
+    @Transactional
     public RoomDto createRoom(CreateRoomParam param) {
         List<GameStateEntity> gameStates = param.gameStates().stream()
                 .map(gameStateMapper::toEntity)
@@ -73,8 +78,12 @@ public class RoomService {
                 pageNumber, pageSize,
                 Sort.by("creationDate").descending()
         );
-        return roomRepository.findRoomsByPlayerId(playerId, pageable)
-                .stream()
+
+        List<RoomEntity> rooms = authService.getAuthenticatedUser().getId().equals(playerId)
+                ? roomRepository.findAllRoomsByPlayerId(playerId, pageable)
+                : roomRepository.findPublicRoomsByPlayerId(playerId, pageable);
+
+        return rooms.stream()
                 .map(roomMapper::toDto)
                 .toList();
     }

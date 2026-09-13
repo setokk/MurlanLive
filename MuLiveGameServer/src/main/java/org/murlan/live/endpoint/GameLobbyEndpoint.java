@@ -288,13 +288,5 @@ public class GameLobbyEndpoint {
     @OnError
     public void onError(Session session, Throwable throwable) throws IOException {
         log.error("Error", throwable);
-        // TODO: maybe dont close session on error
-        /*if (session != null && session.isOpen()) {
-            try {
-                session.close();
-            } catch (IOException e) {
-                log.error("Failed to close session", e);
-            }
-        }*/
     }
 }

@@ -2,8 +2,8 @@ package org.murlan.um.service.mapper;
 
 import org.murlan.um.api.request.LoginPlayerRequest;
 import org.murlan.um.api.request.RegisterPlayerRequest;
-import org.murlan.um.service.param.player.LoginPlayerParam;
-import org.murlan.um.service.param.player.RegisterPlayerParam;
+import org.murlan.um.service.param.LoginPlayerParam;
+import org.murlan.um.service.param.RegisterPlayerParam;
 import org.springframework.stereotype.Component;
 
 @Component

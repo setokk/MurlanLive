@@ -42,7 +42,8 @@ public class GameStateFactory {
         Consumer<GameState> onStartGame = (gameState) -> {
             synchronized (room) {
                 boolean loserContainsBothJokers = gameState.prevLoserContainsBothJokers();
-                gameState.setState(loserContainsBothJokers ? GameState.State.GIVING_CARDS : GameState.State.PLAYING);
+
+                gameState.setState(loserContainsBothJokers ? GameState.State.PLAYING : GameState.State.GIVING_CARDS);
                 gameState.setCurrCardCombination(GameConstants.EMPTY_CARD_COMBINATION);
                 gameState.setScheduler(scheduler);
 
@@ -56,7 +57,7 @@ public class GameStateFactory {
                     gameState.setCurrTurnPlayer(gameState.findPlayerWithCardCombination(new CardCombination(Card.THREE_OF_SPADES)));
                     gameState.setShouldCurrTurnPlayerUseThreeOfSpades(true);
                 } else {
-                    gameState.setCurrTurnPlayer(gameState.prevLoserContainsBothJokers() ? gameState.getPrevWinner() : gameState.getPrevLoser());
+                    gameState.setCurrTurnPlayer(loserContainsBothJokers ? gameState.getPrevWinner() : gameState.getPrevLoser());
                     gameState.setShouldCurrTurnPlayerUseThreeOfSpades(false);
                 }
 

@@ -33,7 +33,6 @@ public class CardCombination {
 
     public CardCombination(Hand hand) {
         this.cards = hand != null ? hand.getCards() : Collections.emptyList();
-        this.cards.sort(ASC_COMPARATOR);
     }
 
     public void setType(CardCombinationType type) {

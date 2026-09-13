@@ -1,6 +1,6 @@
 package org.murlan.um.service.mapper;
 
-import org.murlan.um.api.dto.PlayerDto;
+import org.murlan.um.model.dto.PlayerDto;
 import org.murlan.um.model.RoomEntity;
 import org.murlan.um.model.ScoreTotalEntity;
 import org.murlan.um.model.pk.ScoreTotalPK;

@@ -29,7 +29,8 @@ public final class InformGiveCardResp implements Resp {
                 getResponseStatus().toString(),
                 String.valueOf(originPlayerId),
                 String.valueOf(targetPlayerId),
-                card != null ? String.valueOf(card.ordinal()) : ""
+                card != null ? String.valueOf(card.ordinal()) : "",
+                String.valueOf(haveBothPlayersGivenCards)
         );
     }
 }
