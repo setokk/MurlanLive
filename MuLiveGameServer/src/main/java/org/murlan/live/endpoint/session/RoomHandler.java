@@ -52,7 +52,10 @@ public class RoomHandler {
         }
 
         synchronized (room) {
-            roomIdToSessionMap.get(roomId).remove(playerSession);
+            List<PlayerSession> playerSessions = roomIdToSessionMap.get(roomId);
+            if (playerSessions != null) {
+                playerSessions.remove(playerSession);
+            }
 
             room.getActiveGameState().getPlayers().remove(playerSession.getPlayer());
 
@@ -60,7 +63,7 @@ public class RoomHandler {
             // do NOT remove room.
             // remove room and player sessions ONLY in the case of active game
             if (GameState.State.WAITING.equals(room.getActiveGameState().getState()) && room.getPlayers().size() > 1) {
-                return Optional.ofNullable(roomIdToSessionMap.get(roomId));
+                return Optional.ofNullable(playerSessions);
             }
 
             room.getActiveGameState().handlePlayerNotInRoom(playerSession.getPlayer(), hasPlayerLostConnection);
