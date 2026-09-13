@@ -1,5 +1,6 @@
 package org.murlan.um.service;
 
+import org.murlan.um.model.dto.PlayerDto;
 import org.murlan.um.model.dto.RoomDetailsDto;
 import org.murlan.um.model.dto.RoomDto;
 import org.murlan.um.error.BusinessLogicException;
@@ -91,6 +92,19 @@ public class RoomService {
     public RoomDetailsDto getRoomDetails(String roomId) {
         RoomEntity room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Room with id: " + roomId + " not found"));
+
+        if (!room.getIsPublic()) {
+            PlayerDto player = authService.getAuthenticatedUser();
+
+            boolean isPlayerNotInRoom = room.getTotalScores().stream().noneMatch(ts -> player.getId().equals(ts.getId().getPlayerId()));
+            if (isPlayerNotInRoom) {
+                throw new BusinessLogicException(
+                        HttpStatus.FORBIDDEN,
+                        "Access denied to room with id: " + roomId
+                );
+            }
+        }
+
         return roomMapper.toDetailsDto(room);
     }
 }

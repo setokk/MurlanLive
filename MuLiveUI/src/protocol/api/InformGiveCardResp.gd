@@ -23,3 +23,4 @@ func _init(message_parts: PackedStringArray, _config: ProtocolConfig) -> void:
 	target_player_id = message_parts[start_index() + 2].to_int()
 	var card_part := message_parts[start_index() + 3]
 	card = CardEnum.new().from_ordinal(card_part.to_int()) if card_part != "" else null
+	have_both_players_given_cards = message_parts[start_index() + 4].to_lower() == "true"

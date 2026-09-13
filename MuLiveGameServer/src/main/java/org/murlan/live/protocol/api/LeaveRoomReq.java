@@ -6,10 +6,7 @@ import org.murlan.live.protocol.config.ProtocolConfig;
 
 @Getter
 public final class LeaveRoomReq implements Req {
-    private final String roomId;
-
     public LeaveRoomReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException {
         validate(messageParts);
-        roomId = messageParts[startIndex()];
     }
 }
