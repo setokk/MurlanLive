@@ -62,7 +62,7 @@ public class RoomHandler {
             // if game has not started yet (initial state where not all players have joined)
             // do NOT remove room.
             // remove room and player sessions ONLY in the case of active game
-            if (GameState.State.WAITING.equals(room.getActiveGameState().getState()) && room.getPlayers().size() > 1) {
+            if (GameState.State.WAITING.equals(room.getActiveGameState().getState()) && !room.getPlayers().isEmpty()) {
                 return Optional.ofNullable(playerSessions);
             }
 
