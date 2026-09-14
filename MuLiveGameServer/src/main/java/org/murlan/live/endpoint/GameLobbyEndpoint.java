@@ -217,15 +217,22 @@ public class GameLobbyEndpoint {
             }
             case GiveCardReq giveCardReq -> {
                 Player receivingPlayer = new Player(giveCardReq.getReceivingPlayerId());
+
+                boolean haveBothPlayerGivenCards = false;
+
                 boolean isSuccessful = isRoomPresent && room.giveCard(giveCardReq.getCard(), player, receivingPlayer);
                 if (isSuccessful) {
+                    haveBothPlayerGivenCards = room.getActiveGameState().haveBothPlayersGivenCards();
                     informResp = new InformGiveCardResp(ResponseStatus.OK,
-                            player.getId(), receivingPlayer.getId(), giveCardReq.getCard(),
-                            room.getActiveGameState().haveBothPlayersGivenCards()
+                            player.getId(),
+                            receivingPlayer.getId(),
+                            giveCardReq.getCard(),
+                            haveBothPlayerGivenCards
                     );
                 }
                 yield new GiveCardResp(
-                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR
+                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        haveBothPlayerGivenCards
                 );
             }
             case LeaveRoomReq leaveRoomReq -> {
