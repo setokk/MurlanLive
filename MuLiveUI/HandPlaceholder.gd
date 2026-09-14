@@ -306,29 +306,27 @@ func play_selected_cards() -> Array[Card]:
 	layout_cards()
 	return played
 	
-func give_card(isLoser: bool) -> Card:
-	if selected_cards.size() > 1:
-		print("You can only pick one card")
-		return null
-	else:
-		var card_to_give: Card = selected_cards[0]
-		if is_card_to_give_valid(isLoser, card_to_give):
-			cards.erase(selected_cards[0])
-			selected_cards.clear()
-			layout_cards()
-			return card_to_give
-		return null
+func remove_cards(cards_to_clear: Array[Card]) -> void:
+		for card in cards_to_clear:
+			cards.erase(card)
 		
-func is_card_to_give_valid(isLoser: bool, card_to_give: Card) -> bool:
+		selected_cards.clear()
+		layout_cards()
+	
+func get_card_to_give(isLoser: bool) -> Card:
+	if selected_cards.size() != 1:
+		return null
+
+	var card_to_give: Card = selected_cards[0]
 	if isLoser:
-		if card_to_give in find_highest_rank_cards():
-			return true
-		return false
+		if not (card_to_give in find_highest_rank_cards()):
+			card_to_give = null
 	else:
 		if card_to_give.value.has_bigger_rank_than(CardEnum.TEN_OF_CLUBS):
-			return false
-		return true
-		
+			card_to_give = null
+	
+	return card_to_give
+
 func find_highest_rank_cards() -> Array[Card]:
 	var highest_rank_cards: Array[Card] = []
 	var highest_rank: _Rank

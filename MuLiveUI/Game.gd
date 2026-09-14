@@ -128,8 +128,8 @@ func _on_game_finish(resp: InformGameFinishResp) -> void:
 	if resp.response_status == 200:
 		var score_per_player_id : Dictionary = resp.game_finish["scorePerPlayerId"]
 		for player_id in score_per_player_id:
-			var id: int= int(player_id)
-			var score: int = int(score_per_player_id[id])
+			var id: int = int(player_id)
+			var score: int = int(score_per_player_id[str(id)])
 			seats[find_player_seat_index(id)].set_score(score)
 	else:
 		print("error bruh: ", resp)
@@ -224,22 +224,25 @@ func _on_leave_completed(resp: LeaveRoomResp) -> void:
 		print("Error: ", resp)
 		
 func _on_give_card_requested() -> void:
-	var selected_card: Card = hand_placeholder.selected_cards
-	if not hand_placeholder.is_card_to_give_valid(is_local_player_loser, selected_card):
+	var card_to_give: Card = hand_placeholder.get_card_to_give(is_local_player_loser)
+	if not card_to_give:
 		return
 	if is_local_player_loser: 
-		WebSocketClient.send_message(GiveCardReq.new(selected_card.value, previous_winner["id"]))
+		WebSocketClient.send_message(GiveCardReq.new(card_to_give.value, previous_winner["id"]))
 	else:
-		WebSocketClient.send_message(GiveCardReq.new(selected_card.value, previous_loser["id"]))
+		WebSocketClient.send_message(GiveCardReq.new(card_to_give.value, previous_loser["id"]))
 		
 func _on_give_card_completed(resp: GiveCardResp) -> void:
 	if resp.response_status == 200:
-		var card_to_give: Card = hand_placeholder.give_card(is_local_player_loser)
+		var card_to_give: Card = hand_placeholder.selected_cards[0]
+		hand_placeholder.remove_cards([card_to_give])
+		
 		var opponent_hand_index: int
 		if is_local_player_loser:
-			opponent_hand_index = find_player_seat_index(previous_winner["id"]) -1
+			opponent_hand_index = find_player_seat_index(previous_winner["id"]) - 1
 		else:
-			opponent_hand_index = find_player_seat_index(previous_loser["id"]) -1
+			opponent_hand_index = find_player_seat_index(previous_loser["id"]) - 1
+		
 		var starting_point: Vector2 = opponent_hands[opponent_hand_index].position
 		opponent_hands[opponent_hand_index].receive_card(card_to_give, starting_point)
 		if bool(resp.have_both_players_given_cards):
@@ -282,8 +285,8 @@ func _on_opponent_leave(resp: InformPlayerLeaveRoomResp) -> void:
 	if resp.response_status == 200:
 		for player in players:
 			if player["id"] == resp.player_id:
-				players.erase(player)
 				seats[find_player_seat_index(player["id"])].remove_player()
+				players.erase(player)
 				display_players()
 				break
 	else:
