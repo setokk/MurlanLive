@@ -1,4 +1,5 @@
 extends Panel
+class_name OpponentHand
 
 const HIDDEN_CARD_SCENE: PackedScene = preload("res://scenes/HiddenCard.tscn")
 

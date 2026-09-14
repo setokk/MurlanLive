@@ -9,9 +9,9 @@ extends Control
 @onready var seat4: Seat = $TableLayout/Seat4
 
 @onready var player_hand: Panel = $"../../BottomArea/HandArea/MarginContainer/HandPlaceholder"
-@onready var opponent_hand2: Panel = $TableLayout/OpponentHand2
-@onready var opponent_hand3: Panel = $TableLayout/OpponentHand3
-@onready var opponent_hand4: Panel = $TableLayout/OpponentHand4
+@onready var opponent_hand2: OpponentHand = $TableLayout/OpponentHand2
+@onready var opponent_hand3: OpponentHand = $TableLayout/OpponentHand3
+@onready var opponent_hand4: OpponentHand = $TableLayout/OpponentHand4
 
 @onready var deck: Node2D = $TableLayout/Deck
 
@@ -60,7 +60,7 @@ func calculate_initial_layout() -> void:
 		MAX_SEAT_HEIGHT
 	)
 
-	var seats: Array[VBoxContainer] = [
+	var seats: Array[Seat] = [
 		seat1,
 		seat2,
 		seat3,
@@ -128,6 +128,7 @@ func place_seat(
 		seat.size.x * pivot.x,
 		seat.size.y * pivot.y
 	)
+	
 func setup_deck() -> void:
 	var table_size: Vector2 = table_frame.size
 	deck.create_deck(table_size)
@@ -260,8 +261,8 @@ func setup_opponent_hands() -> void:
 	)
 	
 func place_hand_relative_to_seat(
-	hand: Panel,
-	seat: VBoxContainer,
+	hand: OpponentHand,
+	seat: Seat,
 	offset_ratio: Vector2
 ) -> void:
 

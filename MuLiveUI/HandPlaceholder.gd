@@ -232,10 +232,6 @@ func receive_card(card: Card, start_position: Vector2) -> void:
 	# Make sure it is visible above the existing cards
 	# during the flight.
 	card.z_index = 100
-
-	# -------------------------
-	# 1. Fly to the right side
-	# -------------------------
 	
 	var move_tween: Tween = create_tween()
 
@@ -261,17 +257,7 @@ func receive_card(card: Card, start_position: Vector2) -> void:
 
 	await move_tween.finished
 
-	# -------------------------
-	# 2. Reveal the card
-	# -------------------------
-
-	#await get_tree().create_timer(0.02).timeout
-
 	await card.flip_to_front()
-	
-	# 4. Insertion animation
-
-	var final_position: Vector2 = card.position
 	
 	add_card_to_hand(card)
 	layout_cards()
@@ -319,6 +305,42 @@ func play_selected_cards() -> Array[Card]:
 		
 	layout_cards()
 	return played
-
-func pass_turn() -> void:
-	pass
+	
+func give_card(isLoser: bool) -> Card:
+	if selected_cards.size() > 1:
+		print("You can only pick one card")
+		return null
+	else:
+		var card_to_give: Card = selected_cards[0]
+		if is_card_to_give_valid(isLoser, card_to_give):
+			cards.erase(selected_cards[0])
+			selected_cards.clear()
+			layout_cards()
+			return card_to_give
+		return null
+		
+func is_card_to_give_valid(isLoser: bool, card_to_give: Card) -> bool:
+	if isLoser:
+		if card_to_give in find_highest_rank_cards():
+			return true
+		return false
+	else:
+		if card_to_give.value.has_bigger_rank_than(CardEnum.TEN_OF_CLUBS):
+			return false
+		return true
+		
+func find_highest_rank_cards() -> Array[Card]:
+	var highest_rank_cards: Array[Card] = []
+	var highest_rank: _Rank
+	var strongest_card_comb: CardCombination = CardCombination.new([cards[0].value])
+	var current_card_comb: CardCombination
+	# Find highest rank card
+	for i in range(cards.size()-1):
+		current_card_comb = CardCombination.new([cards[i+1].value])
+		if current_card_comb.is_stronger_than(strongest_card_comb):
+			strongest_card_comb = current_card_comb
+	highest_rank = strongest_card_comb.cards[0].rank()
+	for card in cards:
+		if card.value.rank() == highest_rank:
+			highest_rank_cards.append(card)
+	return highest_rank_cards

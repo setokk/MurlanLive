@@ -89,17 +89,25 @@ script = ExtResource("2_3xj3m")
 layout_mode = 1
 anchors_preset = 15
 
-[node name="TopArea" type="CenterContainer" parent="." unique_id=1090870034]
+[node name="TopArea" type="Control" parent="." unique_id=622972998]
 layout_mode = 1
-anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 0.75
 
 [node name="LeftArea" type="Control" parent="TopArea" unique_id=829091859]
-layout_mode = 2
+layout_mode = 1
+anchor_right = 0.15
+anchor_bottom = 1.0
+offset_left = 576.0
+offset_top = 243.0
+offset_right = 576.0
+offset_bottom = 243.0
 
 [node name="TableArea" type="Control" parent="TopArea" unique_id=863065479]
-layout_mode = 2
+layout_mode = 1
+anchor_left = 0.15
+anchor_right = 0.85
+anchor_bottom = 1.0
 script = ExtResource("3_3so38")
 
 [node name="TableLayout" type="Control" parent="TopArea/TableArea" unique_id=324252698]
@@ -110,14 +118,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_3cx6b")
-
-[node name="TempCurrentPlayerLabel" type="Label" parent="TopArea/TableArea/TableLayout" unique_id=763149528]
-layout_mode = 0
-offset_left = 294.0
-offset_top = 241.0
-offset_right = 440.0
-offset_bottom = 274.0
-text = "Current player: "
 
 [node name="Table" type="TextureRect" parent="TopArea/TableArea/TableLayout" unique_id=747679814]
 layout_mode = 1
@@ -152,14 +152,16 @@ script = ExtResource("8_2rd6h")
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 10
 text = "Not Ready"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=2054377489]
-custom_minimum_size = Vector2(0, 10)
+custom_minimum_size = Vector2(50, 10)
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_6cc1s")
 theme_override_styles/fill = SubResource("StyleBoxFlat_743nf")
@@ -199,7 +201,17 @@ horizontal_alignment = 1
 [node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=1628672719]
 one_shot = true
 
-[node name="Seat2" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=314598374]
+[node name="Score" type="Label" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=573171336]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 12
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Seat2" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=1262989048]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -209,35 +221,37 @@ grow_vertical = 2
 alignment = 1
 script = ExtResource("8_2rd6h")
 
-[node name="IsReady" type="Label" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=1127087839]
+[node name="IsReady" type="Label" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=104888621]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 10
 text = "Not Ready"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=2138635682]
-custom_minimum_size = Vector2(0, 10)
+[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=1083091859]
+custom_minimum_size = Vector2(50, 10)
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_6cc1s")
 theme_override_styles/fill = SubResource("StyleBoxFlat_743nf")
-value = 100.0
+step = 0.0
 fill_mode = 1
 show_percentage = false
 
-[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=1955441943]
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=1623763479]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat2/SeatVisual" unique_id=814611442]
+[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat2/SeatVisual" unique_id=1004293650]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat2/SeatVisual/SeatBackGround" unique_id=865814017]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat2/SeatVisual/SeatBackGround" unique_id=1585517953]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -245,11 +259,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat2/SeatVisual/SeatBackGround/MarginContainer" unique_id=1278622029]
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat2/SeatVisual/SeatBackGround/MarginContainer" unique_id=119388366]
 layout_mode = 2
 expand_icon = true
 
-[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=452909940]
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=2139863817]
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 4
@@ -257,10 +271,20 @@ theme_override_font_sizes/font_size = 12
 text = "Username"
 horizontal_alignment = 1
 
-[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=891695024]
+[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=1159042821]
 one_shot = true
 
-[node name="Seat3" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=1396049796]
+[node name="Score" type="Label" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=39967761]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 12
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Seat3" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=1384875587]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -270,35 +294,37 @@ grow_vertical = 2
 alignment = 1
 script = ExtResource("8_2rd6h")
 
-[node name="IsReady" type="Label" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1356193674]
+[node name="IsReady" type="Label" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=77259153]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 10
 text = "Not Ready"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=2116991749]
-custom_minimum_size = Vector2(0, 10)
+[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1762134893]
+custom_minimum_size = Vector2(50, 10)
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_6cc1s")
 theme_override_styles/fill = SubResource("StyleBoxFlat_743nf")
-value = 100.0
+step = 0.0
 fill_mode = 1
 show_percentage = false
 
-[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1848907168]
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=96075093]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat3/SeatVisual" unique_id=2145380491]
+[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat3/SeatVisual" unique_id=702304778]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat3/SeatVisual/SeatBackGround" unique_id=554678335]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat3/SeatVisual/SeatBackGround" unique_id=212909549]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -306,11 +332,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat3/SeatVisual/SeatBackGround/MarginContainer" unique_id=985983823]
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat3/SeatVisual/SeatBackGround/MarginContainer" unique_id=994514862]
 layout_mode = 2
 expand_icon = true
 
-[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=686754813]
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1162163339]
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 4
@@ -318,10 +344,20 @@ theme_override_font_sizes/font_size = 12
 text = "Username"
 horizontal_alignment = 1
 
-[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=944001416]
+[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=706580484]
 one_shot = true
 
-[node name="Seat4" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=1340784702]
+[node name="Score" type="Label" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1877281887]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 12
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Seat4" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=719645918]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -331,35 +367,37 @@ grow_vertical = 2
 alignment = 1
 script = ExtResource("8_2rd6h")
 
-[node name="IsReady" type="Label" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1801421388]
+[node name="IsReady" type="Label" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=2042459575]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 10
 text = "Not Ready"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1711152357]
-custom_minimum_size = Vector2(0, 10)
+[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1273142253]
+custom_minimum_size = Vector2(50, 10)
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_6cc1s")
 theme_override_styles/fill = SubResource("StyleBoxFlat_743nf")
-value = 100.0
+step = 0.0
 fill_mode = 1
 show_percentage = false
 
-[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=76929080]
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=568518293]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat4/SeatVisual" unique_id=1436905020]
+[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat4/SeatVisual" unique_id=867737156]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat4/SeatVisual/SeatBackGround" unique_id=479013874]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat4/SeatVisual/SeatBackGround" unique_id=1711007143]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -367,11 +405,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat4/SeatVisual/SeatBackGround/MarginContainer" unique_id=1120352996]
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat4/SeatVisual/SeatBackGround/MarginContainer" unique_id=1659142841]
 layout_mode = 2
 expand_icon = true
 
-[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1030067513]
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=760040758]
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 4
@@ -379,8 +417,18 @@ theme_override_font_sizes/font_size = 12
 text = "Username"
 horizontal_alignment = 1
 
-[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=89062505]
+[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1704731765]
 one_shot = true
+
+[node name="Score" type="Label" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=445980332]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 12
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="OpponentHand2" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1267263257]
 layout_mode = 0
@@ -409,24 +457,37 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_5vvyt")
 script = ExtResource("8_4q8tf")
 
 [node name="RightArea" type="Control" parent="TopArea" unique_id=2095940113]
-layout_mode = 2
+layout_mode = 1
+anchor_left = 0.85
+anchor_right = 1.0
+anchor_bottom = 1.0
 
-[node name="TempReadyButton" type="Button" parent="TopArea/RightArea" unique_id=2005863213]
+[node name="VBoxContainer" type="VBoxContainer" parent="TopArea/RightArea" unique_id=32060418]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 2
+
+[node name="TempReadyButton" type="Button" parent="TopArea/RightArea/VBoxContainer" unique_id=2005863213]
 custom_minimum_size = Vector2(150, 50)
-layout_mode = 0
-offset_left = 372.0
-offset_top = -27.0
-offset_right = 526.0
-offset_bottom = 29.0
+layout_mode = 2
 text = "Ready"
 
-[node name="TempLeaveButton" type="Button" parent="TopArea/RightArea" unique_id=1687604281]
-layout_mode = 0
-offset_left = 408.0
-offset_top = 44.0
-offset_right = 492.0
-offset_bottom = 71.0
+[node name="TempLeaveButton" type="Button" parent="TopArea/RightArea/VBoxContainer" unique_id=1687604281]
+layout_mode = 2
 text = "Leave Room"
+
+[node name="TempGiveCardButton" type="Button" parent="TopArea/RightArea/VBoxContainer" unique_id=1896228628]
+layout_mode = 2
+text = "Give Card"
+
+[node name="TempCurrentPlayerLabel" type="Label" parent="TopArea/RightArea/VBoxContainer" unique_id=207774350]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+text = "Current player: "
 
 [node name="BottomArea" type="Control" parent="." unique_id=732581692]
 layout_mode = 1

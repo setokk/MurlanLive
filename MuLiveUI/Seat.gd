@@ -14,12 +14,14 @@ const SEAT_ICON: Texture2D = preload(
 @onready var seat_icon: Button = $SeatVisual/SeatBackGround/MarginContainer/SeatIcon
 @onready var username: Label = $Username
 @onready var is_ready_label: Label = $IsReady
+@onready var score: Label = $Score
 
 @onready var turn_timer: Timer = $TurnTimer
 @onready var turn_timer_bar: ProgressBar = $TurnTimerBar
 
 func _ready() -> void:
 	username.visible = false
+	score.visible = false
 	is_ready_label.visible = false
 	turn_timer_bar.visible = false
 	turn_timer_bar.min_value = 0.0
@@ -57,3 +59,7 @@ func set_ready() -> void:
 	
 func remove_ready_label() -> void:
 	is_ready_label.visible = false
+	
+func set_score(value) -> void:
+	score.visible = true
+	score.text = str(value)
