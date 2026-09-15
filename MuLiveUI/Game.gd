@@ -31,6 +31,8 @@ enum GameStateEnum {
 @onready var is_ready_button: Button = $TopArea/RightArea/VBoxContainer/TempReadyButton
 @onready var leave_room_button: Button = $TopArea/RightArea/VBoxContainer/TempLeaveButton
 @onready var current_player_label: Label = $TopArea/RightArea/VBoxContainer/TempCurrentPlayerLabel
+@onready var give_card_button: Button = $TopArea/RightArea/VBoxContainer/TempGiveCardButton
+
 @onready var seats: Array[Seat] = [
 	$TopArea/TableArea/TableLayout/Seat1,
 	$TopArea/TableArea/TableLayout/Seat2,
@@ -45,6 +47,7 @@ enum GameStateEnum {
 
 func _ready() -> void:
 	players = room.players
+	give_card_button.visible = false
 	
 	WebSocketClient.inform_player_join_room_resp.connect(_on_opponent_joined)
 	WebSocketClient.inform_game_start_resp.connect(_on_game_start)
@@ -62,7 +65,7 @@ func _ready() -> void:
 	WebSocketClient.ready_resp.connect(_on_ready_completed)
 	WebSocketClient.inform_player_ready_resp.connect(_on_opponent_ready)
 	WebSocketClient.inform_game_finish_resp.connect(_on_game_finish)
-	$TopArea/RightArea/VBoxContainer/TempGiveCardButton.pressed.connect(_on_give_card_requested)
+	give_card_button.pressed.connect(_on_give_card_requested)
 	WebSocketClient.give_card_resp.connect(_on_give_card_completed)
 	WebSocketClient.inform_give_card_resp.connect(_on_opponent_give_card)
 	WebSocketClient.send_message(GameStateReq.new())
@@ -70,13 +73,17 @@ func _ready() -> void:
 
 func _on_game_start(resp: InformGameStartResp) -> void:
 	print("Game started")
-	print(resp)
 	var game_state: Dictionary = resp.game_state
 	var game_state_status: int = int(game_state["state"])
 
 	if typeof(game_state) != TYPE_DICTIONARY:
 		print("Unexpected data: ", game_state)
 		return
+		
+	played_cards.clear_cards()
+	hand_placeholder.clear_hand()
+	for opponent in opponent_hands:
+		opponent.clear_hand()
 		
 	match game_state_status:
 		GameStateEnum.GIVING_CARDS:
@@ -89,13 +96,24 @@ func _on_game_start(resp: InformGameStartResp) -> void:
 				" exchanging cards")
 			if PlayerSession.username == previous_winner["username"]:
 				is_local_player_loser = false
-				$TopArea/RightArea/VBoxContainer/TempGiveCardButton.visible = true
+				give_card_button.visible = true
 			elif PlayerSession.username == previous_loser["username"]:
 				is_local_player_loser = true
-				$TopArea/RightArea/VBoxContainer/TempGiveCardButton.visible = true
+				give_card_button.visible = true
 				
+			var my_hand: Array[int] = []
+
+			for value in game_state["hand"].split("_"):
+				my_hand.append(int(value))
+				
+			$TopArea/TableArea.start_dealing(
+				my_hand,
+				game_state["numOfCardsPerPlayerId"],
+				players,
+				local_player_index
+			)
+			
 		GameStateEnum.PLAYING:
-			$TopArea/RightArea/VBoxContainer/TempGiveCardButton.visible = false
 			if int(game_state["totalGamesPlayed"]) < 1:
 				for player in players:
 					seats[find_player_seat_index(player["id"])].remove_ready_label()	
@@ -131,6 +149,8 @@ func _on_game_finish(resp: InformGameFinishResp) -> void:
 			var id: int = int(player_id)
 			var score: int = int(score_per_player_id[str(id)])
 			seats[find_player_seat_index(id)].set_score(score)
+			if resp.game_finish["finalWinner"]:
+				current_player_label.text= "Winner is: " + resp.game_finish["finalWinner"]
 	else:
 		print("error bruh: ", resp)
 
@@ -150,6 +170,8 @@ func _on_game_state(resp: GameStateResp) -> void:
 		GameStateEnum.GIVING_CARDS:
 			pass
 		GameStateEnum.PLAYING:
+			if str(game_state["currCardCombination"]).is_empty():
+				played_cards.clear_cards()
 			current_player = game_state["currTurnPlayer"]
 			current_player_label.text = "Current player: " + current_player["username"]
 			current_player_seat_index = find_player_seat_index(current_player["id"])
@@ -173,17 +195,9 @@ func _on_game_state(resp: GameStateResp) -> void:
 
 # Local user actions functions:
 func _on_play_requested() -> void:
-	var selected_cards: Array[Card] = hand_placeholder.selected_cards
-
-	if not hand_placeholder.is_selection_valid():
-		return
-
-	var combination_cards: Array[_Card] = []
-	for card in selected_cards:
-		combination_cards.append(card.value)
-
-	var combination := CardCombination.new(combination_cards)
-	WebSocketClient.send_message(PlayHandReq.new(combination))
+	var card_combination: CardCombination = hand_placeholder.get_selected_card_combination()
+	if card_combination:
+		WebSocketClient.send_message(PlayHandReq.new(card_combination))
 
 func _on_play_completed(resp: PlayHandResp) -> void:
 	if resp.response_status == 200:
@@ -225,18 +239,21 @@ func _on_leave_completed(resp: LeaveRoomResp) -> void:
 		
 func _on_give_card_requested() -> void:
 	var card_to_give: Card = hand_placeholder.get_card_to_give(is_local_player_loser)
+	print(card_to_give)
 	if not card_to_give:
 		return
-	if is_local_player_loser: 
-		WebSocketClient.send_message(GiveCardReq.new(card_to_give.value, previous_winner["id"]))
+	print(card_to_give.value)
+	if is_local_player_loser:
+		print("Sending card to: ", previous_winner) 
+		WebSocketClient.send_message(GiveCardReq.new(card_to_give.value, int(previous_winner["id"])))
 	else:
-		WebSocketClient.send_message(GiveCardReq.new(card_to_give.value, previous_loser["id"]))
+		print("Sending card to: ", previous_loser) 
+		WebSocketClient.send_message(GiveCardReq.new(card_to_give.value, int(previous_loser["id"])))
 		
 func _on_give_card_completed(resp: GiveCardResp) -> void:
 	if resp.response_status == 200:
-		var card_to_give: Card = hand_placeholder.selected_cards[0]
-		hand_placeholder.remove_cards([card_to_give])
-		
+		print("GiveCardResp: ", resp)
+		var card_to_give: Card = hand_placeholder.give_card()
 		var opponent_hand_index: int
 		if is_local_player_loser:
 			opponent_hand_index = find_player_seat_index(previous_winner["id"]) - 1
@@ -263,6 +280,8 @@ func _on_opponent_played_hand(resp: InformPlayHandResp) -> void:
 	if resp.response_status == 200:
 		var cards: Array[Card] = create_cards_from_combination(resp.card_combination)
 		played_cards.receive_cards(cards)
+		for i in range(cards.size()):
+			opponent_hands[current_player_seat_index-1].remove_card_from_hand()
 		seats[current_player_seat_index].stop_turn()
 		WebSocketClient.send_message(GameStateReq.new())
 	else:
@@ -318,7 +337,7 @@ func display_players() -> void:
 
 	# Fill the seats in order with local player starting at seats[0]
 	for i in range(min(players.size(), seats.size())):
-		var seat_index: int =  (i-local_player_index)%seats.size()
+		var seat_index: int =  posmod(i-local_player_index,seats.size())
 		seats[seat_index].set_player(players[i])
 		
 	for player in ready_players:
@@ -341,7 +360,7 @@ func create_cards_from_combination(
 func find_player_seat_index(id) -> int:
 	for i in range(seats.size()):
 		if players[i]["id"] == id:
-			return (i-local_player_index)%seats.size()
+			return posmod(i-local_player_index,seats.size())
 	return 0
 	
 	

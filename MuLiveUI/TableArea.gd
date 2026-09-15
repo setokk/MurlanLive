@@ -33,9 +33,7 @@ func _ready() -> void:
 	table_layout.size = original_layout_size
 
 	calculate_initial_layout()
-
 	setup_opponent_hands()
-	setup_deck()
 	setup_played_cards()
 
 	# From now on, only scale the whole composition
@@ -146,6 +144,7 @@ func start_dealing(
 	local_player_index: int
 ) -> void:
 
+	setup_deck()
 	var ordered_players: Array = []
 
 	for i in range(players.size()):

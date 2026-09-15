@@ -119,7 +119,6 @@ func layout_cards() -> void:
 		card.z_index = i
 
 func clear_cards() -> void:
-
 	for card in cards:
 		if is_instance_valid(card):
 			card.queue_free()

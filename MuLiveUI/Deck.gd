@@ -12,17 +12,10 @@ const CARD_HEIGHT_RATIO: float = 0.18
 # How tightly the cards are stacked
 const STACK_OFFSET: float = 0.1
 
-var deck_cards: Array[Area2D] = []
+var deck_cards: Array[Card] = []
 
-func create_deck(table_size: Vector2) -> void:
-	# Remove anything already in the deck.
-	for card in deck_cards:
-		if is_instance_valid(card):
-			card.queue_free()
-
-	deck_cards.clear()
-	
-
+func create_deck(table_size: Vector2) -> void:	
+	clear_deck()
 	# Create all 54 cards.
 	for i in range(CardEnum.VALUES.size()):
 
@@ -30,15 +23,12 @@ func create_deck(table_size: Vector2) -> void:
 		add_child(card)
 
 		card.set_face_down()
-
 		var target_height: float = table_size.y * CARD_HEIGHT_RATIO
-
 		var scale_factor: float = (
 			target_height / CARD_HEIGHT
 		)
 
 		card.scale = Vector2.ONE * scale_factor
-
 		deck_cards.append(card)
 
 		# Stack the cards.
@@ -55,5 +45,11 @@ func draw_card() -> Card:
 		return null
 		
 	var card: Card = deck_cards.pop_back()
-	
 	return card
+
+func clear_deck() -> void:
+	for card in deck_cards:
+		if is_instance_valid(card):
+			card.queue_free()
+
+	deck_cards.clear()

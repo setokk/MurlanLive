@@ -1,18 +1,16 @@
 extends Panel
-class_name OpponentHand
 
-const HIDDEN_CARD_SCENE: PackedScene = preload("res://scenes/HiddenCard.tscn")
+class_name OpponentHand
 
 const CARD_WIDTH: float = 730.0
 const CARD_HEIGHT: float = 1024.0
 
-const MIN_CARDS: int = 2
 const MAX_CARDS: int = 14
-
 const CARD_OVERLAP: float = 0.70
 const CARD_HEIGHT_RATIO: float = 0.15
 
 var card_size: Vector2 = Vector2.ZERO
+var cards: Array[Card] = []
 
 
 func setup(table_size: Vector2) -> void:
@@ -32,12 +30,12 @@ func setup(table_size: Vector2) -> void:
 		card_height
 	)
 
+	# Calculate placeholder width using the maximum hand size
 	var card_spacing: float = (
 		card_width
 		* (1.0 - CARD_OVERLAP)
 	)
 
-	# Calculate placeholder width using the maximum hand size
 	var hand_width: float = (
 		card_width
 		+ (MAX_CARDS - 1) * card_spacing
@@ -52,63 +50,87 @@ func setup(table_size: Vector2) -> void:
 	# Rotate around center
 	pivot_offset = size / 2.0
 
+	layout_cards()
 
-func add_card(card: Area2D) -> Vector2:
+
+func add_card_to_hand(card: Card) -> void:
+	cards.append(card)
+
+
+func remove_card_from_hand() -> void:
+	if cards.is_empty():
+		return
+	var card: Card = cards.pop_front()
+	if is_instance_valid(card):
+		card.queue_free()
+	layout_cards()
+
+
+func get_card_count() -> int:
+	return cards.size()
+
+
+func clear_hand() -> void:
+	for card in cards:
+		if is_instance_valid(card):
+			card.queue_free()
+
+	cards.clear()
+	layout_cards()
+
+
+func add_card(card: Card) -> void:
 	card.rotation_degrees = 0
-	
-	add_child(card)
+
+	if card.get_parent() != self:
+		add_child(card)
 
 	var scale_factor: float = (
-			card_size.y / CARD_HEIGHT
-		)
-		
+		card_size.y / CARD_HEIGHT
+	)
+
 	card.scale = Vector2.ONE * scale_factor
-	
+
+	add_card_to_hand(card)
+	layout_cards()
+
+
+func layout_cards() -> void:
+	if cards.is_empty():
+		return
+
 	var card_spacing: float = (
 		card_size.x
 		* (1.0 - CARD_OVERLAP)
 	)
 
-	var cards: Array[Node] = get_children().filter(
-		func(child): return child is Area2D
-	)
-
-	var card_count: int = cards.size()
-
-	var current_hand_width: float = (
+	var hand_width: float = (
 		card_size.x
-		+ (card_count - 1) * card_spacing
+		+ (cards.size() - 1) * card_spacing
 	)
 
-	# Center the current hand inside the placeholder.
 	var start_x: float = (
-		(size.x - current_hand_width) / 2.0
+		(size.x - hand_width) / 2.0
 	)
 
-	for i in range(card_count):
+	for i in range(cards.size()):
 
-		var hand_card: Area2D = cards[i]
+		var card: Card = cards[i]
 
-		hand_card.position = Vector2(
+		card.position = Vector2(
 			start_x
 			+ card_size.x / 2.0
 			+ i * card_spacing,
-
 			card_size.y / 2.0
 		)
 
-		hand_card.z_index = 20 - i
-		
-	return card.global_position
-	
+		card.z_index = 20 - i
+
+
 func get_next_card_position() -> Vector2:
-
 	var card_spacing: float = (
-		card_size.x * (1.0 - CARD_OVERLAP)
-	)
-
-	var cards: Array[Node] = get_children().filter(
-		func(child): return child is Area2D
+		card_size.x
+		* (1.0 - CARD_OVERLAP)
 	)
 
 	var card_count: int = cards.size() + 1
@@ -123,26 +145,32 @@ func get_next_card_position() -> Vector2:
 	)
 
 	var new_card_x: float = (
-		start_x + card_size.x / 2.0
+		start_x
+		+ card_size.x / 2.0
 	)
 
-	var new_card_y: float = card_size.y / 2.0
+	var new_card_y: float = (
+		card_size.y / 2.0
+	)
 
 	return Vector2(
 		new_card_x,
 		new_card_y
 	)
-	
-func get_next_card_global_position() -> Vector2:
 
-	var local_position: Vector2 = get_next_card_position()
+
+func get_next_card_global_position() -> Vector2:
+	var local_position: Vector2 = (
+		get_next_card_position()
+	)
 
 	return get_global_transform_with_canvas() * local_position
+
 
 func receive_card(
 	card: Card,
 	start_position: Vector2
-	) -> void:
+) -> void:
 
 	var target_position: Vector2 = (
 		get_next_card_global_position()
@@ -187,11 +215,6 @@ func receive_card(
 	)
 
 	tween.set_parallel(false)
-
 	await tween.finished
-
-	# Keep the current global position/rotation
-	# when changing parent.
 	card.reparent(self, true)
-
 	add_card(card)
