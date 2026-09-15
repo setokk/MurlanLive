@@ -21,7 +21,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-TestingAutomation="*uid://c0kg2mewrfvsi"
+TestingAutomation="*res://TestingAutomation.gd"
 SceneManager="*res://globals/SceneManager.gd"
 ProtocolConfigProvider="*res://globals/ProtocolConfigProvider.gd"
 PlayerSession="*res://globals/rest/PlayerSession.gd"

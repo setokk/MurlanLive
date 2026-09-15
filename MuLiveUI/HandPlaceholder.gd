@@ -302,6 +302,7 @@ func remove_cards(cards_to_clear: Array[Card]) -> void:
 func get_card_to_give(isLoser: bool) -> Card:
 	if selected_cards.size() != 1:
 		return null
+		
 	var card_to_give: Card = selected_cards[0]
 	if isLoser:
 		if not (card_to_give in find_highest_rank_cards()):
@@ -319,19 +320,14 @@ func give_card() -> Card:
 		return selected_cards[0]
 
 func find_highest_rank_cards() -> Array[Card]:
+	if cards.is_empty():
+		return []
+	
+	var max_rank: int = cards.map(func(c: Card): return c.value._rank.ordinal()).max()
+
 	var highest_rank_cards: Array[Card] = []
-	var highest_rank: _Rank
-	var strongest_card_comb: CardCombination = CardCombination.new([cards[0].value])
-	var current_card_comb: CardCombination
-	# Find highest rank card
-	for i in range(cards.size()-1):
-		current_card_comb = CardCombination.new([cards[i+1].value])
-		if current_card_comb.is_stronger_than(strongest_card_comb):
-			strongest_card_comb = current_card_comb
-	highest_rank = strongest_card_comb.cards[0].rank()
-	for card in cards:
-		if card.value.rank() == highest_rank:
-			highest_rank_cards.append(card)
+	highest_rank_cards.assign(cards.filter(func(c: Card): return c.value._rank.ordinal() == max_rank))
+	
 	return highest_rank_cards
 	
 func clear_hand() -> void:

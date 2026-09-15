@@ -48,7 +48,7 @@ public class GameState {
 
     @JsonIgnore private Player prevWinner;
     @JsonIgnore private Player prevLoser;
-    @JsonIgnore private Set<Player> givenCards = HashSet.newHashSet(0);
+    @JsonIgnore private Set<Player> givenCards;
     @JsonIgnore private PassCounter passCounter;
     @JsonIgnore private boolean isFirstMove;
     @JsonIgnore private List<Player> readyPlayers = new ArrayList<>();
@@ -62,6 +62,7 @@ public class GameState {
         this.players = new ArrayList<>();
         this.players.add(player);
         this.score = HashMap.newHashMap(GameConstants.MAX_PLAYERS);
+        this.givenCards = HashSet.newHashSet(0);
         this.onStartGame = onStartGame;
         this.onFinishGame = onFinishGame;
         this.onTurnTimeout = onTurnTimeout;
@@ -72,6 +73,7 @@ public class GameState {
                 .withState(State.WAITING)
                 .withPlayers(new ArrayList<>(previous.getPlayers()))
                 .withScore(HashMap.newHashMap(GameConstants.MAX_PLAYERS))
+                .withGivenCards(HashSet.newHashSet(0))
                 .withOnStartGame(previous.getOnStartGame())
                 .withOnFinishGame(previous.getOnFinishGame())
                 .withOnTurnTimeout(previous.getOnTurnTimeout())
@@ -177,8 +179,10 @@ public class GameState {
                 .findAny()
                 .orElseThrow(() -> new IllegalStateException("Receiving player not found"));
 
-        if (prevWinner.equals(player) && card.hasBiggerRank(Rank.TEN)) {
-            return false;
+        if (prevWinner.equals(player)) {
+            if (card.hasBiggerRank(Rank.TEN)) {
+                return false;
+            }
         } else if (prevLoser.equals(player)) {
             Rank highestRank = player.getHand().getCards()
                     .stream()

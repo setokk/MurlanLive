@@ -48,7 +48,7 @@ enum GameStateEnum {
 func _ready() -> void:
 	players = room.players
 	give_card_button.visible = false
-	
+
 	WebSocketClient.inform_player_join_room_resp.connect(_on_opponent_joined)
 	WebSocketClient.inform_game_start_resp.connect(_on_game_start)
 	WebSocketClient.game_state_resp.connect(_on_game_state)
@@ -256,9 +256,9 @@ func _on_give_card_completed(resp: GiveCardResp) -> void:
 		var card_to_give: Card = hand_placeholder.give_card()
 		var opponent_hand_index: int
 		if is_local_player_loser:
-			opponent_hand_index = find_player_seat_index(previous_winner["id"]) - 1
+			opponent_hand_index = find_player_seat_index(int(previous_winner["id"])) - 1
 		else:
-			opponent_hand_index = find_player_seat_index(previous_loser["id"]) - 1
+			opponent_hand_index = find_player_seat_index(int(previous_loser["id"])) - 1
 		
 		var starting_point: Vector2 = opponent_hands[opponent_hand_index].position
 		opponent_hands[opponent_hand_index].receive_card(card_to_give, starting_point)
@@ -314,7 +314,9 @@ func _on_opponent_leave(resp: InformPlayerLeaveRoomResp) -> void:
 func _on_opponent_give_card(resp: InformGiveCardResp) -> void:
 	if resp.response_status == 200:
 		var card: Card = CARD_SCENE.instantiate()
-		var opponent_hand_index = find_player_seat_index(resp.origin_player_id) -1
+		add_child(card)
+		
+		var opponent_hand_index = find_player_seat_index(resp.origin_player_id) - 1
 		var starting_point: Vector2 = opponent_hands[opponent_hand_index].position
 		if int(local_player["id"]) == int(resp.target_player_id):
 			card.value = resp.card

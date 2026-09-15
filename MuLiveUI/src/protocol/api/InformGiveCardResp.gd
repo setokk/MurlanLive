@@ -12,7 +12,7 @@ var card: _Card = null
 var have_both_players_given_cards: bool = false
 
 func num_of_fields() -> int:
-	return 4
+	return 5
 
 func _init(message_parts: PackedStringArray, _config: ProtocolConfig) -> void:
 	if not validate(message_parts):
@@ -22,5 +22,5 @@ func _init(message_parts: PackedStringArray, _config: ProtocolConfig) -> void:
 	origin_player_id = message_parts[start_index() + 1].to_int()
 	target_player_id = message_parts[start_index() + 2].to_int()
 	var card_part := message_parts[start_index() + 3]
-	card = CardEnum.new().from_ordinal(card_part.to_int()) if card_part != "" else null
+	card = CardEnum.new().from_ordinal(card_part.to_int()) if not card_part.is_empty() else null
 	have_both_players_given_cards = message_parts[start_index() + 4].to_lower() == "true"
