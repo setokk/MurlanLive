@@ -1,6 +1,6 @@
 package org.murlan.um.service.mapper;
 
-import org.murlan.um.api.dto.GameStateDto;
+import org.murlan.um.model.dto.GameStateDto;
 import org.murlan.um.core.logic.GameStateEnum;
 import org.murlan.um.model.GameStateEntity;
 import org.murlan.um.model.ScoreEntity;

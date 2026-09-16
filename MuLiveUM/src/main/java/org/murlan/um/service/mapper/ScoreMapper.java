@@ -1,7 +1,5 @@
 package org.murlan.um.service.mapper;
 
-import jakarta.validation.constraints.NotNull;
-import org.murlan.um.api.dto.PlayerDto;
 import org.murlan.um.model.GameStateEntity;
 import org.murlan.um.model.ScoreEntity;
 import org.murlan.um.model.pk.ScorePK;

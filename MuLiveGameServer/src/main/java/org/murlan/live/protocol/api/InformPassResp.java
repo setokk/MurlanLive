@@ -12,9 +12,10 @@ import org.murlan.live.protocol.config.ProtocolConfig;
 @Setter
 @Getter
 @AllArgsConstructor
-public class InformPassResp implements Resp {
+public final class InformPassResp implements Resp {
     private ResponseStatus responseStatus;
     private long playerId;
+    private boolean canCurrPlayerPlayAnyHand;
 
     @Override
     public String toMessage(ProtocolConfig config, ObjectMapper objectMapper) throws JsonProcessingException {
@@ -22,7 +23,8 @@ public class InformPassResp implements Resp {
                 config.getProtocol_delimiter(),
                 ServerEvent.INFORM_PASS.id(),
                 getResponseStatus().toString(),
-                String.valueOf(playerId)
+                String.valueOf(playerId),
+                String.valueOf(canCurrPlayerPlayAnyHand)
         );
     }
 }

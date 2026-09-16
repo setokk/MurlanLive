@@ -6,9 +6,9 @@ BEGIN
         WHERE table_name = 'room'
         AND constraint_name = 'fk_room_player'
     ) THEN
-ALTER TABLE ONLY room
-    ADD CONSTRAINT fk_room_player FOREIGN KEY (owner_player_id) REFERENCES player(id);
-END IF;
+        ALTER TABLE ONLY room
+            ADD CONSTRAINT fk_room_player FOREIGN KEY (owner_player_id) REFERENCES player(id);
+    END IF;
 END $$;
 
 -- Foreign key constraint fk_game_state_room
@@ -19,9 +19,9 @@ BEGIN
         WHERE table_name = 'game_state'
         AND constraint_name = 'fk_game_state_room'
     ) THEN
-ALTER TABLE ONLY game_state
-    ADD CONSTRAINT fk_game_state_room FOREIGN KEY (room_id) REFERENCES room(id);
-END IF;
+        ALTER TABLE ONLY game_state
+            ADD CONSTRAINT fk_game_state_room FOREIGN KEY (room_id) REFERENCES room(id);
+    END IF;
 END $$;
 
 -- Foreign key constraint fk_score_game_state
@@ -32,9 +32,9 @@ BEGIN
         WHERE table_name = 'score'
         AND constraint_name = 'fk_score_game_state'
     ) THEN
-ALTER TABLE ONLY score
-    ADD CONSTRAINT fk_score_game_state FOREIGN KEY (game_state_id) REFERENCES game_state(id);
-END IF;
+        ALTER TABLE ONLY score
+            ADD CONSTRAINT fk_score_game_state FOREIGN KEY (game_state_id) REFERENCES game_state(id);
+    END IF;
 END $$;
 
 -- Foreign key constraint fk_score_player
@@ -45,9 +45,9 @@ BEGIN
         WHERE table_name = 'score'
         AND constraint_name = 'fk_score_player'
     ) THEN
-ALTER TABLE ONLY score
-    ADD CONSTRAINT fk_score_player FOREIGN KEY (player_id) REFERENCES player(id);
-END IF;
+        ALTER TABLE ONLY score
+            ADD CONSTRAINT fk_score_player FOREIGN KEY (player_id) REFERENCES player(id);
+    END IF;
 END $$;
 
 -- Foreign key constraint fk_score_total_room
@@ -58,9 +58,9 @@ BEGIN
         WHERE table_name = 'score_total'
         AND constraint_name = 'fk_score_total_room'
     ) THEN
-ALTER TABLE ONLY score_total
-    ADD CONSTRAINT fk_score_total_room FOREIGN KEY (room_id) REFERENCES room(id);
-END IF;
+        ALTER TABLE ONLY score_total
+            ADD CONSTRAINT fk_score_total_room FOREIGN KEY (room_id) REFERENCES room(id);
+    END IF;
 END $$;
 
 -- Foreign key constraint fk_score_total_player
@@ -71,7 +71,35 @@ BEGIN
         WHERE table_name = 'score_total'
         AND constraint_name = 'fk_score_total_player'
     ) THEN
-ALTER TABLE ONLY score_total
-    ADD CONSTRAINT fk_score_total_player FOREIGN KEY (player_id) REFERENCES player(id);
-END IF;
+        ALTER TABLE ONLY score_total
+            ADD CONSTRAINT fk_score_total_player FOREIGN KEY (player_id) REFERENCES player(id);
+    END IF;
+END $$;
+
+-- Foreign key constraint fk_hand_layout_configuration_player
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE table_name = 'hand_layout_configuration'
+        AND constraint_name = 'fk_hand_layout_configuration_player'
+    ) THEN
+        ALTER TABLE ONLY hand_layout_configuration
+            ADD CONSTRAINT fk_hand_layout_configuration_player FOREIGN KEY (player_id) REFERENCES player(id);
+    END IF;
+END $$;
+
+-- Unique constraint uq_hand_layout_configuration_player
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM information_schema.table_constraints
+        WHERE table_name = 'hand_layout_configuration'
+          AND constraint_name = 'uq_hand_layout_configuration_player'
+    ) THEN
+        ALTER TABLE ONLY hand_layout_configuration
+            ADD CONSTRAINT uq_hand_layout_configuration_player
+            UNIQUE (player_id);
+    END IF;
 END $$;

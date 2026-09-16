@@ -16,5 +16,14 @@ public interface RoomRepository extends JpaRepository<RoomEntity, String> {
         join r.totalScores ts
         where ts.id.playerId = :playerId
     """)
-    List<RoomEntity> findRoomsByPlayerId(@Param("playerId") Long playerId, Pageable pageable);
+    List<RoomEntity> findAllRoomsByPlayerId(@Param("playerId") Long playerId, Pageable pageable);
+
+    @Query(
+    """
+        select distinct r
+        from RoomEntity r
+        join r.totalScores ts
+        where r.isPublic=true and ts.id.playerId = :playerId
+    """)
+    List<RoomEntity> findPublicRoomsByPlayerId(@Param("playerId") Long playerId, Pageable pageable);
 }

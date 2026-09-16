@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.murlan.live.game.GameConstants;
 import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
@@ -29,19 +31,27 @@ import java.util.stream.Collectors;
 @Builder(setterPrefix = "with")
 @AllArgsConstructor
 public class GameState {
+    private static final Logger log = LogManager.getLogger(GameState.class);
+
     private State state;
     private List<Player> players;
     private Map<Player, Short> score;
 
+    @JsonIgnore private final long turnDurationInSeconds = GameConstants.TURN_DURATION_SECONDS;
     @JsonIgnore private Player currTurnPlayer;
     @JsonIgnore private boolean shouldCurrTurnPlayerUseThreeOfSpades;
     @JsonIgnore private CardCombination currCardCombination;
+
     @JsonIgnore private Consumer<GameState> onStartGame;
     @JsonIgnore private Runnable onFinishGame;
     @JsonIgnore private Consumer<GameState> onTurnTimeout;
+
     @JsonIgnore private Player prevWinner;
     @JsonIgnore private Player prevLoser;
-    @JsonIgnore private Set<Player> givenCards = HashSet.newHashSet(0);
+    @JsonIgnore private Set<Player> givenCards;
+    @JsonIgnore private PassCounter passCounter;
+    @JsonIgnore private boolean isFirstMove;
+    @JsonIgnore private List<Player> readyPlayers = new ArrayList<>();
 
     /* Turn timer */
     @JsonIgnore private ScheduledExecutorService scheduler;
@@ -51,7 +61,8 @@ public class GameState {
         this.state = state;
         this.players = new ArrayList<>();
         this.players.add(player);
-        this.score = new HashMap<>();
+        this.score = HashMap.newHashMap(GameConstants.MAX_PLAYERS);
+        this.givenCards = HashSet.newHashSet(0);
         this.onStartGame = onStartGame;
         this.onFinishGame = onFinishGame;
         this.onTurnTimeout = onTurnTimeout;
@@ -62,11 +73,13 @@ public class GameState {
                 .withState(State.WAITING)
                 .withPlayers(new ArrayList<>(previous.getPlayers()))
                 .withScore(HashMap.newHashMap(GameConstants.MAX_PLAYERS))
+                .withGivenCards(HashSet.newHashSet(0))
                 .withOnStartGame(previous.getOnStartGame())
                 .withOnFinishGame(previous.getOnFinishGame())
                 .withOnTurnTimeout(previous.getOnTurnTimeout())
                 .withPrevWinner(winner)
                 .withPrevLoser(loser)
+                .withReadyPlayers(previous.getReadyPlayers())
                 .build();
     }
 
@@ -75,46 +88,57 @@ public class GameState {
         return prevLoser != null && prevWinner != null;
     }
 
-    public boolean addPlayer(Player player) {
+    public boolean addPlayer(Player player, Runnable onSuccess) {
         if (players.size() == GameConstants.MAX_PLAYERS) {
             return false;
         }
+
         this.players.add(player);
-        if (players.size() == GameConstants.MAX_PLAYERS) {
-            startGame();
-        }
+        onSuccess.run();
+
         return true;
     }
 
 
     public boolean playHand(Player player, CardCombination cardCombination) {
         if (this.state != State.PLAYING) {
+            log.info("this.state != State.PLAYING, {}", this.state.name());
             return false;
         }
         if (isNotPlayerTurn(player)) {
+            log.info("isNotPlayerTurn {}", this.currTurnPlayer);
             return false;
         }
         if (!this.currTurnPlayer.getHand().contains(cardCombination)) {
+            log.info("!this.currTurnPlayer.getHand().contains(cardCombination)");
             return false;
         }
         if (!MovePipeline.validate(cardCombination)) {
+            log.info("Move is invalid");
             return false;
         }
 
-        boolean isFirstMove = this.currCardCombination == GameConstants.EMPTY_CARD_COMBINATION;
-        if (isFirstMove && shouldCurrTurnPlayerUseThreeOfSpades && !cardCombination.getCards().contains(Card.THREE_OF_SPADES)) {
+        if (this.isFirstMove && shouldCurrTurnPlayerUseThreeOfSpades && !cardCombination.getCards().contains(Card.THREE_OF_SPADES)) {
+            log.info("this.isFirstMove && shouldCurrTurnPlayerUseThreeOfSpades && !cardCombination.getCards().contains(Card.THREE_OF_SPADES)");
             return false;
         }
 
-        if (!isFirstMove && (this.currCardCombination.isEqualStrength(cardCombination) || this.currCardCombination.isStrongerThan(cardCombination))) {
+        if (!this.isFirstMove && (this.currCardCombination.isEqualStrength(cardCombination) || this.currCardCombination.isStrongerThan(cardCombination))) {
+            log.info("!this.isFirstMove && (this.currCardCombination.isEqualStrength(cardCombination) || this.currCardCombination.isStrongerThan(cardCombination))");
             return false;
         }
 
         this.currTurnPlayer.getHand().removeCards(cardCombination);
         this.currCardCombination = cardCombination;
+
+        this.passCounter.reset();
         if (this.currTurnPlayer.getHand().isEmpty()) {
             this.score.put(this.currTurnPlayer, (short) (GameConstants.MAX_PLAYERS - this.score.size() - 1));
+            this.passCounter.resetAfterEmptyHand();
         }
+
+        this.isFirstMove = false;
+
         nextTurn();
 
         return true;
@@ -124,9 +148,22 @@ public class GameState {
         if (this.state != State.PLAYING) {
             return false;
         }
+
         if (isNotPlayerTurn(player)) {
             return false;
         }
+
+        if (this.currCardCombination == GameConstants.EMPTY_CARD_COMBINATION) {
+            // a player cannot pass when it is their turn AND they can play whatever they want
+            return false;
+        }
+
+        this.passCounter.increment();
+        if (this.passCounter.getCounter() == this.getPlayers().size() - this.score.size() - 1) {
+            this.currCardCombination = GameConstants.EMPTY_CARD_COMBINATION;
+            this.passCounter.reset();
+        }
+
         nextTurn();
 
         return true;
@@ -148,8 +185,10 @@ public class GameState {
                 .findAny()
                 .orElseThrow(() -> new IllegalStateException("Receiving player not found"));
 
-        if (prevWinner.equals(player) && card.hasBiggerRank(Rank.TEN)) {
-            return false;
+        if (prevWinner.equals(player)) {
+            if (card.hasBiggerRank(Rank.TEN)) {
+                return false;
+            }
         } else if (prevLoser.equals(player)) {
             Rank highestRank = player.getHand().getCards()
                     .stream()
@@ -175,13 +214,27 @@ public class GameState {
         return true;
     }
 
+    public boolean ready(Player player) {
+        if (this.state != State.WAITING) {
+            return false;
+        }
+
+        if (this.readyPlayers.contains(player)) {
+            return false;
+        }
+
+        this.readyPlayers.add(player);
+
+        return true;
+    }
+
     public void handlePlayerNotInRoom(Player player, boolean hasLostConnection) {
         Optional<Player> optionalPlayer = this.players.stream().filter(player::equals).findAny();
         if (optionalPlayer.isEmpty()) {
             return;
         }
 
-        if (state == State.PLAYING) {
+        if (this.state == State.PLAYING) {
             short scorePenalty = hasLostConnection
                     ? GameConstants.SCORE_PENALTY_LOST_CONNECTION
                     : GameConstants.SCORE_PENALTY_LEAVE_ROOM;
@@ -194,13 +247,12 @@ public class GameState {
                 this.score.put(remainingPlayer, scoreRemainingPlayers);
             }
             this.score.put(optionalPlayer.get(), scorePenalty);
+        } else if (this.state == State.WAITING) {
+            this.readyPlayers.remove(player);
         }
     }
 
-    public void startGame() {
-        if (!State.WAITING.equals(this.state) && !State.GIVING_CARDS.equals(this.state)) {
-            return;
-        }
+    public synchronized void startGame() {
         onStartGame.accept(this);
     }
 
@@ -222,6 +274,7 @@ public class GameState {
             nextTurnIndex = (nextTurnIndex + 1) % players.size();
             this.currTurnPlayer = players.get(nextTurnIndex);
         }
+
         if (this.score.size() == GameConstants.MAX_PLAYERS - 1) {
             this.score.put(this.currTurnPlayer, (short) 0);
             finishGame();
@@ -230,6 +283,7 @@ public class GameState {
         }
     }
 
+    @JsonIgnore
     private boolean isNotPlayerTurn(Player player) {
         return !player.equals(this.currTurnPlayer);
     }
@@ -245,6 +299,7 @@ public class GameState {
         return isFromPrevious() && getPrevLoser().getHand().contains(new CardCombination(Card.BLACK_JOKER, Card.RED_JOKER));
     }
 
+    @JsonIgnore
     public boolean haveBothPlayersGivenCards() {
         return getGivenCards().size() == 2;
     }
@@ -266,9 +321,15 @@ public class GameState {
         }
     }
 
+    @JsonIgnore
     public Map<Long, Short> getNumOfCardsPerPlayerId() {
         return players.stream()
                 .collect(Collectors.toMap(Player::getId, p -> (short) p.getHand().size()));
+    }
+
+    @JsonIgnore
+    public boolean shouldGameStart() {
+        return this.state == State.WAITING && this.readyPlayers.size() == GameConstants.MAX_PLAYERS;
     }
 
     public enum State {

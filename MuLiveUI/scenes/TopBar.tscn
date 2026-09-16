@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://dlcax4o11ecqq"]
 
-[ext_resource type="Script" uid="uid://de03nty16bk8c" path="res://TopBar.gd" id="1_7ilfs"]
+[ext_resource type="Script" uid="uid://cflxw0owgud1i" path="res://TopBar.gd" id="1_7ilfs"]
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_i2wps"]
-[ext_resource type="Script" uid="uid://i4bk2cet6g" path="res://LoginRedirection.gd" id="1_nf15x"]
+[ext_resource type="Script" uid="uid://ckj8ax6i6654n" path="res://LoginRedirection.gd" id="1_nf15x"]
 [ext_resource type="Texture2D" uid="uid://cwphjklugjlik" path="res://assets/images/Logo2.png" id="4_i2wps"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cm0pq"]

@@ -21,8 +21,10 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+TestingAutomation="*res://TestingAutomation.gd"
 SceneManager="*res://globals/SceneManager.gd"
 ProtocolConfigProvider="*res://globals/ProtocolConfigProvider.gd"
+PlayerSession="*res://globals/rest/PlayerSession.gd"
 CardTextureLoader="*res://globals/CardTextureLoader.gd"
 PlayerRESTClient="*res://globals/rest/PlayerRESTClient.gd"
 RoomRESTClient="*res://globals/rest/RoomRESTClient.gd"
