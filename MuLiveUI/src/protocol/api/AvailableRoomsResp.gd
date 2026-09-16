@@ -2,16 +2,19 @@ class_name AvailableRoomsResp
 extends Resp
 
 ## GDScript port of org.murlan.live.protocol.api.AvailableRoomsResp.
+## Server field is a List<RoomDto> serialized via Jackson; ported here as a
+## plain Array of Dictionaries (parsed JSON) rather than a dedicated RoomDto
+## class -- say the word if you'd like typed RoomDto/Player classes ported.
 
-var available_rooms_json: String
+var available_rooms: Array = []
 
-func _init(response_status: ResponseStatus.Value, available_rooms_json: String) -> void:
-	self.response_status = response_status
-	self.available_rooms_json = available_rooms_json
+func num_of_fields() -> int:
+	return 2
 
-func to_message(config: ProtocolConfig) -> String:
-	return [
-		ClientEvent.id(ClientEvent.Value.AVAILABLE_ROOMS),
-		ResponseStatus.to_message(response_status),
-		available_rooms_json,
-	].join(config.protocol_delimiter)
+func _init(message_parts: PackedStringArray, _config: ProtocolConfig) -> void:
+	if not validate(message_parts):
+		push_error("AvailableRoomsResp: invalid message %s" % [message_parts])
+		return
+	response_status = message_parts[start_index()].to_int()
+	var parsed: Variant = JSON.parse_string(message_parts[start_index() + 1])
+	available_rooms = parsed if parsed is Array else []

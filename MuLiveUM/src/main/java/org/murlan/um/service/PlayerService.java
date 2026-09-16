@@ -2,10 +2,10 @@ package org.murlan.um.service;
 
 import org.murlan.um.error.BusinessLogicException;
 import org.murlan.um.model.PlayerEntity;
-import org.murlan.um.api.dto.PlayerDto;
+import org.murlan.um.model.dto.PlayerDto;
 import org.murlan.um.repository.PlayerRepository;
-import org.murlan.um.service.param.player.LoginPlayerParam;
-import org.murlan.um.service.param.player.RegisterPlayerParam;
+import org.murlan.um.service.param.LoginPlayerParam;
+import org.murlan.um.service.param.RegisterPlayerParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;

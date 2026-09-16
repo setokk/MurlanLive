@@ -23,7 +23,12 @@ func _on_login_pressed() -> void:
 func _on_login_completed(response_status: int, jwt: String):
 	if response_status == 200:
 		print("Logged in!")
+		PlayerSession.username = username_input.text
+		PlayerSession.jwt = jwt
+		
 		WebSocketClient.connect_to_ws(jwt)
+		await WebSocketClient.connection_established
+		
 		SceneManager.show_lobby()
 	else:
 		print("Credentials not found/Credentials unmatch")
@@ -41,7 +46,11 @@ func _on_signup_pressed() -> void:
 func _on_signup_completed(response_status: int, jwt: String):
 	if response_status == 200:
 		print("Registered!")
+		PlayerSession.username = username_input.text
+		PlayerSession.jwt = jwt
 		WebSocketClient.connect_to_ws(jwt)
+		await WebSocketClient.connection_established
+		
 		SceneManager.show_lobby()
 	else:
 		print("Register Failed")

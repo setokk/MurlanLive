@@ -21,11 +21,11 @@ public class PlayerSession {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PlayerSession that = (PlayerSession) o;
-        return session.getId().equals(that.session.getId());
+        return this.player.equals(that.getPlayer());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(session.getId());
+        return Objects.hashCode(this.player.hashCode());
     }
 }

@@ -2,7 +2,6 @@ extends Control
 
 class_name RoomItem
 
-
 @onready var join_button: Button = $Panel/Panel/Panel/JoinButton
 
 @onready var seats: Array[Control] = [
@@ -12,38 +11,24 @@ class_name RoomItem
 	$Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer4/PanelContainer/Seat
 ]
 
-
 const USER_ICON: Texture2D = preload("res://assets/images/user-icon.png")
 const EMPTY_SEAT_ICON: Texture2D = preload("res://assets/images/seat-icon-greyscale-no-bg.png")
 
-
-var usernames: Array[String] = [
-	"Alex",
-	"Maria",
-	"John",
-	"Bob",
-	"Nick",
-	"Anna",
-	"Chris",
-	"George"
-]
-
+var room : Dictionary
 
 func _ready() -> void:
-	randomize_room()
+	join_button.pressed.connect(_on_join_requested)
+	WebSocketClient.join_room_resp.connect(_on_join_completed)
+	prepare_room_item()
 
-
-func randomize_room() -> void:
-
-	# At least one player must be present.
-	var player_count: int = randi_range(1, 4)
-
+func prepare_room_item() -> void:
+	var room_id: String = room.id
+	var players: Array = room.players
+	
+	var player_count: int = players.size()
 	var occupied_seats: Array[int] = []
-
-	# First seat is always occupied.
 	occupied_seats.append(0)
 
-	# Randomly choose the remaining occupied seats.
 	var seat_index: int = 1
 	while seat_index < player_count:
 		if not occupied_seats.has(seat_index):
@@ -52,13 +37,13 @@ func randomize_room() -> void:
 		
 	# Update every seat.
 	for i in range(seats.size()):
-
 		var is_occupied: bool = occupied_seats.has(i)
 
 		update_seat(
 			seats[i],
 			is_occupied,
-			i
+			i,
+			players
 		)
 	
 	update_join_button()
@@ -67,9 +52,9 @@ func randomize_room() -> void:
 func update_seat(
 	seat: Control,
 	is_occupied: bool,
-	seat_index: int
+	seat_index: int,
+	players: Array
 ) -> void:
-
 	var username_label: Label = (
 		seat.get_node("UsernameLabel")
 	)
@@ -78,18 +63,15 @@ func update_seat(
 		seat.get_node("SeatOrUserIcon")
 	)
 
-	if is_occupied:
-
+	if is_occupied and !players.is_empty():
 		icon.texture_normal = USER_ICON
 
 		username_label.text = (
-			usernames[randi_range(0, usernames.size() - 1)]
+			players[seat_index].username
 		)
 
 		username_label.visible = true
-
 	else:
-
 		icon.texture_normal = EMPTY_SEAT_ICON
 		icon.modulate = Color()
 		username_label.text = ""
@@ -97,7 +79,6 @@ func update_seat(
 
 
 func get_player_count() -> int:
-
 	var count: int = 0
 
 	for seat in seats:
@@ -113,11 +94,17 @@ func get_player_count() -> int:
 
 
 func is_full() -> bool:
-
 	return get_player_count() >= seats.size()
 
-
-
 func update_join_button() -> void:
-
 	join_button.disabled = is_full()
+	
+func _on_join_requested() -> void:
+	WebSocketClient.send_message(JoinRoomReq.new(room.id))
+	
+func _on_join_completed(resp : JoinRoomResp) -> void:
+	if resp.response_status == 200:
+		SceneManager.show_game(room)
+		print("Joined successfully")
+	else:
+		print("Cannot join")

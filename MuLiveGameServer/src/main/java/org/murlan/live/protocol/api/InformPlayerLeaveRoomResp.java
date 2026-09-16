@@ -12,7 +12,7 @@ import org.murlan.live.protocol.config.ProtocolConfig;
 @Setter
 @Getter
 @AllArgsConstructor
-public class InformPlayerLeaveRoomResp implements Resp {
+public final class InformPlayerLeaveRoomResp implements Resp {
     private ResponseStatus responseStatus;
     private long playerId;
 

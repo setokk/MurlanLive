@@ -1,7 +1,7 @@
-package org.murlan.um.service.param.room;
+package org.murlan.um.service.param;
 
-import org.murlan.um.api.dto.PlayerDto;
-import org.murlan.um.api.dto.GameStateDto;
+import org.murlan.um.model.dto.PlayerDto;
+import org.murlan.um.model.dto.GameStateDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

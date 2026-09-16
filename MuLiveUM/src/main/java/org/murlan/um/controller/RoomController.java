@@ -1,8 +1,8 @@
 package org.murlan.um.controller;
 
 import jakarta.validation.Valid;
-import org.murlan.um.api.dto.RoomDetailsDto;
-import org.murlan.um.api.dto.RoomDto;
+import org.murlan.um.model.dto.RoomDetailsDto;
+import org.murlan.um.model.dto.RoomDto;
 import org.murlan.um.api.request.CreateRoomRequest;
 import org.murlan.um.error.BusinessLogicException;
 import org.murlan.um.service.RoomService;

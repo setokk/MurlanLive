@@ -7,6 +7,8 @@ signal pass_requested
 @onready var pass_button: Button = $PassButton
 
 func _ready() -> void:
+	play_hand_button.disabled = true
+	pass_button.disabled = true
 	play_hand_button.pressed.connect(_on_play_pressed)
 	pass_button.pressed.connect(_on_pass_pressed)
 

@@ -1,13 +1,13 @@
 package org.murlan.um.service.mapper;
 
-import org.murlan.um.api.dto.PlayerDto;
-import org.murlan.um.api.dto.RoomDetailsDto;
-import org.murlan.um.api.dto.RoomDto;
+import org.murlan.um.model.dto.PlayerDto;
+import org.murlan.um.model.dto.RoomDetailsDto;
+import org.murlan.um.model.dto.RoomDto;
 import org.murlan.um.api.request.CreateRoomRequest;
 import org.murlan.um.model.GameStateEntity;
 import org.murlan.um.model.PlayerEntity;
 import org.murlan.um.model.RoomEntity;
-import org.murlan.um.service.param.room.CreateRoomParam;
+import org.murlan.um.service.param.CreateRoomParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +42,7 @@ public final class RoomMapper {
                 request.getTotalScoreToWin(),
                 request.getGameStates(),
                 totalScores,
-                request.getNumPlayers(),
+                (short) totalScores.size(),
                 request.getOwner()
         );
     }

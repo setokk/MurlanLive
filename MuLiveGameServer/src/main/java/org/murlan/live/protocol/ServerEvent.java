@@ -16,7 +16,8 @@ public enum ServerEvent {
     INFORM_GAME_FINISH(),
     INFORM_PLAYER_JOIN_ROOM(),
     INFORM_PLAYER_LEAVE_ROOM(),
-    INFORM_PLAYER_LOST_CONNECTION();
+    INFORM_PLAYER_LOST_CONNECTION(),
+    INFORM_PLAYER_READY();
 
     public String id() {
         return "S" + ordinal();

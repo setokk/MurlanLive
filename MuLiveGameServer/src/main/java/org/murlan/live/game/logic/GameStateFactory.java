@@ -42,7 +42,13 @@ public class GameStateFactory {
         Consumer<GameState> onStartGame = (gameState) -> {
             synchronized (room) {
                 boolean loserContainsBothJokers = gameState.prevLoserContainsBothJokers();
-                gameState.setState(loserContainsBothJokers ? GameState.State.GIVING_CARDS : GameState.State.PLAYING);
+
+                if (room.getTotalFinishedGames() == 0) {
+                    gameState.setState(GameState.State.PLAYING);
+                } else {
+                    gameState.setState(loserContainsBothJokers ? GameState.State.PLAYING : GameState.State.GIVING_CARDS);
+                }
+
                 gameState.setCurrCardCombination(GameConstants.EMPTY_CARD_COMBINATION);
                 gameState.setScheduler(scheduler);
 
@@ -56,9 +62,12 @@ public class GameStateFactory {
                     gameState.setCurrTurnPlayer(gameState.findPlayerWithCardCombination(new CardCombination(Card.THREE_OF_SPADES)));
                     gameState.setShouldCurrTurnPlayerUseThreeOfSpades(true);
                 } else {
-                    gameState.setCurrTurnPlayer(gameState.prevLoserContainsBothJokers() ? gameState.getPrevWinner() : gameState.getPrevLoser());
+                    gameState.setCurrTurnPlayer(loserContainsBothJokers ? gameState.getPrevWinner() : gameState.getPrevLoser());
                     gameState.setShouldCurrTurnPlayerUseThreeOfSpades(false);
                 }
+
+                gameState.setPassCounter(new PassCounter(0));
+                gameState.setFirstMove(true);
 
                 GameStateDto gameStateDto = GameStateDto.from(gameState, room, config);
                 try {
@@ -89,17 +98,9 @@ public class GameStateFactory {
                         .map(Map.Entry::getKey)
                         .findAny();
 
-                if (optionalFinalWinner.isPresent()) {
-                    try {
-                        roomRESTClient.createRoom(room);
-                    } catch (IOException | InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                } else {
-                    room.startNewGameFromPreviousGame(winner, loser);
-                }
-
                 try {
+                    boolean isFinalWinner = optionalFinalWinner.isPresent();
+
                     GameFinishDto gameFinishDto = GameFinishDto.builder()
                             .winnerPlayerId(winner.getId())
                             .loserPlayerId(loser.getId())
@@ -109,8 +110,19 @@ public class GameStateFactory {
                                             Map.Entry::getValue)
                                     )
                             )
+                            .finalWinner(isFinalWinner ? optionalFinalWinner.get() : null)
                             .build();
                     endpointHelper.informPlayers(new InformGameFinishResp(ResponseStatus.OK, gameFinishDto), null, roomHandler.getPlayersInRoom(room.getId()));
+
+                    if (isFinalWinner) {
+                        try {
+                            roomRESTClient.createRoom(room);
+                        } catch (IOException | InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    } else {
+                        room.startNewGameFromPreviousGame(winner, loser);
+                    }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -123,7 +135,13 @@ public class GameStateFactory {
                     try {
                         Player currTurnPlayer = gameState.getCurrTurnPlayer();
                         gameState.pass(currTurnPlayer);
-                        endpointHelper.informPlayers(new InformPassResp(ResponseStatus.OK, currTurnPlayer.getId()), null, roomHandler.getPlayersInRoom(room.getId()));
+
+                        boolean canCurrPlayerPlayAnyHand = gameState.getPassCounter().getCounter() == 0;
+                        endpointHelper.informPlayers(new InformPassResp(
+                                ResponseStatus.OK,
+                                currTurnPlayer.getId(),
+                                canCurrPlayerPlayAnyHand
+                        ), null, roomHandler.getPlayersInRoom(room.getId()));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

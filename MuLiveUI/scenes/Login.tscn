@@ -3,9 +3,9 @@
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_jbclg"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_xpxjw"]
 [ext_resource type="Theme" uid="uid://bqn3ljfdspx6i" path="res://themes/LoginTheme.tres" id="3_na214"]
-[ext_resource type="Script" uid="uid://dugpo3hevhr53" path="res://LoginSignupInfo.gd" id="4_7hd5n"]
-[ext_resource type="Script" uid="uid://cuww2yf6w3bpx" path="res://LoginSignupButtons.gd" id="5_ft2vs"]
-[ext_resource type="Script" uid="uid://cw77pls2wgca7" path="res://MessageContainer.gd" id="6_egi27"]
+[ext_resource type="Script" uid="uid://bdxu5q2kf6fai" path="res://LoginSignupInfo.gd" id="4_7hd5n"]
+[ext_resource type="Script" uid="uid://cv8rpnt0rcvwf" path="res://LoginSignupButtons.gd" id="5_ft2vs"]
+[ext_resource type="Script" uid="uid://beuyhyaeynanw" path="res://MessageContainer.gd" id="6_egi27"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pgobs"]
 bg_color = Color(0.8980392, 0.27058825, 0.20784314, 1)
@@ -164,7 +164,7 @@ theme_override_constants/margin_top = 40
 
 [node name="SignupContainer" type="HBoxContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons" unique_id=1041393184]
 layout_mode = 2
-alignment = 2
+alignment = 1
 
 [node name="Label" type="Label" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons/SignupContainer" unique_id=213834597]
 layout_mode = 2

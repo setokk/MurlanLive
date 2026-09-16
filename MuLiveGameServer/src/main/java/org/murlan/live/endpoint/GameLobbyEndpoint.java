@@ -27,6 +27,7 @@ import org.murlan.live.protocol.api.InformPlayHandResp;
 import org.murlan.live.protocol.api.InformPlayerJoinRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLeaveRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLostConnectionResp;
+import org.murlan.live.protocol.api.InformPlayerReadyResp;
 import org.murlan.live.protocol.api.JoinRoomReq;
 import org.murlan.live.protocol.api.JoinRoomResp;
 import org.murlan.live.protocol.api.LeaveRoomReq;
@@ -35,6 +36,8 @@ import org.murlan.live.protocol.api.PassReq;
 import org.murlan.live.protocol.api.PassResp;
 import org.murlan.live.protocol.api.PlayHandReq;
 import org.murlan.live.protocol.api.PlayHandResp;
+import org.murlan.live.protocol.api.ReadyReq;
+import org.murlan.live.protocol.api.ReadyResp;
 import org.murlan.live.protocol.api.Req;
 import org.murlan.live.protocol.api.Resp;
 import org.murlan.live.protocol.api.error.InvalidDataException;
@@ -56,6 +59,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Consumer;
 
 @ServerEndpoint(value = "/game-lobby")
 public class GameLobbyEndpoint {
@@ -75,6 +79,14 @@ public class GameLobbyEndpoint {
     private static final PlayerRESTClient playerRESTClient = new PlayerRESTClient(config);
     private static final RoomRESTClient roomRESTClient = new RoomRESTClient(config, objectMapper);
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+
+    private static final Consumer<Room> onPlayerLeaveOrDisconnect = room -> {
+        try {
+            roomRESTClient.createRoom(room);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    };
 
     static {
         // Save rooms if any shutdown happens to the game server, no matter the state they are in.
@@ -99,18 +111,21 @@ public class GameLobbyEndpoint {
             endpointHelper.closeWithErrorMessage(session, MuliveCloseReason.FORBIDDEN);
             return;
         }
+
         Player player = JwtUtils.decodeJWT(jwt);
         if (player.isInvalid()) {
             endpointHelper.closeWithErrorMessage(session, MuliveCloseReason.INVALID_JWT);
             return;
         }
-        if (roomHandler.jwtSessionExists(jwt)) {
+
+        if (roomHandler.isPlayerSessionCurrentlyActive(player)) {
             endpointHelper.closeWithErrorMessage(session, MuliveCloseReason.JWT_SESSION_ALREADY_EXISTS);
             return;
         }
+
         roomHandler.addSession(new PlayerSession(session, player));
 
-        log.info("Connection with sessionId: {} established!", session.getId());
+        log.info("Connection with sessionId: {} established! Player.id = {}, Player.username = {}", session.getId(), player.getId(), player.getUsername());
     }
 
     @OnMessage
@@ -133,28 +148,42 @@ public class GameLobbyEndpoint {
 
         PlayerSession playerSession = optionalPlayerSession.get();
         Player player = playerSession.getPlayer();
+
         Room room = roomHandler.getPlayerRoom(playerSession);
+        boolean isRoomPresent = room != null;
+
+        log.info(
+                "[IN] Processing valid event...\n-> event={}\n\t- playerId={}\n\t- payload={}\n\t- sessionId={}\n",
+                req.getClass().getSimpleName(),
+                player.getId(),
+                message,
+                playerSession.getSession().getId()
+        );
 
         Resp informResp = null;
         Resp resp = switch (req) {
             case GameStateReq gameStateReq -> {
-                GameStateDto gameStateDto = GameStateDto.from(room, player, config);
+                GameStateDto gameStateDto = null;
+                if (isRoomPresent) {
+                    gameStateDto = GameStateDto.from(room, player, config);
+                }
                 yield new GameStateResp(
-                        ResponseStatus.OK,
-                        objectMapper.writeValueAsString(gameStateDto)
+                        isRoomPresent ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        gameStateDto
                 );
             }
             case PlayHandReq playHandReq -> {
-                boolean isSuccessful = room.playHand(player, playHandReq.getCardCombination());
+                boolean isSuccessful = isRoomPresent && room.playHand(player, playHandReq.getCardCombination());
                 if (isSuccessful) {
                     informResp = new InformPlayHandResp(ResponseStatus.OK, player.getId(), playHandReq.getCardCombination());
                 }
                 yield new PlayHandResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
             case PassReq passReq -> {
-                boolean isSuccessful = room.pass(player);
+                boolean isSuccessful = isRoomPresent && room.pass(player);
                 if (isSuccessful) {
-                    informResp = new InformPassResp(ResponseStatus.OK, player.getId());
+                    boolean canCurrPlayerPlayAnyHand = room.getActiveGameState().getPassCounter().getCounter() == 0;
+                    informResp = new InformPassResp(ResponseStatus.OK, player.getId(), canCurrPlayerPlayAnyHand);
                 }
                 yield new PassResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
@@ -165,7 +194,8 @@ public class GameLobbyEndpoint {
             case JoinRoomReq joinRoomReq -> {
                 boolean isSuccessful = roomHandler.joinRoom(joinRoomReq.getRoomId(), playerSession);
                 if (isSuccessful) {
-                    informResp = new InformPlayerJoinRoomResp(ResponseStatus.OK, playerSession.getPlayer());
+                    room = roomHandler.getPlayerRoom(playerSession);
+                    informResp = new InformPlayerJoinRoomResp(ResponseStatus.OK, player);
                 }
                 yield new JoinRoomResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
             }
@@ -187,19 +217,30 @@ public class GameLobbyEndpoint {
             }
             case GiveCardReq giveCardReq -> {
                 Player receivingPlayer = new Player(giveCardReq.getReceivingPlayerId());
-                boolean isSuccessful = room.giveCard(giveCardReq.getCard(), player, receivingPlayer);
+
+                boolean haveBothPlayerGivenCards = false;
+
+                boolean isSuccessful = isRoomPresent && room.giveCard(giveCardReq.getCard(), player, receivingPlayer);
                 if (isSuccessful) {
+                    haveBothPlayerGivenCards = room.getActiveGameState().haveBothPlayersGivenCards();
                     informResp = new InformGiveCardResp(ResponseStatus.OK,
-                            player.getId(), receivingPlayer.getId(), giveCardReq.getCard(),
-                            room.getActiveGameState().haveBothPlayersGivenCards()
+                            player.getId(),
+                            receivingPlayer.getId(),
+                            giveCardReq.getCard(),
+                            haveBothPlayerGivenCards
                     );
                 }
                 yield new GiveCardResp(
-                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR
+                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        haveBothPlayerGivenCards
                 );
             }
             case LeaveRoomReq leaveRoomReq -> {
-                Optional<List<PlayerSession>> playersInRoom = roomHandler.removeSession(playerSession, false);
+                if (!isRoomPresent) {
+                    yield new LeaveRoomResp(ResponseStatus.ERROR);
+                }
+
+                Optional<List<PlayerSession>> playersInRoom = roomHandler.removeSession(playerSession, false, onPlayerLeaveOrDisconnect);
 
                 boolean isSuccessful = playersInRoom.isPresent();
                 if (isSuccessful) {
@@ -211,16 +252,26 @@ public class GameLobbyEndpoint {
                         isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR
                 );
             }
+            case ReadyReq readyReq -> {
+                boolean isSuccessful = isRoomPresent && room.ready(player);
+                if (isSuccessful) {
+                    informResp = new InformPlayerReadyResp(ResponseStatus.OK, player);
+                }
+                yield new ReadyResp(
+                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR
+                );
+            }
             default -> throw new IllegalStateException("Unexpected request: " + req);
         };
 
-        String responseString = generator.generateMessage(resp);
-        if (!responseString.isEmpty()) {
-            session.getBasicRemote().sendText(responseString);
-        }
+        endpointHelper.send(resp, playerSession);
 
         if (room != null) {
             endpointHelper.informPlayers(informResp, playerSession, roomHandler.getPlayersInRoom(room.getId()));
+
+            if (room.getActiveGameState().shouldGameStart()) {
+                room.getActiveGameState().startGame();
+            }
         }
     }
 
@@ -232,7 +283,7 @@ public class GameLobbyEndpoint {
         }
         PlayerSession playerSession = optionalPlayerSession.get();
 
-        Optional<List<PlayerSession>> playersInRoom = roomHandler.removeSession(playerSession, true);
+        Optional<List<PlayerSession>> playersInRoom = roomHandler.removeSession(playerSession, true, onPlayerLeaveOrDisconnect);
         if (playersInRoom.isEmpty()) {
             return;
         }
@@ -248,13 +299,5 @@ public class GameLobbyEndpoint {
     @OnError
     public void onError(Session session, Throwable throwable) throws IOException {
         log.error("Error", throwable);
-        // TODO: maybe dont close session on error
-        /*if (session != null && session.isOpen()) {
-            try {
-                session.close();
-            } catch (IOException e) {
-                log.error("Failed to close session", e);
-            }
-        }*/
     }
 }

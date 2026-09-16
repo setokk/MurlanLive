@@ -9,7 +9,7 @@ func _init(room_id: String) -> void:
 	self.room_id = room_id
 
 func to_message(config: ProtocolConfig) -> String:
-	return [
+	return config.protocol_delimiter.join([
 		ClientEvent.id(ClientEvent.Value.JOIN_ROOM),
-		room_id
-	].join(config.protocol_delimiter)
+		room_id,
+	])

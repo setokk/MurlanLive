@@ -1,4 +1,4 @@
-package org.murlan.um.api.dto;
+package org.murlan.um.model.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

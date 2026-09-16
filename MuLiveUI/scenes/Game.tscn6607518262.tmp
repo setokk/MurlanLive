@@ -1,0 +1,384 @@
+[gd_scene format=3 uid="uid://f8in7s47ipg4"]
+
+[ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_71axn"]
+[ext_resource type="Script" uid="uid://d2ugnd66ke3bo" path="res://Game.gd" id="2_3xj3m"]
+[ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_dahhg"]
+[ext_resource type="Script" uid="uid://cggmhq3jr6r2l" path="res://TableArea.gd" id="3_3so38"]
+[ext_resource type="Theme" uid="uid://dcg0tqtvbome4" path="res://themes/SeatTheme.tres" id="4_3cx6b"]
+[ext_resource type="Texture2D" uid="uid://b8df7a4o34kvg" path="res://assets/images/table.png" id="5_qy1jj"]
+[ext_resource type="Script" uid="uid://dfknfovm6tddy" path="res://Deck.gd" id="6_acvyw"]
+[ext_resource type="Script" uid="uid://c3xfjnp81ckek" path="res://OpponentHand.gd" id="7_alh3a"]
+[ext_resource type="Script" uid="uid://clxc14fpj30ha" path="res://Seat.gd" id="8_2rd6h"]
+[ext_resource type="Script" uid="uid://d3trjxyp4ubau" path="res://PlayedCards.gd" id="8_4q8tf"]
+[ext_resource type="Script" uid="uid://prjme07f6efi" path="res://HandPlaceholder.gd" id="9_x3xnh"]
+[ext_resource type="Script" uid="uid://k68075chkxlf" path="res://ButtonsContainer.gd" id="10_8r6kd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_trn2v"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_03owx"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wkp8b"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5vvyt"]
+
+[sub_resource type="GDScript" id="GDScript_20pc6"]
+script/source = "extends Control
+
+@onready var player_hand = $HandArea/MarginContainer/HandPlaceholder
+@onready var buttons_container = $ButtonsContainer
+
+func _ready():
+	#buttons_container.play_hand_requested.connect(player_hand.play_hand)
+	#buttons_container.pass_requested.connect(player_hand.pass_turn)
+	pass
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3xj3m"]
+bg_color = Color(0.87058824, 0.6784314, 0.23921569, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c6i3y"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_17p60"]
+bg_color = Color(0.8980392, 0.27058825, 0.20784314, 1)
+border_width_left = 3
+border_width_top = 2
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[node name="Game" type="Control" unique_id=684905153]
+z_index = -1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_71axn")
+script = ExtResource("2_3xj3m")
+
+[node name="Background" parent="." unique_id=2002749364 instance=ExtResource("2_dahhg")]
+layout_mode = 1
+anchors_preset = 15
+
+[node name="TopArea" type="CenterContainer" parent="." unique_id=1090870034]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.75
+
+[node name="LeftArea" type="Control" parent="TopArea" unique_id=829091859]
+layout_mode = 2
+
+[node name="TableArea" type="Control" parent="TopArea" unique_id=863065479]
+layout_mode = 2
+script = ExtResource("3_3so38")
+
+[node name="TableLayout" type="Control" parent="TopArea/TableArea" unique_id=324252698]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_3cx6b")
+
+[node name="TempCurrentPlayerLabel" type="Label" parent="TopArea/TableArea/TableLayout" unique_id=763149528]
+layout_mode = 0
+offset_left = 294.0
+offset_top = 241.0
+offset_right = 440.0
+offset_bottom = 274.0
+text = "Current player: "
+
+[node name="Table" type="TextureRect" parent="TopArea/TableArea/TableLayout" unique_id=747679814]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -311.04
+offset_top = -179.7919
+offset_right = 311.04
+offset_bottom = 179.7919
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_qy1jj")
+expand_mode = 1
+
+[node name="Deck" type="Node2D" parent="TopArea/TableArea/TableLayout" unique_id=1762135531]
+script = ExtResource("6_acvyw")
+
+[node name="Seat1" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=1012558803]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+script = ExtResource("8_2rd6h")
+
+[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=1351487608]
+layout_mode = 2
+show_percentage = false
+
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=1442695590]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat1/SeatVisual" unique_id=584993701]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat1/SeatVisual/SeatBackGround" unique_id=1987879458]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat1/SeatVisual/SeatBackGround/MarginContainer" unique_id=1805753504]
+layout_mode = 2
+expand_icon = true
+
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=810908013]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 12
+text = "Username"
+horizontal_alignment = 1
+
+[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=1628672719]
+one_shot = true
+
+[node name="Seat2" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=1728508544]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+script = ExtResource("8_2rd6h")
+
+[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=998756970]
+layout_mode = 2
+show_percentage = false
+
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=285242577]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat2/SeatVisual" unique_id=1746739102]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat2/SeatVisual/SeatBackGround" unique_id=171400088]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat2/SeatVisual/SeatBackGround/MarginContainer" unique_id=1928559361]
+layout_mode = 2
+expand_icon = true
+
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=1192308050]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 12
+text = "Username"
+horizontal_alignment = 1
+
+[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=2144452569]
+one_shot = true
+
+[node name="Seat3" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=2137630723]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+script = ExtResource("8_2rd6h")
+
+[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1869493267]
+layout_mode = 2
+show_percentage = false
+
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1232222181]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat3/SeatVisual" unique_id=1340903464]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat3/SeatVisual/SeatBackGround" unique_id=1641365024]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat3/SeatVisual/SeatBackGround/MarginContainer" unique_id=815604274]
+layout_mode = 2
+expand_icon = true
+
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=800074855]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 12
+text = "Username"
+horizontal_alignment = 1
+
+[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=808634705]
+one_shot = true
+
+[node name="Seat4" type="VBoxContainer" parent="TopArea/TableArea/TableLayout" unique_id=881878962]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+script = ExtResource("8_2rd6h")
+
+[node name="TurnTimerBar" type="ProgressBar" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=807514177]
+layout_mode = 2
+show_percentage = false
+
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=685740717]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="SeatBackGround" type="Panel" parent="TopArea/TableArea/TableLayout/Seat4/SeatVisual" unique_id=1972513246]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat4/SeatVisual/SeatBackGround" unique_id=617502756]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat4/SeatVisual/SeatBackGround/MarginContainer" unique_id=2070133777]
+layout_mode = 2
+expand_icon = true
+
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1943317460]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 12
+text = "Username"
+horizontal_alignment = 1
+
+[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1371786412]
+one_shot = true
+
+[node name="OpponentHand2" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1267263257]
+layout_mode = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_trn2v")
+script = ExtResource("7_alh3a")
+
+[node name="OpponentHand3" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=454168365]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_03owx")
+script = ExtResource("7_alh3a")
+
+[node name="OpponentHand4" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=246364564]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_wkp8b")
+script = ExtResource("7_alh3a")
+
+[node name="PlayedCards" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=452367580]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_5vvyt")
+script = ExtResource("8_4q8tf")
+
+[node name="RightArea" type="Control" parent="TopArea" unique_id=2095940113]
+layout_mode = 2
+
+[node name="BottomArea" type="Control" parent="." unique_id=732581692]
+layout_mode = 1
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource("GDScript_20pc6")
+
+[node name="HandArea" type="PanelContainer" parent="BottomArea" unique_id=1394942407]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.01
+anchor_top = 0.05
+anchor_right = 0.71
+anchor_bottom = 0.95
+theme_override_styles/panel = SubResource("StyleBoxFlat_3xj3m")
+
+[node name="MarginContainer" type="MarginContainer" parent="BottomArea/HandArea" unique_id=1686990007]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="HandPlaceholder" type="Panel" parent="BottomArea/HandArea/MarginContainer" unique_id=299893312 node_paths=PackedStringArray("deck")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_c6i3y")
+script = ExtResource("9_x3xnh")
+deck = NodePath("../../../../TopArea/TableArea/TableLayout/Deck")
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="BottomArea" unique_id=1690199426]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.75
+anchor_right = 0.9
+anchor_bottom = 1.0
+theme_override_constants/separation = 10
+alignment = 1
+script = ExtResource("10_8r6kd")
+
+[node name="PlayButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=768235351]
+layout_mode = 2
+tooltip_text = "Play Hand"
+theme_override_styles/normal = SubResource("StyleBoxFlat_17p60")
+text = "Play Hand"
+
+[node name="PassButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=1608814664]
+layout_mode = 2
+tooltip_text = "Play Hand"
+theme_override_styles/normal = SubResource("StyleBoxFlat_17p60")
+text = "Pass"
