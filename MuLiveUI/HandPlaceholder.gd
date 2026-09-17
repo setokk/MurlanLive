@@ -211,15 +211,14 @@ func get_card_to_give(isLoser: bool) -> _Card:
 		return null
 	return card_to_give.value
 	
-func give_card() -> Card:
-	if selected_cards.size() != 1:
-		return null
-	else:
-		var card_to_give: Card = selected_cards[0]
-		cards.erase(selected_cards[0])
-		selected_cards.clear()
-		layout_cards()
-		return card_to_give
+func give_card(card: _Card) -> Card:
+	var index_of_card_to_give: int = cards.find(func(c: Card): return c.value.ordinal() == card.ordinal())
+	var card_to_give: Card = cards[index_of_card_to_give]
+	
+	cards.erase(card_to_give)
+	selected_cards.clear()
+	layout_cards()
+	return card_to_give
 
 func find_highest_rank_cards() -> Array[Card]:
 	if cards.is_empty():
@@ -244,8 +243,10 @@ func get_selected_card_combination() -> CardCombination:
 		return cardCombination
 	return null
 	
-func play_selected_cards() -> Array[Card]:
-	var played: Array[Card] = selected_cards.duplicate()
+func play_selected_cards(card_combination: CardCombination) -> Array[Card]:
+	var played: Array[Card] = []
+	played.assign(cards.filter(func(c: Card): return card_combination.contains_card(c.value)))
+	
 	selected_cards.clear()
 	for card in played:
 		cards.erase(card)

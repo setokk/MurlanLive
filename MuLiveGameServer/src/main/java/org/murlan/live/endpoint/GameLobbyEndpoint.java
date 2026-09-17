@@ -15,6 +15,8 @@ import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.api.AvailableRoomsReq;
 import org.murlan.live.protocol.api.AvailableRoomsResp;
+import org.murlan.live.protocol.api.ChatReq;
+import org.murlan.live.protocol.api.ChatResp;
 import org.murlan.live.protocol.api.CreateRoomReq;
 import org.murlan.live.protocol.api.CreateRoomResp;
 import org.murlan.live.protocol.api.GameStateReq;
@@ -24,6 +26,7 @@ import org.murlan.live.protocol.api.GiveCardResp;
 import org.murlan.live.protocol.api.InformGiveCardResp;
 import org.murlan.live.protocol.api.InformPassResp;
 import org.murlan.live.protocol.api.InformPlayHandResp;
+import org.murlan.live.protocol.api.InformPlayerChatResp;
 import org.murlan.live.protocol.api.InformPlayerJoinRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLeaveRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLostConnectionResp;
@@ -177,7 +180,10 @@ public class GameLobbyEndpoint {
                 if (isSuccessful) {
                     informResp = new InformPlayHandResp(ResponseStatus.OK, player.getId(), playHandReq.getCardCombination());
                 }
-                yield new PlayHandResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
+                yield new PlayHandResp(
+                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        playHandReq.getCardCombination()
+                );
             }
             case PassReq passReq -> {
                 boolean isSuccessful = isRoomPresent && room.pass(player);
@@ -206,7 +212,7 @@ public class GameLobbyEndpoint {
                         LocalDateTime.now(),
                         createRoomReq.getTotalScoreToWin(),
                         playerSession.getPlayer(),
-                        new GameStateFactory(roomRESTClient, endpointHelper, roomHandler, config, scheduler)
+                        new GameStateFactory(roomHandler, endpointHelper, roomRESTClient, config, scheduler)
                 );
 
                 RoomDto roomDto = roomHandler.createRoom(newRoom, playerSession);
@@ -232,7 +238,8 @@ public class GameLobbyEndpoint {
                 }
                 yield new GiveCardResp(
                         isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
-                        haveBothPlayerGivenCards
+                        haveBothPlayerGivenCards,
+                        giveCardReq.getCard()
                 );
             }
             case LeaveRoomReq leaveRoomReq -> {
@@ -259,6 +266,14 @@ public class GameLobbyEndpoint {
                 }
                 yield new ReadyResp(
                         isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR
+                );
+            }
+            case ChatReq chatReq -> {
+                if (isRoomPresent) {
+                    informResp = new InformPlayerChatResp(ResponseStatus.OK, chatReq.getMessage(), player);
+                }
+                yield new ChatResp(
+                        isRoomPresent ? ResponseStatus.OK : ResponseStatus.ERROR
                 );
             }
             default -> throw new IllegalStateException("Unexpected request: " + req);

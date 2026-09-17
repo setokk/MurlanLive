@@ -13,6 +13,14 @@ class_name Req
 ## numOfFields, validate, postValidate) have moved to Resp.gd, since on the
 ## client it's incoming Resp messages that need to be parsed.
 
-func to_message(_config: ProtocolConfig) -> String:
+func to_message(config: ProtocolConfig) -> String:
 	push_error("to_message() not implemented")
 	return ""
+	
+func escape(message: String, config: ProtocolConfig) -> String:
+	return message \
+		.replace("\\", "\\\\") \
+		.replace(
+			config.protocol_delimiter,
+			"\\" + config.protocol_delimiter
+		)

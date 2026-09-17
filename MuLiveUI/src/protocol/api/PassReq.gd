@@ -6,5 +6,5 @@ extends Req
 func _init() -> void:
 	pass
 
-func to_message(_config: ProtocolConfig) -> String:
+func to_message(config: ProtocolConfig) -> String:
 	return ClientEvent.id(ClientEvent.Value.PASS)

@@ -1,11 +1,14 @@
 package org.murlan.live.game.deck;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class ShufflerTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.*;
 
+public class ShufflerTest {
+
+    @Test
     public void testShuffle() {
         int numParts = 4;
         List<Hand> hands = Shuffler.shuffle(numParts);

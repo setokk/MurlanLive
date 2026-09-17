@@ -11,5 +11,5 @@ func _init(room_id: String) -> void:
 func to_message(config: ProtocolConfig) -> String:
 	return config.protocol_delimiter.join([
 		ClientEvent.id(ClientEvent.Value.JOIN_ROOM),
-		room_id,
+		escape(room_id, config),
 	])

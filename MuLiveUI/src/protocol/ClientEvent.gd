@@ -15,6 +15,7 @@ enum Value {
 	GIVE_CARD,
 	LEAVE_ROOM,
 	READY,
+	CHAT,
 }
 
 static var RESP_FACTORIES: Dictionary[int, Callable] = {
@@ -27,6 +28,7 @@ static var RESP_FACTORIES: Dictionary[int, Callable] = {
 	Value.GIVE_CARD: func(parts, config): return GiveCardResp.new(parts, config),
 	Value.LEAVE_ROOM: func(parts, config): return LeaveRoomResp.new(parts, config),
 	Value.READY: func(parts, config): return ReadyResp.new(parts, config),
+	Value.CHAT: func(parts, config): return ChatResp.new(parts, config),
 }
 
 static func create_resp(value: Value, parts: PackedStringArray, config: ProtocolConfig) -> Resp:

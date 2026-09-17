@@ -37,6 +37,12 @@ func contains_rank(rank: _Rank) -> bool:
 		if card.rank() == rank:
 			return true
 	return false
+	
+func contains_card(other_card: _Card) -> bool:
+	for card in cards:
+		if card.ordinal() == other_card.ordinal():
+			return true
+	return false
 
 func get_lowest_card_of_kolor() -> _Card:
 	var is_not_kolor := type != CardCombinationTypeEnum.KOLOR and type != CardCombinationTypeEnum.BOMB_KOLOR
@@ -109,3 +115,17 @@ func to_message(protocol_list_delimiter: String) -> String:
 	for card in cards:
 		ordinals.append(str(card.ordinal()))
 	return protocol_list_delimiter.join(ordinals)
+
+## Mirrors the card-parsing loop in PlayHandReq.java's constructor: on any
+## unparsable ordinal, falls back to an empty combination.
+static func parse_card_combination(raw: String, config: ProtocolConfig) -> CardCombination:
+	var individual_cards := raw.split(config.protocol_list_delimiter)
+	var cards: Array[_Card] = []
+	for individual_card in individual_cards:
+		if not individual_card.is_valid_int():
+			return CardCombination.new([])
+		var card: _Card = CardEnum.new().from_ordinal(individual_card.to_int())
+		if card == null:
+			return CardCombination.new([])
+		cards.append(card)
+	return CardCombination.new(cards)
