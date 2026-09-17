@@ -1,6 +1,5 @@
 package org.murlan.live.protocol.api;
 
-import org.murlan.live.game.GameConstants;
 import org.murlan.live.protocol.api.error.InvalidDataException;
 
 import static org.murlan.live.protocol.util.Parser.MIN_NUM_VALUES;

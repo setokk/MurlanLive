@@ -18,7 +18,7 @@ func _init(config: ProtocolConfig) -> void:
 	self.config = config
 
 func parse(message: String) -> Resp:
-	var message_parts: PackedStringArray = message.split(config.protocol_delimiter)
+	var message_parts: PackedStringArray = split_escaped(message, config.protocol_delimiter)
 	if message_parts.size() < MIN_NUM_VALUES:
 		push_error("Invalid message: %s" % message)
 		return null
@@ -38,6 +38,33 @@ func parse(message: String) -> Resp:
 		resp.event_id = ServerEvent.id(server_event)
 
 	return resp
+
+func split_escaped(message: String, delimiter: String) -> PackedStringArray:
+	var delimiter_char: String = delimiter[0]
+	var encountered_backslash: bool = false
+	var message_parts := PackedStringArray()
+
+	var sb := ""
+
+	for c in message:
+		if c == "\\" and not encountered_backslash:
+			encountered_backslash = true
+			continue
+
+		elif c == delimiter_char and not encountered_backslash:
+			message_parts.append(sb)
+			sb = ""
+			continue
+
+		encountered_backslash = false
+		sb += c
+
+	if encountered_backslash:
+		sb += "\\"
+
+	message_parts.append(sb)
+
+	return message_parts
 
 func parse_query_params(query_string: String) -> Dictionary:
 	var query_params := {}

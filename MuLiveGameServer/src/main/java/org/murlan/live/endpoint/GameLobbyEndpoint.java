@@ -15,6 +15,8 @@ import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.api.AvailableRoomsReq;
 import org.murlan.live.protocol.api.AvailableRoomsResp;
+import org.murlan.live.protocol.api.ChatReq;
+import org.murlan.live.protocol.api.ChatResp;
 import org.murlan.live.protocol.api.CreateRoomReq;
 import org.murlan.live.protocol.api.CreateRoomResp;
 import org.murlan.live.protocol.api.GameStateReq;
@@ -24,6 +26,7 @@ import org.murlan.live.protocol.api.GiveCardResp;
 import org.murlan.live.protocol.api.InformGiveCardResp;
 import org.murlan.live.protocol.api.InformPassResp;
 import org.murlan.live.protocol.api.InformPlayHandResp;
+import org.murlan.live.protocol.api.InformPlayerChatResp;
 import org.murlan.live.protocol.api.InformPlayerJoinRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLeaveRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLostConnectionResp;
@@ -261,12 +264,20 @@ public class GameLobbyEndpoint {
                         isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR
                 );
             }
+            case ChatReq chatReq -> {
+                if (isRoomPresent) {
+                    informResp = new InformPlayerChatResp(ResponseStatus.OK, chatReq.getMessage(), player);
+                }
+                yield new ChatResp(
+                        isRoomPresent ? ResponseStatus.OK : ResponseStatus.ERROR
+                );
+            }
             default -> throw new IllegalStateException("Unexpected request: " + req);
         };
 
         endpointHelper.send(resp, playerSession);
 
-        if (room != null) {
+        if (isRoomPresent) {
             endpointHelper.informPlayers(informResp, playerSession, roomHandler.getPlayersInRoom(room.getId()));
 
             if (room.getActiveGameState().shouldGameStart()) {

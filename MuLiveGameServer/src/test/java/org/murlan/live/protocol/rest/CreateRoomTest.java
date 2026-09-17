@@ -1,9 +1,8 @@
 package org.murlan.live.protocol.rest;
 
 import org.glassfish.grizzly.http.util.HttpStatus;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.murlan.live.game.logic.GameState;
 import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.config.ConfigProvider;
@@ -19,16 +18,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class CreateRoomTest {
-    private ProtocolConfig config;
-    private RoomRESTClient restClient;
-    private MLObjectMapper objectMapper;
+import static org.junit.jupiter.api.Assertions.*;
 
-    @Before
-    public void setUp() {
-        this.config = ConfigProvider.getProtocolConfig();
-        this.restClient = new RoomRESTClient(config, new MLObjectMapper());
-        this.objectMapper = new MLObjectMapper();
+public class CreateRoomTest {
+    private static ProtocolConfig config;
+    private static RoomRESTClient restClient;
+    private static MLObjectMapper objectMapper;
+
+    @BeforeAll
+    public static void setUp() {
+        config = ConfigProvider.getProtocolConfig();
+        restClient = new RoomRESTClient(config, new MLObjectMapper());
+        objectMapper = new MLObjectMapper();
     }
 
     @Test
@@ -40,7 +41,7 @@ public class CreateRoomTest {
         HttpResponse<String> response = restClient.createRoom(room);
         System.out.println("------Finished REST call to /api/rooms/create");
         System.out.println(response);
-        Assert.assertTrue(HttpStatus.OK_200.getStatusCode() == response.statusCode());
+        assertEquals(HttpStatus.OK_200.getStatusCode(), response.statusCode());
     }
 
     public Room prepareRoom() {

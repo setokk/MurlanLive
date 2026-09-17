@@ -8,4 +8,13 @@ import org.murlan.live.protocol.config.ProtocolConfig;
 public interface Resp {
     ResponseStatus getResponseStatus();
     String toMessage(ProtocolConfig config, ObjectMapper objectMapper) throws JsonProcessingException;
+
+    default String escape(String message, ProtocolConfig config) {
+        return message
+                .replace("\\", "\\\\")
+                .replace(
+                        config.getProtocol_delimiter(),
+                        "\\" + config.getProtocol_delimiter()
+                );
+    }
 }

@@ -1,20 +1,26 @@
 package org.murlan.live.session;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.deck.CardCombinationType;
 import org.murlan.live.game.deck.Hand;
 import org.murlan.live.game.logic.GameState;
+import org.murlan.live.game.logic.PassCounter;
 import org.murlan.live.protocol.dto.Player;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-public class GameStateTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.*;
+
+public class GameStateTest {
+
+    @Test
     public void testPlayHand_SameRankSingle() {
         Player currPlayer = new Player(1L, "currPlayer", LocalDateTime.now(), "currPlayer");
         Player otherPlayer = new Player(2L, "otherPlayer", LocalDateTime.now(), "otherPlayer");
@@ -29,6 +35,8 @@ public class GameStateTest extends TestCase {
                 .withPlayers(List.of(currPlayer, otherPlayer))
                 .withScore(HashMap.newHashMap(4))
                 .withCurrCardCombination(initialCardCombination)
+                .withPassCounter(new PassCounter(0))
+                .withScheduler(Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()))
                 .build();
 
         boolean isFirstMoveSuccessful = gameState.playHand(currPlayer, new CardCombination(Card.FIVE_OF_CLUBS));
@@ -38,6 +46,7 @@ public class GameStateTest extends TestCase {
         assertFalse(isSecondMoveSuccessful);
     }
 
+    @Test
     public void testPlayHand_SameRankDouble() {
         Player currPlayer = new Player(1L, "currPlayer", LocalDateTime.now(), "currPlayer");
         Player otherPlayer = new Player(2L, "otherPlayer", LocalDateTime.now(), "otherPlayer");
@@ -52,6 +61,8 @@ public class GameStateTest extends TestCase {
                 .withPlayers(List.of(currPlayer, otherPlayer))
                 .withScore(HashMap.newHashMap(4))
                 .withCurrCardCombination(initialCardCombination)
+                .withPassCounter(new PassCounter(0))
+                .withScheduler(Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()))
                 .build();
 
         List<Card> currCardsToPlay = getListOfCards(Card.TWO_OF_CLUBS, Card.TWO_OF_DIAMONDS);
@@ -64,6 +75,7 @@ public class GameStateTest extends TestCase {
         assertFalse(isSecondMoveSuccessful);
     }
 
+    @Test
     public void testPlayHand_TripleWithDoubleCard() {
         Player currPlayer = new Player(1L, "currPlayer", LocalDateTime.now(), "currPlayer");
         Player otherPlayer = new Player(2L, "otherPlayer", LocalDateTime.now(), "otherPlayer");
@@ -78,6 +90,8 @@ public class GameStateTest extends TestCase {
                 .withPlayers(List.of(currPlayer, otherPlayer))
                 .withScore(HashMap.newHashMap(4))
                 .withCurrCardCombination(initialCardCombination)
+                .withPassCounter(new PassCounter(0))
+                .withScheduler(Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()))
                 .build();
 
         List<Card> currCardsToPlay = getListOfCards(Card.FIVE_OF_SPADES, Card.FIVE_OF_CLUBS, Card.FIVE_OF_HEARTS);

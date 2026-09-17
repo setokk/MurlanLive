@@ -1,9 +1,12 @@
 package org.murlan.live.game.deck;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-public class CardCombinationTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.*;
 
+public class CardCombinationTest {
+
+    @Test
     public void testIsWeakerThan() {
         CardCombination weakerCombination = new CardCombination(Card.FIVE_OF_HEARTS, Card.FIVE_OF_SPADES, Card.FIVE_OF_DIAMONDS);
         CardCombination strongerCombination = new CardCombination(Card.NINE_OF_HEARTS, Card.NINE_OF_SPADES, Card.NINE_OF_CLUBS);
@@ -13,6 +16,7 @@ public class CardCombinationTest extends TestCase {
         assertTrue(weakerCombination.isWeakerThan(strongerCombination));
     }
 
+    @Test
     public void testIsWeakerThan_2() {
         CardCombination weakerCombination = new CardCombination(Card.FOUR_OF_CLUBS, Card.FIVE_OF_SPADES, Card.SIX_OF_DIAMONDS, Card.SEVEN_OF_HEARTS, Card.EIGHT_OF_HEARTS);
         CardCombination strongerCombination = new CardCombination(Card.SIX_OF_DIAMONDS, Card.SEVEN_OF_HEARTS, Card.EIGHT_OF_HEARTS, Card.NINE_OF_HEARTS, Card.TEN_OF_DIAMONDS);
@@ -22,6 +26,7 @@ public class CardCombinationTest extends TestCase {
         assertTrue(weakerCombination.isWeakerThan(strongerCombination));
     }
 
+    @Test
     public void testIsWeakerThan_3() {
         CardCombination kolorOfFive = new CardCombination(Card.FOUR_OF_CLUBS, Card.FIVE_OF_SPADES, Card.SIX_OF_DIAMONDS, Card.SEVEN_OF_HEARTS, Card.EIGHT_OF_HEARTS);
         CardCombination kolorOfSix = new CardCombination(Card.SIX_OF_DIAMONDS, Card.SEVEN_OF_HEARTS, Card.EIGHT_OF_HEARTS, Card.NINE_OF_HEARTS, Card.TEN_OF_DIAMONDS, Card.JACK_OF_DIAMONDS);
@@ -32,6 +37,7 @@ public class CardCombinationTest extends TestCase {
         assertFalse(kolorOfSix.isWeakerThan(kolorOfFive));
     }
 
+    @Test
     public void testIsWeakerThan_4() {
         CardCombination weakerCombination = new CardCombination(Card.ACE_OF_CLUBS, Card.TWO_OF_HEARTS, Card.THREE_OF_SPADES, Card.FOUR_OF_SPADES, Card.FIVE_OF_DIAMONDS);
         CardCombination strongerCombination = new CardCombination(Card.TWO_OF_HEARTS, Card.THREE_OF_SPADES, Card.FOUR_OF_SPADES, Card.FIVE_OF_DIAMONDS, Card.SIX_OF_SPADES);
@@ -41,6 +47,7 @@ public class CardCombinationTest extends TestCase {
         assertTrue(weakerCombination.isWeakerThan(strongerCombination));
     }
 
+    @Test
     public void testIsWeakerThan_5() {
         CardCombination weakerCombination = new CardCombination(Card.ACE_OF_CLUBS, Card.TWO_OF_HEARTS, Card.THREE_OF_SPADES, Card.FOUR_OF_SPADES, Card.FIVE_OF_DIAMONDS);
         CardCombination strongerCombination = new CardCombination(Card.THREE_OF_SPADES, Card.FOUR_OF_SPADES, Card.FIVE_OF_DIAMONDS, Card.SIX_OF_SPADES, Card.SEVEN_OF_HEARTS);
@@ -50,6 +57,7 @@ public class CardCombinationTest extends TestCase {
         assertTrue(weakerCombination.isWeakerThan(strongerCombination));
     }
 
+    @Test
     public void testIsWeakerThan_6() {
         CardCombination weakerCombination = new CardCombination(Card.TWO_OF_HEARTS, Card.THREE_OF_SPADES, Card.FOUR_OF_SPADES, Card.FIVE_OF_DIAMONDS, Card.SIX_OF_DIAMONDS);
         CardCombination strongerCombination = new CardCombination(Card.THREE_OF_SPADES, Card.FOUR_OF_SPADES, Card.FIVE_OF_DIAMONDS, Card.SIX_OF_SPADES, Card.SEVEN_OF_HEARTS);
@@ -59,6 +67,7 @@ public class CardCombinationTest extends TestCase {
         assertTrue(weakerCombination.isWeakerThan(strongerCombination));
     }
 
+    @Test
     public void testIsWeakerThan_7() {
         CardCombination weakerCombination = new CardCombination(Card.TWO_OF_HEARTS, Card.THREE_OF_HEARTS, Card.FOUR_OF_HEARTS, Card.FIVE_OF_HEARTS, Card.SIX_OF_HEARTS);
         CardCombination strongerCombination = new CardCombination(Card.THREE_OF_SPADES, Card.FOUR_OF_SPADES, Card.FIVE_OF_SPADES, Card.SIX_OF_SPADES, Card.SEVEN_OF_SPADES);

@@ -11,4 +11,5 @@ public final class GameConstants {
     public static final short SCORE_REMAINING_PLAYERS_AFTER_LOST_CONNECTION = 0;
     public static final CardCombination EMPTY_CARD_COMBINATION = new CardCombination();
     public static final long TURN_DURATION_SECONDS = 3600;
+    public static final int CHAT_CHARACTER_LIMIT = 356;
 }

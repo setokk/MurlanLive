@@ -16,3 +16,11 @@ class_name Req
 func to_message(_config: ProtocolConfig) -> String:
 	push_error("to_message() not implemented")
 	return ""
+	
+func escape(message: String, _config: ProtocolConfig) -> String:
+	return message \
+		.replace("\\", "\\\\") \
+		.replace(
+			_config.protocol_delimiter,
+			"\\" + _config.protocol_delimiter
+		)

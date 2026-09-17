@@ -1,8 +1,8 @@
 package org.murlan.live.protocol.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.murlan.live.game.logic.GameState;
 import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.dto.Player;
@@ -14,12 +14,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class ObjectMapperTest {
-    private MLObjectMapper objectMapper;
+import static org.junit.jupiter.api.Assertions.*;
 
-    @Before
-    public void setUp() {
-        this.objectMapper = new MLObjectMapper();
+public class ObjectMapperTest {
+    private static MLObjectMapper objectMapper;
+
+    @BeforeAll
+    public static void setUp() {
+        objectMapper = new MLObjectMapper();
     }
 
     @Test
