@@ -190,8 +190,8 @@ func _on_play_requested() -> void:
 func _on_play_completed(resp: PlayHandResp) -> void:
 	if resp.response_status == 200:
 		var cards_to_play: Array[Card] = hand_placeholder.play_selected_cards(resp.card_combination)
-		await played_cards.receive_cards(cards_to_play)
-		seats[current_player_seat_index].stop_turn()
+		played_cards.receive_cards(cards_to_play, false, 0.025)
+		seats[0].stop_turn()
 		WebSocketClient.send_message(GameStateReq.new())
 	else:
 		print("Invalid selection or not your turn.")
@@ -201,7 +201,7 @@ func _on_pass_requested() -> void:
 	
 func _on_pass_completed(resp: PassResp) -> void:
 	if resp.response_status == 200:
-		seats[current_player_seat_index].stop_turn()
+		seats[0].stop_turn()
 		WebSocketClient.send_message(GameStateReq.new())
 	else:
 		print("Error with passing. Response: ", resp)
@@ -212,7 +212,6 @@ func _on_ready_requested() -> void:
 func _on_ready_completed(resp: ReadyResp):
 	if resp.response_status == 200:
 		seats[0].set_ready()
-		print("all good man")
 	else:
 		print("error bruh: ", resp)
 
@@ -230,10 +229,8 @@ func _on_give_card_requested() -> void:
 	if not card_to_give:
 		return
 	if is_local_player_loser:
-		print("Sending card to: ", previous_winner["username"]) 
 		WebSocketClient.send_message(GiveCardReq.new(card_to_give, int(previous_winner["id"])))
 	else:
-		print("Sending card to: ", previous_loser["username"])
 		WebSocketClient.send_message(GiveCardReq.new(card_to_give, int(previous_loser["id"])))
 		
 func _on_give_card_completed(resp: GiveCardResp) -> void:
@@ -246,7 +243,7 @@ func _on_give_card_completed(resp: GiveCardResp) -> void:
 			opponent_hand_index = find_player_seat_index(int(previous_loser["id"])) - 1
 		
 		var starting_point: Vector2 = opponent_hands[opponent_hand_index].global_position
-		opponent_hands[opponent_hand_index].receive_card(card_to_give, starting_point)
+		opponent_hands[opponent_hand_index].receive_card(card_to_give, 0.025)
 		if bool(resp.have_both_players_given_cards):
 			WebSocketClient.send_message(GameStateReq.new())
 			give_card_button.visible = false	
@@ -264,10 +261,8 @@ func _on_opponent_joined(resp: InformPlayerJoinRoomResp):
 	
 func _on_opponent_played_hand(resp: InformPlayHandResp) -> void:
 	if resp.response_status == 200:
-		var cards: Array[Card] = create_cards_from_combination(resp.card_combination)
-		played_cards.receive_cards(cards)
-		for i in range(cards.size()):
-			opponent_hands[current_player_seat_index-1].remove_card_from_hand()
+		var cards: Array[Card] = opponent_hands[current_player_seat_index - 1].play_cards(resp.card_combination)
+		played_cards.receive_cards(cards, true, 0.025)
 		seats[current_player_seat_index].stop_turn()
 		WebSocketClient.send_message(GameStateReq.new())
 	else:
@@ -304,9 +299,9 @@ func _on_opponent_give_card(resp: InformGiveCardResp) -> void:
 		var card: Card = opponent_hands[opponent_hand_index].give_card()
 		if int(local_player["id"]) == int(resp.target_player_id):
 			card.value = resp.card
-			hand_placeholder.receive_card(card, starting_point)
+			hand_placeholder.receive_card(card, 0.025)
 		else:
-			opponent_hands[opponent_hand_index].receive_card(card, starting_point)
+			opponent_hands[opponent_hand_index].receive_card(card, 0.025)
 		if bool(resp.have_both_players_given_cards):
 			WebSocketClient.send_message(GameStateReq.new())
 			give_card_button.visible = false	
@@ -329,25 +324,9 @@ func display_players() -> void:
 		
 	for player in ready_players:
 		seats[find_player_seat_index(player["id"])].set_ready()
-					
-func create_cards_from_combination(
-	combination: CardCombination
-) -> Array[Card]:
-	var result: Array[Card] = []
-
-	for value in combination.cards:
-		var card: Card = CARD_SCENE.instantiate()
-
-		add_child(card)
-		card.set_value(value)
-		result.append(card)
-
-	return result
 
 func find_player_seat_index(id) -> int:
 	for i in range(seats.size()):
 		if players[i]["id"] == id:
 			return posmod(i-local_player_index,seats.size())
 	return 0
-	
-	
