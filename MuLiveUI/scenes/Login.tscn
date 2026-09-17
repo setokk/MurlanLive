@@ -3,8 +3,8 @@
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_jbclg"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_xpxjw"]
 [ext_resource type="Theme" uid="uid://bqn3ljfdspx6i" path="res://themes/LoginTheme.tres" id="3_na214"]
-[ext_resource type="Script" uid="uid://bdxu5q2kf6fai" path="res://LoginSignupInfo.gd" id="4_7hd5n"]
-[ext_resource type="Script" uid="uid://cv8rpnt0rcvwf" path="res://LoginSignupButtons.gd" id="5_ft2vs"]
+[ext_resource type="Script" uid="uid://bhbpva4sor3de" path="res://scripts/login/LoginInfo.gd" id="4_7hd5n"]
+[ext_resource type="Script" uid="uid://cv8rpnt0rcvwf" path="res://scripts/login/LoginRegisterButtons.gd" id="5_ft2vs"]
 [ext_resource type="Script" uid="uid://beuyhyaeynanw" path="res://MessageContainer.gd" id="6_egi27"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pgobs"]
@@ -72,28 +72,28 @@ theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 50
 
-[node name="LoginSignupInfo" type="VBoxContainer" parent="LoginPanel/MarginContainer" unique_id=1629308152]
+[node name="LoginInfo" type="VBoxContainer" parent="LoginPanel/MarginContainer" unique_id=1629308152]
 layout_mode = 2
 script = ExtResource("4_7hd5n")
 
-[node name="Label" type="Label" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=2118485535]
+[node name="Label" type="Label" parent="LoginPanel/MarginContainer/LoginInfo" unique_id=2118485535]
 layout_mode = 2
 text = "Welcome to Murlan!"
 
-[node name="MarginContainer3" type="MarginContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=1151944136]
+[node name="MarginContainer3" type="MarginContainer" parent="LoginPanel/MarginContainer/LoginInfo" unique_id=1151944136]
 layout_mode = 2
 theme_override_constants/margin_top = 8
 
-[node name="Username" type="LineEdit" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=825852046]
+[node name="UsernameOrEmail" type="LineEdit" parent="LoginPanel/MarginContainer/LoginInfo" unique_id=825852046]
 layout_mode = 2
-placeholder_text = "Username"
+placeholder_text = "Username or Email"
 clear_button_enabled = true
 
-[node name="MarginContainer" type="MarginContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=724790553]
+[node name="MarginContainer" type="MarginContainer" parent="LoginPanel/MarginContainer/LoginInfo" unique_id=724790553]
 layout_mode = 2
 theme_override_constants/margin_top = 10
 
-[node name="Password" type="LineEdit" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=466938253]
+[node name="Password" type="LineEdit" parent="LoginPanel/MarginContainer/LoginInfo" unique_id=466938253]
 layout_mode = 2
 placeholder_text = "Password"
 emoji_menu_enabled = false
@@ -103,13 +103,13 @@ caret_blink_interval = 0.5
 secret = true
 secret_character = "*"
 
-[node name="RememberInfoContainer" type="HBoxContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=571387075]
+[node name="RememberInfoContainer" type="HBoxContainer" parent="LoginPanel/MarginContainer/LoginInfo" unique_id=571387075]
 layout_mode = 2
 size_flags_vertical = 8
 theme_override_constants/separation = 6
 alignment = 2
 
-[node name="Label" type="Label" parent="LoginPanel/MarginContainer/LoginSignupInfo/RememberInfoContainer" unique_id=1467958042]
+[node name="Label" type="Label" parent="LoginPanel/MarginContainer/LoginInfo/RememberInfoContainer" unique_id=1467958042]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 12
@@ -117,7 +117,7 @@ text = "Remember me"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="RememberInfoCheckbox" type="CheckBox" parent="LoginPanel/MarginContainer/LoginSignupInfo/RememberInfoContainer" unique_id=1998148867]
+[node name="RememberInfoCheckbox" type="CheckBox" parent="LoginPanel/MarginContainer/LoginInfo/RememberInfoContainer" unique_id=1998148867]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -125,15 +125,15 @@ alignment = 1
 icon_alignment = 1
 expand_icon = true
 
-[node name="MarginContainer2" type="MarginContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=1045742524]
+[node name="MarginContainer2" type="MarginContainer" parent="LoginPanel/MarginContainer/LoginInfo" unique_id=1045742524]
 layout_mode = 2
 theme_override_constants/margin_top = 25
 
-[node name="LoginSignupButtons" type="VBoxContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo" unique_id=848076722]
+[node name="LoginRegisterButtons" type="VBoxContainer" parent="LoginPanel/MarginContainer/LoginInfo" unique_id=848076722]
 layout_mode = 2
 script = ExtResource("5_ft2vs")
 
-[node name="LoginButton" type="Button" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons" unique_id=2011992809]
+[node name="LoginButton" type="Button" parent="LoginPanel/MarginContainer/LoginInfo/LoginRegisterButtons" unique_id=2011992809]
 custom_minimum_size = Vector2(140, 30)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -143,11 +143,11 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_jbclg")
 theme_override_styles/hover = SubResource("StyleBoxFlat_xpxjw")
 text = "Login"
 
-[node name="MarginContainer3" type="MarginContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons" unique_id=1180125916]
+[node name="MarginContainer3" type="MarginContainer" parent="LoginPanel/MarginContainer/LoginInfo/LoginRegisterButtons" unique_id=1180125916]
 layout_mode = 2
 theme_override_constants/margin_top = 10
 
-[node name="Button" type="Button" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons" unique_id=1218924468]
+[node name="ForgotPasswordButton" type="Button" parent="LoginPanel/MarginContainer/LoginInfo/LoginRegisterButtons" unique_id=1218924468]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
@@ -158,20 +158,20 @@ theme_override_styles/pressed = SubResource("StyleBoxEmpty_7hd5n")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_ft2vs")
 text = "I forgot my password"
 
-[node name="MarginContainer2" type="MarginContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons" unique_id=2120585079]
+[node name="MarginContainer2" type="MarginContainer" parent="LoginPanel/MarginContainer/LoginInfo/LoginRegisterButtons" unique_id=2120585079]
 layout_mode = 2
 theme_override_constants/margin_top = 40
 
-[node name="SignupContainer" type="HBoxContainer" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons" unique_id=1041393184]
+[node name="RegisterPageContainer" type="HBoxContainer" parent="LoginPanel/MarginContainer/LoginInfo/LoginRegisterButtons" unique_id=1041393184]
 layout_mode = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons/SignupContainer" unique_id=213834597]
+[node name="Label" type="Label" parent="LoginPanel/MarginContainer/LoginInfo/LoginRegisterButtons/RegisterPageContainer" unique_id=213834597]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Don't have an account?"
 
-[node name="SignupButton" type="Button" parent="LoginPanel/MarginContainer/LoginSignupInfo/LoginSignupButtons/SignupContainer" unique_id=653932228]
+[node name="RegisterPageButton" type="Button" parent="LoginPanel/MarginContainer/LoginInfo/LoginRegisterButtons/RegisterPageContainer" unique_id=653932228]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0.08235294, 0.003921569, 0.3254902, 1)
@@ -180,7 +180,8 @@ theme_override_font_sizes/font_size = 13
 theme_override_styles/normal = SubResource("StyleBoxEmpty_8ud1i")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_743nf")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_5tuhn")
-text = "Sign Up"
+text = "Register
+"
 
 [node name="MessageContainer" type="CenterContainer" parent="." unique_id=1509949399]
 layout_mode = 1

@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://cds5gub2k1q6m"]
+
+[ext_resource type="Texture2D" uid="uid://ca4lafe626upe" path="res://assets/images/user-icon.png" id="1_og1mq"]
+[ext_resource type="Script" uid="uid://d1q14uib631ly" path="res://ChatItem.gd" id="1_rd5a2"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8ud1i"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ud1i"]
+
+[node name="ChatItem" type="PanelContainer" unique_id=1901581067]
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.2
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_8ud1i")
+script = ExtResource("1_rd5a2")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=123949795]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Panel" type="PanelContainer" parent="HBoxContainer" unique_id=297171437]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8ud1i")
+
+[node name="UserIcon" type="TextureRect" parent="HBoxContainer/Panel" unique_id=1046493062]
+layout_mode = 2
+texture = ExtResource("1_og1mq")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Username" type="Label" parent="HBoxContainer" unique_id=670265521]
+layout_mode = 2
+size_flags_vertical = 1
+text = "username:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Message" type="Label" parent="HBoxContainer" unique_id=973842492]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "message"
+vertical_alignment = 1

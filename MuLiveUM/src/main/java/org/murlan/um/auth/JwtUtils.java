@@ -32,6 +32,7 @@ public class JwtUtils {
         claims.put("id", player.getId());
         claims.put("username", player.getUsername());
         claims.put("creationDate", player.getCreationDate().toString());
+        claims.put("email", player.getEmail());
 
         Instant currentInstant = Instant.now();
         return Jwts.builder()

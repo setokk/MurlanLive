@@ -3,7 +3,6 @@ extends Node
 var content: Control 
 
 func show_scene(scene: PackedScene) -> Node:
-
 	content = get_tree().root.find_child(
 		"Content",
 		true,
@@ -19,7 +18,6 @@ func show_scene(scene: PackedScene) -> Node:
 
 	return scene.instantiate()
 
-
 func get_top_bar() -> Control:
 	return get_tree().root.find_child(
 		"TopBar",
@@ -28,13 +26,18 @@ func get_top_bar() -> Control:
 	)
 	
 func show_login() -> void:
-
 	var top_bar: Control = get_top_bar()
-
 	if top_bar:
 		top_bar.set_mode(top_bar.TopBarMode.LOGIN)
 
 	content.add_child(show_scene(preload("res://scenes/Login.tscn")))
+	
+func show_register() -> void:
+	var top_bar: Control = get_top_bar()
+	if top_bar:
+		top_bar.set_mode(top_bar.TopBarMode.REGISTER)
+
+	content.add_child(show_scene(preload("res://scenes/Register.tscn")))
 	
 func show_lobby() -> void:
 	var top_bar: Control = get_top_bar()

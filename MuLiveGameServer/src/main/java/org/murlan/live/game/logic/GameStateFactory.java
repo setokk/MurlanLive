@@ -23,6 +23,7 @@ public class GameStateFactory {
         return new GameState(
                 GameState.State.WAITING,
                 room.getOwner(),
+                room.getTurnDurationInSeconds(),
                 new OnGameStart(room, roomHandler, endpointHelper, config, scheduler),
                 new OnGameFinish(room, roomHandler, endpointHelper, roomRESTClient),
                 new OnTurnTimeout(room, roomHandler, endpointHelper)

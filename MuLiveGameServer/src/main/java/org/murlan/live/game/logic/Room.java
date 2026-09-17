@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
@@ -14,6 +13,9 @@ import org.murlan.live.protocol.dto.Player;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -22,17 +24,33 @@ import java.util.stream.Collectors;
 @Setter
 @Getter
 @Builder(setterPrefix = "with")
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class Room {
     private String id;
-    private final String name;
+    private String name;
     @JsonProperty("isPublic") private final boolean isPublic;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") private final LocalDateTime creationDate;
-    private final short totalScoreToWin;
+    private short totalScoreToWin;
     private List<GameState> gameStates;
-    private final Player owner;
+    private Player owner;
+    @JsonIgnore private long turnDurationInSeconds;
     @JsonIgnore private final GameStateFactory gameStateFactory;
+
+    public Room(String name,
+                boolean isPublic,
+                LocalDateTime creationDate,
+                short totalScoreToWin,
+                Player owner,
+                long turnDurationInSeconds,
+                GameStateFactory gameStateFactory) {
+        this.name = name;
+        this.isPublic = isPublic;
+        this.creationDate = creationDate;
+        this.totalScoreToWin = totalScoreToWin;
+        this.owner = owner;
+        this.turnDurationInSeconds = turnDurationInSeconds;
+        this.gameStateFactory = gameStateFactory;
+    }
 
     public void initialGameState() {
         this.gameStates = new ArrayList<>();
@@ -66,14 +84,40 @@ public class Room {
     }
 
     public synchronized Map<Player, Short> getTotalScores() {
-        return gameStates.stream()
-                .map(GameState::getScore)
-                .flatMap(s -> s.entrySet().stream())
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (partialScore, currScore) -> (short) (partialScore + currScore)
-                ));
+        Map<Player, Integer> totals = new LinkedHashMap<>();
+        Map<Player, Integer> reachedAt = new HashMap<>();
+        int seq = 0;
+
+        for (GameState gs : gameStates) {
+            // players without a score entry yet still need to appear
+            for (Player p : gs.getPlayers()) {
+                if (!totals.containsKey(p)) {
+                    totals.put(p, 0);
+                    reachedAt.put(p, seq++);
+                }
+            }
+
+            for (Map.Entry<Player, Short> e : gs.getScore().entrySet()) {
+                Player p = e.getKey();
+                int before = totals.get(p);
+                int after = before + e.getValue();
+                totals.put(p, after);
+
+                if (after != before) {
+                    reachedAt.put(p, seq);
+                }
+                seq++;
+            }
+        }
+
+        Map<Player, Short> result = new LinkedHashMap<>();
+        totals.entrySet().stream()
+                .sorted(Comparator
+                        .comparing((Map.Entry<Player, Integer> e) -> e.getValue()).reversed()
+                        .thenComparing(e -> reachedAt.get(e.getKey())))
+                .forEach(e -> result.put(e.getKey(), e.getValue().shortValue()));
+
+        return result;
     }
 
     public synchronized List<Player> getPlayers() {

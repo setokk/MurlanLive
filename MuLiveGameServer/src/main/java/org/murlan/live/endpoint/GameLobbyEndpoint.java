@@ -10,11 +10,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.murlan.live.endpoint.session.PlayerSession;
 import org.murlan.live.endpoint.session.RoomHandler;
+import org.murlan.live.game.logic.GameState;
 import org.murlan.live.game.logic.GameStateFactory;
 import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.api.AvailableRoomsReq;
 import org.murlan.live.protocol.api.AvailableRoomsResp;
+import org.murlan.live.protocol.api.BlockReq;
+import org.murlan.live.protocol.api.BlockResp;
 import org.murlan.live.protocol.api.ChatReq;
 import org.murlan.live.protocol.api.ChatResp;
 import org.murlan.live.protocol.api.CreateRoomReq;
@@ -28,13 +31,19 @@ import org.murlan.live.protocol.api.InformPassResp;
 import org.murlan.live.protocol.api.InformPlayHandResp;
 import org.murlan.live.protocol.api.InformPlayerChatResp;
 import org.murlan.live.protocol.api.InformPlayerJoinRoomResp;
+import org.murlan.live.protocol.api.InformPlayerKickedResp;
 import org.murlan.live.protocol.api.InformPlayerLeaveRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLostConnectionResp;
 import org.murlan.live.protocol.api.InformPlayerReadyResp;
+import org.murlan.live.protocol.api.InformUpdateRoomDetailsResp;
 import org.murlan.live.protocol.api.JoinRoomReq;
 import org.murlan.live.protocol.api.JoinRoomResp;
+import org.murlan.live.protocol.api.KickReq;
+import org.murlan.live.protocol.api.KickResp;
 import org.murlan.live.protocol.api.LeaveRoomReq;
 import org.murlan.live.protocol.api.LeaveRoomResp;
+import org.murlan.live.protocol.api.MuteReq;
+import org.murlan.live.protocol.api.MuteResp;
 import org.murlan.live.protocol.api.PassReq;
 import org.murlan.live.protocol.api.PassResp;
 import org.murlan.live.protocol.api.PlayHandReq;
@@ -43,12 +52,20 @@ import org.murlan.live.protocol.api.ReadyReq;
 import org.murlan.live.protocol.api.ReadyResp;
 import org.murlan.live.protocol.api.Req;
 import org.murlan.live.protocol.api.Resp;
+import org.murlan.live.protocol.api.UnBlockReq;
+import org.murlan.live.protocol.api.UnBlockResp;
+import org.murlan.live.protocol.api.UnMuteReq;
+import org.murlan.live.protocol.api.UnMuteResp;
+import org.murlan.live.protocol.api.UpdateRoomDetailsReq;
+import org.murlan.live.protocol.api.UpdateRoomDetailsResp;
 import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ConfigProvider;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.dto.GameStateDto;
 import org.murlan.live.protocol.dto.Player;
+import org.murlan.live.protocol.dto.RoomDetailsDto;
 import org.murlan.live.protocol.dto.RoomDto;
+import org.murlan.live.protocol.dto.UpdatedRoomDetailsDto;
 import org.murlan.live.protocol.jwt.JwtUtils;
 import org.murlan.live.protocol.rest.PlayerRESTClient;
 import org.murlan.live.protocol.rest.RoomRESTClient;
@@ -58,11 +75,17 @@ import org.murlan.live.util.MLObjectMapper;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @ServerEndpoint(value = "/game-lobby")
 public class GameLobbyEndpoint {
@@ -79,12 +102,15 @@ public class GameLobbyEndpoint {
 
     private static final EndpointHelper endpointHelper = new EndpointHelper(parser, generator, config);
     private static final RoomHandler roomHandler = new RoomHandler();
-    private static final PlayerRESTClient playerRESTClient = new PlayerRESTClient(config);
+    private static final PlayerRESTClient playerRESTClient = new PlayerRESTClient(config, objectMapper);
     private static final RoomRESTClient roomRESTClient = new RoomRESTClient(config, objectMapper);
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 
     private static final Consumer<Room> onPlayerLeaveOrDisconnect = room -> {
         try {
+            if (!GameState.State.FINISHED.equals(room.getActiveGameState().getState())) {
+                return;
+            }
             roomRESTClient.createRoom(room);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
@@ -96,6 +122,9 @@ public class GameLobbyEndpoint {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             for (Room room : roomHandler.getAllRooms()) {
                 try {
+                    if (!GameState.State.FINISHED.equals(room.getActiveGameState().getState())) {
+                        return;
+                    }
                     roomRESTClient.createRoom(room);
                 } catch (IOException | InterruptedException e) {
                     log.error("Could not save room with id: {}", room.getId());
@@ -126,13 +155,19 @@ public class GameLobbyEndpoint {
             return;
         }
 
-        roomHandler.addSession(new PlayerSession(session, player));
+        Set<Player> mutedPlayers = ConcurrentHashMap.newKeySet();
+        Set<Player> blockedPlayers = ConcurrentHashMap.newKeySet();
+
+        playerRESTClient.getBlockedPlayers(jwt)
+                .ifPresent(blockedPlayers::addAll);
+
+        roomHandler.addSession(new PlayerSession(session, player, mutedPlayers, blockedPlayers));
 
         log.info("Connection with sessionId: {} established! Player.id = {}, Player.username = {}", session.getId(), player.getId(), player.getUsername());
     }
 
     @OnMessage
-    public void onMessage(String message, Session session) throws IOException {
+    public void onMessage(String message, Session session) throws IOException, InterruptedException {
         log.info("From {{}}, received message: {}", session.getId(), message);
 
         Req req;
@@ -212,6 +247,7 @@ public class GameLobbyEndpoint {
                         LocalDateTime.now(),
                         createRoomReq.getTotalScoreToWin(),
                         playerSession.getPlayer(),
+                        createRoomReq.getTurnDurationInSeconds(),
                         new GameStateFactory(roomHandler, endpointHelper, roomRESTClient, config, scheduler)
                 );
 
@@ -274,6 +310,93 @@ public class GameLobbyEndpoint {
                 }
                 yield new ChatResp(
                         isRoomPresent ? ResponseStatus.OK : ResponseStatus.ERROR
+                );
+            }
+            case UpdateRoomDetailsReq updateRoomDetailsReq -> {
+                Optional<UpdatedRoomDetailsDto> updatedRoomDetailsDto = Optional.empty();
+                if (isRoomPresent) {
+                    updatedRoomDetailsDto = roomHandler.updateRoom(room.getId(), new RoomDetailsDto(
+                            updateRoomDetailsReq.getRoomName(),
+                            updateRoomDetailsReq.getTotalScoreToWin(),
+                            updateRoomDetailsReq.getTurnDurationInSeconds()
+                    ), player);
+                }
+
+                boolean isSuccessful = updatedRoomDetailsDto.isPresent();
+                if (isSuccessful) {
+                    informResp = new InformUpdateRoomDetailsResp(ResponseStatus.OK, updatedRoomDetailsDto.get());
+                }
+                yield new UpdateRoomDetailsResp(
+                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        isSuccessful ? updatedRoomDetailsDto.get() : null
+                );
+            }
+            case KickReq kickReq -> {
+                PlayerSession kickedPlayerSession = null;
+                if (isRoomPresent) {
+                    kickedPlayerSession = roomHandler.kickPlayer(room.getId(), kickReq.getPlayerToKickId(), player);
+                }
+
+                boolean isSuccessful = kickedPlayerSession != null;
+                if (isSuccessful) {
+                    informResp = new InformPlayerKickedResp(ResponseStatus.OK, kickedPlayerSession.getPlayer());
+                    endpointHelper.send(informResp, kickedPlayerSession); // send here because they are removed and unreachable from roomHandler.getPlayersInRoom
+                }
+                yield new KickResp(
+                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        kickedPlayerSession != null ? kickedPlayerSession.getPlayer() : null
+                );
+            }
+            case MuteReq muteReq -> {
+                boolean isSuccessful = false;
+                if (isRoomPresent) {
+                    playerSession.getMutedPlayers().addAll(muteReq.getPlayersToMute());
+                    isSuccessful = true;
+                }
+                yield new MuteResp(
+                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        isSuccessful ? muteReq.getPlayersToMute().stream().map(Player::getId).collect(Collectors.toSet()) : Collections.emptySet()
+                );
+            }
+            case UnMuteReq unMuteReq -> {
+                boolean isSuccessful = false;
+                if (isRoomPresent) {
+                    playerSession.getMutedPlayers().removeAll(unMuteReq.getPlayersToUnMute());
+                    isSuccessful = true;
+                }
+                yield new UnMuteResp(
+                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        isSuccessful ? unMuteReq.getPlayersToUnMute().stream().map(Player::getId).collect(Collectors.toSet()) : Collections.emptySet()
+                );
+            }
+            case BlockReq blockReq -> {
+                Optional<Player> blockedPlayer = playerRESTClient.blockPlayer(
+                        player.getJwt(),
+                        blockReq.getPlayerToBlock()
+                );
+
+                blockedPlayer.ifPresent(p ->
+                        playerSession.getBlockedPlayers().add(p)
+                );
+
+                yield new BlockResp(
+                        blockedPlayer.isPresent() ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        blockedPlayer.orElse(null)
+                );
+            }
+            case UnBlockReq unBlockReq -> {
+                Optional<Player> unblockedPlayer = playerRESTClient.unblockPlayer(
+                        player.getJwt(),
+                        unBlockReq.getPlayerToUnblock()
+                );
+
+                unblockedPlayer.ifPresent(p ->
+                        playerSession.getBlockedPlayers().remove(p)
+                );
+
+                yield new UnBlockResp(
+                        unblockedPlayer.isPresent() ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        unblockedPlayer.orElse(null)
                 );
             }
             default -> throw new IllegalStateException("Unexpected request: " + req);

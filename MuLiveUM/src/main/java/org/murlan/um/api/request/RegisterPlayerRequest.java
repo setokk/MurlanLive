@@ -2,6 +2,7 @@ package org.murlan.um.api.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -26,10 +27,20 @@ public class RegisterPlayerRequest implements IRequest {
     @NotEmpty(message = "[RegisterPlayerRequest]: password field cannot be empty")
     private final String password;
 
+    @NotNull(message = "[RegisterPlayerRequest]: email field is mandatory")
+    @NotEmpty(message = "[RegisterPlayerRequest]: email field cannot be empty")
+    @Email(message = "[RegisterPlayerRequest]: email is not valid")
+    private final String email;
+
     @JsonCreator
-    public RegisterPlayerRequest(@JsonProperty("username") String username, @JsonProperty("password") String password) {
+    public RegisterPlayerRequest(
+            @JsonProperty("username") String username,
+            @JsonProperty("password") String password,
+            @JsonProperty("email") String email
+    ) {
         this.username = username;
         this.password = password;
+        this.email = email;
     }
 
     @Override

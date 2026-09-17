@@ -1,4 +1,4 @@
 package org.murlan.um.service.param;
 
-public record RegisterPlayerParam(String username, String password) {
+public record RegisterPlayerParam(String username, String password, String email) {
 }

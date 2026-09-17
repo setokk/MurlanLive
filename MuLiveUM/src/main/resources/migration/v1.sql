@@ -5,7 +5,9 @@ CREATE TABLE IF NOT EXISTS player(
     id BIGINT NOT NULL PRIMARY KEY,
     username TEXT NOT NULL,
     password TEXT NOT NULL,
-    creation_date TIMESTAMP NOT NULL
+    email TEXT NOT NULL,
+    creation_date TIMESTAMP NOT NULL,
+    is_verified BOOLEAN NOT NULL DEFAULT FALSE
 );
 CREATE SEQUENCE IF NOT EXISTS player_seq
     START WITH 1
@@ -79,6 +81,52 @@ CREATE TABLE IF NOT EXISTS hand_layout_configuration(
     player_id BIGINT NOT NULL
 );
 CREATE SEQUENCE IF NOT EXISTS hand_layout_configuration_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO CYCLE;
+
+--
+-- player_block Table
+--
+CREATE TABLE IF NOT EXISTS player_block (
+    player_id BIGINT NOT NULL,
+    blocked_player_id BIGINT NOT NULL,
+    PRIMARY KEY (player_id, blocked_player_id)
+);
+
+--
+-- player_reset_password Table
+--
+CREATE TABLE IF NOT EXISTS player_reset_password (
+    id BIGINT NOT NULL PRIMARY KEY,
+    token TEXT NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    player_id BIGINT NOT NULL
+);
+CREATE SEQUENCE IF NOT EXISTS player_reset_password_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO CYCLE;
+
+--
+-- player_rating Table
+--
+CREATE TABLE IF NOT EXISTS player_rating (
+    player_id BIGINT NOT NULL PRIMARY KEY,
+    mu DOUBLE PRECISION NOT NULL,
+    sigma DOUBLE PRECISION NOT NULL,
+    rooms_played INTEGER NOT NULL
+);
+
+--
+-- player_email_verification Table
+--
+CREATE TABLE IF NOT EXISTS player_email_verification (
+    id BIGINT NOT NULL PRIMARY KEY,
+    token TEXT NOT NULL,
+    player_id BIGINT NOT NULL
+);
+CREATE SEQUENCE IF NOT EXISTS player_email_verification_seq
     START WITH 1
     INCREMENT BY 1
     NO CYCLE;

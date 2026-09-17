@@ -6,8 +6,11 @@ import org.murlan.live.game.GameConstants;
 import org.murlan.live.game.logic.GameState;
 import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.dto.Player;
+import org.murlan.live.protocol.dto.RoomDetailsDto;
 import org.murlan.live.protocol.dto.RoomDto;
+import org.murlan.live.protocol.dto.UpdatedRoomDetailsDto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +60,14 @@ public class RoomHandler {
                 playerSessions.remove(playerSession);
             }
 
-            room.getActiveGameState().getPlayers().remove(playerSession.getPlayer());
+            Player player = playerSession.getPlayer();
+
+            List<Player> players = room.getActiveGameState().getPlayers();
+            List<Player> readyPlayers = room.getActiveGameState().getReadyPlayers();
+            players.remove(player);
+            readyPlayers.remove(player);
+
+            room.setOwner(!players.isEmpty() ? players.getFirst() : room.getOwner());
 
             // if game has not started yet (initial state where not all players have joined)
             // do NOT remove room.
@@ -66,7 +76,7 @@ public class RoomHandler {
                 return Optional.ofNullable(playerSessions);
             }
 
-            room.getActiveGameState().handlePlayerNotInRoom(playerSession.getPlayer(), hasPlayerLostConnection);
+            room.getActiveGameState().handlePlayerNotInRoom(player, hasPlayerLostConnection);
             onPlayerLeaveOrDisconnect.accept(room);
 
             List<PlayerSession> playersInRoom = removeRoom(roomId);
@@ -82,7 +92,7 @@ public class RoomHandler {
     }
 
     public synchronized boolean isPlayerSessionCurrentlyActive(@NonNull Player player) {
-        return jwtToSessionMap.containsValue(new PlayerSession(null, player));
+        return jwtToSessionMap.containsValue(new PlayerSession(null, player, null, null));
     }
 
     private void linkSessionWithRoom(@NonNull PlayerSession playerSession, @NonNull String roomId) {
@@ -105,7 +115,104 @@ public class RoomHandler {
         roomIdToRoomMap.put(room.getId(), room);
         linkSessionWithRoom(playerSession, room.getId());
 
-        return new RoomDto(room.getId(), room.getName(), room.getPlayers());
+        return new RoomDto(room.getId(), room.getName(), room.getPlayers(), room.getTotalScoreToWin(), room.getTurnDurationInSeconds());
+    }
+
+    public RoomDto copyRoom(@NonNull String roomId) {
+        Room room = getRoom(roomId);
+        if (room == null) {
+            return null;
+        }
+
+        synchronized (room) {
+            List<PlayerSession> playersInRoom = removeRoom(roomId);
+            PlayerSession ownerPlayerSession = playersInRoom.stream()
+                    .filter(ps -> ps.getPlayer().equals(room.getOwner()))
+                    .findAny()
+                    .orElseThrow();
+
+            for (PlayerSession playerSession : playersInRoom) {
+                sessionToRoomIdMap.remove(playerSession);
+            }
+
+            Room copyRoom = new Room(
+                    room.getName(),
+                    room.isPublic(),
+                    LocalDateTime.now(),
+                    room.getTotalScoreToWin(),
+                    room.getOwner(),
+                    room.getTurnDurationInSeconds(),
+                    room.getGameStateFactory()
+            );
+
+            RoomDto copyRoomDto = createRoom(copyRoom, ownerPlayerSession);
+
+            for (PlayerSession playerSession : playersInRoom) {
+                if (!ownerPlayerSession.equals(playerSession)) {
+                    joinRoom(copyRoom.getId(), playerSession);
+                }
+            }
+            return copyRoomDto;
+        }
+    }
+
+    public Optional<UpdatedRoomDetailsDto> updateRoom(@NonNull String roomId, @NonNull RoomDetailsDto roomDetailsDto, @NonNull Player player) {
+        Room room = getRoom(roomId);
+        if (room == null) {
+            return Optional.empty();
+        }
+
+        synchronized (room) {
+            if (!GameState.State.WAITING.equals(room.getActiveGameState().getState())) {
+                return Optional.empty();
+            }
+
+            if (!room.getOwner().equals(player)) {
+                return Optional.empty();
+            }
+
+            if (roomDetailsDto.roomName() != null) {
+                room.setName(roomDetailsDto.roomName());
+            }
+            if (roomDetailsDto.totalScoreToWin() != null) {
+                room.setTotalScoreToWin(roomDetailsDto.totalScoreToWin());
+            }
+            if (roomDetailsDto.turnDurationInSeconds() != null) {
+                room.setTurnDurationInSeconds(roomDetailsDto.turnDurationInSeconds());
+            }
+        }
+
+        return Optional.of(new UpdatedRoomDetailsDto(
+                room.getName(),
+                room.getTotalScoreToWin(),
+                room.getTurnDurationInSeconds()
+        ));
+    }
+
+    public PlayerSession kickPlayer(@NonNull String roomId, long playerToKickId, @NonNull Player player) {
+        Room room = getRoom(roomId);
+        if (room == null) {
+            return null;
+        }
+
+        synchronized (room) {
+            if (!GameState.State.WAITING.equals(room.getActiveGameState().getState())) {
+                return null;
+            }
+
+            if (!room.getOwner().equals(player)) {
+                return null;
+            }
+
+            PlayerSession playerSessionToBeKicked = getPlayersInRoom(roomId).stream()
+                    .filter(ps -> ps.getPlayer().getId() == playerToKickId)
+                    .findAny()
+                    .orElseThrow();
+
+            removeSession(playerSessionToBeKicked, false, r -> {});
+
+            return playerSessionToBeKicked;
+        }
     }
 
     public Room getRoom(@NonNull String roomId) {
@@ -151,7 +258,7 @@ public class RoomHandler {
         return roomIdToRoomMap.values()
                 .stream()
                 .filter(Room::isPublic)
-                .map(room -> new RoomDto(room.getId(), room.getName(), room.getPlayers()))
+                .map(room -> new RoomDto(room.getId(), room.getName(), room.getPlayers(), room.getTotalScoreToWin(), room.getTurnDurationInSeconds()))
                 .collect(Collectors.toList());
     }
 

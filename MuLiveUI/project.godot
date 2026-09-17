@@ -22,6 +22,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 TestingAutomation="*res://TestingAutomation.gd"
+GameConstants="*res://globals/GameConstants.gd"
+PopupFactory="*res://globals/PopupFactory.gd"
 SceneManager="*res://globals/SceneManager.gd"
 ProtocolConfigProvider="*res://globals/ProtocolConfigProvider.gd"
 PlayerSession="*res://globals/rest/PlayerSession.gd"
@@ -56,6 +58,10 @@ enabled=PackedStringArray("res://addons/yaml/plugin.cfg")
 animation_library={
 &"animation/fps": 60.0
 }
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://translations/translations.en.translation", "res://translations/translations.sq.translation")
 
 [rendering]
 
