@@ -1,6 +1,7 @@
 package org.murlan.um.service.mapper;
 
 import org.murlan.um.model.dto.PlayerDto;
+import org.murlan.um.model.dto.RankRatingDto;
 import org.murlan.um.model.dto.RoomDetailsDto;
 import org.murlan.um.model.dto.RoomDto;
 import org.murlan.um.api.request.CreateRoomRequest;
@@ -54,6 +55,17 @@ public final class RoomMapper {
                 .creationDate(entity.getCreationDate())
                 .finishedDate(entity.getFinishedDate())
                 .numPlayers(entity.getNumPlayers())
+                .build();
+    }
+
+    public RoomDto toDto(RoomEntity entity, Map<Long, RankRatingDto> rankRatingsByPlayerId) {
+        return RoomDto.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .creationDate(entity.getCreationDate())
+                .finishedDate(entity.getFinishedDate())
+                .numPlayers(entity.getNumPlayers())
+                .rankRatingsByPlayerId(rankRatingsByPlayerId)
                 .build();
     }
 

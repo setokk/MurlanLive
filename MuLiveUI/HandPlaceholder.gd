@@ -2,25 +2,18 @@ extends Panel
 
 class_name PlayerHand
 
-@export var deck: Node2D
-
 const CARD_SCENE: Resource = preload("res://scenes/Card.tscn")
 const CARD_WIDTH: float = 730.0
 const CARD_HEIGHT: float = 1024.0
-
-const MAX_CARDS: int = 14
+const MAX_CARDS: int = 15
 const CARD_OVERLAP: float = 0.50
 
 var cards: Array[Card] = []
 var selected_cards: Array[Card] = []
 
-
 func _ready() -> void:
 	resized.connect(layout_cards)
 	call_deferred("layout_cards")
-	
-func add_card_to_hand(card: Card) -> void:
-	cards.append(card)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton \
@@ -38,7 +31,6 @@ func get_top_card_under_mouse() -> Card:
 	query.collide_with_bodies = false
 
 	var results := space_state.intersect_point(query)
-
 	var top_card: Card = null
 
 	for result in results:
@@ -64,136 +56,18 @@ func select_or_unselect_card(card: Card) -> void:
 		selected_cards.append(card)
 	else:
 		selected_cards.erase(card)
-	
-func layout_cards() -> void:
-	if cards.is_empty():
-		return
-
-	var available_width: float = size.x
-	var available_height: float = size.y
-
-	var height_scale: float = (
-		available_height / CARD_HEIGHT
-	)
-
-	var card_width_from_height: float = (
-		CARD_WIDTH * height_scale
-	)
-
-	var normal_spacing: float = (
-		card_width_from_height
-		* (1.0 - CARD_OVERLAP)
-	)
-
-	var required_width: float = (
-		card_width_from_height
-		+ (cards.size() - 1) * normal_spacing
-	)
-
-	var card_scale: float = height_scale
-
-	if required_width > available_width:
-
-		var width_scale: float = (
-			available_width
-			/
-			(CARD_WIDTH
-			+ (cards.size() - 1)
-			* CARD_WIDTH
-			* (1.0 - CARD_OVERLAP)))
-
-		card_scale = min(height_scale, width_scale)
-
-	var actual_card_width: float = CARD_WIDTH * card_scale
-	var actual_card_height: float = CARD_HEIGHT * card_scale
-	var card_spacing: float = actual_card_width * (1.0 - CARD_OVERLAP)
-
-	var hand_width: float = actual_card_width + (cards.size() - 1) * card_spacing
-	
-
-	var start_x: float = (available_width - hand_width) / 2.0
-
-	var y: float = available_height / 2.0
-	
-	# Position cards
-	for i in range(cards.size()):
-		var card: Card = cards[i]
-		card.scale = Vector2.ONE * card_scale
-
-		var new_position := Vector2(
-			start_x
-			+ actual_card_width / 2.0
-			+ i * card_spacing,
-			y
-		)
-
-		card.original_position = new_position
-		if card.selected:
-			card.position = new_position + Vector2(0, -20)
-		else:
-			card.position = new_position
-
-		card.z_index = i
 		
-		
-func get_next_card_position() -> Vector2:
-	var card_height: float = size.y
-	var card_scale: float = card_height / CARD_HEIGHT
-	var card_width: float = CARD_WIDTH * card_scale
-	var card_spacing: float = card_width * (1.0 - CARD_OVERLAP)
-	var card_count: int = cards.size() + 1
-	var hand_width: float = card_width + (card_count - 1) * card_spacing
-	var start_x: float = (size.x - hand_width) / 2.0
-
-	# New cards come from the RIGHT.
-	var x: float = (
-		start_x
-		+ card_width / 2.0
-		+ (card_count - 1) * card_spacing
-	)
-
-	var y: float = card_height / 2.0
-	return Vector2(x, y)
-
-func receive_card(card: Card, start_position: Vector2) -> void:
-	var target_position: Vector2 = get_next_card_position()
-	var target_scale: float = size.y / CARD_HEIGHT
-
-	card.reparent(self)
-	card.rotation_degrees = 0
-	card.global_position = start_position
-	card.set_face_down()
-
-	# Make sure it is visible above the existing cards
-	# during the flight.
-	card.z_index = 100
-	
-	var move_tween: Tween = create_tween()
-
-	move_tween.set_trans(Tween.TRANS_QUAD)
-	move_tween.set_ease(Tween.EASE_OUT)
-	move_tween.set_parallel(true)
-
-	move_tween.tween_property(
-		card,
-		"position",
-		target_position,
-		0.10
-	)
-
-	move_tween.tween_property(
-		card,
-		"scale",
-		Vector2.ONE * target_scale,
-		0.10
-	)
-
-	move_tween.set_parallel(false)
-	await move_tween.finished
-	await card.flip_to_front()
-	
-	add_card_to_hand(card)
+func add_card(card: Card) -> void:
+	cards.append(card)
 	layout_cards()
+	
+func clear_hand() -> void:
+	for card in cards:
+		if is_instance_valid(card):
+			card.queue_free()
+
+	cards.clear()
+	selected_cards.clear()
 	
 func get_card_to_give(isLoser: bool) -> _Card:
 	if selected_cards.size() != 1:
@@ -250,14 +124,111 @@ func play_selected_cards(card_combination: CardCombination) -> Array[Card]:
 	selected_cards.clear()
 	for card in played:
 		cards.erase(card)
-		
 	layout_cards()
 	return played
+	
+func layout_cards() -> void:
+	if cards.is_empty():
+		return
 
-func clear_hand() -> void:
-	for card in cards:
-		if is_instance_valid(card):
-			card.queue_free()
+	var available_width: float = size.x
+	var available_height: float = size.y
+	var height_scale: float = available_height / CARD_HEIGHT
+	var card_width_from_height: float = CARD_WIDTH * height_scale
+	var normal_spacing: float = card_width_from_height * (1.0 - CARD_OVERLAP)
+	var required_width: float = (
+		card_width_from_height
+		+ (cards.size() - 1) * normal_spacing
+	)
 
-	cards.clear()
-	selected_cards.clear()
+	var card_scale: float = height_scale
+
+	if required_width > available_width:
+
+		var width_scale: float = (
+			available_width
+			/
+			(CARD_WIDTH
+			+ (cards.size() - 1)
+			* CARD_WIDTH
+			* (1.0 - CARD_OVERLAP)))
+
+		card_scale = min(height_scale, width_scale)
+
+	var actual_card_width: float = CARD_WIDTH * card_scale
+	var actual_card_height: float = CARD_HEIGHT * card_scale
+	var card_spacing: float = actual_card_width * (1.0 - CARD_OVERLAP)
+	var hand_width: float = actual_card_width + (cards.size() - 1) * card_spacing
+	var start_x: float = (available_width - hand_width) / 2.0
+	var y: float = available_height / 2.0
+	
+	# Position cards
+	for i in range(cards.size()):
+		var card: Card = cards[i]
+		card.scale = Vector2.ONE * card_scale
+
+		var new_position := Vector2(
+			start_x
+			+ actual_card_width / 2.0
+			+ i * card_spacing,
+			y
+		)
+
+		card.original_position = new_position
+		if card.selected:
+			card.position = new_position + Vector2(0, -20)
+		else:
+			card.position = new_position
+
+		card.z_index = i
+		
+		
+func get_next_card_position() -> Vector2:
+	var card_height: float = size.y
+	var card_scale: float = card_height / CARD_HEIGHT
+	var card_width: float = CARD_WIDTH * card_scale
+	var card_spacing: float = card_width * (1.0 - CARD_OVERLAP)
+	var card_count: int = cards.size() + 1
+	var hand_width: float = card_width + (card_count - 1) * card_spacing
+	var start_x: float = (size.x - hand_width) / 2.0
+	var x: float = (
+		start_x
+		+ card_width / 2.0
+		+ (card_count - 1) * card_spacing
+	)
+	var y: float = card_height / 2.0
+	return Vector2(x, y)
+
+func receive_card(card: Card, duration: float) -> void:
+	if card.get_parent() == null:
+		add_child(card)
+	if card.get_parent() != self:
+		card.reparent(self)
+		
+	var target_position: Vector2 = get_next_card_position()
+	var target_scale: float = size.y / CARD_HEIGHT
+		
+	card.rotation_degrees = 0
+	card.set_face_down()
+
+	card.z_index = 100
+	
+	var move_tween: Tween = create_tween()
+	move_tween.set_trans(Tween.TRANS_QUAD)
+	move_tween.set_ease(Tween.EASE_OUT)
+	move_tween.set_parallel(true)
+	move_tween.tween_property(
+		card,
+		"position",
+		target_position,
+		duration/2
+	)
+	move_tween.tween_property(
+		card,
+		"scale",
+		Vector2.ONE * target_scale,
+		duration/2
+	)
+	await move_tween.finished
+	await card.flip_to_front(duration/2)
+	add_card(card)

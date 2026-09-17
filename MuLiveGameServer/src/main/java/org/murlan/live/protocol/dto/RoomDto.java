@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.Objects;
 
-public record RoomDto(String id, String name, List<Player> players) {
+public record RoomDto(String id, String name, List<Player> players, short totalScoreToWin, long turnDurationInSeconds) {
     public static RoomDto invalid() {
-        return new RoomDto(null, null, null);
+        return new RoomDto(null, null, null, (short) -1, -1L);
     }
 
     @JsonIgnore

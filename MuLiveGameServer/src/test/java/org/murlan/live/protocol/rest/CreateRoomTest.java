@@ -8,6 +8,7 @@ import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.config.ConfigProvider;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.dto.Player;
+import org.murlan.live.protocol.dto.um.UMRoomDto;
 import org.murlan.live.util.MLObjectMapper;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,10 +40,8 @@ public class CreateRoomTest {
         System.out.println("------Saving room:------");
         System.out.println(objectMapper.writeValueAsString(room));
         System.out.println("------Making REST call to /api/rooms/create");
-        HttpResponse<String> response = restClient.createRoom(room);
-        System.out.println("------Finished REST call to /api/rooms/create");
-        System.out.println(response);
-        assertEquals(HttpStatus.OK_200.getStatusCode(), response.statusCode());
+        Optional<UMRoomDto> umRoomDto = restClient.createRoom(room);
+        assertTrue(umRoomDto.isPresent());
     }
 
     public Room prepareRoom() {

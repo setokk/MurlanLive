@@ -30,19 +30,16 @@ const MESSAGES: Array[String] = [
 
 const MESSAGE_INTERVAL: float = 5.0
 
-
 func _ready() -> void:
 	random_message_loop()
 
 var last_message: String = ""
 
 func random_message_loop() -> void:
-
 	var last_message: String = ""
 
 	while true:
 		var new_message: String = random_message.text
-
 		while new_message == last_message:
 			new_message = MESSAGES.pick_random()
 

@@ -11,19 +11,19 @@ import java.util.List;
 public interface RoomRepository extends JpaRepository<RoomEntity, String> {
     @Query(
     """
-        select distinct r
-        from RoomEntity r
-        join r.totalScores ts
-        where ts.id.playerId = :playerId
+        SELECT DISTINCT r
+        FROM RoomEntity r
+        JOIN r.totalScores ts
+        WHERE ts.id.playerId=:playerId
     """)
     List<RoomEntity> findAllRoomsByPlayerId(@Param("playerId") Long playerId, Pageable pageable);
 
     @Query(
     """
-        select distinct r
-        from RoomEntity r
-        join r.totalScores ts
-        where r.isPublic=true and ts.id.playerId = :playerId
+        SELECT DISTINCT r
+        FROM RoomEntity r
+        JOIN r.totalScores ts
+        WHERE r.isPublic=true AND ts.id.playerId=:playerId
     """)
     List<RoomEntity> findPublicRoomsByPlayerId(@Param("playerId") Long playerId, Pageable pageable);
 }

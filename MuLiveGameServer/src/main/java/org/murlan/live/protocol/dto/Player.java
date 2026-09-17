@@ -21,6 +21,7 @@ public class Player {
     private long id;
     private String username;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") private LocalDateTime creationDate;
+    private String email;
     @JsonIgnore private String jwt;
     @JsonIgnore private Hand hand;
 
@@ -28,16 +29,25 @@ public class Player {
         this.id = id;
     }
 
+    public Player(long id, String username, LocalDateTime creationDate, String email, String jwt) {
+        this.id = id;
+        this.username = username;
+        this.creationDate = creationDate;
+        this.email = email;
+        this.jwt = jwt;
+    }
+
     public Player(long id, String username, LocalDateTime creationDate, String jwt) {
         this.id = id;
         this.username = username;
         this.creationDate = creationDate;
+        this.email = "";
         this.jwt = jwt;
     }
 
     @JsonIgnore
     public boolean isInvalid() {
-        return jwt == null;
+        return jwt == null || id == -1;
     }
 
     @Override

@@ -2,9 +2,6 @@ class_name InformPlayerJoinRoomResp
 extends Resp
 
 ## GDScript port of org.murlan.live.protocol.api.InformPlayerJoinRoomResp.
-## The Player field is serialized server-side via Jackson; ported here as a
-## plain Dictionary (parsed JSON) rather than a dedicated Player class --
-## say the word if you'd like a typed Player class ported too.
 
 var player: Dictionary = {}
 

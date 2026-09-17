@@ -170,7 +170,7 @@ func start_dealing(
 
 			if card == null:
 				return
-
+			var duration : float = 0.05
 			match seat_index:
 				0:
 					if my_card_index < my_hand.size():
@@ -184,30 +184,28 @@ func start_dealing(
 
 					await player_hand.receive_card(
 						card,
-						deck.global_position
+						duration
 					)
 
 				1:
 					await opponent_hand2.receive_card(
 						card,
-						deck.global_position
+						duration
 					)
 
 				2:
 					await opponent_hand3.receive_card(
 						card,
-						deck.global_position
+						duration
 					)
 
 				3:
 					await opponent_hand4.receive_card(
 						card,
-						deck.global_position
+						duration
 					)
 
 			remaining_cards[seat_index] -= 1
-
-			await get_tree().create_timer(0.05).timeout
 	
 func get_hand_card_global_position(hand: Panel) -> Vector2:
 
