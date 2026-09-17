@@ -57,6 +57,10 @@ fi
 docker-compose up -d --build "${SERVICES_TO_BUILD[@]}"
 
 if [ $DROP_CREATE_DB = true ]; then
+  if [ $BUILD_UMSERVER = true ]; then
+    docker stop mulive-umserver
+  fi
+
   chmod +x ./wait-for-it.sh && ./wait-for-it.sh localhost:5432 && sleep 2
   docker exec -it mulive-db psql -U postgres -c "DROP DATABASE IF EXISTS ${POSTGRES_DB};"
   docker exec -it mulive-db psql -U postgres -c "CREATE DATABASE ${POSTGRES_DB} WITH ENCODING 'UTF8' LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8' TEMPLATE template0;"
@@ -68,12 +72,8 @@ if [ $DROP_CREATE_DB = true ]; then
   done
 
   # After running DB scripts, check if umserver is to be built.
-  # If it is, stop and start again in order for SpringBoot to start-up with the updated DB
-  for service in "${SERVICES_TO_BUILD[@]}"; do
-      if [[ "$service" == "umserver" ]]; then
-          docker stop mulive-umserver
-          docker start mulive-umserver
-          break
-      fi
-  done
+  # If it is, start again in order for SpringBoot to start-up with the updated DB
+  if [ $BUILD_UMSERVER = true ]; then
+    docker start mulive-umserver
+  fi
 fi

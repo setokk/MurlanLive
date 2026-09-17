@@ -1,12 +1,15 @@
 package org.murlan.live.game.deck;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class HandTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.*;
 
+public class HandTest {
+
+    @Test
     public void testContains() {
         List<Card> sameCards = Arrays.asList(Card.FIVE_OF_HEARTS, Card.FIVE_OF_SPADES);
 
@@ -17,6 +20,7 @@ public class HandTest extends TestCase {
         assertTrue(hand.contains(cardCombination));
     }
 
+    @Test
     public void testNotContains() {
         List<Card> cardsToBePlayed = Arrays.asList(Card.FIVE_OF_HEARTS, Card.FIVE_OF_SPADES);
         List<Card> actualOwnedCards = Arrays.asList(Card.FIVE_OF_HEARTS, Card.ACE_OF_CLUBS);
@@ -28,6 +32,7 @@ public class HandTest extends TestCase {
         assertFalse(hand.contains(cardCombination));
     }
 
+    @Test
     public void testContains_2() {
         List<Card> cardsToBePlayed = Arrays.asList(Card.FIVE_OF_HEARTS, Card.FIVE_OF_SPADES);
         List<Card> actualOwnedCards = Arrays.asList(Card.FIVE_OF_HEARTS, Card.FIVE_OF_SPADES, Card.ACE_OF_CLUBS);

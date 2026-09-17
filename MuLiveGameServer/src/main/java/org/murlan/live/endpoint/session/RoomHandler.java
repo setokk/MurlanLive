@@ -70,10 +70,13 @@ public class RoomHandler {
             onPlayerLeaveOrDisconnect.accept(room);
 
             List<PlayerSession> playersInRoom = removeRoom(roomId);
+            if (playersInRoom == null) {
+                return Optional.empty();
+            }
+
             for (PlayerSession otherPlayerSession : playersInRoom) {
                 sessionToRoomIdMap.remove(otherPlayerSession);
             }
-
             return Optional.of(playersInRoom);
         }
     }

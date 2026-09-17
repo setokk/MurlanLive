@@ -2,8 +2,6 @@ class_name CreateRoomReq
 extends Req
 
 ## GDScript port of org.murlan.live.protocol.api.CreateRoomReq.
-## Note: passcode has been removed server-side; this request no longer
-## takes one.
 
 var room_name: String
 var is_public: bool
@@ -23,7 +21,7 @@ func is_valid() -> bool:
 func to_message(config: ProtocolConfig) -> String:
 	return config.protocol_delimiter.join([
 		ClientEvent.id(ClientEvent.Value.CREATE_ROOM),
-		room_name,
+		escape(room_name, config),
 		str(is_public),
 		str(total_score_to_win),
 	])

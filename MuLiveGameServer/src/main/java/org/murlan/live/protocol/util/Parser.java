@@ -6,7 +6,9 @@ import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.ClientEvent;
 import org.murlan.live.protocol.api.Req;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -16,7 +18,7 @@ public class Parser {
     private final ProtocolConfig config;
 
     public Req parse(String message) throws InvalidDataException {
-        String[] messageParts = message.split(Pattern.quote(config.getProtocol_delimiter()));
+        String[] messageParts = splitEscaped(message, config.getProtocol_delimiter());
         if (messageParts.length < MIN_NUM_VALUES) { // All messages should start with: ClientEvent ID
             throw new InvalidDataException();
         }
@@ -26,6 +28,35 @@ public class Parser {
         } catch (IllegalArgumentException e) {
             throw new InvalidDataException();
         }
+    }
+
+    private String[] splitEscaped(String message, String delimiter) {
+        char delimiterChar = delimiter.charAt(0);
+        boolean encounteredBackslash = false;
+        List<String> messageParts = new ArrayList<>();
+
+        StringBuilder sb = new StringBuilder();
+        for (char c : message.toCharArray()) {
+            if (c == '\\' && !encounteredBackslash) {
+                encounteredBackslash = true;
+                continue;
+            } else if (c == delimiterChar && !encounteredBackslash) {
+                messageParts.add(sb.toString());
+                sb = new StringBuilder();
+                continue;
+            }
+
+            encounteredBackslash = false;
+            sb.append(c);
+        }
+
+        if (encounteredBackslash) {
+            sb.append('\\');
+        }
+
+        messageParts.add(sb.toString());
+
+        return messageParts.toArray(new String[0]);
     }
 
     public Map<String, String> parseQueryParams(String queryString) {

@@ -3,6 +3,7 @@ package org.murlan.live.protocol;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.murlan.live.protocol.api.AvailableRoomsReq;
+import org.murlan.live.protocol.api.ChatReq;
 import org.murlan.live.protocol.api.CreateRoomReq;
 import org.murlan.live.protocol.api.GameStateReq;
 import org.murlan.live.protocol.api.GiveCardReq;
@@ -25,11 +26,13 @@ import java.util.Arrays;
  *     <li>{@link #GAME_STATE}</li>
  *     <li>{@link #PLAY_HAND}</li>
  *     <li>{@link #PASS}</li>
- *     <li>${@link #AVAILABLE_ROOMS}</li>
- *     <li>${@link #JOIN_ROOM}</li>
- *     <li>${@link #CREATE_ROOM}</li>
- *     <li>${@link #GIVE_CARD}</li>
- *     <li>${@link #LEAVE_ROOM}</li>
+ *     <li>{@link #AVAILABLE_ROOMS}</li>
+ *     <li>{@link #JOIN_ROOM}</li>
+ *     <li>{@link #CREATE_ROOM}</li>
+ *     <li>{@link #GIVE_CARD}</li>
+ *     <li>{@link #LEAVE_ROOM}</li>
+ *     <li>{@link #READY}</li>
+ *     <li>{@link #CHAT}</li>
  * </ul>
  */
 @Getter
@@ -78,7 +81,12 @@ public enum ClientEvent {
     /**
      * Indicates that a player is ready to play (only the first game of the room).
      */
-    READY(ReadyReq::new);
+    READY(ReadyReq::new),
+
+    /**
+     * Indicates that a player wants to send a chat message in the room they are in.
+     */
+    CHAT(ChatReq::new);
 
     private final ReqFactory reqFactory;
 

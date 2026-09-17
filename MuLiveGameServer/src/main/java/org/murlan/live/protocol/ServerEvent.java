@@ -5,6 +5,20 @@ import lombok.Getter;
 
 /**
  * Enum defining <b>all</b> possible events that the server can send during a game lobby.
+ * </br>
+ * List of possible events a player can receive:
+ * <ul>
+ *     <li>{@link #INFORM_PLAY_HAND}</li>
+ *     <li>{@link #INFORM_PASS}</li>
+ *     <li>{@link #INFORM_GIVE_CARD}</li>
+ *     <li>{@link #INFORM_GAME_START}</li>
+ *     <li>{@link #INFORM_GAME_FINISH}</li>
+ *     <li>{@link #INFORM_PLAYER_JOIN_ROOM}</li>
+ *     <li>{@link #INFORM_PLAYER_LEAVE_ROOM}</li>
+ *     <li>{@link #INFORM_PLAYER_LOST_CONNECTION}</li>
+ *     <li>{@link #INFORM_PLAYER_READY}</li>
+ *     <li>{@link #INFORM_PLAYER_CHAT}</li>
+ *  * </ul>
  */
 @Getter
 @AllArgsConstructor
@@ -17,7 +31,8 @@ public enum ServerEvent {
     INFORM_PLAYER_JOIN_ROOM(),
     INFORM_PLAYER_LEAVE_ROOM(),
     INFORM_PLAYER_LOST_CONNECTION(),
-    INFORM_PLAYER_READY();
+    INFORM_PLAYER_READY(),
+    INFORM_PLAYER_CHAT();
 
     public String id() {
         return "S" + ordinal();

@@ -56,6 +56,25 @@ public class EndpointHelper {
         session.close(closeReason.create());
     }
 
+    /**
+     * Sends a server event to a list of players.
+     * </br>
+     * </br>
+     * <b>The default behaviour of this method:</b> send the server event to everyone, <b>EXCEPT</b> the player that did this request.
+     * </br>
+     * <i>(ex. A player does a {@link org.murlan.live.protocol.api.PassReq} request ->
+     * This has the side effect of sending {@link InformPassResp} to the 3 other players.
+     * The player that did the initial request is ignored.)</i>
+     * </br>
+     * </br>
+     * If any server event needs <b>special handling</b> and does not follow this rule
+     * (see {@link InformGameStartResp}, {@link InformGameFinishResp}, {@link InformGameFinishResp}, {@link InformGiveCardResp} etc.),
+     * it can be specified inside the <b>switch</b> for special handling.
+     * @param resp the server event
+     * @param originPlayer the origin player (the one that made the initial request)
+     * @param playerSessionsInRoom the players that are in the room.
+     * @throws IOException in case of any socket error
+     */
     public void informPlayers(Resp resp, PlayerSession originPlayer, List<PlayerSession> playerSessionsInRoom) throws IOException {
         if (resp == null) {
             return;
@@ -70,16 +89,6 @@ public class EndpointHelper {
                     send(informGameStartResp, playerSession);
                 }
                 case InformGameFinishResp informGameFinishResp -> send(resp, playerSession);
-                case InformPlayHandResp informPlayHandResp -> {
-                    if (!playerSession.equals(originPlayer)) {
-                        send(resp, playerSession);
-                    }
-                }
-                case InformPassResp informPassResp -> {
-                    if (!playerSession.equals(originPlayer)) {
-                        send(resp, playerSession);
-                    }
-                }
                 case InformGiveCardResp informGiveCardResp -> {
                     if (informGiveCardResp.getTargetPlayerId() == playerSession.getPlayer().getId()) {
                         send(resp, playerSession);
@@ -94,23 +103,12 @@ public class EndpointHelper {
                         send(hiddenInformGiveCardResp, playerSession);
                     }
                 }
-                case InformPlayerJoinRoomResp informPlayerJoinRoomResp ->  {
-                    if (!playerSession.equals(originPlayer)) {
-                        send(resp, playerSession);
-                    }
-                }
-                case InformPlayerLeaveRoomResp informPlayerLeaveRoomResp ->  {
-                    if (!playerSession.equals(originPlayer)) {
-                        send(resp, playerSession);
-                    }
-                }
                 case InformPlayerLostConnectionResp informPlayerLostConnectionResp -> send(resp, playerSession);
-                case InformPlayerReadyResp informPlayerReadyResp -> {
+                default -> {
                     if (!playerSession.equals(originPlayer)) {
                         send(resp, playerSession);
                     }
                 }
-                default -> throw new IllegalStateException("Unexpected value: " + resp);
             }
         }
     }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.protocol.ClientEvent;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.ResponseStatus;
@@ -14,12 +15,14 @@ import org.murlan.live.protocol.ResponseStatus;
 @AllArgsConstructor
 public final class PlayHandResp implements Resp {
     private ResponseStatus responseStatus;
+    private CardCombination cardCombination;
 
     @Override
     public String toMessage(ProtocolConfig config, ObjectMapper objectMapper) throws JsonProcessingException {
         return String.join(config.getProtocol_delimiter(),
                 ClientEvent.PLAY_HAND.id(),
-                getResponseStatus().toString()
+                getResponseStatus().toString(),
+                cardCombination.toMessage(config.getProtocol_list_delimiter())
         );
     }
 }

@@ -5,27 +5,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
-import org.murlan.live.game.deck.Card;
-import org.murlan.live.protocol.ClientEvent;
 import org.murlan.live.protocol.ResponseStatus;
+import org.murlan.live.protocol.ServerEvent;
 import org.murlan.live.protocol.config.ProtocolConfig;
+import org.murlan.live.protocol.dto.Player;
 
 @Setter
 @Getter
 @AllArgsConstructor
-public final class GiveCardResp implements Resp {
+public final class InformPlayerChatResp implements Resp {
     private ResponseStatus responseStatus;
-    @Accessors(fluent = true) private boolean haveBothPlayersGivenCards;
-    private Card givenCard;
+    private String message;
+    private Player player;
 
     @Override
     public String toMessage(ProtocolConfig config, ObjectMapper objectMapper) throws JsonProcessingException {
-        return String.join(config.getProtocol_delimiter(),
-                ClientEvent.GIVE_CARD.id(),
+        return String.join(
+                config.getProtocol_delimiter(),
+                ServerEvent.INFORM_PLAYER_CHAT.id(),
                 getResponseStatus().toString(),
-                String.valueOf(haveBothPlayersGivenCards),
-                String.valueOf(givenCard.ordinal())
+                escape(message, config),
+                objectMapper.writeValueAsString(player)
         );
     }
 }

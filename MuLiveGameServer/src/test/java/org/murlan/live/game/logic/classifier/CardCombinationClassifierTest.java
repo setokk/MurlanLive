@@ -1,8 +1,7 @@
 package org.murlan.live.game.logic.classifier;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.murlan.live.game.classifier.CardCombinationClassifier00;
 import org.murlan.live.game.classifier.CardCombinationClassifier01;
 import org.murlan.live.game.classifier.CardCombinationClassifier02;
@@ -21,14 +20,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class CardCombinationClassifierTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(CardCombinationClassifierTest.class);
 
-    private List<ICardCombinationClassifier> classifiers;
+    private static List<ICardCombinationClassifier> classifiers;
 
-    @Before
-    public void setUp() throws Exception {
-        this.classifiers = Arrays.asList(
+    @BeforeAll
+    public static void setUp() throws Exception {
+        classifiers = Arrays.asList(
                 new CardCombinationClassifier00(),
                 new CardCombinationClassifier01(),
                 new CardCombinationClassifier02(),
@@ -48,8 +49,8 @@ public class CardCombinationClassifierTest {
         );
         LOGGER.debug("testCardCombination_BOMB() -> Card combination: {{}} should be classified!", combination);
         boolean isClassified = runClassifiers(combination);
-        Assert.assertTrue(isClassified);
-        Assert.assertEquals(CardCombinationType.BOMB, combination.getType());
+        assertTrue(isClassified);
+        assertEquals(CardCombinationType.BOMB, combination.getType());
     }
 
     @Test
@@ -62,7 +63,7 @@ public class CardCombinationClassifierTest {
         );
         LOGGER.debug("testCardCombination_TRIPLE_SINGLE() -> Card combination: {{}} should NOT be classified!", combination);
         boolean isClassified = runClassifiers(combination);
-        Assert.assertFalse(isClassified);
+        assertFalse(isClassified);
     }
 
     @Test
@@ -77,8 +78,8 @@ public class CardCombinationClassifierTest {
         );
         LOGGER.debug("testCardCombination_KOLOR_6() -> Card combination: {{}} should be classified!", combination);
         boolean isClassified = runClassifiers(combination);
-        Assert.assertTrue(isClassified);
-        Assert.assertEquals(CardCombinationType.KOLOR, combination.getType());
+        assertTrue(isClassified);
+        assertEquals(CardCombinationType.KOLOR, combination.getType());
     }
 
     @Test
@@ -92,8 +93,8 @@ public class CardCombinationClassifierTest {
         );
         LOGGER.debug("testCardCombination_KOLOR_5() -> Card combination: {{}} should be classified!", combination);
         boolean isClassified = runClassifiers(combination);
-        Assert.assertTrue(isClassified);
-        Assert.assertEquals(CardCombinationType.KOLOR, combination.getType());
+        assertTrue(isClassified);
+        assertEquals(CardCombinationType.KOLOR, combination.getType());
     }
 
     @Test
@@ -107,8 +108,8 @@ public class CardCombinationClassifierTest {
         );
         LOGGER.debug("testCardCombination_KOLOR_5_KING_ACE() -> Card combination: {{}} should be classified!", combination);
         boolean isClassified = runClassifiers(combination);
-        Assert.assertTrue(isClassified);
-        Assert.assertEquals(CardCombinationType.KOLOR, combination.getType());
+        assertTrue(isClassified);
+        assertEquals(CardCombinationType.KOLOR, combination.getType());
     }
 
     @Test
@@ -120,8 +121,8 @@ public class CardCombinationClassifierTest {
         );
         LOGGER.debug("testCardCombination_BOMB_KOLOR_FULL() -> Card combination: {{}} should be classified!", combination);
         boolean isClassified = runClassifiers(combination);
-        Assert.assertTrue(isClassified);
-        Assert.assertEquals(CardCombinationType.BOMB_KOLOR, combination.getType());
+        assertTrue(isClassified);
+        assertEquals(CardCombinationType.BOMB_KOLOR, combination.getType());
     }
 
     @Test
@@ -135,8 +136,8 @@ public class CardCombinationClassifierTest {
         );
         LOGGER.debug("testCardCombination_BOMB_KOLOR_5() -> Card combination: {{}} should be classified!", combination);
         boolean isClassified = runClassifiers(combination);
-        Assert.assertTrue(isClassified);
-        Assert.assertEquals(CardCombinationType.BOMB_KOLOR, combination.getType());
+        assertTrue(isClassified);
+        assertEquals(CardCombinationType.BOMB_KOLOR, combination.getType());
     }
 
     @Test
@@ -149,7 +150,7 @@ public class CardCombinationClassifierTest {
         );
         LOGGER.debug("testCardCombination_SINGLE_4() -> Card combination: {{}} should not be classified!", combination);
         boolean isClassified = runClassifiers(combination);
-        Assert.assertFalse(isClassified);
+        assertFalse(isClassified);
     }
 
     @Test
@@ -163,7 +164,7 @@ public class CardCombinationClassifierTest {
         );
         LOGGER.debug("testCardCombination_KOLOR_5_ACE() -> Card combination: {{}} should not be classified!", combination);
         boolean isClassified = runClassifiers(combination);
-        Assert.assertFalse(isClassified);
+        assertFalse(isClassified);
     }
 
     private boolean runClassifiers(CardCombination combination) {

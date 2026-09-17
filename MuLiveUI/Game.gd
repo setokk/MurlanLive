@@ -189,7 +189,7 @@ func _on_play_requested() -> void:
 
 func _on_play_completed(resp: PlayHandResp) -> void:
 	if resp.response_status == 200:
-		var cards_to_play = hand_placeholder.play_selected_cards()
+		var cards_to_play: Array[Card] = hand_placeholder.play_selected_cards(resp.card_combination)
 		await played_cards.receive_cards(cards_to_play)
 		seats[current_player_seat_index].stop_turn()
 		WebSocketClient.send_message(GameStateReq.new())
@@ -238,7 +238,7 @@ func _on_give_card_requested() -> void:
 		
 func _on_give_card_completed(resp: GiveCardResp) -> void:
 	if resp.response_status == 200:
-		var card_to_give: Card = hand_placeholder.give_card()
+		var card_to_give: Card = hand_placeholder.give_card(resp.given_card)
 		var opponent_hand_index: int
 		if is_local_player_loser:
 			opponent_hand_index = find_player_seat_index(int(previous_winner["id"])) - 1
