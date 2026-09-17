@@ -33,7 +33,7 @@ public class HandLayoutConfigurationEntity {
     @Id
     @SequenceGenerator(
             name = "handLayoutConfigurationSeqGen",
-            sequenceName = "hand_layout_configuration",
+            sequenceName = "hand_layout_configuration_seq",
             allocationSize = 1
     )
     @GeneratedValue(
