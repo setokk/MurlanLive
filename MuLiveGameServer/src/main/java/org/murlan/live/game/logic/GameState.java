@@ -11,6 +11,9 @@ import org.murlan.live.game.GameConstants;
 import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.game.deck.Rank;
+import org.murlan.live.game.logic.handler.OnGameFinish;
+import org.murlan.live.game.logic.handler.OnGameStart;
+import org.murlan.live.game.logic.handler.OnTurnTimeout;
 import org.murlan.live.protocol.dto.Player;
 
 import java.util.ArrayList;
@@ -23,7 +26,6 @@ import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Getter
@@ -42,9 +44,9 @@ public class GameState {
     @JsonIgnore private boolean shouldCurrTurnPlayerUseThreeOfSpades;
     @JsonIgnore private CardCombination currCardCombination;
 
-    @JsonIgnore private Consumer<GameState> onStartGame;
-    @JsonIgnore private Runnable onFinishGame;
-    @JsonIgnore private Consumer<GameState> onTurnTimeout;
+    @JsonIgnore private OnGameStart onGameStart;
+    @JsonIgnore private OnGameFinish onGameFinish;
+    @JsonIgnore private OnTurnTimeout onTurnTimeout;
 
     @JsonIgnore private Player prevWinner;
     @JsonIgnore private Player prevLoser;
@@ -57,14 +59,14 @@ public class GameState {
     @JsonIgnore private ScheduledExecutorService scheduler;
     @JsonIgnore private ScheduledFuture<?> turnTimer;
 
-    public GameState(State state, Player player, Consumer<GameState> onStartGame, Runnable onFinishGame, Consumer<GameState> onTurnTimeout) {
+    public GameState(State state, Player player, OnGameStart onGameStart, OnGameFinish onGameFinish, OnTurnTimeout onTurnTimeout) {
         this.state = state;
         this.players = new ArrayList<>();
         this.players.add(player);
         this.score = HashMap.newHashMap(GameConstants.MAX_PLAYERS);
         this.givenCards = HashSet.newHashSet(0);
-        this.onStartGame = onStartGame;
-        this.onFinishGame = onFinishGame;
+        this.onGameStart = onGameStart;
+        this.onGameFinish = onGameFinish;
         this.onTurnTimeout = onTurnTimeout;
     }
 
@@ -74,8 +76,8 @@ public class GameState {
                 .withPlayers(new ArrayList<>(previous.getPlayers()))
                 .withScore(HashMap.newHashMap(GameConstants.MAX_PLAYERS))
                 .withGivenCards(HashSet.newHashSet(0))
-                .withOnStartGame(previous.getOnStartGame())
-                .withOnFinishGame(previous.getOnFinishGame())
+                .withOnGameStart(previous.getOnGameStart())
+                .withOnGameFinish(previous.getOnGameFinish())
                 .withOnTurnTimeout(previous.getOnTurnTimeout())
                 .withPrevWinner(winner)
                 .withPrevLoser(loser)
@@ -253,7 +255,7 @@ public class GameState {
     }
 
     public synchronized void startGame() {
-        onStartGame.accept(this);
+        onGameStart.accept(this);
     }
 
     private void finishGame() {
@@ -264,7 +266,7 @@ public class GameState {
         cancelTurnTimer();
 
         this.state = State.FINISHED;
-        onFinishGame.run();
+        onGameFinish.run();
     }
 
     private void nextTurn() {

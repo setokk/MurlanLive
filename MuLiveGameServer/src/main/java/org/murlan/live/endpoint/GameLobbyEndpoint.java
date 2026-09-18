@@ -209,7 +209,7 @@ public class GameLobbyEndpoint {
                         LocalDateTime.now(),
                         createRoomReq.getTotalScoreToWin(),
                         playerSession.getPlayer(),
-                        new GameStateFactory(roomRESTClient, endpointHelper, roomHandler, config, scheduler)
+                        new GameStateFactory(roomHandler, endpointHelper, roomRESTClient, config, scheduler)
                 );
 
                 RoomDto roomDto = roomHandler.createRoom(newRoom, playerSession);
