@@ -18,6 +18,8 @@ import lombok.Getter;
  *     <li>{@link #INFORM_PLAYER_LOST_CONNECTION}</li>
  *     <li>{@link #INFORM_PLAYER_READY}</li>
  *     <li>{@link #INFORM_PLAYER_CHAT}</li>
+ *     <li>{@link #INFORM_UPDATE_ROOM_DETAILS}</li>
+ *     <li>{@link #INFORM_PLAYER_KICKED}</li>
  *  * </ul>
  */
 @Getter
@@ -32,7 +34,9 @@ public enum ServerEvent {
     INFORM_PLAYER_LEAVE_ROOM(),
     INFORM_PLAYER_LOST_CONNECTION(),
     INFORM_PLAYER_READY(),
-    INFORM_PLAYER_CHAT();
+    INFORM_PLAYER_CHAT(),
+    INFORM_UPDATE_ROOM_DETAILS(),
+    INFORM_PLAYER_KICKED();
 
     public String id() {
         return "S" + ordinal();

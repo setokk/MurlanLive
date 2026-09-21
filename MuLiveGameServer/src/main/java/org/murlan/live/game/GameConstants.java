@@ -2,6 +2,8 @@ package org.murlan.live.game;
 
 import org.murlan.live.game.deck.CardCombination;
 
+import java.util.List;
+
 public final class GameConstants {
     public static final int MAX_PLAYERS = 4;
     public static final short MAX_TOTAL_SCORE_TO_WIN = 50;
@@ -10,6 +12,6 @@ public final class GameConstants {
     public static final short SCORE_PENALTY_LOST_CONNECTION = 0;
     public static final short SCORE_REMAINING_PLAYERS_AFTER_LOST_CONNECTION = 0;
     public static final CardCombination EMPTY_CARD_COMBINATION = new CardCombination();
-    public static final long TURN_DURATION_SECONDS = 3600;
-    public static final int CHAT_CHARACTER_LIMIT = 356;
+    public static final List<Long> TURN_DURATION_SECONDS_VALUES = List.of(30L, 45L, 60L, 75L, 90L, 105L, 120L);
+    public static final int CHAT_CHARACTER_LIMIT = 256;
 }

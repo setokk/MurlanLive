@@ -103,3 +103,29 @@ BEGIN
             UNIQUE (player_id);
     END IF;
 END $$;
+
+-- Foreign key constraint fk_player_block_player
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE table_name = 'player_block'
+        AND constraint_name = 'fk_player_block_player'
+    ) THEN
+ALTER TABLE ONLY player_block
+    ADD CONSTRAINT fk_player_block_player FOREIGN KEY (player_id) REFERENCES player(id);
+END IF;
+END $$;
+
+-- Foreign key constraint fk_player_block_blocked_player
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE table_name = 'player_block'
+        AND constraint_name = 'fk_player_block_blocked_player'
+    ) THEN
+ALTER TABLE ONLY player_block
+    ADD CONSTRAINT fk_player_block_blocked_player FOREIGN KEY (blocked_player_id) REFERENCES player(id);
+END IF;
+END $$;

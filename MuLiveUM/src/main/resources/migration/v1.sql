@@ -82,3 +82,12 @@ CREATE SEQUENCE IF NOT EXISTS hand_layout_configuration_seq
     START WITH 1
     INCREMENT BY 1
     NO CYCLE;
+
+--
+-- player_block Table
+--
+CREATE TABLE player_block (
+    player_id BIGINT NOT NULL,
+    blocked_player_id BIGINT NOT NULL,
+    PRIMARY KEY (player_id, blocked_player_id)
+);

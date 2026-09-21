@@ -39,7 +39,7 @@ public class GameState {
     private List<Player> players;
     private Map<Player, Short> score;
 
-    @JsonIgnore private final long turnDurationInSeconds = GameConstants.TURN_DURATION_SECONDS;
+    @JsonIgnore private long turnDurationInSeconds;
     @JsonIgnore private Player currTurnPlayer;
     @JsonIgnore private boolean shouldCurrTurnPlayerUseThreeOfSpades;
     @JsonIgnore private CardCombination currCardCombination;
@@ -59,10 +59,16 @@ public class GameState {
     @JsonIgnore private ScheduledExecutorService scheduler;
     @JsonIgnore private ScheduledFuture<?> turnTimer;
 
-    public GameState(State state, Player player, OnGameStart onGameStart, OnGameFinish onGameFinish, OnTurnTimeout onTurnTimeout) {
+    public GameState(State state,
+                     Player player,
+                     long turnDurationInSeconds,
+                     OnGameStart onGameStart,
+                     OnGameFinish onGameFinish,
+                     OnTurnTimeout onTurnTimeout) {
         this.state = state;
         this.players = new ArrayList<>();
         this.players.add(player);
+        this.turnDurationInSeconds = turnDurationInSeconds;
         this.score = HashMap.newHashMap(GameConstants.MAX_PLAYERS);
         this.givenCards = HashSet.newHashSet(0);
         this.onGameStart = onGameStart;
@@ -74,6 +80,7 @@ public class GameState {
         return GameState.builder()
                 .withState(State.WAITING)
                 .withPlayers(new ArrayList<>(previous.getPlayers()))
+                .withTurnDurationInSeconds(previous.getTurnDurationInSeconds())
                 .withScore(HashMap.newHashMap(GameConstants.MAX_PLAYERS))
                 .withGivenCards(HashSet.newHashSet(0))
                 .withOnGameStart(previous.getOnGameStart())
@@ -315,7 +322,7 @@ public class GameState {
 
         turnTimer = scheduler.schedule(
                 () -> onTurnTimeout.accept(this),
-                GameConstants.TURN_DURATION_SECONDS,
+                turnDurationInSeconds,
                 TimeUnit.SECONDS
         );
     }

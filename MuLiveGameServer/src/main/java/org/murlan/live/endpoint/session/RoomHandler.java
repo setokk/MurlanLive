@@ -6,8 +6,10 @@ import org.murlan.live.game.GameConstants;
 import org.murlan.live.game.logic.GameState;
 import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.dto.Player;
+import org.murlan.live.protocol.dto.RoomDetailsDto;
 import org.murlan.live.protocol.dto.RoomDto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -106,6 +108,97 @@ public class RoomHandler {
         linkSessionWithRoom(playerSession, room.getId());
 
         return new RoomDto(room.getId(), room.getName(), room.getPlayers());
+    }
+
+    public void copyRoom(@NonNull String roomId) {
+        Room room = getRoom(roomId);
+        if (room == null) {
+            return;
+        }
+
+        synchronized (room) {
+            List<PlayerSession> playersInRoom = removeRoom(roomId);
+            PlayerSession ownerPlayerSession = playersInRoom.stream()
+                    .filter(ps -> ps.getPlayer().equals(room.getOwner()))
+                    .findAny()
+                    .orElseThrow();
+
+            for (PlayerSession playerSession : playersInRoom) {
+                sessionToRoomIdMap.remove(playerSession);
+            }
+
+            Room copyRoom = new Room(
+                    room.getName(),
+                    room.isPublic(),
+                    LocalDateTime.now(),
+                    room.getTotalScoreToWin(),
+                    room.getOwner(),
+                    room.getTurnDurationSeconds(),
+                    room.getGameStateFactory()
+            );
+            createRoom(copyRoom, ownerPlayerSession);
+
+            for (PlayerSession playerSession : playersInRoom) {
+                if (!ownerPlayerSession.equals(playerSession)) {
+                    joinRoom(copyRoom.getId(), playerSession);
+                }
+            }
+        }
+    }
+
+    public boolean updateRoom(@NonNull String roomId, @NonNull RoomDetailsDto roomDetailsDto, @NonNull Player player) {
+        Room room = getRoom(roomId);
+        if (room == null) {
+            return false;
+        }
+
+        synchronized (room) {
+            if (!GameState.State.WAITING.equals(room.getActiveGameState().getState())) {
+                return false;
+            }
+
+            if (!room.getOwner().equals(player)) {
+                return false;
+            }
+
+            if (roomDetailsDto.roomName() != null) {
+                room.setName(roomDetailsDto.roomName());
+            }
+            if (roomDetailsDto.totalScoreToWin() != null) {
+                room.setTotalScoreToWin(roomDetailsDto.totalScoreToWin());
+            }
+            if (roomDetailsDto.turnDurationSeconds() != null) {
+                room.setTurnDurationSeconds(roomDetailsDto.turnDurationSeconds());
+            }
+        }
+
+        return true;
+    }
+
+    public PlayerSession kickPlayer(@NonNull String roomId, long playerToKickId, @NonNull Player player) {
+        Room room = getRoom(roomId);
+        if (room == null) {
+            return null;
+        }
+
+        synchronized (room) {
+            if (!GameState.State.WAITING.equals(room.getActiveGameState().getState())) {
+                return null;
+            }
+
+            if (!room.getOwner().equals(player)) {
+                return null;
+            }
+
+            PlayerSession playerSessionToBeKicked = getPlayersInRoom(roomId).stream()
+                    .filter(ps -> ps.getPlayer().getId() == playerToKickId)
+                    .findAny()
+                    .orElseThrow();
+
+            removeSession(playerSessionToBeKicked, false, r -> {});
+
+            return playerSessionToBeKicked;
+        }
     }
 
     public Room getRoom(@NonNull String roomId) {

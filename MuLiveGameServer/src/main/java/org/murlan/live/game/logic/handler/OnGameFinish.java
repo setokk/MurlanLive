@@ -60,6 +60,7 @@ public final class OnGameFinish implements Runnable {
                 if (isFinalWinner) {
                     try {
                         roomRESTClient.createRoom(room);
+                        roomHandler.copyRoom(room.getId());
                     } catch (IOException | InterruptedException e) {
                         throw new RuntimeException(e);
                     }

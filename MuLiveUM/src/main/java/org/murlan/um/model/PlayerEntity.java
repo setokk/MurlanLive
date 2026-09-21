@@ -3,9 +3,13 @@ package org.murlan.um.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -16,6 +20,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -50,9 +57,28 @@ public class PlayerEntity {
     @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
     private HandLayoutConfigurationEntity handLayoutConfiguration;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "player_block",
+            joinColumns = @JoinColumn(name = "player_id"),
+            inverseJoinColumns = @JoinColumn(name = "blocked_player_id")
+    )
+    private Set<PlayerEntity> blockedPlayers = new HashSet<>();
+
     public PlayerEntity(String username, String password, LocalDateTime createdDate) {
         this.username = username;
         this.password = password;
         this.createdDate = createdDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof PlayerEntity player)) return false;
+        return Objects.equals(id, player.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

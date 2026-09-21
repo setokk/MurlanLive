@@ -28,11 +28,15 @@ import org.murlan.live.protocol.api.InformPassResp;
 import org.murlan.live.protocol.api.InformPlayHandResp;
 import org.murlan.live.protocol.api.InformPlayerChatResp;
 import org.murlan.live.protocol.api.InformPlayerJoinRoomResp;
+import org.murlan.live.protocol.api.InformPlayerKickedResp;
 import org.murlan.live.protocol.api.InformPlayerLeaveRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLostConnectionResp;
 import org.murlan.live.protocol.api.InformPlayerReadyResp;
+import org.murlan.live.protocol.api.InformUpdateRoomDetailsResp;
 import org.murlan.live.protocol.api.JoinRoomReq;
 import org.murlan.live.protocol.api.JoinRoomResp;
+import org.murlan.live.protocol.api.KickReq;
+import org.murlan.live.protocol.api.KickResp;
 import org.murlan.live.protocol.api.LeaveRoomReq;
 import org.murlan.live.protocol.api.LeaveRoomResp;
 import org.murlan.live.protocol.api.PassReq;
@@ -43,11 +47,14 @@ import org.murlan.live.protocol.api.ReadyReq;
 import org.murlan.live.protocol.api.ReadyResp;
 import org.murlan.live.protocol.api.Req;
 import org.murlan.live.protocol.api.Resp;
+import org.murlan.live.protocol.api.UpdateRoomDetailsReq;
+import org.murlan.live.protocol.api.UpdateRoomDetailsResp;
 import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ConfigProvider;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.dto.GameStateDto;
 import org.murlan.live.protocol.dto.Player;
+import org.murlan.live.protocol.dto.RoomDetailsDto;
 import org.murlan.live.protocol.dto.RoomDto;
 import org.murlan.live.protocol.jwt.JwtUtils;
 import org.murlan.live.protocol.rest.PlayerRESTClient;
@@ -212,6 +219,7 @@ public class GameLobbyEndpoint {
                         LocalDateTime.now(),
                         createRoomReq.getTotalScoreToWin(),
                         playerSession.getPlayer(),
+                        createRoomReq.getTurnDurationSeconds(),
                         new GameStateFactory(roomHandler, endpointHelper, roomRESTClient, config, scheduler)
                 );
 
@@ -274,6 +282,37 @@ public class GameLobbyEndpoint {
                 }
                 yield new ChatResp(
                         isRoomPresent ? ResponseStatus.OK : ResponseStatus.ERROR
+                );
+            }
+            case UpdateRoomDetailsReq updateRoomDetailsReq -> {
+                RoomDetailsDto roomDetailsDto = new RoomDetailsDto(
+                        updateRoomDetailsReq.getRoomName(),
+                        updateRoomDetailsReq.getTotalScoreToWin(),
+                        updateRoomDetailsReq.getTurnDurationSeconds()
+                );
+                boolean isSuccessful = isRoomPresent && roomHandler.updateRoom(room.getId(), roomDetailsDto, player);
+                if (isSuccessful) {
+                    informResp = new InformUpdateRoomDetailsResp(ResponseStatus.OK, roomDetailsDto);
+                }
+                yield new UpdateRoomDetailsResp(
+                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        roomDetailsDto
+                );
+            }
+            case KickReq kickReq -> {
+                PlayerSession kickedPlayerSession = null;
+                if (isRoomPresent) {
+                    kickedPlayerSession = roomHandler.kickPlayer(room.getId(), kickReq.getPlayerToKickId(), player);
+                }
+
+                boolean isSuccessful = kickedPlayerSession != null;
+                if (isSuccessful) {
+                    informResp = new InformPlayerKickedResp(ResponseStatus.OK, kickedPlayerSession.getPlayer());
+                    endpointHelper.send(informResp, kickedPlayerSession); // send here because they are removed and unreachable from roomHandler.getPlayersInRoom
+                }
+                yield new KickResp(
+                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        kickedPlayerSession != null ? kickedPlayerSession.getPlayer() : null
                 );
             }
             default -> throw new IllegalStateException("Unexpected request: " + req);

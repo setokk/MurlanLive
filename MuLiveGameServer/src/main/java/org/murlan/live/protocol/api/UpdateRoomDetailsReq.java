@@ -6,18 +6,16 @@ import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ProtocolConfig;
 
 @Getter
-public final class CreateRoomReq implements Req {
+public final class UpdateRoomDetailsReq implements Req {
     private final String roomName;
-    private final boolean isPublic;
     private final short totalScoreToWin;
     private final long turnDurationSeconds;
 
-    public CreateRoomReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException {
+    public UpdateRoomDetailsReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException {
         validate(messageParts);
         roomName = messageParts[startIndex()];
-        isPublic = Boolean.parseBoolean(messageParts[startIndex() + 1]);
-        totalScoreToWin = Short.parseShort(messageParts[startIndex() + 2]);
-        turnDurationSeconds = Long.parseLong(messageParts[startIndex() + 3]);
+        totalScoreToWin = parseNumber(messageParts[startIndex() + 1], Short.MIN_VALUE);
+        turnDurationSeconds = parseNumber(messageParts[startIndex() + 2], Long.MIN_VALUE);
     }
 
     @Override

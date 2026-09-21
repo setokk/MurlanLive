@@ -22,17 +22,33 @@ import java.util.stream.Collectors;
 @Setter
 @Getter
 @Builder(setterPrefix = "with")
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class Room {
     private String id;
-    private final String name;
+    private String name;
     @JsonProperty("isPublic") private final boolean isPublic;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") private final LocalDateTime creationDate;
-    private final short totalScoreToWin;
+    private short totalScoreToWin;
     private List<GameState> gameStates;
-    private final Player owner;
+    private Player owner;
+    @JsonIgnore private long turnDurationSeconds;
     @JsonIgnore private final GameStateFactory gameStateFactory;
+
+    public Room(String name,
+                boolean isPublic,
+                LocalDateTime creationDate,
+                short totalScoreToWin,
+                Player owner,
+                long turnDurationSeconds,
+                GameStateFactory gameStateFactory) {
+        this.name = name;
+        this.isPublic = isPublic;
+        this.creationDate = creationDate;
+        this.totalScoreToWin = totalScoreToWin;
+        this.owner = owner;
+        this.turnDurationSeconds = turnDurationSeconds;
+        this.gameStateFactory = gameStateFactory;
+    }
 
     public void initialGameState() {
         this.gameStates = new ArrayList<>();

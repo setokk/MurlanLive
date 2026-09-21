@@ -1,8 +1,10 @@
 package org.murlan.um.controller;
 
 import jakarta.validation.Valid;
+import org.murlan.um.api.request.BlockPlayerRequest;
 import org.murlan.um.api.request.LoginPlayerRequest;
 import org.murlan.um.api.request.RegisterPlayerRequest;
+import org.murlan.um.api.request.UnblockPlayerRequest;
 import org.murlan.um.auth.JwtUtils;
 import org.murlan.um.model.dto.PlayerDto;
 import org.murlan.um.service.PlayerService;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/players")
@@ -49,5 +53,23 @@ public class PlayerController {
     public ResponseEntity<PlayerDto> getPlayer(@PathVariable(name = "id") long playerId) {
         PlayerDto playerDto = playerService.getPlayer(playerId);
         return ResponseEntity.ok(playerDto);
+    }
+
+    @PostMapping("/block-player")
+    public ResponseEntity<PlayerDto> blockPlayer(@RequestBody @Valid BlockPlayerRequest request) {
+        PlayerDto blockedPlayerDto = playerService.blockPlayer(request.getPlayerToBlockId());
+        return ResponseEntity.ok(blockedPlayerDto);
+    }
+
+    @PostMapping("/unblock-player")
+    public ResponseEntity<PlayerDto> unblockPlayer(@RequestBody @Valid UnblockPlayerRequest request) {
+        PlayerDto blockedPlayerDto = playerService.unblockPlayer(request.getPlayerToUnblockId());
+        return ResponseEntity.ok(blockedPlayerDto);
+    }
+
+    @GetMapping("/get-blocked-players")
+    public ResponseEntity<List<PlayerDto>> getBlockedPlayers() {
+        List<PlayerDto> blockedPlayersDto = playerService.getBlockedPlayers();
+        return ResponseEntity.ok(blockedPlayersDto);
     }
 }

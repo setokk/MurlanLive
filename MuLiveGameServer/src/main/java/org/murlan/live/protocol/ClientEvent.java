@@ -8,11 +8,14 @@ import org.murlan.live.protocol.api.CreateRoomReq;
 import org.murlan.live.protocol.api.GameStateReq;
 import org.murlan.live.protocol.api.GiveCardReq;
 import org.murlan.live.protocol.api.JoinRoomReq;
+import org.murlan.live.protocol.api.KickReq;
 import org.murlan.live.protocol.api.LeaveRoomReq;
+import org.murlan.live.protocol.api.MuteReq;
 import org.murlan.live.protocol.api.PassReq;
 import org.murlan.live.protocol.api.PlayHandReq;
 import org.murlan.live.protocol.api.ReadyReq;
 import org.murlan.live.protocol.api.Req;
+import org.murlan.live.protocol.api.UpdateRoomDetailsReq;
 import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ProtocolConfig;
 
@@ -33,6 +36,7 @@ import java.util.Arrays;
  *     <li>{@link #LEAVE_ROOM}</li>
  *     <li>{@link #READY}</li>
  *     <li>{@link #CHAT}</li>
+ *     <li>{@link #UPDATE_ROOM_DETAILS}</li>
  * </ul>
  */
 @Getter
@@ -86,7 +90,22 @@ public enum ClientEvent {
     /**
      * Indicates that a player wants to send a chat message in the room they are in.
      */
-    CHAT(ChatReq::new);
+    CHAT(ChatReq::new),
+
+    /**
+     * Indicates that the owner of a room wants to update the room information.
+     */
+    UPDATE_ROOM_DETAILS(UpdateRoomDetailsReq::new),
+
+    /**
+     * Indicates that the owner of a room wants to kick a player.
+     */
+    KICK(KickReq::new),
+
+    /**
+     * Indicates that a player wants to mute the messages of another player.
+     */
+    MUTE(MuteReq::new);
 
     private final ReqFactory reqFactory;
 
