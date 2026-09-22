@@ -1,37 +1,60 @@
 package org.murlan.um.service;
 
+import jakarta.mail.MessagingException;
 import org.murlan.um.error.BusinessLogicException;
 import org.murlan.um.model.PlayerEntity;
+import org.murlan.um.model.PlayerResetPasswordEntity;
 import org.murlan.um.model.dto.PlayerDto;
 import org.murlan.um.repository.PlayerRepository;
+import org.murlan.um.repository.PlayerResetPasswordEntityRepository;
+import org.murlan.um.security.TokenGenerator;
 import org.murlan.um.service.param.LoginPlayerParam;
 import org.murlan.um.service.param.RegisterPlayerParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
 public class PlayerService {
     private final PlayerRepository playerRepository;
+    private final PlayerResetPasswordEntityRepository resetPasswordRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
+    private final TokenGenerator tokenGenerator;
+    private final EmailTemplateService emailTemplateService;
+    private final EmailService emailService;
 
     @Autowired
-    public PlayerService(PlayerRepository playerRepository, PasswordEncoder passwordEncoder, AuthService authService) {
+    public PlayerService(
+            PlayerRepository playerRepository,
+            PlayerResetPasswordEntityRepository resetPasswordRepository,
+            PasswordEncoder passwordEncoder,
+            AuthService authService,
+            TokenGenerator tokenGenerator,
+            EmailTemplateService emailTemplateService,
+            EmailService emailService
+    ) {
         this.playerRepository = playerRepository;
+        this.resetPasswordRepository = resetPasswordRepository;
         this.passwordEncoder = passwordEncoder;
         this.authService = authService;
+        this.tokenGenerator = tokenGenerator;
+        this.emailTemplateService = emailTemplateService;
+        this.emailService = emailService;
     }
 
     public PlayerDto loginPlayer(LoginPlayerParam param) {
         PlayerEntity player = playerRepository
-                .findPlayerByUsername(param.username())
+                .findPlayerByUsernameOrEmail(param.usernameOrEmail())
                 .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Invalid credentials"));
 
         String actualHashedPassword = player.getPassword();
@@ -47,7 +70,13 @@ public class PlayerService {
         if (usernameExists) {
             throw new BusinessLogicException(HttpStatus.CONFLICT, "Player with username: " + param.username() + " exists");
         }
-        PlayerEntity savedPlayer = playerRepository.save(new PlayerEntity(param.username(), passwordEncoder.encode(param.password()), LocalDateTime.now()));
+
+        boolean emailExists = param.email() != null && playerRepository.findPlayerByEmail(param.email()).isPresent();
+        if (emailExists) {
+            throw new BusinessLogicException(HttpStatus.CONFLICT, "Player with email: " + param.email() + " exists");
+        }
+
+        PlayerEntity savedPlayer = playerRepository.save(new PlayerEntity(param.username(), passwordEncoder.encode(param.password()), param.email(), LocalDateTime.now()));
         return new PlayerDto(savedPlayer.getId(), savedPlayer.getUsername(), savedPlayer.getCreatedDate());
     }
 
@@ -89,6 +118,69 @@ public class PlayerService {
         return player.getBlockedPlayers().stream()
                 .map(p -> new PlayerDto(p.getId(), p.getUsername(), p.getCreatedDate()))
                 .toList();
+    }
+
+    @Transactional
+    public void forgotPassword(String usernameOrEmail) {
+        PlayerEntity player = playerRepository.findPlayerByUsernameOrEmail(usernameOrEmail)
+                .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Username or email not found"));
+
+        if (player.getEmail() == null) {
+            throw new BusinessLogicException(HttpStatus.NOT_FOUND, "User has no email assigned");
+        }
+
+        PlayerResetPasswordEntity resetPassword = new PlayerResetPasswordEntity(
+                null,
+                tokenGenerator.generateToken(),
+                LocalDateTime.now().plusHours(12),
+                player
+        );
+        PlayerResetPasswordEntity savedResetPassword = resetPasswordRepository.save(resetPassword);
+
+        try {
+            String resetPasswordLink = ServletUriComponentsBuilder
+                    .fromCurrentContextPath()
+                    .path("/reset-password.html")
+                    .queryParam("token", savedResetPassword.getToken())
+                    .build()
+                    .toUriString();
+
+            String renderedHtml = emailTemplateService.render(
+                    EmailTemplateService.FORGOT_PASSWORD, Map.of(
+                            "username", player.getUsername(),
+                            "email", player.getEmail(),
+                            "reset-password-link", resetPasswordLink
+                    ));
+
+            emailService.sendMail(
+                    player.getEmail(),
+                    "MuLive: Request for Password Reset",
+                    renderedHtml,
+                    (helper) -> helper.addInline(
+                            "logo",
+                            new ClassPathResource("static/images/logo.png"),
+                            "image/png"
+                    )
+            );
+        } catch (MessagingException e) {
+            throw new BusinessLogicException(HttpStatus.INTERNAL_SERVER_ERROR, "There was an error with the email service. Please try again later");
+        }
+    }
+
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        PlayerResetPasswordEntity resetPassword = resetPasswordRepository.findByToken(token)
+                .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Reset password token not found"));
+
+        if (LocalDateTime.now().isAfter(resetPassword.getExpiresAt())) {
+            return;
+        }
+
+        PlayerEntity player = resetPassword.getPlayer();
+        player.setPassword(passwordEncoder.encode(newPassword));
+        playerRepository.save(player);
+
+        resetPasswordRepository.delete(resetPassword);
     }
 
     private PlayerBlockContext getPlayerBlockContext(long playerToBlockId) {

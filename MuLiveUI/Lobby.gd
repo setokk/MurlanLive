@@ -64,8 +64,8 @@ func update_room_visibility() -> void:
 		else:
 			room.visible = not room.is_full()
 
-func _on_create_requested() -> void: 
-	WebSocketClient.send_message(CreateRoomReq.new("Room", true, 3))
+func _on_create_requested() -> void:
+	WebSocketClient.send_message(CreateRoomReq.new("Room", true, 3, 3600))
 	
 func _on_create_completed(resp: CreateRoomResp) -> void:
 	SceneManager.show_game(resp.room)

@@ -14,9 +14,9 @@ func _ready():
 	login_http.request_completed.connect(_on_login_completed)
 	register_http.request_completed.connect(_on_register_completed)
 
-func login(username: String, password: String) -> void:
+func login(usernameOrEmail: String, password: String) -> void:
 	var body: String = JSON.stringify({
-		"username": username,
+		"usernameOrEmail": usernameOrEmail,
 		"password": password
 	})
 	

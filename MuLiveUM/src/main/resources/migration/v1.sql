@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS player(
     id BIGINT NOT NULL PRIMARY KEY,
     username TEXT NOT NULL,
     password TEXT NOT NULL,
+    email TEXT,
     creation_date TIMESTAMP NOT NULL
 );
 CREATE SEQUENCE IF NOT EXISTS player_seq
@@ -91,3 +92,17 @@ CREATE TABLE player_block (
     blocked_player_id BIGINT NOT NULL,
     PRIMARY KEY (player_id, blocked_player_id)
 );
+
+--
+-- player_reset_password Table
+--
+CREATE TABLE player_reset_password (
+    id BIGINT NOT NULL PRIMARY KEY,
+    token TEXT NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    player_id BIGINT NOT NULL
+);
+CREATE SEQUENCE IF NOT EXISTS player_reset_password_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO CYCLE;

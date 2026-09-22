@@ -10,4 +10,10 @@ import java.util.Optional;
 public interface PlayerRepository extends JpaRepository<PlayerEntity, Long> {
     @Query(value = "SELECT p FROM PlayerEntity p WHERE p.username=:username")
     Optional<PlayerEntity> findPlayerByUsername(@Param("username") String username);
+
+    @Query(value = "SELECT p FROM PlayerEntity p WHERE p.email=:email")
+    Optional<PlayerEntity> findPlayerByEmail(@Param("email") String email);
+
+    @Query(value = "SELECT p FROM PlayerEntity p WHERE p.username=:usernameOrEmail OR p.email=:usernameOrEmail")
+    Optional<PlayerEntity> findPlayerByUsernameOrEmail(@Param("usernameOrEmail") String usernameOrEmail);
 }

@@ -11,14 +11,14 @@ func _ready() -> void:
 	PlayerRESTClient.register_completed.connect(_on_signup_completed)
 		
 func _on_login_pressed() -> void:
-	var username: String = username_input.text.strip_edges()
+	var usernameOrEmail: String = username_input.text.strip_edges()
 	var password: String = password_input.text
 	
-	if username.is_empty() or password.is_empty():
+	if usernameOrEmail.is_empty() or password.is_empty():
 		print("Please enter username and password.")
 		return
 		
-	PlayerRESTClient.login(username, password)
+	PlayerRESTClient.login(usernameOrEmail, password)
 
 func _on_login_completed(response_status: int, jwt: String):
 	if response_status == 200:

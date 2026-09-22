@@ -27,6 +27,7 @@ services:
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
       MULIVE_GAMESERVER_SECRET_HEADER: "${MULIVE_GAMESERVER_SECRET_HEADER}"
       MULIVE_GAMESERVER_SECRET_HEADER_VAL: "${MULIVE_GAMESERVER_SECRET_HEADER_VAL}"
+      MULIVE_UM_EMAIL_APP_PASSWORD: "${MULIVE_UM_EMAIL_APP_PASSWORD}"
 
   # Game Server Service:
   # Responsible for handling real-time communication with clients based on game logic

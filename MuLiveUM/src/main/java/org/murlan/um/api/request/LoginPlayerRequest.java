@@ -9,17 +9,17 @@ import org.murlan.um.api.validation.IRequest;
 
 @Getter
 public class LoginPlayerRequest implements IRequest {
-    @NotNull(message = "[LoginPlayerRequest]: username field is mandatory")
-    @NotEmpty(message = "[LoginPlayerRequest]: username field cannot be empty")
-    private final String username;
+    @NotNull(message = "[LoginPlayerRequest]: usernameOrEmail field is mandatory")
+    @NotEmpty(message = "[LoginPlayerRequest]: usernameOrEmail field cannot be empty")
+    private final String usernameOrEmail;
 
     @NotNull(message = "[LoginPlayerRequest]: password field is mandatory")
     @NotEmpty(message = "[LoginPlayerRequest]: password field cannot be empty")
     private final String password;
 
     @JsonCreator
-    public LoginPlayerRequest(@JsonProperty("username") String username, @JsonProperty("password") String password) {
-        this.username = username;
+    public LoginPlayerRequest(@JsonProperty("usernameOrEmail") String usernameOrEmail, @JsonProperty("password") String password) {
+        this.usernameOrEmail = usernameOrEmail;
         this.password = password;
     }
 }

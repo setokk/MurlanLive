@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -21,6 +22,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -45,11 +47,14 @@ public class PlayerEntity {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Column(name = "username", updatable = false, nullable = false)
+    @Column(name = "username", updatable = false, nullable = false, unique = true)
     private String username;
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "email", updatable = false, unique = true)
+    private String email;
 
     @Column(name = "creation_date", updatable = false, nullable = false)
     private LocalDateTime createdDate;
@@ -65,9 +70,13 @@ public class PlayerEntity {
     )
     private Set<PlayerEntity> blockedPlayers = new HashSet<>();
 
-    public PlayerEntity(String username, String password, LocalDateTime createdDate) {
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<PlayerResetPasswordEntity> playerResetPasswords;
+
+    public PlayerEntity(String username, String password, String email, LocalDateTime createdDate) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.createdDate = createdDate;
     }
 

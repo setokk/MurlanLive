@@ -26,6 +26,8 @@ public class RegisterPlayerRequest implements IRequest {
     @NotEmpty(message = "[RegisterPlayerRequest]: password field cannot be empty")
     private final String password;
 
+    private String email;
+
     @JsonCreator
     public RegisterPlayerRequest(@JsonProperty("username") String username, @JsonProperty("password") String password) {
         this.username = username;
@@ -53,6 +55,10 @@ public class RegisterPlayerRequest implements IRequest {
 
         if (!USERNAME_PATTERN.matcher(username).matches()) {
             e.addErrorMessage("Username may only contain letters, numbers, '_' and '-'.");
+        }
+
+        if (email != null && email.isBlank()) {
+            e.addErrorMessage("If email is provided, it cannot be empty.");
         }
 
         if (e.hasErrorMessages()) throw e;

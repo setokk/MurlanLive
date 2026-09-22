@@ -129,3 +129,61 @@ ALTER TABLE ONLY player_block
     ADD CONSTRAINT fk_player_block_blocked_player FOREIGN KEY (blocked_player_id) REFERENCES player(id);
 END IF;
 END $$;
+
+-- Foreign key constraint fk_player_reset_password_player
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE table_name = 'player_reset_password'
+        AND constraint_name = 'fk_player_reset_password_player'
+    ) THEN
+ALTER TABLE ONLY player_reset_password
+    ADD CONSTRAINT fk_player_reset_password_player FOREIGN KEY (player_id) REFERENCES player(id);
+END IF;
+END $$;
+
+-- Unique constraint uq_player_reset_password_token
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM information_schema.table_constraints
+        WHERE table_name = 'player_reset_password'
+          AND constraint_name = 'uq_player_reset_password_token'
+    ) THEN
+ALTER TABLE ONLY player_reset_password
+    ADD CONSTRAINT uq_player_reset_password_token
+    UNIQUE (token);
+END IF;
+END $$;
+
+-- Unique constraint uq_player_username
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM information_schema.table_constraints
+        WHERE table_name = 'player'
+          AND constraint_name = 'uq_player_username'
+    ) THEN
+ALTER TABLE ONLY player
+    ADD CONSTRAINT uq_player_username
+    UNIQUE (username);
+END IF;
+END $$;
+
+-- Unique constraint uq_player_email
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM information_schema.table_constraints
+        WHERE table_name = 'player'
+          AND constraint_name = 'uq_player_email'
+    ) THEN
+ALTER TABLE ONLY player
+    ADD CONSTRAINT uq_player_email
+    UNIQUE (email);
+END IF;
+END $$;

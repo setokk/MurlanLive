@@ -2,8 +2,10 @@ package org.murlan.um.controller;
 
 import jakarta.validation.Valid;
 import org.murlan.um.api.request.BlockPlayerRequest;
+import org.murlan.um.api.request.ForgotPasswordRequest;
 import org.murlan.um.api.request.LoginPlayerRequest;
 import org.murlan.um.api.request.RegisterPlayerRequest;
+import org.murlan.um.api.request.ResetPasswordRequest;
 import org.murlan.um.api.request.UnblockPlayerRequest;
 import org.murlan.um.auth.JwtUtils;
 import org.murlan.um.model.dto.PlayerDto;
@@ -71,5 +73,17 @@ public class PlayerController {
     public ResponseEntity<List<PlayerDto>> getBlockedPlayers() {
         List<PlayerDto> blockedPlayersDto = playerService.getBlockedPlayers();
         return ResponseEntity.ok(blockedPlayersDto);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody @Valid ForgotPasswordRequest request) {
+        playerService.forgotPassword(request.getUsernameOrEmail());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+        playerService.resetPassword(request.getToken(), request.getNewPassword());
+        return ResponseEntity.ok().build();
     }
 }
