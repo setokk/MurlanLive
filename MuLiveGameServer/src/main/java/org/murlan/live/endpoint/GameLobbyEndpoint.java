@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.murlan.live.endpoint.session.PlayerSession;
 import org.murlan.live.endpoint.session.RoomHandler;
+import org.murlan.live.game.logic.GameState;
 import org.murlan.live.game.logic.GameStateFactory;
 import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.ResponseStatus;
@@ -92,6 +93,9 @@ public class GameLobbyEndpoint {
 
     private static final Consumer<Room> onPlayerLeaveOrDisconnect = room -> {
         try {
+            if (GameState.State.WAITING.equals(room.getActiveGameState().getState())) {
+                return;
+            }
             roomRESTClient.createRoom(room);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);

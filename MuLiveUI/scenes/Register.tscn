@@ -1,0 +1,189 @@
+[gd_scene format=3 uid="uid://d0r8iwr1yanqk"]
+
+[ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_fvamt"]
+[ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="1_pr50c"]
+[ext_resource type="Theme" uid="uid://bqn3ljfdspx6i" path="res://themes/LoginTheme.tres" id="2_fvamt"]
+[ext_resource type="Script" uid="uid://b50bl1ungtcem" path="res://scripts/register/RegisterInfo.gd" id="4_afkia"]
+[ext_resource type="Script" uid="uid://beuyhyaeynanw" path="res://MessageContainer.gd" id="5_8mejn"]
+[ext_resource type="Script" uid="uid://d1is7b8hy45hu" path="res://scripts/register/RegisterLoginButtons.gd" id="5_pr50c"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m3v72"]
+bg_color = Color(0.8980392, 0.27058825, 0.20784314, 1)
+border_width_left = 2
+border_width_top = 1
+border_width_right = 2
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_avmqu"]
+bg_color = Color(0.5348032, 0.123425655, 0.08523319, 1)
+border_width_left = 2
+border_width_top = 1
+border_width_right = 2
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1alyd"]
+bg_color = Color(0.7436663, 0.19260594, 0.14184436, 1)
+border_width_left = 2
+border_width_top = 1
+border_width_right = 2
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a81xy"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qkn4w"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jik4v"]
+
+[node name="Register" type="Control" unique_id=1403697454]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_fvamt")
+
+[node name="Background" parent="." unique_id=2002749364 instance=ExtResource("1_pr50c")]
+layout_mode = 1
+anchors_preset = 15
+
+[node name="RegisterPanel" type="PanelContainer" parent="." unique_id=2005304679]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.35
+anchor_top = 0.1
+anchor_right = 0.65
+anchor_bottom = 0.65
+theme = ExtResource("2_fvamt")
+
+[node name="MarginContainer" type="MarginContainer" parent="RegisterPanel" unique_id=2129265561]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 50
+
+[node name="RegisterSignupInfo" type="VBoxContainer" parent="RegisterPanel/MarginContainer" unique_id=1607066056]
+layout_mode = 2
+script = ExtResource("4_afkia")
+
+[node name="Label" type="Label" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=2025770063]
+layout_mode = 2
+text = "Welcome to Murlan!"
+
+[node name="MarginContainer3" type="MarginContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=510900598]
+layout_mode = 2
+theme_override_constants/margin_top = 8
+
+[node name="Username" type="LineEdit" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=752133016]
+layout_mode = 2
+placeholder_text = "Username"
+clear_button_enabled = true
+
+[node name="MarginContainer" type="MarginContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=941646736]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+
+[node name="Email" type="LineEdit" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=1945883949]
+layout_mode = 2
+placeholder_text = "Email (optional)"
+emoji_menu_enabled = false
+clear_button_enabled = true
+caret_blink = true
+caret_blink_interval = 0.5
+secret_character = "*"
+
+[node name="MarginContainer4" type="MarginContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=1964041775]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+
+[node name="Password" type="LineEdit" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=1140952530]
+layout_mode = 2
+placeholder_text = "Password"
+emoji_menu_enabled = false
+clear_button_enabled = true
+caret_blink = true
+caret_blink_interval = 0.5
+secret = true
+secret_character = "*"
+
+[node name="RememberInfoContainer" type="HBoxContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=312858873]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/separation = 6
+alignment = 2
+
+[node name="Label" type="Label" parent="RegisterPanel/MarginContainer/RegisterSignupInfo/RememberInfoContainer" unique_id=1543224456]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "Remember me"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="RememberInfoCheckbox" type="CheckBox" parent="RegisterPanel/MarginContainer/RegisterSignupInfo/RememberInfoContainer" unique_id=284617600]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+icon_alignment = 1
+expand_icon = true
+
+[node name="MarginContainer2" type="MarginContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=1117951467]
+layout_mode = 2
+theme_override_constants/margin_top = 25
+
+[node name="RegisterLoginButtons" type="VBoxContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=516353426]
+layout_mode = 2
+script = ExtResource("5_pr50c")
+
+[node name="RegisterButton" type="Button" parent="RegisterPanel/MarginContainer/RegisterSignupInfo/RegisterLoginButtons" unique_id=952653970]
+custom_minimum_size = Vector2(140, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_m3v72")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_avmqu")
+theme_override_styles/hover = SubResource("StyleBoxFlat_1alyd")
+text = "Register"
+
+[node name="MarginContainer2" type="MarginContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo/RegisterLoginButtons" unique_id=671378359]
+layout_mode = 2
+theme_override_constants/margin_top = 40
+
+[node name="LoginPageContainer" type="HBoxContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo/RegisterLoginButtons" unique_id=1840873148]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="RegisterPanel/MarginContainer/RegisterSignupInfo/RegisterLoginButtons/LoginPageContainer" unique_id=2053756134]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Already have an account?"
+
+[node name="LoginPageButton" type="Button" parent="RegisterPanel/MarginContainer/RegisterSignupInfo/RegisterLoginButtons/LoginPageContainer" unique_id=487384030]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.08235294, 0.003921569, 0.3254902, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 1, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxEmpty_a81xy")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_qkn4w")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_jik4v")
+text = "Login"
+
+[node name="MessageContainer" type="CenterContainer" parent="." unique_id=1852871827]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("5_8mejn")
+
+[node name="RandomMessage" type="Label" parent="MessageContainer" unique_id=1753980306]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1

@@ -54,7 +54,9 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .permitAll()
                         .requestMatchers(
                                 HttpMethod.GET,
-                                "/reset-password.html"
+                                "/reset-password.html",
+                                "/images/**",
+                                "/fonts/**"
                         ).permitAll()
                         .anyRequest()
                         .authenticated()

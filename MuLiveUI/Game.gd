@@ -110,10 +110,10 @@ func _on_game_start(resp: InformGameStartResp) -> void:
 				" and " + 
 				previous_loser["username"] +
 				" exchanging cards")
-			if PlayerSession.username == previous_winner["username"]:
+			if PlayerSession.player.id == previous_winner["id"]:
 				is_local_player_loser = false
 				give_card_button.visible = true
-			elif PlayerSession.username == previous_loser["username"]:
+			elif PlayerSession.player.id == previous_loser["id"]:
 				is_local_player_loser = true
 				give_card_button.visible = true
 				
@@ -123,7 +123,7 @@ func _on_game_start(resp: InformGameStartResp) -> void:
 			current_player_seat_index = find_player_seat_index(current_player["id"])
 			seats[current_player_seat_index].start_turn(turn_time)
 
-			if current_player["username"] != PlayerSession.username:
+			if current_player["id"] != PlayerSession.player.id:
 				play_button.disabled = true
 				pass_button.disabled = true
 			else:
@@ -170,7 +170,7 @@ func _on_game_state(resp: GameStateResp) -> void:
 			for value in game_state["hand"].split("_"):
 				my_hand.append(int(value))
 
-			if current_player["username"] != PlayerSession.username:
+			if current_player["id"] != PlayerSession.player.id:
 				play_button.disabled = true
 				pass_button.disabled = true
 			else:
@@ -312,7 +312,7 @@ func _on_opponent_give_card(resp: InformGiveCardResp) -> void:
 func display_players() -> void:
 	local_player_index = 0
 	for player in players:
-		if player.username == PlayerSession.username:
+		if player.id == PlayerSession.player.id:
 			local_player = player
 			break
 		local_player_index += 1

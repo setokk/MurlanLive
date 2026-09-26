@@ -87,7 +87,7 @@ CREATE SEQUENCE IF NOT EXISTS hand_layout_configuration_seq
 --
 -- player_block Table
 --
-CREATE TABLE player_block (
+CREATE TABLE IF NOT EXISTS player_block (
     player_id BIGINT NOT NULL,
     blocked_player_id BIGINT NOT NULL,
     PRIMARY KEY (player_id, blocked_player_id)
@@ -96,7 +96,7 @@ CREATE TABLE player_block (
 --
 -- player_reset_password Table
 --
-CREATE TABLE player_reset_password (
+CREATE TABLE IF NOT EXISTS player_reset_password (
     id BIGINT NOT NULL PRIMARY KEY,
     token TEXT NOT NULL,
     expires_at TIMESTAMP NOT NULL,

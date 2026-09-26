@@ -46,7 +46,7 @@ public class PlayerController {
         return ResponseEntity.ok(JwtUtils.generateJWT(playerDto));
     }
 
-    @GetMapping("/validateJwt")
+    @GetMapping("/validate-jwt")
     public ResponseEntity<?> validateJwt() {
         return ResponseEntity.ok().build();
     }
