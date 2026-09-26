@@ -3,8 +3,8 @@
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_jbclg"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_xpxjw"]
 [ext_resource type="Theme" uid="uid://bqn3ljfdspx6i" path="res://themes/LoginTheme.tres" id="3_na214"]
-[ext_resource type="Script" uid="uid://bhbpva4sor3de" path="res://scripts/login/LoginInfo.gd" id="4_7hd5n"]
-[ext_resource type="Script" uid="uid://cv8rpnt0rcvwf" path="res://scripts/login/LoginRegisterButtons.gd" id="5_ft2vs"]
+[ext_resource type="Script" uid="uid://bt6nn883cv0ps" path="res://scripts/login/LoginInfo.gd" id="4_7hd5n"]
+[ext_resource type="Script" uid="uid://djjn6d4u0i3m1" path="res://scripts/login/LoginRegisterButtons.gd" id="5_ft2vs"]
 [ext_resource type="Script" uid="uid://beuyhyaeynanw" path="res://MessageContainer.gd" id="6_egi27"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pgobs"]

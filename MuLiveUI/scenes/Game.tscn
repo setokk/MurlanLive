@@ -4,14 +4,21 @@
 [ext_resource type="Script" uid="uid://d2ugnd66ke3bo" path="res://Game.gd" id="2_3xj3m"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_dahhg"]
 [ext_resource type="Script" uid="uid://cggmhq3jr6r2l" path="res://TableArea.gd" id="3_3so38"]
+[ext_resource type="Script" uid="uid://dce3sdwcicv3c" path="res://scenes/RoomInfo.gd" id="4_2rd6h"]
 [ext_resource type="Theme" uid="uid://dcg0tqtvbome4" path="res://themes/SeatTheme.tres" id="4_3cx6b"]
 [ext_resource type="Texture2D" uid="uid://b8df7a4o34kvg" path="res://assets/images/table.png" id="5_qy1jj"]
+[ext_resource type="Texture2D" uid="uid://db6p7v6k4c8d3" path="res://assets/images/1416596-200.png" id="5_r7sob"]
 [ext_resource type="Script" uid="uid://dfknfovm6tddy" path="res://Deck.gd" id="6_acvyw"]
 [ext_resource type="Script" uid="uid://c3xfjnp81ckek" path="res://OpponentHand.gd" id="7_alh3a"]
 [ext_resource type="Script" uid="uid://clxc14fpj30ha" path="res://Seat.gd" id="8_2rd6h"]
 [ext_resource type="Script" uid="uid://d3trjxyp4ubau" path="res://PlayedCards.gd" id="8_4q8tf"]
 [ext_resource type="Script" uid="uid://prjme07f6efi" path="res://HandPlaceholder.gd" id="9_x3xnh"]
 [ext_resource type="Script" uid="uid://k68075chkxlf" path="res://ButtonsContainer.gd" id="10_8r6kd"]
+[ext_resource type="Script" uid="uid://csw0mu5fybip3" path="res://scenes/Chat.gd" id="12_7ua8r"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ud1i"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ua8r"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6cc1s"]
 bg_color = Color(0, 0, 0, 1)
@@ -39,6 +46,8 @@ corner_detail = 5
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wkp8b"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5vvyt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7ua8r"]
 
 [sub_resource type="GDScript" id="GDScript_20pc6"]
 script/source = "extends Control
@@ -98,10 +107,97 @@ anchor_bottom = 0.75
 layout_mode = 1
 anchor_right = 0.15
 anchor_bottom = 1.0
-offset_left = 576.0
-offset_top = 243.0
-offset_right = 576.0
-offset_bottom = 243.0
+
+[node name="RoomInfo" type="Panel" parent="TopArea/LeftArea" unique_id=1600115500]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.05
+anchor_right = 1.0
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8ud1i")
+script = ExtResource("4_2rd6h")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TopArea/LeftArea/RoomInfo" unique_id=523799686]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+grow_horizontal = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TopArea/LeftArea/RoomInfo/VBoxContainer" unique_id=4660539]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="RoomName" type="LineEdit" parent="TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer" unique_id=444216655]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Room Name"
+editable = false
+expand_to_text_length = true
+flat = true
+
+[node name="EditRoomName" type="Button" parent="TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer" unique_id=1978942476]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7ua8r")
+text = " "
+icon = ExtResource("5_r7sob")
+icon_alignment = 1
+expand_icon = true
+
+[node name="TotalScoreLabel" type="Label" parent="TopArea/LeftArea/RoomInfo/VBoxContainer" unique_id=702352752]
+layout_mode = 2
+text = "Total Score:"
+
+[node name="TotalScore" type="HSlider" parent="TopArea/LeftArea/RoomInfo/VBoxContainer" unique_id=165797508]
+layout_mode = 2
+min_value = 3.0
+max_value = 50.0
+value = 3.0
+rounded = true
+ticks_on_borders = true
+
+[node name="TimeOptionsLabel" type="Label" parent="TopArea/LeftArea/RoomInfo/VBoxContainer" unique_id=994215542]
+layout_mode = 2
+text = "Turn time:"
+
+[node name="TimeOptions" type="OptionButton" parent="TopArea/LeftArea/RoomInfo/VBoxContainer" unique_id=979919888]
+layout_mode = 2
+item_count = 3
+popup/item_0/text = "0:30"
+popup/item_0/id = 0
+popup/item_1/text = "0:45"
+popup/item_1/id = 1
+popup/item_2/text = "1:00"
+popup/item_2/id = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="TopArea/LeftArea/RoomInfo" unique_id=1083195726]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -81.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="ReadyButton" type="Button" parent="TopArea/LeftArea/RoomInfo/VBoxContainer2" unique_id=2005863213]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+text = "Ready"
+
+[node name="LeaveButton" type="Button" parent="TopArea/LeftArea/RoomInfo/VBoxContainer2" unique_id=1687604281]
+layout_mode = 2
+text = "Leave Room"
 
 [node name="TableArea" type="Control" parent="TopArea" unique_id=863065479]
 layout_mode = 1
@@ -462,32 +558,47 @@ anchor_left = 0.85
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TopArea/RightArea" unique_id=32060418]
+[node name="Chat" type="Panel" parent="TopArea/RightArea" unique_id=1675043778]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.05
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_styles/panel = SubResource("StyleBoxFlat_7ua8r")
+script = ExtResource("12_7ua8r")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TopArea/RightArea/Chat" unique_id=630486576]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="ChatMessagesContainer" type="ScrollContainer" parent="TopArea/RightArea/Chat/VBoxContainer" unique_id=213017357]
+propagate_maximum_size = true
+clip_contents = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Messages" type="VBoxContainer" parent="TopArea/RightArea/Chat/VBoxContainer/ChatMessagesContainer" unique_id=1236521384]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 alignment = 2
 
-[node name="TempReadyButton" type="Button" parent="TopArea/RightArea/VBoxContainer" unique_id=2005863213]
-custom_minimum_size = Vector2(150, 50)
+[node name="HBoxContainer" type="HBoxContainer" parent="TopArea/RightArea/Chat/VBoxContainer" unique_id=346181385]
 layout_mode = 2
-text = "Ready"
+theme_override_constants/separation = 5
 
-[node name="TempLeaveButton" type="Button" parent="TopArea/RightArea/VBoxContainer" unique_id=1687604281]
+[node name="MessageInput" type="LineEdit" parent="TopArea/RightArea/Chat/VBoxContainer/HBoxContainer" unique_id=2020266752]
 layout_mode = 2
-text = "Leave Room"
+size_flags_horizontal = 3
 
-[node name="TempGiveCardButton" type="Button" parent="TopArea/RightArea/VBoxContainer" unique_id=1896228628]
+[node name="SendButton" type="Button" parent="TopArea/RightArea/Chat/VBoxContainer/HBoxContainer" unique_id=1313095050]
 layout_mode = 2
-text = "Give Card"
-
-[node name="TempCurrentPlayerLabel" type="Label" parent="TopArea/RightArea/VBoxContainer" unique_id=207774350]
-custom_minimum_size = Vector2(0, 100)
-layout_mode = 2
-text = "Current player: "
+text = "send"
 
 [node name="BottomArea" type="Control" parent="." unique_id=732581692]
 layout_mode = 1
@@ -538,3 +649,7 @@ layout_mode = 2
 tooltip_text = "Play Hand"
 theme_override_styles/normal = SubResource("StyleBoxFlat_17p60")
 text = "Pass"
+
+[node name="GiveCardButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=1896228628]
+layout_mode = 2
+text = "Give Card"

@@ -28,10 +28,12 @@ enum GameStateEnum {
 @onready var play_button: Button = $BottomArea/ButtonsContainer/PlayButton
 @onready var pass_button: Button = $BottomArea/ButtonsContainer/PassButton
 @onready var played_cards: Panel = $TopArea/TableArea/TableLayout/PlayedCards
-@onready var is_ready_button: Button = $TopArea/RightArea/VBoxContainer/TempReadyButton
-@onready var leave_room_button: Button = $TopArea/RightArea/VBoxContainer/TempLeaveButton
-@onready var current_player_label: Label = $TopArea/RightArea/VBoxContainer/TempCurrentPlayerLabel
-@onready var give_card_button: Button = $TopArea/RightArea/VBoxContainer/TempGiveCardButton
+@onready var is_ready_button: Button = $TopArea/LeftArea/RoomInfo/VBoxContainer2/ReadyButton
+@onready var leave_room_button: Button = $TopArea/LeftArea/RoomInfo/VBoxContainer2/LeaveButton
+@onready var give_card_button: Button = $BottomArea/ButtonsContainer/GiveCardButton
+@onready var room_name_label: LineEdit = $TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer/RoomName
+@onready var score_slider: Slider = $TopArea/LeftArea/RoomInfo/VBoxContainer/TotalScore
+@onready var time_options: OptionButton = $TopArea/LeftArea/RoomInfo/VBoxContainer/TimeOptions
 
 @onready var seats: Array[Seat] = [
 	$TopArea/TableArea/TableLayout/Seat1,
@@ -47,6 +49,7 @@ enum GameStateEnum {
 
 func _ready() -> void:
 	give_card_button.visible = false
+	room_name_label.text = room["name"]
 
 	WebSocketClient.inform_player_join_room_resp.connect(_on_opponent_joined)
 	WebSocketClient.inform_game_start_resp.connect(_on_game_start)
@@ -105,11 +108,6 @@ func _on_game_start(resp: InformGameStartResp) -> void:
 		GameStateEnum.GIVING_CARDS:
 			previous_winner = game_state["prevWinner"]
 			previous_loser = game_state["prevLoser"]
-			current_player_label.text = (
-				previous_winner["username"] + 
-				" and " + 
-				previous_loser["username"] +
-				" exchanging cards")
 			if PlayerSession.player.id == previous_winner["id"]:
 				is_local_player_loser = false
 				give_card_button.visible = true
@@ -119,7 +117,6 @@ func _on_game_start(resp: InformGameStartResp) -> void:
 				
 		GameStateEnum.PLAYING:	
 			current_player = game_state["currTurnPlayer"]
-			current_player_label.text = "Current player: " + current_player["username"]
 			current_player_seat_index = find_player_seat_index(current_player["id"])
 			seats[current_player_seat_index].start_turn(turn_time)
 
@@ -138,7 +135,7 @@ func _on_game_finish(resp: InformGameFinishResp) -> void:
 			var score: int = int(score_per_player_id[str(id)])
 			seats[find_player_seat_index(id)].set_score(score)
 			if resp.game_finish["finalWinner"]:
-				current_player_label.text= "Winner is: " + resp.game_finish["finalWinner"]["username"]
+				print("Winner is: " + resp.game_finish["finalWinner"]["username"])
 	else:
 		print("error bruh: ", resp)
 
@@ -161,7 +158,6 @@ func _on_game_state(resp: GameStateResp) -> void:
 			if str(game_state["currCardCombination"]).is_empty():
 				played_cards.clear_cards()
 			current_player = game_state["currTurnPlayer"]
-			current_player_label.text = "Current player: " + current_player["username"]
 			current_player_seat_index = find_player_seat_index(current_player["id"])
 			seats[current_player_seat_index].start_turn(turn_time)
 			
@@ -212,6 +208,9 @@ func _on_ready_requested() -> void:
 func _on_ready_completed(resp: ReadyResp):
 	if resp.response_status == 200:
 		seats[0].set_ready()
+		score_slider.editable = false
+		time_options.disabled = true
+		is_ready_button.disabled = true
 	else:
 		print("error bruh: ", resp)
 

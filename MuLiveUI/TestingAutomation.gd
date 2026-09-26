@@ -54,7 +54,7 @@ func automate_login_flow() -> void:
 
 	# Wait until the Home login button exists
 	var login_redirect_button :Button = await wait_for_node(
-		"TopBar/LoginRedirection"
+		"TopBar/HBoxContainer/LoginRedirection"
 	)
 
 	if login_redirect_button == null:
@@ -68,7 +68,7 @@ func automate_login_flow() -> void:
 	print("Pressed Login Redirect.")
 
 	# Wait until the login screen's username field exists
-	var username_input := await wait_for_named_node("Username")
+	var username_input := await wait_for_named_node("UsernameOrEmail")
 	var password_input := await wait_for_named_node("Password")
 	var login_button := await wait_for_named_node("LoginButton")
 
@@ -143,13 +143,13 @@ func get_test_username() -> String:
 
 	match get_instance_index():
 		0:
-			return "player"
+			return "1"
 		1:
-			return "player2"
+			return "2"
 		2:
-			return "player3"
+			return "3"
 		3:
-			return "player4"
+			return "4"
 
 	return ""
 
@@ -157,12 +157,12 @@ func get_test_username() -> String:
 func get_test_password() -> String:
 	match get_instance_index():
 		0:
-			return "player"
+			return "1"
 		1:
-			return "player2"
+			return "2"
 		2:
-			return "player3"
+			return "3"
 		3:
-			return "player4"
+			return "4"
 			
 	return ""
