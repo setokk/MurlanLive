@@ -9,6 +9,9 @@ const ROOM_ITEM_SCENE: PackedScene = preload("res://scenes/RoomItem.tscn")
 var refresh_timer: Timer
 var available_rooms: Array = []
 
+const default_turn_duration_in_seconds_id: int = GameConstants.TurnDuration.SEC_75
+const default_total_score_to_win: int = 9
+
 func _ready() -> void:
 	room_buttons_container.random_join_requested.connect(_on_random_join_requested)
 	# Normally we would call the join_room_resp but it's already handled in the room item
@@ -65,9 +68,12 @@ func update_room_visibility() -> void:
 			room.visible = not room.is_full()
 
 func _on_create_requested() -> void:
-	WebSocketClient.send_message(CreateRoomReq.new("Room", true, 3, 3600))
+	var room_name: String = PlayerSession.player.username + "'s " + "Room"
+	var turn_duration_in_seconds: int = GameConstants.TURN_DURATION_SECONDS[default_turn_duration_in_seconds_id]
 	
-func _on_create_completed(resp: CreateRoomResp) -> void:
+	WebSocketClient.send_message(CreateRoomReq.new(room_name, true, default_total_score_to_win, turn_duration_in_seconds))
+	
+func _on_create_completed(resp: CreateRoomResp) -> void:	
 	SceneManager.show_game(resp.room)
 
 func _on_random_join_requested() -> void:

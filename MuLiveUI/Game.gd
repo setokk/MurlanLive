@@ -50,6 +50,12 @@ enum GameStateEnum {
 func _ready() -> void:
 	give_card_button.visible = false
 	room_name_label.text = room["name"]
+	
+	score_slider.value = int(room["totalScoreToWin"])
+	
+	var duration_id: int = GameConstants.TURN_DURATION_SECONDS.find_key(int(room["turnDurationInSeconds"]))
+	var idx: int = time_options.get_item_index(duration_id)
+	time_options.select(idx)
 
 	WebSocketClient.inform_player_join_room_resp.connect(_on_opponent_joined)
 	WebSocketClient.inform_game_start_resp.connect(_on_game_start)
@@ -70,6 +76,8 @@ func _ready() -> void:
 	give_card_button.pressed.connect(_on_give_card_requested)
 	WebSocketClient.give_card_resp.connect(_on_give_card_completed)
 	WebSocketClient.inform_give_card_resp.connect(_on_opponent_give_card)
+	WebSocketClient.update_room_details_resp.connect(_on_update_room_details_completed)
+	WebSocketClient.inform_update_room_details_resp.connect(_on_opponent_update_room_details)
 	WebSocketClient.send_message(GameStateReq.new())
 	
 
@@ -203,6 +211,16 @@ func _on_pass_completed(resp: PassResp) -> void:
 		print("Error with passing. Response: ", resp)
 		
 func _on_ready_requested() -> void:
+	if is_owner():
+		var room_name: String = room_name_label.text.strip_edges()
+		var total_score_to_win: int = int(score_slider.value)
+		var turn_duration_in_seconds: int = GameConstants.TURN_DURATION_SECONDS[time_options.get_selected_id()]
+		
+		if room_name.is_empty():
+			PopupFactory.error("Room name cannot be empty")
+			return
+		WebSocketClient.send_message(UpdateRoomDetailsReq.new(room_name, total_score_to_win, turn_duration_in_seconds))
+		
 	WebSocketClient.send_message(ReadyReq.new())
 	
 func _on_ready_completed(resp: ReadyResp):
@@ -307,6 +325,24 @@ func _on_opponent_give_card(resp: InformGiveCardResp) -> void:
 	else:
 		print("Error: ", resp)
 
+func _on_update_room_details_completed(resp: UpdateRoomDetailsResp) -> void:
+	if resp.response_status == 200:
+		PopupFactory.info("Update of room details was successful!")
+	else:
+		PopupFactory.error("There was an error with the update of room details.\nPlease try again")
+		
+func _on_opponent_update_room_details(resp: InformUpdateRoomDetailsResp) -> void:
+	if resp.response_status == 200:
+		room["name"] = resp.room_details["roomName"]
+		room["totalScoreToWin"] = resp.room_details["totalScoreToWin"]
+		room["turnDurationInSeconds"] = resp.room_details["turnDurationInSeconds"]
+		
+		room_name_label.text = room["name"]
+		score_slider.value = int(room["totalScoreToWin"])
+		var duration_id: int = GameConstants.TURN_DURATION_SECONDS.find_key(int(room["turnDurationInSeconds"]))
+		var idx: int = time_options.get_item_index(duration_id)
+		time_options.select(idx)
+
 # Helper functions	
 func display_players() -> void:
 	local_player_index = 0
@@ -329,3 +365,9 @@ func find_player_seat_index(id) -> int:
 		if players[i]["id"] == id:
 			return posmod(i-local_player_index,seats.size())
 	return 0
+
+func is_owner() -> bool:
+	if players.is_empty():
+		return false
+	else:
+		return players[0].id == PlayerSession.player.id

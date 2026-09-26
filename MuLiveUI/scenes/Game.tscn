@@ -1,20 +1,20 @@
 [gd_scene format=3 uid="uid://f8in7s47ipg4"]
 
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_71axn"]
-[ext_resource type="Script" uid="uid://d2ugnd66ke3bo" path="res://Game.gd" id="2_3xj3m"]
+[ext_resource type="Script" uid="uid://dshkt7a1vlh6w" path="res://Game.gd" id="2_3xj3m"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_dahhg"]
-[ext_resource type="Script" uid="uid://cggmhq3jr6r2l" path="res://TableArea.gd" id="3_3so38"]
-[ext_resource type="Script" uid="uid://dce3sdwcicv3c" path="res://scenes/RoomInfo.gd" id="4_2rd6h"]
+[ext_resource type="Script" uid="uid://qfbjwyal50vd" path="res://TableArea.gd" id="3_3so38"]
+[ext_resource type="Script" uid="uid://cvnw1l8hi3cih" path="res://RoomInfo.gd" id="4_2rd6h"]
 [ext_resource type="Theme" uid="uid://dcg0tqtvbome4" path="res://themes/SeatTheme.tres" id="4_3cx6b"]
 [ext_resource type="Texture2D" uid="uid://b8df7a4o34kvg" path="res://assets/images/table.png" id="5_qy1jj"]
 [ext_resource type="Texture2D" uid="uid://db6p7v6k4c8d3" path="res://assets/images/1416596-200.png" id="5_r7sob"]
-[ext_resource type="Script" uid="uid://dfknfovm6tddy" path="res://Deck.gd" id="6_acvyw"]
-[ext_resource type="Script" uid="uid://c3xfjnp81ckek" path="res://OpponentHand.gd" id="7_alh3a"]
-[ext_resource type="Script" uid="uid://clxc14fpj30ha" path="res://Seat.gd" id="8_2rd6h"]
-[ext_resource type="Script" uid="uid://d3trjxyp4ubau" path="res://PlayedCards.gd" id="8_4q8tf"]
-[ext_resource type="Script" uid="uid://prjme07f6efi" path="res://HandPlaceholder.gd" id="9_x3xnh"]
-[ext_resource type="Script" uid="uid://k68075chkxlf" path="res://ButtonsContainer.gd" id="10_8r6kd"]
-[ext_resource type="Script" uid="uid://csw0mu5fybip3" path="res://scenes/Chat.gd" id="12_7ua8r"]
+[ext_resource type="Script" uid="uid://y8r0rpi50vla" path="res://Deck.gd" id="6_acvyw"]
+[ext_resource type="Script" uid="uid://dnpihega65fwq" path="res://OpponentHand.gd" id="7_alh3a"]
+[ext_resource type="Script" uid="uid://chdhko4w4etio" path="res://Seat.gd" id="8_2rd6h"]
+[ext_resource type="Script" uid="uid://cs2r8uvg6ffdb" path="res://PlayedCards.gd" id="8_4q8tf"]
+[ext_resource type="Script" uid="uid://dsvr36s1t80n1" path="res://HandPlaceholder.gd" id="9_x3xnh"]
+[ext_resource type="Script" uid="uid://755ytelsigcg" path="res://ButtonsContainer.gd" id="10_8r6kd"]
+[ext_resource type="Script" uid="uid://cmdk3phi6av7y" path="res://Chat.gd" id="12_7ua8r"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ud1i"]
 
@@ -171,13 +171,21 @@ text = "Turn time:"
 
 [node name="TimeOptions" type="OptionButton" parent="TopArea/LeftArea/RoomInfo/VBoxContainer" unique_id=979919888]
 layout_mode = 2
-item_count = 3
+item_count = 7
 popup/item_0/text = "0:30"
 popup/item_0/id = 0
 popup/item_1/text = "0:45"
 popup/item_1/id = 1
 popup/item_2/text = "1:00"
 popup/item_2/id = 2
+popup/item_3/text = "1:15"
+popup/item_3/id = 3
+popup/item_4/text = "1:30"
+popup/item_4/id = 4
+popup/item_5/text = "1:45"
+popup/item_5/id = 5
+popup/item_6/text = "2:00"
+popup/item_6/id = 6
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="TopArea/LeftArea/RoomInfo" unique_id=1083195726]
 layout_mode = 1

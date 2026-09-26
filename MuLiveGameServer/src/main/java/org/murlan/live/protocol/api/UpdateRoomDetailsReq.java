@@ -9,13 +9,13 @@ import org.murlan.live.protocol.config.ProtocolConfig;
 public final class UpdateRoomDetailsReq implements Req {
     private final String roomName;
     private final short totalScoreToWin;
-    private final long turnDurationSeconds;
+    private final long turnDurationInSeconds;
 
     public UpdateRoomDetailsReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException {
         validate(messageParts);
         roomName = messageParts[startIndex()];
         totalScoreToWin = parseNumber(messageParts[startIndex() + 1], Short.MIN_VALUE);
-        turnDurationSeconds = parseNumber(messageParts[startIndex() + 2], Long.MIN_VALUE);
+        turnDurationInSeconds = parseNumber(messageParts[startIndex() + 2], Long.MIN_VALUE);
     }
 
     @Override
@@ -24,7 +24,7 @@ public final class UpdateRoomDetailsReq implements Req {
             throw new InvalidDataException();
         }
 
-        if (!GameConstants.TURN_DURATION_SECONDS_VALUES.contains(turnDurationSeconds)) {
+        if (!GameConstants.TURN_DURATION_SECONDS_VALUES.contains(turnDurationInSeconds)) {
             throw new InvalidDataException();
         }
     }

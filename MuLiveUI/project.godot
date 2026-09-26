@@ -22,6 +22,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 TestingAutomation="*res://TestingAutomation.gd"
+GameConstants="*res://globals/GameConstants.gd"
 PopupFactory="*res://globals/PopupFactory.gd"
 SceneManager="*res://globals/SceneManager.gd"
 ProtocolConfigProvider="*res://globals/ProtocolConfigProvider.gd"

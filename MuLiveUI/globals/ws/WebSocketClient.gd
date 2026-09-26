@@ -19,6 +19,7 @@ signal inform_player_leave_room_resp(resp: InformPlayerLeaveRoomResp)
 signal inform_player_lost_connection_resp(resp: InformPlayerLostConnectionResp)
 signal inform_player_ready_resp(resp: InformPlayerReadyResp)
 signal inform_player_chat_resp(resp: InformPlayerChatResp)
+signal inform_update_room_details_resp(resp: InformUpdateRoomDetailsResp)
 
 # Client Events
 signal game_state_resp(resp: GameStateResp)
@@ -31,6 +32,7 @@ signal give_card_resp(resp: GiveCardResp)
 signal leave_room_resp(resp: LeaveRoomResp)
 signal ready_resp(resp: ReadyResp)
 signal chat_resp(resp: ChatResp)
+signal update_room_details_resp(resp: UpdateRoomDetailsResp)
 
 var resp_signal_handlers: Dictionary[String, Callable] = {
 	ServerEvent.id(ServerEvent.Value.INFORM_PLAY_HAND): func(resp): inform_play_hand_resp.emit(resp),
@@ -43,6 +45,7 @@ var resp_signal_handlers: Dictionary[String, Callable] = {
 	ServerEvent.id(ServerEvent.Value.INFORM_PLAYER_LOST_CONNECTION): func(resp): inform_player_lost_connection_resp.emit(resp),
 	ServerEvent.id(ServerEvent.Value.INFORM_PLAYER_READY): func(resp): inform_player_ready_resp.emit(resp),
 	ServerEvent.id(ServerEvent.Value.INFORM_PLAYER_CHAT): func(resp): inform_player_chat_resp.emit(resp),
+	ServerEvent.id(ServerEvent.Value.INFORM_UPDATE_ROOM_DETAILS): func(resp): inform_update_room_details_resp.emit(resp),
 	
 	ClientEvent.id(ClientEvent.Value.GAME_STATE): func(resp): game_state_resp.emit(resp),
 	ClientEvent.id(ClientEvent.Value.PLAY_HAND): func(resp): play_hand_resp.emit(resp),
@@ -53,7 +56,8 @@ var resp_signal_handlers: Dictionary[String, Callable] = {
 	ClientEvent.id(ClientEvent.Value.GIVE_CARD): func(resp): give_card_resp.emit(resp),
 	ClientEvent.id(ClientEvent.Value.LEAVE_ROOM): func(resp): leave_room_resp.emit(resp),
 	ClientEvent.id(ClientEvent.Value.READY): func(resp): ready_resp.emit(resp),
-	ClientEvent.id(ClientEvent.Value.CHAT): func(resp): chat_resp.emit(resp)
+	ClientEvent.id(ClientEvent.Value.CHAT): func(resp): chat_resp.emit(resp),
+	ClientEvent.id(ClientEvent.Value.UPDATE_ROOM_DETAILS): func(resp): update_room_details_resp.emit(resp)
 }
 
 func send_message(req: Req) -> bool:

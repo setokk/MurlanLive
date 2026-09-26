@@ -59,7 +59,9 @@ public class RoomHandler {
                 playerSessions.remove(playerSession);
             }
 
-            room.getActiveGameState().getPlayers().remove(playerSession.getPlayer());
+            List<Player> players = room.getActiveGameState().getPlayers();
+            players.remove(playerSession.getPlayer());
+            room.setOwner(!players.isEmpty() ? players.getFirst() : room.getOwner());
 
             // if game has not started yet (initial state where not all players have joined)
             // do NOT remove room.
@@ -107,7 +109,7 @@ public class RoomHandler {
         roomIdToRoomMap.put(room.getId(), room);
         linkSessionWithRoom(playerSession, room.getId());
 
-        return new RoomDto(room.getId(), room.getName(), room.getPlayers());
+        return new RoomDto(room.getId(), room.getName(), room.getPlayers(), room.getTotalScoreToWin(), room.getTurnDurationInSeconds());
     }
 
     public void copyRoom(@NonNull String roomId) {
@@ -133,7 +135,7 @@ public class RoomHandler {
                     LocalDateTime.now(),
                     room.getTotalScoreToWin(),
                     room.getOwner(),
-                    room.getTurnDurationSeconds(),
+                    room.getTurnDurationInSeconds(),
                     room.getGameStateFactory()
             );
             createRoom(copyRoom, ownerPlayerSession);
@@ -161,14 +163,18 @@ public class RoomHandler {
                 return false;
             }
 
+            if (room.getActiveGameState().getReadyPlayers().contains(player)) {
+                return false;
+            }
+
             if (roomDetailsDto.roomName() != null) {
                 room.setName(roomDetailsDto.roomName());
             }
             if (roomDetailsDto.totalScoreToWin() != null) {
                 room.setTotalScoreToWin(roomDetailsDto.totalScoreToWin());
             }
-            if (roomDetailsDto.turnDurationSeconds() != null) {
-                room.setTurnDurationSeconds(roomDetailsDto.turnDurationSeconds());
+            if (roomDetailsDto.turnDurationInSeconds() != null) {
+                room.setTurnDurationInSeconds(roomDetailsDto.turnDurationInSeconds());
             }
         }
 
@@ -244,7 +250,7 @@ public class RoomHandler {
         return roomIdToRoomMap.values()
                 .stream()
                 .filter(Room::isPublic)
-                .map(room -> new RoomDto(room.getId(), room.getName(), room.getPlayers()))
+                .map(room -> new RoomDto(room.getId(), room.getName(), room.getPlayers(), room.getTotalScoreToWin(), room.getTurnDurationInSeconds()))
                 .collect(Collectors.toList());
     }
 

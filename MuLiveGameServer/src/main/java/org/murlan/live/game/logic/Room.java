@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
@@ -31,7 +30,7 @@ public class Room {
     private short totalScoreToWin;
     private List<GameState> gameStates;
     private Player owner;
-    @JsonIgnore private long turnDurationSeconds;
+    @JsonIgnore private long turnDurationInSeconds;
     @JsonIgnore private final GameStateFactory gameStateFactory;
 
     public Room(String name,
@@ -39,14 +38,14 @@ public class Room {
                 LocalDateTime creationDate,
                 short totalScoreToWin,
                 Player owner,
-                long turnDurationSeconds,
+                long turnDurationInSeconds,
                 GameStateFactory gameStateFactory) {
         this.name = name;
         this.isPublic = isPublic;
         this.creationDate = creationDate;
         this.totalScoreToWin = totalScoreToWin;
         this.owner = owner;
-        this.turnDurationSeconds = turnDurationSeconds;
+        this.turnDurationInSeconds = turnDurationInSeconds;
         this.gameStateFactory = gameStateFactory;
     }
 

@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_i2wps"]
 [ext_resource type="Script" uid="uid://ckj8ax6i6654n" path="res://LoginRedirection.gd" id="1_nf15x"]
 [ext_resource type="Texture2D" uid="uid://cwphjklugjlik" path="res://assets/images/Logo2.png" id="4_i2wps"]
-[ext_resource type="Script" uid="uid://co4857u6ncor5" path="res://scenes/LogoutRedirection.gd" id="4_wjcpy"]
+[ext_resource type="Script" uid="uid://jbns8goi7txj" path="res://LogoutRedirection.gd" id="4_wjcpy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cm0pq"]
 bg_color = Color(0.87058824, 0.67058825, 0.23921569, 1)

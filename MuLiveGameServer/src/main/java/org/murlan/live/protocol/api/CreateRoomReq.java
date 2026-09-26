@@ -10,14 +10,14 @@ public final class CreateRoomReq implements Req {
     private final String roomName;
     private final boolean isPublic;
     private final short totalScoreToWin;
-    private final long turnDurationSeconds;
+    private final long turnDurationInSeconds;
 
     public CreateRoomReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException {
         validate(messageParts);
         roomName = messageParts[startIndex()];
         isPublic = Boolean.parseBoolean(messageParts[startIndex() + 1]);
         totalScoreToWin = Short.parseShort(messageParts[startIndex() + 2]);
-        turnDurationSeconds = Long.parseLong(messageParts[startIndex() + 3]);
+        turnDurationInSeconds = Long.parseLong(messageParts[startIndex() + 3]);
     }
 
     @Override
@@ -26,7 +26,7 @@ public final class CreateRoomReq implements Req {
             throw new InvalidDataException();
         }
 
-        if (!GameConstants.TURN_DURATION_SECONDS_VALUES.contains(turnDurationSeconds)) {
+        if (!GameConstants.TURN_DURATION_SECONDS_VALUES.contains(turnDurationInSeconds)) {
             throw new InvalidDataException();
         }
     }

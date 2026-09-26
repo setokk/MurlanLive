@@ -15,6 +15,7 @@ theme = ExtResource("1_biidh")
 
 [node name="Background" parent="." unique_id=2002749364 instance=ExtResource("2_maaha")]
 layout_mode = 1
+anchors_preset = 15
 
 [node name="MainScreen" type="Control" parent="." unique_id=1378734640]
 layout_mode = 1

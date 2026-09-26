@@ -223,7 +223,7 @@ public class GameLobbyEndpoint {
                         LocalDateTime.now(),
                         createRoomReq.getTotalScoreToWin(),
                         playerSession.getPlayer(),
-                        createRoomReq.getTurnDurationSeconds(),
+                        createRoomReq.getTurnDurationInSeconds(),
                         new GameStateFactory(roomHandler, endpointHelper, roomRESTClient, config, scheduler)
                 );
 
@@ -292,7 +292,7 @@ public class GameLobbyEndpoint {
                 RoomDetailsDto roomDetailsDto = new RoomDetailsDto(
                         updateRoomDetailsReq.getRoomName(),
                         updateRoomDetailsReq.getTotalScoreToWin(),
-                        updateRoomDetailsReq.getTurnDurationSeconds()
+                        updateRoomDetailsReq.getTurnDurationInSeconds()
                 );
                 boolean isSuccessful = isRoomPresent && roomHandler.updateRoom(room.getId(), roomDetailsDto, player);
                 if (isSuccessful) {
