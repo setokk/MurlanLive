@@ -8,6 +8,7 @@ import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.api.InformGameFinishResp;
 import org.murlan.live.protocol.dto.GameFinishDto;
 import org.murlan.live.protocol.dto.Player;
+import org.murlan.live.protocol.dto.RoomDto;
 import org.murlan.live.protocol.rest.RoomRESTClient;
 
 import java.io.IOException;
@@ -41,34 +42,33 @@ public final class OnGameFinish implements Runnable {
                     .map(Map.Entry::getKey)
                     .findAny();
 
-            try {
-                boolean isFinalWinner = optionalFinalWinner.isPresent();
+            boolean isFinalWinner = optionalFinalWinner.isPresent();
 
-                GameFinishDto gameFinishDto = GameFinishDto.builder()
-                        .winnerPlayerId(winner.getId())
-                        .loserPlayerId(loser.getId())
-                        .scorePerPlayerId(previousScore.entrySet().stream()
-                                .collect(Collectors.toMap(
-                                        entry -> entry.getKey().getId(),
-                                        Map.Entry::getValue)
-                                )
-                        )
-                        .finalWinner(isFinalWinner ? optionalFinalWinner.get() : null)
-                        .build();
-                endpointHelper.informPlayers(new InformGameFinishResp(ResponseStatus.OK, gameFinishDto), null, roomHandler.getPlayersInRoom(room.getId()));
+            GameFinishDto gameFinishDto = GameFinishDto.builder()
+                    .winnerPlayerId(winner.getId())
+                    .loserPlayerId(loser.getId())
+                    .scorePerPlayerId(previousScore.entrySet().stream()
+                            .collect(Collectors.toMap(
+                                    entry -> entry.getKey().getId(),
+                                    Map.Entry::getValue)
+                            )
+                    )
+                    .finalWinner(isFinalWinner ? optionalFinalWinner.get() : null)
+                    .roomId(room.getId())
+                    .build();
 
-                if (isFinalWinner) {
-                    try {
-                        roomRESTClient.createRoom(room);
-                        roomHandler.copyRoom(room.getId());
-                    } catch (IOException | InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                } else {
-                    room.startNewGameFromPreviousGame(winner, loser);
+            if (isFinalWinner) {
+                try {
+                    RoomDto copyRoomDto = roomHandler.copyRoom(room.getId());
+                    gameFinishDto.setRoomId(copyRoomDto.id());
+
+                    endpointHelper.informPlayers(new InformGameFinishResp(ResponseStatus.OK, gameFinishDto), null, roomHandler.getPlayersInRoom(copyRoomDto.id()));
+                    roomRESTClient.createRoom(room);
+                } catch (IOException | InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } else {
+                room.startNewGameFromPreviousGame(winner, loser);
             }
         }
     }

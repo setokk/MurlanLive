@@ -32,8 +32,10 @@ enum GameStateEnum {
 @onready var leave_room_button: Button = $TopArea/LeftArea/RoomInfo/VBoxContainer2/LeaveButton
 @onready var give_card_button: Button = $BottomArea/ButtonsContainer/GiveCardButton
 @onready var room_name_label: LineEdit = $TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer/RoomName
+@onready var edit_room_name_button: Button = $TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer/EditRoomNameButton
 @onready var score_slider: Slider = $TopArea/LeftArea/RoomInfo/VBoxContainer/TotalScore
 @onready var time_options: OptionButton = $TopArea/LeftArea/RoomInfo/VBoxContainer/TimeOptions
+@onready var room_id_label: Label = $TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer2/RoomId
 
 @onready var seats: Array[Seat] = [
 	$TopArea/TableArea/TableLayout/Seat1,
@@ -50,12 +52,15 @@ enum GameStateEnum {
 func _ready() -> void:
 	give_card_button.visible = false
 	room_name_label.text = room["name"]
+	room_id_label.text = room["id"]
 	
 	score_slider.value = int(room["totalScoreToWin"])
 	
 	var duration_id: int = GameConstants.TURN_DURATION_SECONDS.find_key(int(room["turnDurationInSeconds"]))
 	var idx: int = time_options.get_item_index(duration_id)
 	time_options.select(idx)
+	
+	set_room_info_editable(false)
 
 	WebSocketClient.inform_player_join_room_resp.connect(_on_opponent_joined)
 	WebSocketClient.inform_game_start_resp.connect(_on_game_start)
@@ -144,6 +149,12 @@ func _on_game_finish(resp: InformGameFinishResp) -> void:
 			seats[find_player_seat_index(id)].set_score(score)
 			if resp.game_finish["finalWinner"]:
 				print("Winner is: " + resp.game_finish["finalWinner"]["username"])
+				
+				room_id_label.text = resp.game_finish["roomId"]
+				
+				is_ready_button.disabled = false
+				if is_owner():
+					set_room_info_editable(true)
 	else:
 		print("error bruh: ", resp)
 
@@ -183,7 +194,9 @@ func _on_game_state(resp: GameStateResp) -> void:
 		GameStateEnum.FINISHED:
 				play_button.disabled = false
 				pass_button.disabled = false
-			
+				
+	if is_owner():
+		set_room_info_editable(true)
 
 # Local user actions functions:
 func _on_play_requested() -> void:
@@ -226,9 +239,8 @@ func _on_ready_requested() -> void:
 func _on_ready_completed(resp: ReadyResp):
 	if resp.response_status == 200:
 		seats[0].set_ready()
-		score_slider.editable = false
-		time_options.disabled = true
 		is_ready_button.disabled = true
+		set_room_info_editable(false)
 	else:
 		print("error bruh: ", resp)
 
@@ -371,3 +383,8 @@ func is_owner() -> bool:
 		return false
 	else:
 		return players[0].id == PlayerSession.player.id
+
+func set_room_info_editable(is_editable: bool) -> void:
+		edit_room_name_button.disabled = not is_editable
+		score_slider.editable = is_editable
+		time_options.disabled = not is_editable

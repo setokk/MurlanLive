@@ -16,4 +16,5 @@ public class GameFinishDto {
     private Long winnerPlayerId;
     private Long loserPlayerId;
     private Player finalWinner;
+    private String roomId;
 }

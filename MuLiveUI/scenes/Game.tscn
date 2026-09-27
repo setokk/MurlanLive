@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://b8df7a4o34kvg" path="res://assets/images/table.png" id="5_qy1jj"]
 [ext_resource type="Texture2D" uid="uid://db6p7v6k4c8d3" path="res://assets/images/1416596-200.png" id="5_r7sob"]
 [ext_resource type="Script" uid="uid://y8r0rpi50vla" path="res://Deck.gd" id="6_acvyw"]
+[ext_resource type="Texture2D" uid="uid://by11rgbb78bj5" path="res://assets/images/361082-200.png" id="6_y5y3l"]
 [ext_resource type="Script" uid="uid://dnpihega65fwq" path="res://OpponentHand.gd" id="7_alh3a"]
 [ext_resource type="Script" uid="uid://chdhko4w4etio" path="res://Seat.gd" id="8_2rd6h"]
 [ext_resource type="Script" uid="uid://cs2r8uvg6ffdb" path="res://PlayedCards.gd" id="8_4q8tf"]
@@ -143,13 +144,41 @@ editable = false
 expand_to_text_length = true
 flat = true
 
-[node name="EditRoomName" type="Button" parent="TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer" unique_id=1978942476]
+[node name="EditRoomNameButton" type="Button" parent="TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer" unique_id=1978942476]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/normal = SubResource("StyleBoxEmpty_7ua8r")
 text = " "
 icon = ExtResource("5_r7sob")
+icon_alignment = 1
+expand_icon = true
+
+[node name="RoomIdLabel" type="Label" parent="TopArea/LeftArea/RoomInfo/VBoxContainer" unique_id=569776824]
+layout_mode = 2
+text = "Room ID:"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TopArea/LeftArea/RoomInfo/VBoxContainer" unique_id=30059844]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="RoomId" type="Label" parent="TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer2" unique_id=1547995849]
+custom_minimum_size = Vector2(1, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 14
+autowrap_mode = 1
+
+[node name="CopyRoomIdButton" type="Button" parent="TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer2" unique_id=1070905252]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7ua8r")
+text = " "
+icon = ExtResource("6_y5y3l")
 icon_alignment = 1
 expand_icon = true
 

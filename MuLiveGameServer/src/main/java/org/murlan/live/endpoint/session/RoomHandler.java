@@ -112,10 +112,10 @@ public class RoomHandler {
         return new RoomDto(room.getId(), room.getName(), room.getPlayers(), room.getTotalScoreToWin(), room.getTurnDurationInSeconds());
     }
 
-    public void copyRoom(@NonNull String roomId) {
+    public RoomDto copyRoom(@NonNull String roomId) {
         Room room = getRoom(roomId);
         if (room == null) {
-            return;
+            return null;
         }
 
         synchronized (room) {
@@ -138,13 +138,15 @@ public class RoomHandler {
                     room.getTurnDurationInSeconds(),
                     room.getGameStateFactory()
             );
-            createRoom(copyRoom, ownerPlayerSession);
+
+            RoomDto copyRoomDto = createRoom(copyRoom, ownerPlayerSession);
 
             for (PlayerSession playerSession : playersInRoom) {
                 if (!ownerPlayerSession.equals(playerSession)) {
                     joinRoom(copyRoom.getId(), playerSession);
                 }
             }
+            return copyRoomDto;
         }
     }
 
