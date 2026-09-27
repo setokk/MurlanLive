@@ -31,11 +31,7 @@ enum GameStateEnum {
 @onready var is_ready_button: Button = $TopArea/LeftArea/RoomInfo/VBoxContainer2/ReadyButton
 @onready var leave_room_button: Button = $TopArea/LeftArea/RoomInfo/VBoxContainer2/LeaveButton
 @onready var give_card_button: Button = $BottomArea/ButtonsContainer/GiveCardButton
-@onready var room_name_label: LineEdit = $TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer/RoomName
-@onready var edit_room_name_button: Button = $TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer/EditRoomNameButton
-@onready var score_slider: Slider = $TopArea/LeftArea/RoomInfo/VBoxContainer/TotalScore
-@onready var time_options: OptionButton = $TopArea/LeftArea/RoomInfo/VBoxContainer/TimeOptions
-@onready var room_id_label: Label = $TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer2/RoomId
+@onready var room_info : Panel = $TopArea/LeftArea/RoomInfo
 
 @onready var seats: Array[Seat] = [
 	$TopArea/TableArea/TableLayout/Seat1,
@@ -50,25 +46,20 @@ enum GameStateEnum {
 ]
 
 func _ready() -> void:
-	give_card_button.visible = false
-	room_name_label.text = room["name"]
-	room_id_label.text = room["id"]
-	
-	score_slider.value = int(room["totalScoreToWin"])
-	
-	var duration_id: int = GameConstants.TURN_DURATION_SECONDS.find_key(int(room["turnDurationInSeconds"]))
-	var idx: int = time_options.get_item_index(duration_id)
-	time_options.select(idx)
-	
-	set_room_info_editable(false)
+	players = room["players"]
+	set_owner_info()
+	room_info.set_room_id(room["id"])
+	room_info.set_slider_value(int(room["totalScoreToWin"]))
+	room_info.set_time_option(int(room["turnDurationInSeconds"]))
+	room_info.set_room_info_editable(false)
 
 	WebSocketClient.inform_player_join_room_resp.connect(_on_opponent_joined)
 	WebSocketClient.inform_game_start_resp.connect(_on_game_start)
 	WebSocketClient.game_state_resp.connect(_on_game_state)
-	$BottomArea/ButtonsContainer.play_hand_requested.connect(_on_play_requested)
+	play_button.pressed.connect(_on_play_requested)
 	WebSocketClient.play_hand_resp.connect(_on_play_completed)
 	WebSocketClient.inform_play_hand_resp.connect(_on_opponent_played_hand)
-	$BottomArea/ButtonsContainer.pass_requested.connect(_on_pass_requested)
+	pass_button.pressed.connect(_on_pass_requested)
 	WebSocketClient.pass_resp.connect(_on_pass_completed)
 	WebSocketClient.inform_pass_resp.connect(_on_opponent_passed_hand)
 	leave_room_button.pressed.connect(_on_leave_requested)
@@ -150,11 +141,11 @@ func _on_game_finish(resp: InformGameFinishResp) -> void:
 			if resp.game_finish["finalWinner"]:
 				print("Winner is: " + resp.game_finish["finalWinner"]["username"])
 				
-				room_id_label.text = resp.game_finish["roomId"]
+				room_info.set_room_id(resp.game_finish["roomId"])
 				
 				is_ready_button.disabled = false
-				if is_owner():
-					set_room_info_editable(true)
+				if is_owner(PlayerSession.player):
+					room_info.set_room_info_editable(true)
 	else:
 		print("error bruh: ", resp)
 
@@ -195,8 +186,8 @@ func _on_game_state(resp: GameStateResp) -> void:
 				play_button.disabled = false
 				pass_button.disabled = false
 				
-	if is_owner():
-		set_room_info_editable(true)
+	if is_owner(PlayerSession.player):
+		room_info.set_room_info_editable(true)
 
 # Local user actions functions:
 func _on_play_requested() -> void:
@@ -224,10 +215,10 @@ func _on_pass_completed(resp: PassResp) -> void:
 		print("Error with passing. Response: ", resp)
 		
 func _on_ready_requested() -> void:
-	if is_owner():
-		var room_name: String = room_name_label.text.strip_edges()
-		var total_score_to_win: int = int(score_slider.value)
-		var turn_duration_in_seconds: int = GameConstants.TURN_DURATION_SECONDS[time_options.get_selected_id()]
+	if is_owner(PlayerSession.player):
+		var room_name: String = room_info.get_room_name()
+		var total_score_to_win: int = room_info.get_slider_value()
+		var turn_duration_in_seconds: int = room_info.get_time_option_in_seconds()
 		
 		if room_name.is_empty():
 			PopupFactory.error("Room name cannot be empty")
@@ -240,7 +231,7 @@ func _on_ready_completed(resp: ReadyResp):
 	if resp.response_status == 200:
 		seats[0].set_ready()
 		is_ready_button.disabled = true
-		set_room_info_editable(false)
+		room_info.set_room_info_editable(false)
 	else:
 		print("error bruh: ", resp)
 
@@ -249,6 +240,11 @@ func _on_leave_requested() -> void:
 	
 func _on_leave_completed(resp: LeaveRoomResp) -> void:
 	if resp.response_status == 200:
+		if is_owner(PlayerSession.player):
+			players.erase(PlayerSession.player)
+			set_owner_info()
+		else:
+			players.erase(PlayerSession.player)		
 		SceneManager.show_lobby()
 	else:
 		print("Error: ", resp)
@@ -315,7 +311,13 @@ func _on_opponent_leave(resp: InformPlayerLeaveRoomResp) -> void:
 		for player in players:
 			if player["id"] == resp.player_id:
 				seats[find_player_seat_index(player["id"])].remove_player()
-				players.erase(player)
+				if is_owner(player):
+					players.erase(player)
+					set_owner_info()
+				else:
+					players.erase(player)
+				if is_owner(PlayerSession.player):
+					room_info.set_room_info_editable(true)
 				display_players()
 				break
 	else:
@@ -349,11 +351,9 @@ func _on_opponent_update_room_details(resp: InformUpdateRoomDetailsResp) -> void
 		room["totalScoreToWin"] = resp.room_details["totalScoreToWin"]
 		room["turnDurationInSeconds"] = resp.room_details["turnDurationInSeconds"]
 		
-		room_name_label.text = room["name"]
-		score_slider.value = int(room["totalScoreToWin"])
-		var duration_id: int = GameConstants.TURN_DURATION_SECONDS.find_key(int(room["turnDurationInSeconds"]))
-		var idx: int = time_options.get_item_index(duration_id)
-		time_options.select(idx)
+		room_info.set_room_name(room["name"])
+		room_info.set_slider_value(int(room["totalScoreToWin"]))
+		room_info.set_time_option(int(room["turnDurationInSeconds"]))
 
 # Helper functions	
 func display_players() -> void:
@@ -378,13 +378,13 @@ func find_player_seat_index(id) -> int:
 			return posmod(i-local_player_index,seats.size())
 	return 0
 
-func is_owner() -> bool:
+func is_owner(player) -> bool:
 	if players.is_empty():
 		return false
 	else:
-		return players[0].id == PlayerSession.player.id
+		return players[0].id == player.id
 
-func set_room_info_editable(is_editable: bool) -> void:
-		edit_room_name_button.disabled = not is_editable
-		score_slider.editable = is_editable
-		time_options.disabled = not is_editable
+func set_owner_info() -> void:
+	if not players.is_empty():
+		room["name"] = players[0]["username"] + "'s Room"
+		room_info.set_room_name(room["name"])
