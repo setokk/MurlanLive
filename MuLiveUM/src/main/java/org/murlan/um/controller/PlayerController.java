@@ -8,6 +8,7 @@ import org.murlan.um.api.request.RegisterPlayerRequest;
 import org.murlan.um.api.request.ResetPasswordRequest;
 import org.murlan.um.api.request.UnblockPlayerRequest;
 import org.murlan.um.auth.JwtUtils;
+import org.murlan.um.model.dto.PlayerDetailsDto;
 import org.murlan.um.model.dto.PlayerDto;
 import org.murlan.um.service.PlayerService;
 import org.murlan.um.service.mapper.PlayerMapper;
@@ -51,10 +52,10 @@ public class PlayerController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PlayerDto> getPlayer(@PathVariable(name = "id") long playerId) {
-        PlayerDto playerDto = playerService.getPlayer(playerId);
-        return ResponseEntity.ok(playerDto);
+    @GetMapping("/user-details/{id}")
+    public ResponseEntity<PlayerDetailsDto> getUserDetails(@PathVariable(name = "id") long playerId) {
+        PlayerDetailsDto playerDetailsDto = playerService.getPlayerDetails();
+        return ResponseEntity.ok(playerDetailsDto);
     }
 
     @PostMapping("/block-player")

@@ -165,10 +165,6 @@ public class RoomHandler {
                 return false;
             }
 
-            if (room.getActiveGameState().getReadyPlayers().contains(player)) {
-                return false;
-            }
-
             if (roomDetailsDto.roomName() != null) {
                 room.setName(roomDetailsDto.roomName());
             }

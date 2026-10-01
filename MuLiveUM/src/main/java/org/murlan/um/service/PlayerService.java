@@ -4,6 +4,7 @@ import jakarta.mail.MessagingException;
 import org.murlan.um.error.BusinessLogicException;
 import org.murlan.um.model.PlayerEntity;
 import org.murlan.um.model.PlayerResetPasswordEntity;
+import org.murlan.um.model.dto.PlayerDetailsDto;
 import org.murlan.um.model.dto.PlayerDto;
 import org.murlan.um.repository.PlayerRepository;
 import org.murlan.um.repository.PlayerResetPasswordEntityRepository;
@@ -84,6 +85,11 @@ public class PlayerService {
         PlayerEntity player = playerRepository.findById(playerId)
                 .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Player with id: " + playerId + " not found"));
         return new PlayerDto(player.getId(), player.getUsername(), player.getCreatedDate());
+    }
+
+    public PlayerDetailsDto getPlayerDetails() {
+        PlayerDto playerDto = authService.getAuthenticatedUser();
+        return new PlayerDetailsDto();
     }
 
     @Transactional

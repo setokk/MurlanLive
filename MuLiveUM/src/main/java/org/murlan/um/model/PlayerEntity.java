@@ -53,11 +53,14 @@ public class PlayerEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "email", updatable = false, unique = true)
+    @Column(name = "email", updatable = false, nullable = false, unique = true)
     private String email;
 
     @Column(name = "creation_date", updatable = false, nullable = false)
     private LocalDateTime createdDate;
+
+    @Column(name = "is_verified", nullable = false)
+    private Boolean isVerified;
 
     @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
     private HandLayoutConfigurationEntity handLayoutConfiguration;

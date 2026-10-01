@@ -5,8 +5,9 @@ CREATE TABLE IF NOT EXISTS player(
     id BIGINT NOT NULL PRIMARY KEY,
     username TEXT NOT NULL,
     password TEXT NOT NULL,
-    email TEXT,
-    creation_date TIMESTAMP NOT NULL
+    email TEXT NOT NULL,
+    creation_date TIMESTAMP NOT NULL,
+    is_verified BOOLEAN NOT NULL DEFAULT 0
 );
 CREATE SEQUENCE IF NOT EXISTS player_seq
     START WITH 1
