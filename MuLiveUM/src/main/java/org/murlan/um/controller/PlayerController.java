@@ -1,6 +1,7 @@
 package org.murlan.um.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.murlan.um.api.request.BlockPlayerRequest;
 import org.murlan.um.api.request.ForgotPasswordRequest;
 import org.murlan.um.api.request.LoginPlayerRequest;
@@ -25,15 +26,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/players")
+@RequiredArgsConstructor
 public class PlayerController {
     private final PlayerService playerService;
     private final PlayerMapper playerMapper;
-
-    @Autowired
-    public PlayerController(PlayerService playerService, PlayerMapper playerMapper) {
-        this.playerService = playerService;
-        this.playerMapper = playerMapper;
-    }
 
     @PostMapping("/login")
     public ResponseEntity<String> loginPlayer(@RequestBody @Valid LoginPlayerRequest request) {

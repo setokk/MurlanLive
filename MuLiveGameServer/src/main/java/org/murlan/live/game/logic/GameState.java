@@ -19,6 +19,7 @@ import org.murlan.live.protocol.dto.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -69,7 +70,7 @@ public class GameState {
         this.players = new ArrayList<>();
         this.players.add(player);
         this.turnDurationInSeconds = turnDurationInSeconds;
-        this.score = HashMap.newHashMap(GameConstants.MAX_PLAYERS);
+        this.score = LinkedHashMap.newLinkedHashMap(GameConstants.MAX_PLAYERS);
         this.givenCards = HashSet.newHashSet(0);
         this.onGameStart = onGameStart;
         this.onGameFinish = onGameFinish;
@@ -81,7 +82,7 @@ public class GameState {
                 .withState(State.WAITING)
                 .withPlayers(new ArrayList<>(previous.getPlayers()))
                 .withTurnDurationInSeconds(previous.getTurnDurationInSeconds())
-                .withScore(HashMap.newHashMap(GameConstants.MAX_PLAYERS))
+                .withScore(LinkedHashMap.newLinkedHashMap(GameConstants.MAX_PLAYERS))
                 .withGivenCards(HashSet.newHashSet(0))
                 .withOnGameStart(previous.getOnGameStart())
                 .withOnGameFinish(previous.getOnGameFinish())
@@ -111,29 +112,23 @@ public class GameState {
 
     public boolean playHand(Player player, CardCombination cardCombination) {
         if (this.state != State.PLAYING) {
-            log.info("this.state != State.PLAYING, {}", this.state.name());
             return false;
         }
         if (isNotPlayerTurn(player)) {
-            log.info("isNotPlayerTurn {}", this.currTurnPlayer);
             return false;
         }
         if (!this.currTurnPlayer.getHand().contains(cardCombination)) {
-            log.info("!this.currTurnPlayer.getHand().contains(cardCombination)");
             return false;
         }
         if (!MovePipeline.validate(cardCombination)) {
-            log.info("Move is invalid");
             return false;
         }
 
         if (this.isFirstMove && this.shouldCurrTurnPlayerUseThreeOfSpades && !cardCombination.getCards().contains(Card.THREE_OF_SPADES)) {
-            log.info("this.isFirstMove && shouldCurrTurnPlayerUseThreeOfSpades && !cardCombination.getCards().contains(Card.THREE_OF_SPADES)");
             return false;
         }
 
         if (!this.isFirstMove && (this.currCardCombination.isEqualStrength(cardCombination) || this.currCardCombination.isStrongerThan(cardCombination))) {
-            log.info("!this.isFirstMove && (this.currCardCombination.isEqualStrength(cardCombination) || this.currCardCombination.isStrongerThan(cardCombination))");
             return false;
         }
 
@@ -252,13 +247,6 @@ public class GameState {
                     ? GameConstants.SCORE_PENALTY_LOST_CONNECTION
                     : GameConstants.SCORE_PENALTY_LEAVE_ROOM;
 
-            short scoreRemainingPlayers = hasLostConnection
-                    ? GameConstants.SCORE_REMAINING_PLAYERS_AFTER_LOST_CONNECTION
-                    : GameConstants.SCORE_REMAINING_PLAYERS_AFTER_LEAVE_ROOM;
-
-            for (Player remainingPlayer : this.players) {
-                this.score.put(remainingPlayer, scoreRemainingPlayers);
-            }
             this.score.put(optionalPlayer.get(), scorePenalty);
         } else if (this.state == State.WAITING) {
             this.readyPlayers.remove(player);

@@ -60,7 +60,7 @@ public class PlayerEntity {
     private LocalDateTime createdDate;
 
     @Column(name = "is_verified", nullable = false)
-    private Boolean isVerified;
+    private boolean isVerified;
 
     @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
     private HandLayoutConfigurationEntity handLayoutConfiguration;
@@ -81,6 +81,10 @@ public class PlayerEntity {
         this.password = password;
         this.email = email;
         this.createdDate = createdDate;
+    }
+
+    public PlayerEntity(Long id) {
+        this.id = id;
     }
 
     @Override

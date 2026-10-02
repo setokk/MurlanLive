@@ -1,6 +1,7 @@
 package org.murlan.um.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.murlan.um.model.dto.RoomDetailsDto;
 import org.murlan.um.model.dto.RoomDto;
 import org.murlan.um.api.request.CreateRoomRequest;
@@ -22,15 +23,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/rooms")
+@RequiredArgsConstructor
 public class RoomController {
     private final RoomService roomService;
     private final RoomMapper roomMapper;
-
-    @Autowired
-    public RoomController(RoomService roomService, RoomMapper roomMapper) {
-        this.roomService = roomService;
-        this.roomMapper = roomMapper;
-    }
 
     @PostMapping("/create")
     public ResponseEntity<RoomDto> createRoom(@RequestBody @Valid CreateRoomRequest request) {

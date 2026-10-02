@@ -93,7 +93,7 @@ public class GameLobbyEndpoint {
 
     private static final Consumer<Room> onPlayerLeaveOrDisconnect = room -> {
         try {
-            if (GameState.State.WAITING.equals(room.getActiveGameState().getState())) {
+            if (!GameState.State.FINISHED.equals(room.getActiveGameState().getState())) {
                 return;
             }
             roomRESTClient.createRoom(room);
@@ -107,6 +107,9 @@ public class GameLobbyEndpoint {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             for (Room room : roomHandler.getAllRooms()) {
                 try {
+                    if (!GameState.State.FINISHED.equals(room.getActiveGameState().getState())) {
+                        return;
+                    }
                     roomRESTClient.createRoom(room);
                 } catch (IOException | InterruptedException e) {
                     log.error("Could not save room with id: {}", room.getId());

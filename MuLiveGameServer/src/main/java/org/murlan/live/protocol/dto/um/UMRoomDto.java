@@ -1,4 +1,4 @@
-package org.murlan.um.model.dto;
+package org.murlan.live.protocol.dto.um;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -16,7 +16,7 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public final class RoomDto {
+public final class UMRoomDto {
     private String id;
     private String name;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
@@ -25,5 +25,5 @@ public final class RoomDto {
     private LocalDateTime finishedDate;
     private short numPlayers;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Map<Long, RankRatingDto> rankRatingsByPlayerId;
+    private Map<Long, UMRankRatingDto> rankRatingsByPlayerId;
 }

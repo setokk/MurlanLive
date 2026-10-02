@@ -13,6 +13,9 @@ import org.murlan.live.protocol.dto.Player;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -81,14 +84,40 @@ public class Room {
     }
 
     public synchronized Map<Player, Short> getTotalScores() {
-        return gameStates.stream()
-                .map(GameState::getScore)
-                .flatMap(s -> s.entrySet().stream())
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (partialScore, currScore) -> (short) (partialScore + currScore)
-                ));
+        Map<Player, Integer> totals = new LinkedHashMap<>();
+        Map<Player, Integer> reachedAt = new HashMap<>();
+        int seq = 0;
+
+        for (GameState gs : gameStates) {
+            // players without a score entry yet still need to appear
+            for (Player p : gs.getPlayers()) {
+                if (!totals.containsKey(p)) {
+                    totals.put(p, 0);
+                    reachedAt.put(p, seq++);
+                }
+            }
+
+            for (Map.Entry<Player, Short> e : gs.getScore().entrySet()) {
+                Player p = e.getKey();
+                int before = totals.get(p);
+                int after = before + e.getValue();
+                totals.put(p, after);
+
+                if (after != before) {
+                    reachedAt.put(p, seq);
+                }
+                seq++;
+            }
+        }
+
+        Map<Player, Short> result = new LinkedHashMap<>();
+        totals.entrySet().stream()
+                .sorted(Comparator
+                        .comparing((Map.Entry<Player, Integer> e) -> e.getValue()).reversed()
+                        .thenComparing(e -> reachedAt.get(e.getKey())))
+                .forEach(e -> result.put(e.getKey(), e.getValue().shortValue()));
+
+        return result;
     }
 
     public synchronized List<Player> getPlayers() {

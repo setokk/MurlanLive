@@ -1,6 +1,7 @@
 package org.murlan.um.service;
 
 import jakarta.mail.MessagingException;
+import lombok.RequiredArgsConstructor;
 import org.murlan.um.error.BusinessLogicException;
 import org.murlan.um.model.PlayerEntity;
 import org.murlan.um.model.PlayerResetPasswordEntity;
@@ -11,7 +12,6 @@ import org.murlan.um.repository.PlayerResetPasswordEntityRepository;
 import org.murlan.um.security.TokenGenerator;
 import org.murlan.um.service.param.LoginPlayerParam;
 import org.murlan.um.service.param.RegisterPlayerParam;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class PlayerService {
     private final PlayerRepository playerRepository;
     private final PlayerResetPasswordEntityRepository resetPasswordRepository;
@@ -33,25 +34,6 @@ public class PlayerService {
     private final TokenGenerator tokenGenerator;
     private final EmailTemplateService emailTemplateService;
     private final EmailService emailService;
-
-    @Autowired
-    public PlayerService(
-            PlayerRepository playerRepository,
-            PlayerResetPasswordEntityRepository resetPasswordRepository,
-            PasswordEncoder passwordEncoder,
-            AuthService authService,
-            TokenGenerator tokenGenerator,
-            EmailTemplateService emailTemplateService,
-            EmailService emailService
-    ) {
-        this.playerRepository = playerRepository;
-        this.resetPasswordRepository = resetPasswordRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authService = authService;
-        this.tokenGenerator = tokenGenerator;
-        this.emailTemplateService = emailTemplateService;
-        this.emailService = emailService;
-    }
 
     public PlayerDto loginPlayer(LoginPlayerParam param) {
         PlayerEntity player = playerRepository

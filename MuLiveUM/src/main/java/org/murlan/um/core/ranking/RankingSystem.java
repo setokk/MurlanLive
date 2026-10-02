@@ -1,7 +1,5 @@
 package org.murlan.um.core.ranking;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -121,7 +119,7 @@ public final class RankingSystem {
             Rating r = players.get(i);
             r.mu = newMu[i];
             r.sigma = newSigma[i];
-            r.matches++;
+            r.roomsPlayed++;
         }
     }
 }

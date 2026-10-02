@@ -119,6 +119,70 @@ class RankingSystemTest {
     }
 
     /* ====================================================================== */
+    /* Experience-based gain statistics                                       */
+    /* ====================================================================== */
+
+    static final class ExperienceGainStats {
+        // 1-10, 11-20, 21-30, 31-50, 51-100, 101+
+        static final int[] BUCKET_ENDS = {10, 20, 30, 50, 100};
+
+        final long[] n = new long[BUCKET_ENDS.length + 1];
+        final long[] up = new long[BUCKET_ENDS.length + 1];
+        final double[] ord = new double[BUCKET_ENDS.length + 1];
+        final double[] mu = new double[BUCKET_ENDS.length + 1];
+        final double[] sigma = new double[BUCKET_ENDS.length + 1];
+
+        final double[][] posOrd = new double[BUCKET_ENDS.length + 1][4];
+        final long[][] posN = new long[BUCKET_ENDS.length + 1][4];
+
+        static int bucket(int matchesBefore) {
+            for (int i = 0; i < BUCKET_ENDS.length; i++) {
+                if (matchesBefore <= BUCKET_ENDS[i]) return i;
+            }
+            return BUCKET_ENDS.length;
+        }
+
+        static String label(int bucket) {
+            if (bucket == 0) return "1-10";
+            if (bucket == 1) return "11-20";
+            if (bucket == 2) return "21-30";
+            if (bucket == 3) return "31-50";
+            if (bucket == 4) return "51-100";
+            return "101+";
+        }
+
+        void add(int matchesBefore, int position,
+                 double dOrd, double dMu, double dSigma) {
+            int b = bucket(matchesBefore);
+
+            n[b]++;
+            if (dOrd > 0) up[b]++;
+
+            ord[b] += dOrd;
+            mu[b] += dMu;
+            sigma[b] += dSigma;
+
+            posOrd[b][position] += dOrd;
+            posN[b][position]++;
+        }
+
+        void merge(ExperienceGainStats other) {
+            for (int b = 0; b < n.length; b++) {
+                n[b] += other.n[b];
+                up[b] += other.up[b];
+                ord[b] += other.ord[b];
+                mu[b] += other.mu[b];
+                sigma[b] += other.sigma[b];
+
+                for (int p = 0; p < 4; p++) {
+                    posOrd[b][p] += other.posOrd[b][p];
+                    posN[b][p] += other.posN[b][p];
+                }
+            }
+        }
+    }
+
+    /* ====================================================================== */
     /* Simulation                                                              */
     /* ====================================================================== */
 
@@ -139,6 +203,8 @@ class RankingSystemTest {
         /** Gain per match by rank: over all matches, and over the 2nd half only (after warmup). */
         final GainStats gainAll = new GainStats();
         final GainStats gainLate = new GainStats();
+
+        final ExperienceGainStats gainByExperience = new ExperienceGainStats();
 
         Sim(long seed, int numPlayers, double luckSd, int warmupRooms) {
             if (numPlayers < 4 || numPlayers > POOL_SIZE) {
@@ -235,12 +301,16 @@ class RankingSystemTest {
 
             // snapshot BEFORE the update: rank, ordinal, mu, sigma
             Rank[] rankBefore = new Rank[4];
+            int[] matchesBefore = new int[4];
             double[] ordBefore = new double[4];
             double[] muBefore = new double[4];
             double[] sigmaBefore = new double[4];
             for (int k = 0; k < 4; k++) {
                 Rating r = ordered.get(k);
+
                 rankBefore[k] = Rank.of(r);
+                matchesBefore[k] = r.roomsPlayed;
+
                 ordBefore[k] = r.ordinal();
                 muBefore[k] = r.mu;
                 sigmaBefore[k] = r.sigma;
@@ -250,11 +320,24 @@ class RankingSystemTest {
 
             for (int k = 0; k < 4; k++) {
                 Rating r = ordered.get(k);
+
                 double dOrd = r.ordinal() - ordBefore[k];
                 double dMu = r.mu - muBefore[k];
                 double dSigma = r.sigma - sigmaBefore[k];
+
                 gainAll.add(rankBefore[k], k, dOrd, dMu, dSigma);
-                if (late) gainLate.add(rankBefore[k], k, dOrd, dMu, dSigma);
+
+                if (late) {
+                    gainLate.add(rankBefore[k], k, dOrd, dMu, dSigma);
+                }
+
+                gainByExperience.add(
+                        matchesBefore[k],
+                        k,
+                        dOrd,
+                        dMu,
+                        dSigma
+                );
             }
             roomsPlayed++;
         }
@@ -281,7 +364,7 @@ class RankingSystemTest {
 
         double avgGames() {
             double total = 0;
-            for (Rating r : ratings) total += r.matches;
+            for (Rating r : ratings) total += r.roomsPlayed;
             return total / n;
         }
 
@@ -289,14 +372,14 @@ class RankingSystemTest {
         int[] rankCounts() {
             int[] counts = new int[Rank.values().length];
             for (Rating r : ratings) {
-                if (r.matches > 0) counts[Rank.of(r).ordinal()]++;
+                if (r.roomsPlayed > 0) counts[Rank.of(r).ordinal()]++;
             }
             return counts;
         }
 
         int unplayedCount() {
             int c = 0;
-            for (Rating r : ratings) if (r.matches == 0) c++;
+            for (Rating r : ratings) if (r.roomsPlayed == 0) c++;
             return c;
         }
 
@@ -304,14 +387,14 @@ class RankingSystemTest {
         int provisionalCount() {
             int c = 0;
             for (Rating r : ratings) {
-                if (r.matches > 0 && r.matches < Rank.MIN_MATCHES_FOR_TOP_TIERS) c++;
+                if (r.roomsPlayed > 0 && r.roomsPlayed < Rank.MIN_MATCHES_FOR_TOP_TIERS) c++;
             }
             return c;
         }
 
         Metrics snapshot() {
             List<Integer> rated = new ArrayList<>();
-            for (int i = 0; i < n; i++) if (ratings.get(i).matches > 0) rated.add(i);
+            for (int i = 0; i < n; i++) if (ratings.get(i).roomsPlayed > 0) rated.add(i);
             int m = rated.size();
             int tiers = Rank.values().length;
             int[] tierCount = new int[tiers];
@@ -490,6 +573,76 @@ class RankingSystemTest {
                 + " 1st..4th = avg ordinal change by finishing position; rank = rank BEFORE the match)%n");
     }
 
+    private static void printGainByExperience(String title, ExperienceGainStats g) {
+        out("%n-- %s --%n", title);
+
+        out("%-9s %9s %8s %8s %8s %6s | %7s %7s %7s %7s%n",
+                "matches", "count", "dOrd", "dMu", "dSigma", "up%",
+                "1st", "2nd", "3rd", "4th");
+
+        long totalN = 0;
+        long totalUp = 0;
+        double totalOrd = 0;
+        double totalMu = 0;
+        double totalSigma = 0;
+
+        double[] totalPos = new double[4];
+        long[] totalPosN = new long[4];
+
+        for (int b = 0; b < g.n.length; b++) {
+            if (g.n[b] == 0) continue;
+
+            out("%-9s %9d %+8.3f %+8.3f %+8.3f %6.0f |",
+                    ExperienceGainStats.label(b),
+                    g.n[b],
+                    g.ord[b] / g.n[b],
+                    g.mu[b] / g.n[b],
+                    g.sigma[b] / g.n[b],
+                    100.0 * g.up[b] / g.n[b]);
+
+            for (int p = 0; p < 4; p++) {
+                double avg = g.posN[b][p] == 0
+                        ? Double.NaN
+                        : g.posOrd[b][p] / g.posN[b][p];
+
+                out(" %+7.2f", avg);
+
+                totalPos[p] += g.posOrd[b][p];
+                totalPosN[p] += g.posN[b][p];
+            }
+
+            out("%n");
+
+            totalN += g.n[b];
+            totalUp += g.up[b];
+            totalOrd += g.ord[b];
+            totalMu += g.mu[b];
+            totalSigma += g.sigma[b];
+        }
+
+        if (totalN > 0) {
+            out("%-9s %9d %+8.3f %+8.3f %+8.3f %6.0f |",
+                    "ALL",
+                    totalN,
+                    totalOrd / totalN,
+                    totalMu / totalN,
+                    totalSigma / totalN,
+                    100.0 * totalUp / totalN);
+
+            for (int p = 0; p < 4; p++) {
+                out(" %+7.2f",
+                        totalPosN[p] == 0
+                                ? Double.NaN
+                                : totalPos[p] / totalPosN[p]);
+            }
+
+            out("%n");
+        }
+
+        out("(matches = matches completed BEFORE the match; "
+                + "dOrd = ordinal change; up%% = positive ordinal gain)%n");
+    }
+
     private static void printReport(String title, List<Scenario> scenarios, List<Sim> sims) {
         out("%n==================== %s ====================%n", title);
 
@@ -564,7 +717,7 @@ class RankingSystemTest {
         for (Rating r : sim.ratings) {
             assertTrue(Double.isFinite(r.mu), "mu must be finite");
             assertTrue(Double.isFinite(r.sigma) && r.sigma > 0, "sigma must be positive and finite");
-            assertFalse(r.matches < Rank.MIN_MATCHES_FOR_TOP_TIERS && Rank.of(r).compareTo(Rank.GOLD) > 0,
+            assertFalse(r.roomsPlayed < Rank.MIN_MATCHES_FOR_TOP_TIERS && Rank.of(r).compareTo(Rank.GOLD) > 0,
                     "players with few matches must be capped at GOLD");
         }
     }
@@ -709,6 +862,56 @@ class RankingSystemTest {
             }
             printGainDetail(st.name() + " | ALL matches", all);
             printGainDetail(st.name() + " | 2nd half only", late);
+        }
+    }
+
+    @Test
+    void gainPerMatchByExperience() {
+        record Setup(
+                String name,
+                int players,
+                int gamesPerPlayer,
+                ToIntFunction<Random> scores
+        ) {}
+
+        List<Setup> setups = List.of(
+                new Setup("10 players, 200 games/pl, mixed", 10, 200, MIXED),
+                new Setup("20 players, 200 games/pl, mixed", 20, 200, MIXED),
+                new Setup("100 players, 200 games/pl, mixed", 100, 200, MIXED),
+                new Setup("100 players, 200 games/pl, max21", 100, 200, fixed(21)),
+                new Setup("100 players, 200 games/pl, max3", 100, 200, fixed(3))
+        );
+
+        int seeds = 5;
+
+        out("%n==================== GAIN PER MATCH BY EXPERIENCE "
+                + "(avg of %d seeds) ====================%n", seeds);
+
+        for (Setup st : setups) {
+            int rooms = st.gamesPerPlayer() * st.players() / 4;
+
+            ExperienceGainStats experience = new ExperienceGainStats();
+
+            for (int s = 0; s < seeds; s++) {
+                Sim sim = new Sim(
+                        8000 + s,
+                        st.players(),
+                        DEFAULT_LUCK_SD,
+                        rooms / 2
+                );
+
+                for (int r = 0; r < rooms; r++) {
+                    sim.playRoom(st.scores().applyAsInt(sim.rnd));
+                }
+
+                assertSane(sim);
+                experience.merge(sim.gainByExperience);
+            }
+
+            printGainByExperience(
+                    st.name() + " | ALL matches",
+                    experience
+            );
         }
     }
 

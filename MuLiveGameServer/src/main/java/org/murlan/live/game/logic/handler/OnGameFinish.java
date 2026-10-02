@@ -9,11 +9,14 @@ import org.murlan.live.protocol.api.InformGameFinishResp;
 import org.murlan.live.protocol.dto.GameFinishDto;
 import org.murlan.live.protocol.dto.Player;
 import org.murlan.live.protocol.dto.RoomDto;
+import org.murlan.live.protocol.dto.um.UMRoomDto;
 import org.murlan.live.protocol.rest.RoomRESTClient;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -22,6 +25,8 @@ public final class OnGameFinish implements Runnable {
     private final RoomHandler roomHandler;
     private final EndpointHelper endpointHelper;
     private final RoomRESTClient roomRESTClient;
+
+    private static final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
     @Override
     public void run() {
@@ -58,15 +63,25 @@ public final class OnGameFinish implements Runnable {
                     .build();
 
             if (isFinalWinner) {
-                try {
-                    RoomDto copyRoomDto = roomHandler.copyRoom(room.getId());
-                    gameFinishDto.setRoomId(copyRoomDto.id());
+                RoomDto copyRoomDto = roomHandler.copyRoom(room.getId());
+                gameFinishDto.setRoomId(copyRoomDto.id());
 
-                    endpointHelper.informPlayers(new InformGameFinishResp(ResponseStatus.OK, gameFinishDto), null, roomHandler.getPlayersInRoom(copyRoomDto.id()));
-                    roomRESTClient.createRoom(room);
-                } catch (IOException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                executor.submit(() -> {
+                    try {
+                        ResponseStatus responseStatus = ResponseStatus.OK;
+
+                        Optional<UMRoomDto> optionalUmRoomDto = roomRESTClient.createRoom(room);
+                        if (optionalUmRoomDto.isEmpty()) {
+                            responseStatus = ResponseStatus.ERROR;
+                        } else {
+                            UMRoomDto umRoomDto = optionalUmRoomDto.get();
+                            gameFinishDto.setRankRatingsByPlayerId(umRoomDto.getRankRatingsByPlayerId());
+                        }
+                        endpointHelper.informPlayers(new InformGameFinishResp(responseStatus, gameFinishDto), null, roomHandler.getPlayersInRoom(copyRoomDto.id()));
+                    } catch (IOException | InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
             } else {
                 room.startNewGameFromPreviousGame(winner, loser);
             }

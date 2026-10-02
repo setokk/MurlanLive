@@ -20,9 +20,13 @@ public enum Rank {
             if (r.ordinal() >= t.minOrdinal) result = t;
         }
 
-        if (r.matches < MIN_MATCHES_FOR_TOP_TIERS && result.compareTo(GOLD) > 0) {
+        if (r.roomsPlayed < MIN_MATCHES_FOR_TOP_TIERS && result.compareTo(GOLD) > 0) {
             result = GOLD;
         }
         return result;
+    }
+
+    public String displayName() {
+        return name().charAt(0) + name().substring(1).toLowerCase();
     }
 }
