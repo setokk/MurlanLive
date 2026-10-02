@@ -59,6 +59,10 @@ animation_library={
 &"animation/fps": 60.0
 }
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://translations/translations.en.translation", "res://translations/translations.sq.translation")
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=2

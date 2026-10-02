@@ -1,20 +1,20 @@
 [gd_scene format=3 uid="uid://f8in7s47ipg4"]
 
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_71axn"]
-[ext_resource type="Script" uid="uid://d2ugnd66ke3bo" path="res://Game.gd" id="2_3xj3m"]
+[ext_resource type="Script" uid="uid://dshkt7a1vlh6w" path="res://Game.gd" id="2_3xj3m"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_dahhg"]
-[ext_resource type="Script" uid="uid://cggmhq3jr6r2l" path="res://TableArea.gd" id="3_3so38"]
-[ext_resource type="Script" uid="uid://cnfr068ybvthk" path="res://RoomInfo.gd" id="4_2rd6h"]
+[ext_resource type="Script" uid="uid://qfbjwyal50vd" path="res://TableArea.gd" id="3_3so38"]
+[ext_resource type="Script" uid="uid://cvnw1l8hi3cih" path="res://RoomInfo.gd" id="4_2rd6h"]
 [ext_resource type="Theme" uid="uid://dcg0tqtvbome4" path="res://themes/SeatTheme.tres" id="4_3cx6b"]
 [ext_resource type="Texture2D" uid="uid://b8df7a4o34kvg" path="res://assets/images/table.png" id="5_qy1jj"]
 [ext_resource type="Texture2D" uid="uid://db6p7v6k4c8d3" path="res://assets/images/1416596-200.png" id="5_r7sob"]
-[ext_resource type="Script" uid="uid://dfknfovm6tddy" path="res://Deck.gd" id="6_acvyw"]
+[ext_resource type="Script" uid="uid://y8r0rpi50vla" path="res://Deck.gd" id="6_acvyw"]
 [ext_resource type="Texture2D" uid="uid://by11rgbb78bj5" path="res://assets/images/361082-200.png" id="6_y5y3l"]
-[ext_resource type="Script" uid="uid://c3xfjnp81ckek" path="res://OpponentHand.gd" id="7_alh3a"]
-[ext_resource type="Script" uid="uid://clxc14fpj30ha" path="res://Seat.gd" id="8_2rd6h"]
-[ext_resource type="Script" uid="uid://d3trjxyp4ubau" path="res://PlayedCards.gd" id="8_4q8tf"]
-[ext_resource type="Script" uid="uid://prjme07f6efi" path="res://HandPlaceholder.gd" id="9_x3xnh"]
-[ext_resource type="Script" uid="uid://k68075chkxlf" path="res://ButtonsContainer.gd" id="10_8r6kd"]
+[ext_resource type="Script" uid="uid://dnpihega65fwq" path="res://OpponentHand.gd" id="7_alh3a"]
+[ext_resource type="Script" uid="uid://chdhko4w4etio" path="res://Seat.gd" id="8_2rd6h"]
+[ext_resource type="Script" uid="uid://cs2r8uvg6ffdb" path="res://PlayedCards.gd" id="8_4q8tf"]
+[ext_resource type="Script" uid="uid://dsvr36s1t80n1" path="res://HandPlaceholder.gd" id="9_x3xnh"]
+[ext_resource type="Script" uid="uid://755ytelsigcg" path="res://ButtonsContainer.gd" id="10_8r6kd"]
 [ext_resource type="PackedScene" uid="uid://3maglnyvccuy" path="res://scenes/Chat.tscn" id="14_y5y3l"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m32dw"]
@@ -228,9 +228,8 @@ text = "Ready"
 layout_mode = 2
 text = "Leave Room"
 
-[node name="TableArea" type="CenterContainer" parent="TopArea" unique_id=458807453]
+[node name="TableArea" type="Control" parent="TopArea" unique_id=536433243]
 layout_mode = 1
-anchors_preset = -1
 anchor_left = 0.2
 anchor_right = 0.8
 anchor_bottom = 1.0
@@ -239,7 +238,11 @@ offset_bottom = 4.0
 script = ExtResource("3_3so38")
 
 [node name="TableLayout" type="Control" parent="TopArea/TableArea" unique_id=324252698]
-layout_mode = 2
+anchors_preset = 0
+offset_left = 345.0
+offset_top = 243.0
+offset_right = 345.0
+offset_bottom = 243.0
 theme = ExtResource("4_3cx6b")
 
 [node name="Table" type="TextureRect" parent="TopArea/TableArea/TableLayout" unique_id=747679814]
@@ -633,7 +636,7 @@ script = ExtResource("10_8r6kd")
 layout_mode = 2
 tooltip_text = "Play Hand"
 theme_override_styles/normal = SubResource("StyleBoxFlat_17p60")
-text = "Play Hand"
+text = "PLAY_HAND_BUTTON"
 
 [node name="PassButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=1608814664]
 layout_mode = 2
