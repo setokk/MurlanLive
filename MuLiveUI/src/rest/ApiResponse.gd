@@ -3,7 +3,7 @@ extends RefCounted
 
 var success: bool
 var status_code: int
-var data: Dictionary
+var data: Variant
 var errors: Array
 
 static func from_http(response_code: int, body: PackedByteArray) -> ApiResponse:
@@ -12,11 +12,13 @@ static func from_http(response_code: int, body: PackedByteArray) -> ApiResponse:
 	res.success = response_code >= 200 and response_code < 300
 
 	var text: String = body.get_string_from_utf8()
-	var parsed = JSON.parse_string(text)
-	res.data = parsed if parsed is Dictionary else {}
+	res.data = JSON.parse_string(text)
 
-	var err = res.data.get("errors", [])
-	res.errors = err if err is Array else []
+	if res.data is Dictionary:
+		var err = res.data.get("errors", [])
+		res.errors = err if err is Array else []
+	else:
+		res.errors = []
 
 	return res
 

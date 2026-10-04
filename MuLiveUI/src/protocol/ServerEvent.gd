@@ -32,6 +32,7 @@ static var RESP_FACTORIES: Dictionary[int, Callable] = {
 	Value.INFORM_PLAYER_READY: func(parts, config): return InformPlayerReadyResp.new(parts, config),
 	Value.INFORM_PLAYER_CHAT: func(parts, config): return InformPlayerChatResp.new(parts, config),
 	Value.INFORM_UPDATE_ROOM_DETAILS: func(parts, config): return InformUpdateRoomDetailsResp.new(parts, config),
+	Value.INFORM_PLAYER_KICKED: func(parts, config): return InformPlayerKickedResp.new(parts, config),
 }
 
 static func create_resp(value: Value, parts: PackedStringArray, config: ProtocolConfig) -> Resp:

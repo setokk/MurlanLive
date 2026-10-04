@@ -20,6 +20,7 @@ signal inform_player_lost_connection_resp(resp: InformPlayerLostConnectionResp)
 signal inform_player_ready_resp(resp: InformPlayerReadyResp)
 signal inform_player_chat_resp(resp: InformPlayerChatResp)
 signal inform_update_room_details_resp(resp: InformUpdateRoomDetailsResp)
+signal inform_player_kicked_resp(resp: InformPlayerKickedResp)
 
 # Client Events
 signal game_state_resp(resp: GameStateResp)
@@ -51,6 +52,7 @@ var resp_signal_handlers: Dictionary[String, Callable] = {
 	ServerEvent.id(ServerEvent.Value.INFORM_PLAYER_READY): func(resp): inform_player_ready_resp.emit(resp),
 	ServerEvent.id(ServerEvent.Value.INFORM_PLAYER_CHAT): func(resp): inform_player_chat_resp.emit(resp),
 	ServerEvent.id(ServerEvent.Value.INFORM_UPDATE_ROOM_DETAILS): func(resp): inform_update_room_details_resp.emit(resp),
+	ServerEvent.id(ServerEvent.Value.INFORM_PLAYER_KICKED): func(resp): inform_player_kicked_resp.emit(resp),
 	
 	ClientEvent.id(ClientEvent.Value.GAME_STATE): func(resp): game_state_resp.emit(resp),
 	ClientEvent.id(ClientEvent.Value.PLAY_HAND): func(resp): play_hand_resp.emit(resp),

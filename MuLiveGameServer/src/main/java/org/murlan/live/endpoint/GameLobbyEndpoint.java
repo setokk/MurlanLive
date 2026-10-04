@@ -65,6 +65,7 @@ import org.murlan.live.protocol.dto.GameStateDto;
 import org.murlan.live.protocol.dto.Player;
 import org.murlan.live.protocol.dto.RoomDetailsDto;
 import org.murlan.live.protocol.dto.RoomDto;
+import org.murlan.live.protocol.dto.UpdatedRoomDetailsDto;
 import org.murlan.live.protocol.jwt.JwtUtils;
 import org.murlan.live.protocol.rest.PlayerRESTClient;
 import org.murlan.live.protocol.rest.RoomRESTClient;
@@ -74,6 +75,7 @@ import org.murlan.live.util.MLObjectMapper;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -83,6 +85,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @ServerEndpoint(value = "/game-lobby")
 public class GameLobbyEndpoint {
@@ -310,18 +313,22 @@ public class GameLobbyEndpoint {
                 );
             }
             case UpdateRoomDetailsReq updateRoomDetailsReq -> {
-                RoomDetailsDto roomDetailsDto = new RoomDetailsDto(
-                        updateRoomDetailsReq.getRoomName(),
-                        updateRoomDetailsReq.getTotalScoreToWin(),
-                        updateRoomDetailsReq.getTurnDurationInSeconds()
-                );
-                boolean isSuccessful = isRoomPresent && roomHandler.updateRoom(room.getId(), roomDetailsDto, player);
+                Optional<UpdatedRoomDetailsDto> updatedRoomDetailsDto = Optional.empty();
+                if (isRoomPresent) {
+                    updatedRoomDetailsDto = roomHandler.updateRoom(room.getId(), new RoomDetailsDto(
+                            updateRoomDetailsReq.getRoomName(),
+                            updateRoomDetailsReq.getTotalScoreToWin(),
+                            updateRoomDetailsReq.getTurnDurationInSeconds()
+                    ), player);
+                }
+
+                boolean isSuccessful = updatedRoomDetailsDto.isPresent();
                 if (isSuccessful) {
-                    informResp = new InformUpdateRoomDetailsResp(ResponseStatus.OK, roomDetailsDto);
+                    informResp = new InformUpdateRoomDetailsResp(ResponseStatus.OK, updatedRoomDetailsDto.get());
                 }
                 yield new UpdateRoomDetailsResp(
                         isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
-                        roomDetailsDto
+                        isSuccessful ? updatedRoomDetailsDto.get() : null
                 );
             }
             case KickReq kickReq -> {
@@ -346,7 +353,10 @@ public class GameLobbyEndpoint {
                     playerSession.getMutedPlayers().addAll(muteReq.getPlayersToMute());
                     isSuccessful = true;
                 }
-                yield new MuteResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
+                yield new MuteResp(
+                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        isSuccessful ? muteReq.getPlayersToMute().stream().map(Player::getId).collect(Collectors.toSet()) : Collections.emptySet()
+                );
             }
             case UnMuteReq unMuteReq -> {
                 boolean isSuccessful = false;
@@ -354,7 +364,10 @@ public class GameLobbyEndpoint {
                     playerSession.getMutedPlayers().removeAll(unMuteReq.getPlayersToUnMute());
                     isSuccessful = true;
                 }
-                yield new UnMuteResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
+                yield new UnMuteResp(
+                        isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        isSuccessful ? unMuteReq.getPlayersToUnMute().stream().map(Player::getId).collect(Collectors.toSet()) : Collections.emptySet()
+                );
             }
             case BlockReq blockReq -> {
                 Optional<Player> blockedPlayer = playerRESTClient.blockPlayer(

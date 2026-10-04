@@ -18,9 +18,8 @@ func _ready() -> void:
 	
 	copy_room_id_button.pressed.connect(_on_copy_room_id_requested)
 
-
 func _on_slider_value_changed(value: float) -> void:
-	value_label.text = "Total Score: " + str(int(value))
+	value_label.text = tr("TOTAL_SCORE_LABEL") + ": " + str(int(value))
 
 func _on_edit_requested() -> void:
 	room_name.editable = true
@@ -64,3 +63,12 @@ func set_room_info_editable(is_editable: bool) -> void:
 		
 func _on_copy_room_id_requested() -> void:
 	DisplayServer.clipboard_set(room_id.text)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED:
+		if is_node_ready():
+			_update_texts()
+
+func _update_texts() -> void:
+	var slider_value: int = value_label.text.split(":")[1].strip_edges().to_int()
+	value_label.text = tr("TOTAL_SCORE_LABEL") + ": " + str(int(slider_value))

@@ -11,6 +11,7 @@ func _ready() -> void:
 	login_register_buttons.forgot_password_requested.connect(_on_forgot_password_pressed)
 	PlayerRESTClient.login_completed.connect(_on_login_completed)
 	PlayerRESTClient.forgot_password_completed.connect(_on_forgot_password_completed)
+	PlayerRESTClient.get_blocked_players_completed.connect(_on_get_blocked_players_completed)
 		
 func _on_login_pressed() -> void:
 	var usernameOrEmail: String = username_or_email_input.text.strip_edges()
@@ -25,14 +26,9 @@ func _on_login_pressed() -> void:
 func _on_login_completed(res: ApiResponse, jwt: String):
 	if res.success:
 		PlayerSession.set_session(jwt)
-		
-		WebSocketClient.connect_to_ws(jwt)
-		await WebSocketClient.connection_established
-		
 		if remember_me_checkbox.button_pressed:
 			PlayerSession.save_session()
-		
-		SceneManager.show_lobby()
+		PlayerRESTClient.get_blocked_players(jwt)
 	else:
 		PopupFactory.error("Errors:\n" + res.error_message())
 
@@ -52,3 +48,16 @@ func _on_forgot_password_completed(res: ApiResponse) -> void:
 
 func _on_register_page_pressed() -> void:
 	SceneManager.show_register()
+
+func _on_get_blocked_players_completed(res: ApiResponse) -> void:
+	if res.success:
+		var blocked_players: Array[Dictionary] = []
+		blocked_players.assign(res.data)
+		PlayerSession.init_blocked_players(blocked_players)
+		
+		WebSocketClient.connect_to_ws(PlayerSession.jwt)
+		await WebSocketClient.connection_established
+		
+		SceneManager.show_lobby()
+	else:
+		PopupFactory.error("Errors:\n" + res.error_message())

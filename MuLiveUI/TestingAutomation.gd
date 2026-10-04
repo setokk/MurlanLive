@@ -143,13 +143,13 @@ func get_test_username() -> String:
 
 	match get_instance_index():
 		0:
-			return "1"
+			return "player_1"
 		1:
-			return "2"
+			return "player_2"
 		2:
-			return "3"
+			return "player_3"
 		3:
-			return "4"
+			return "player_4"
 
 	return ""
 
@@ -157,12 +157,12 @@ func get_test_username() -> String:
 func get_test_password() -> String:
 	match get_instance_index():
 		0:
-			return "1"
+			return "player_1"
 		1:
-			return "2"
+			return "player_2"
 		2:
-			return "3"
+			return "player_3"
 		3:
-			return "4"
+			return "player_4"
 			
 	return ""

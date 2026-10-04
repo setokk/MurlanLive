@@ -22,6 +22,7 @@ signal on_taken_seat_pressed
 @onready var turn_timer_bar: ProgressBar = $TurnTimerBar
 
 var is_seat_taken: bool = false
+var player_id: int = -1
 
 func _ready() -> void:
 	username.visible = false
@@ -49,16 +50,18 @@ func _process(_delta: float) -> void:
 func set_player(player: Dictionary) -> void:
 	seat_icon.icon = USER_ICON
 	username.visible = true
-	username.text = player.username
+	username.text = player["username"]
 	is_ready_label.visible = true
 	is_ready_label.text = "Not Ready"
 	is_seat_taken = true
+	player_id = player["id"]
 
 func remove_player() -> void:
 	seat_icon.icon = SEAT_ICON
 	username.visible = false
 	remove_ready_label()
 	is_seat_taken = false
+	player_id = -1
 	
 func set_ready() -> void:
 	is_ready_label.visible = true

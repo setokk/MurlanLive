@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dfinc61m5vof"]
 
-[ext_resource type="Script" uid="uid://b057gfdcui1on" path="res://PlayerContextMenu.gd" id="1_g1k4k"]
+[ext_resource type="Script" uid="uid://cluvfm5tn3x65" path="res://PlayerContextMenu.gd" id="1_g1k4k"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sseyb"]
 content_margin_left = 5.0
@@ -39,13 +39,11 @@ text = "PROFILE_BUTTON"
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_sseyb")
-text = "MUTE_BUTTON"
 
 [node name="BlockButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1434204346]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_sseyb")
-text = "BLOCK_BUTTON"
 
 [node name="KickButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=502653789]
 layout_mode = 2

@@ -8,7 +8,11 @@ const CHAT_ITEM_SCENE: PackedScene = preload("res://scenes/ChatItem.tscn")
 var message: String
 
 func _ready() -> void:
+	message_input.keep_editing_on_text_submit = true
 	send_button.pressed.connect(_on_message_requested)
+	message_input.text_submitted.connect(func(_text: String) -> void:
+		_on_message_requested()
+	)
 	WebSocketClient.chat_resp.connect(_on_message_completed)
 	WebSocketClient.inform_player_chat_resp.connect(_on_opponent_message)
 
@@ -24,10 +28,10 @@ func _on_message_requested() -> void:
 		PopupFactory.warning("Message is empty")
 	else:
 		WebSocketClient.send_message(ChatReq.new(message))
+	message_input.grab_focus.call_deferred()
 
 func _on_message_completed(resp: ChatResp) -> void:
 	if resp.response_status == 200:
-		#var username: String = PlayerSession.player.username
 		add_message("You", message)
 		message_input.clear()
 	else:

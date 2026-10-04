@@ -5,6 +5,9 @@ var player: Player
 var key: String = "U-W+]=Wiz?C?[ybo[IB$79mxVL6dHn6W"
 const SESSION_PATH: String = "user://session.dat"
 
+var muted_players: Dictionary = {}
+var blocked_players: Dictionary = {}
+
 func set_session(jwt: String) -> bool:
 	self.jwt = jwt
 	self.player = JwtUtils.decode_jwt(self.jwt)
@@ -54,3 +57,25 @@ func clear_session() -> void:
 	WebSocketClient.disconnect_from_ws()
 	if FileAccess.file_exists(SESSION_PATH):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(SESSION_PATH))
+
+func init_blocked_players(players: Array[Dictionary]) -> void:
+	for player in players:
+		add_blocked(player)
+
+func is_muted(id: int) -> bool:
+	return muted_players.has(id)
+
+func is_blocked(id: int) -> bool:
+	return blocked_players.has(id)
+
+func add_muted(player: Dictionary) -> void:
+	muted_players[int(player["id"])] = player
+
+func remove_muted(id: int) -> void:
+	muted_players.erase(id)
+
+func add_blocked(player: Dictionary) -> void:
+	blocked_players[int(player["id"])] = player
+
+func remove_blocked(id: int) -> void:
+	blocked_players.erase(id)

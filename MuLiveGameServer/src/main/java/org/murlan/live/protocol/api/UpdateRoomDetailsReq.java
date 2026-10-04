@@ -20,7 +20,7 @@ public final class UpdateRoomDetailsReq implements Req {
 
     @Override
     public void postValidate() throws InvalidDataException {
-        if (totalScoreToWin < 3 || totalScoreToWin > GameConstants.MAX_TOTAL_SCORE_TO_WIN) {
+        if ((totalScoreToWin > 0) && (totalScoreToWin < 3 || totalScoreToWin > GameConstants.MAX_TOTAL_SCORE_TO_WIN)) {
             throw new InvalidDataException();
         }
 

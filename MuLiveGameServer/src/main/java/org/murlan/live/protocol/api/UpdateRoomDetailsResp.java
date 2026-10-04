@@ -8,21 +8,21 @@ import lombok.Setter;
 import org.murlan.live.protocol.ClientEvent;
 import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.config.ProtocolConfig;
-import org.murlan.live.protocol.dto.RoomDetailsDto;
+import org.murlan.live.protocol.dto.UpdatedRoomDetailsDto;
 
 @Setter
 @Getter
 @AllArgsConstructor
 public final class UpdateRoomDetailsResp implements Resp {
     private ResponseStatus responseStatus;
-    private RoomDetailsDto roomDetailsDto;
+    private UpdatedRoomDetailsDto updatedRoomDetailsDto;
 
     @Override
     public String toMessage(ProtocolConfig config, ObjectMapper objectMapper) throws JsonProcessingException {
         return String.join(config.getProtocol_delimiter(),
                 ClientEvent.UPDATE_ROOM_DETAILS.id(),
                 getResponseStatus().toString(),
-                objectMapper.writeValueAsString(roomDetailsDto)
+                objectMapper.writeValueAsString(updatedRoomDetailsDto)
         );
     }
 }

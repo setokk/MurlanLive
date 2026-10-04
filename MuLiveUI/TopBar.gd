@@ -9,6 +9,7 @@ enum TopBarMode {
 
 @onready var login_button: Button = $HBoxContainer/LoginRedirection
 @onready var logout_button: Button = $HBoxContainer/LogoutRedirection
+@onready var language_dropdown_button: TextureButton = $HBoxContainer/LanguageDropDown
 
 func _ready() -> void:
 	print("Script is attached to: ", get_path())

@@ -3,8 +3,10 @@
 [ext_resource type="Script" uid="uid://cflxw0owgud1i" path="res://TopBar.gd" id="1_7ilfs"]
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_i2wps"]
 [ext_resource type="Script" uid="uid://ckj8ax6i6654n" path="res://LoginRedirection.gd" id="1_nf15x"]
+[ext_resource type="Texture2D" uid="uid://dabkblyx3wpt1" path="res://assets/images/language.svg" id="4_6q1hj"]
+[ext_resource type="Script" uid="uid://2urbonioe26g" path="res://scenes/LanguageDropDown.gd" id="4_f573w"]
 [ext_resource type="Texture2D" uid="uid://cwphjklugjlik" path="res://assets/images/Logo2.png" id="4_i2wps"]
-[ext_resource type="Script" uid="uid://dh4jlin702dy" path="res://LogoutRedirection.gd" id="4_wjcpy"]
+[ext_resource type="Script" uid="uid://jbns8goi7txj" path="res://LogoutRedirection.gd" id="4_wjcpy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cm0pq"]
 bg_color = Color(0.87058824, 0.67058825, 0.23921569, 1)
@@ -43,6 +45,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 2
+
+[node name="LanguageDropDown" type="TextureButton" parent="HBoxContainer" unique_id=981708786]
+layout_mode = 2
+size_flags_vertical = 4
+texture_normal = ExtResource("4_6q1hj")
+script = ExtResource("4_f573w")
 
 [node name="LoginRedirection" type="Button" parent="HBoxContainer" unique_id=1022596152]
 layout_mode = 2

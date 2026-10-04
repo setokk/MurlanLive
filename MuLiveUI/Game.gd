@@ -7,8 +7,8 @@ const CARD_SCENE: PackedScene = preload("res://scenes/Card.tscn")
 var room: Dictionary
 var current_player: Dictionary
 var current_player_seat_index: int
-var players: Array = []
-var ready_players: Array = []
+var players: Array[Dictionary] = []
+var ready_players: Array[Dictionary] = []
 var local_player_index: int
 var local_player: Dictionary
 var previous_winner: Dictionary
@@ -47,9 +47,9 @@ enum GameStateEnum {
 ]
 
 func _ready() -> void:
-	players = room["players"]
-	set_owner_info()
+	players.assign(room["players"])
 	room_info.set_room_id(room["id"])
+	room_info.set_room_name(room["name"])
 	room_info.set_slider_value(int(room["totalScoreToWin"]))
 	room_info.set_time_option(int(room["turnDurationInSeconds"]))
 	room_info.set_room_info_editable(false)
@@ -78,6 +78,15 @@ func _ready() -> void:
 	WebSocketClient.inform_give_card_resp.connect(_on_opponent_give_card)
 	WebSocketClient.update_room_details_resp.connect(_on_update_room_details_completed)
 	WebSocketClient.inform_update_room_details_resp.connect(_on_opponent_update_room_details)
+	WebSocketClient.kick_resp.connect(_on_kick_completed)
+	WebSocketClient.inform_player_kicked_resp.connect(_on_opponent_kicked)
+	WebSocketClient.mute_resp.connect(_on_mute_completed)
+	WebSocketClient.unmute_resp.connect(_on_unmute_completed)
+	WebSocketClient.block_resp.connect(_on_block_completed)
+	WebSocketClient.unblock_resp.connect(_on_unblock_completed)
+	player_context_menu.mute_button_pressed.connect(_on_mute_requested)
+	player_context_menu.block_button_pressed.connect(_on_block_requested)
+	player_context_menu.kick_button_pressed.connect(_on_kick_requested)
 	WebSocketClient.send_message(GameStateReq.new())
 	
 
@@ -163,8 +172,8 @@ func _on_game_state(resp: GameStateResp) -> void:
 	
 	match game_state_status:
 		GameStateEnum.WAITING:
-			players = game_state["players"]
-			ready_players = game_state["readyPlayers"]
+			players.assign(game_state["players"])
+			ready_players.assign(game_state["readyPlayers"])
 			display_players()
 		GameStateEnum.GIVING_CARDS:
 			pass
@@ -192,6 +201,7 @@ func _on_game_state(resp: GameStateResp) -> void:
 				
 	if is_owner(PlayerSession.player):
 		room_info.set_room_info_editable(true)
+		player_context_menu.kick_button.visible = true
 
 # Local user actions functions:
 func _on_play_requested() -> void:
@@ -244,11 +254,6 @@ func _on_leave_requested() -> void:
 	
 func _on_leave_completed(resp: LeaveRoomResp) -> void:
 	if resp.response_status == 200:
-		if is_owner(PlayerSession.player):
-			players.erase(PlayerSession.player)
-			set_owner_info()
-		else:
-			players.erase(PlayerSession.player)		
 		SceneManager.show_lobby()
 	else:
 		print("Error: ", resp)
@@ -311,19 +316,17 @@ func _on_opponent_ready(resp: InformPlayerReadyResp) -> void:
 		print("Error: ", resp)
 			
 func _on_opponent_leave(resp: InformPlayerLeaveRoomResp) -> void:
-	if resp.response_status == 200:
-		for player in players:
-			if player["id"] == resp.player_id:
-				seats[find_player_seat_index(player["id"])].remove_player()
-				if is_owner(player):
-					players.erase(player)
-					set_owner_info()
-				else:
-					players.erase(player)
-				if is_owner(PlayerSession.player):
-					room_info.set_room_info_editable(true)
-				display_players()
-				break
+	if resp.response_status == 200:	
+		var was_not_owner: bool = not is_owner(PlayerSession.player)
+		remove_player(resp.player_id)
+		var became_owner_now: bool = is_owner(PlayerSession.player)
+		
+		if was_not_owner && became_owner_now:
+			WebSocketClient.send_message(UpdateRoomDetailsReq.new(PlayerSession.player.username + "'s Room", -1, -1))
+			room_info.set_room_info_editable(true)
+			player_context_menu.kick_button.visible = true
+		display_players()
+				
 	else:
 		print("Error: ", resp)
 		
@@ -345,21 +348,78 @@ func _on_opponent_give_card(resp: InformGiveCardResp) -> void:
 
 func _on_update_room_details_completed(resp: UpdateRoomDetailsResp) -> void:
 	if resp.response_status == 200:
-		PopupFactory.info("Update of room details was successful!")
+		update_room_details(resp.room_details)
 	else:
 		PopupFactory.error("There was an error with the update of room details.\nPlease try again")
 		
 func _on_opponent_update_room_details(resp: InformUpdateRoomDetailsResp) -> void:
 	if resp.response_status == 200:
-		room["name"] = resp.room_details["roomName"]
-		room["totalScoreToWin"] = resp.room_details["totalScoreToWin"]
-		room["turnDurationInSeconds"] = resp.room_details["turnDurationInSeconds"]
-		
-		room_info.set_room_name(room["name"])
-		room_info.set_slider_value(int(room["totalScoreToWin"]))
-		room_info.set_time_option(int(room["turnDurationInSeconds"]))
+		update_room_details(resp.room_details)
 
-# Helper functions	
+func _on_kick_requested(player_id: int):
+	if player_id == -1:
+		return
+	WebSocketClient.send_message(KickReq.new(player_id))
+
+func _on_kick_completed(resp: KickResp) -> void:
+	if resp.response_status == 200:
+		PopupFactory.info("Player: " + resp.kicked_player["username"] + " successfully kicked!")
+		remove_player(resp.kicked_player["id"])
+		display_players()
+	
+func _on_opponent_kicked(resp: InformPlayerKickedResp) -> void:
+	if resp.response_status == 200:
+		if int(resp.kicked_player["id"]) == PlayerSession.player.id:
+			PopupFactory.info("You got kicked by: " + players[0]["username"] + " (owner)")
+			SceneManager.show_lobby()
+		else:	
+			PopupFactory.info("Player: " + resp.kicked_player["username"] + " kicked by: " + players[0]["username"] + " (owner)")
+			remove_player(resp.kicked_player["id"])
+			display_players()
+
+func _on_mute_requested(player_id: int, is_muted: bool) -> void:
+	if player_id == -1:
+		return
+	if is_muted:
+		WebSocketClient.send_message(UnMuteReq.new([player_id]))
+	else:
+		WebSocketClient.send_message(MuteReq.new([player_id]))
+
+func _on_mute_completed(resp: MuteResp) -> void:
+	if resp.response_status != 200:
+		return
+	for player_id in resp.muted_player_ids:
+		var id: int = int(player_id)
+		var player: Dictionary = ArrayUtils.find_by(
+			players,
+			func(p: Dictionary): return int(p["id"]) == id
+		)
+		
+		PlayerSession.add_muted(player if player and not player.is_empty() else {"id": id})
+
+func _on_unmute_completed(resp: UnMuteResp) -> void:
+	if resp.response_status != 200:
+		return
+	for player_id in resp.unmuted_player_ids:
+		PlayerSession.remove_muted(int(player_id))
+
+func _on_block_requested(player_id: int, is_blocked: bool) -> void:
+	if player_id == -1:
+		return
+	if is_blocked:
+		WebSocketClient.send_message(UnBlockReq.new(player_id))
+	else:
+		WebSocketClient.send_message(BlockReq.new(player_id))
+
+func _on_block_completed(resp: BlockResp) -> void:
+	if resp.response_status == 200:
+		PlayerSession.add_blocked(resp.blocked_player)
+		
+func _on_unblock_completed(resp: UnBlockResp) -> void:
+	if resp.response_status == 200:
+		PlayerSession.remove_blocked(int(resp.unblocked_player["id"]))
+		
+# Helper functions
 func display_players() -> void:
 	local_player_index = 0
 	for player in players:
@@ -368,30 +428,49 @@ func display_players() -> void:
 			break
 		local_player_index += 1
 
+	for seat in seats:
+		seat.remove_player()
+
 	# Fill the seats in order with local player starting at seats[0]
 	for i in range(min(players.size(), seats.size())):
-		var seat_index: int =  posmod(i-local_player_index,seats.size())
+		var seat_index: int = posmod(i-local_player_index,seats.size())
 		seats[seat_index].set_player(players[i])
 		
 	for player in ready_players:
 		seats[find_player_seat_index(player["id"])].set_ready()
 
 func find_player_seat_index(id) -> int:
-	for i in range(seats.size()):
+	for i in range(players.size()):
 		if players[i]["id"] == id:
 			return posmod(i-local_player_index,seats.size())
 	return 0
 
-func is_owner(player) -> bool:
+func is_owner(player: Player) -> bool:
 	if players.is_empty():
 		return false
 	else:
 		return players[0].id == player.id
 
-func set_owner_info() -> void:
-	if not players.is_empty():
-		room["name"] = players[0]["username"] + "'s Room"
-		room_info.set_room_name(room["name"])
-
 func _on_player_context_menu_requested(seat: Seat) -> void:
 	player_context_menu.open_for_seat(seat)
+
+func update_room_details(room_details: Dictionary) -> void:
+	room["name"] = room_details["roomName"]
+	room["totalScoreToWin"] = room_details["totalScoreToWin"]
+	room["turnDurationInSeconds"] = room_details["turnDurationInSeconds"]
+		
+	room_info.set_room_name(room["name"])
+	room_info.set_slider_value(int(room["totalScoreToWin"]))
+	room_info.set_time_option(int(room["turnDurationInSeconds"]))
+
+func remove_player(player_id: int) -> void:
+	var player: Dictionary = ArrayUtils.find_by(
+			players,
+			func(p: Dictionary): return int(p["id"]) == player_id
+	)
+	var ready_player: Dictionary = ArrayUtils.find_by(
+			ready_players,
+			func(p: Dictionary): return int(p["id"]) == player_id
+	)
+	players.erase(player)
+	ready_players.erase(ready_player)

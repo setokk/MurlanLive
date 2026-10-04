@@ -8,6 +8,7 @@ import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.dto.Player;
 import org.murlan.live.protocol.dto.RoomDetailsDto;
 import org.murlan.live.protocol.dto.RoomDto;
+import org.murlan.live.protocol.dto.UpdatedRoomDetailsDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -59,8 +60,13 @@ public class RoomHandler {
                 playerSessions.remove(playerSession);
             }
 
+            Player player = playerSession.getPlayer();
+
             List<Player> players = room.getActiveGameState().getPlayers();
-            players.remove(playerSession.getPlayer());
+            List<Player> readyPlayers = room.getActiveGameState().getReadyPlayers();
+            players.remove(player);
+            readyPlayers.remove(player);
+
             room.setOwner(!players.isEmpty() ? players.getFirst() : room.getOwner());
 
             // if game has not started yet (initial state where not all players have joined)
@@ -70,7 +76,7 @@ public class RoomHandler {
                 return Optional.ofNullable(playerSessions);
             }
 
-            room.getActiveGameState().handlePlayerNotInRoom(playerSession.getPlayer(), hasPlayerLostConnection);
+            room.getActiveGameState().handlePlayerNotInRoom(player, hasPlayerLostConnection);
             onPlayerLeaveOrDisconnect.accept(room);
 
             List<PlayerSession> playersInRoom = removeRoom(roomId);
@@ -150,19 +156,19 @@ public class RoomHandler {
         }
     }
 
-    public boolean updateRoom(@NonNull String roomId, @NonNull RoomDetailsDto roomDetailsDto, @NonNull Player player) {
+    public Optional<UpdatedRoomDetailsDto> updateRoom(@NonNull String roomId, @NonNull RoomDetailsDto roomDetailsDto, @NonNull Player player) {
         Room room = getRoom(roomId);
         if (room == null) {
-            return false;
+            return Optional.empty();
         }
 
         synchronized (room) {
             if (!GameState.State.WAITING.equals(room.getActiveGameState().getState())) {
-                return false;
+                return Optional.empty();
             }
 
             if (!room.getOwner().equals(player)) {
-                return false;
+                return Optional.empty();
             }
 
             if (roomDetailsDto.roomName() != null) {
@@ -176,7 +182,11 @@ public class RoomHandler {
             }
         }
 
-        return true;
+        return Optional.of(new UpdatedRoomDetailsDto(
+                room.getName(),
+                room.getTotalScoreToWin(),
+                room.getTurnDurationInSeconds()
+        ));
     }
 
     public PlayerSession kickPlayer(@NonNull String roomId, long playerToKickId, @NonNull Player player) {
