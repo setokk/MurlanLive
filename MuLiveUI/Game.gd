@@ -32,6 +32,7 @@ enum GameStateEnum {
 @onready var leave_room_button: Button = $TopArea/LeftArea/RoomInfo/VBoxContainer2/LeaveButton
 @onready var give_card_button: Button = $BottomArea/ButtonsContainer/GiveCardButton
 @onready var room_info : Panel = $TopArea/LeftArea/RoomInfo
+@onready var player_context_menu: PlayerContextMenu = $PlayerContextMenu
 
 @onready var seats: Array[Seat] = [
 	$TopArea/TableArea/TableLayout/Seat1,
@@ -52,6 +53,9 @@ func _ready() -> void:
 	room_info.set_slider_value(int(room["totalScoreToWin"]))
 	room_info.set_time_option(int(room["turnDurationInSeconds"]))
 	room_info.set_room_info_editable(false)
+	
+	for i in seats.size() - 1:
+		seats[i+1].on_taken_seat_pressed.connect(_on_player_context_menu_requested)
 
 	WebSocketClient.inform_player_join_room_resp.connect(_on_opponent_joined)
 	WebSocketClient.inform_game_start_resp.connect(_on_game_start)
@@ -388,3 +392,6 @@ func set_owner_info() -> void:
 	if not players.is_empty():
 		room["name"] = players[0]["username"] + "'s Room"
 		room_info.set_room_name(room["name"])
+
+func _on_player_context_menu_requested(seat: Seat) -> void:
+	player_context_menu.open_for_seat(seat)

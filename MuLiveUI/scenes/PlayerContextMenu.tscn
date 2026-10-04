@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://dfinc61m5vof"]
+
+[ext_resource type="Script" uid="uid://b057gfdcui1on" path="res://PlayerContextMenu.gd" id="1_g1k4k"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sseyb"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+
+[node name="PlayerContextMenu" type="PanelContainer" unique_id=695943598]
+offset_right = 133.0
+offset_bottom = 111.0
+script = ExtResource("1_g1k4k")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=2116272190]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=592980970]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="CloseButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=254004954]
+layout_mode = 2
+text = "x"
+alignment = 2
+
+[node name="ProfileButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=2015971795]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_sseyb")
+text = "PROFILE_BUTTON"
+
+[node name="MuteButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=336707558]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_sseyb")
+text = "MUTE_BUTTON"
+
+[node name="BlockButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1434204346]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_sseyb")
+text = "BLOCK_BUTTON"
+
+[node name="KickButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=502653789]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_sseyb")
+text = "KICK_BUTTON"
