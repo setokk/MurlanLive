@@ -51,5 +51,6 @@ func load_session() -> bool:
 func clear_session() -> void:
 	self.jwt = ""
 	self.player = null
+	WebSocketClient.disconnect_from_ws()
 	if FileAccess.file_exists(SESSION_PATH):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(SESSION_PATH))
