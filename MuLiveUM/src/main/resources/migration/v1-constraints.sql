@@ -200,3 +200,31 @@ ALTER TABLE ONLY player_rating
     ADD CONSTRAINT fk_player_rating_player FOREIGN KEY (player_id) REFERENCES player(id);
 END IF;
 END $$;
+
+-- Foreign key constraint fk_player_email_verification_player
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE table_name = 'player_email_verification'
+        AND constraint_name = 'fk_player_email_verification_player'
+    ) THEN
+ALTER TABLE ONLY player_email_verification
+    ADD CONSTRAINT fk_player_email_verification_player FOREIGN KEY (player_id) REFERENCES player(id);
+END IF;
+END $$;
+
+-- Unique constraint uq_player_email_verification_token
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM information_schema.table_constraints
+        WHERE table_name = 'player_email_verification'
+          AND constraint_name = 'uq_player_email_verification_token'
+    ) THEN
+ALTER TABLE ONLY player_email_verification
+    ADD CONSTRAINT uq_player_email_verification_token
+    UNIQUE (token);
+END IF;
+END $$;

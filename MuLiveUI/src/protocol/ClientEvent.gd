@@ -19,6 +19,9 @@ enum Value {
 	UPDATE_ROOM_DETAILS,
 	KICK,
 	MUTE,
+	UNMUTE,
+	BLOCK,
+	UNBLOCK
 }
 
 static var RESP_FACTORIES: Dictionary[int, Callable] = {
@@ -33,6 +36,11 @@ static var RESP_FACTORIES: Dictionary[int, Callable] = {
 	Value.READY: func(parts, config): return ReadyResp.new(parts, config),
 	Value.CHAT: func(parts, config): return ChatResp.new(parts, config),
 	Value.UPDATE_ROOM_DETAILS: func(parts, config): return UpdateRoomDetailsResp.new(parts, config),
+	Value.KICK: func(parts, config): return KickResp.new(parts, config),
+	Value.MUTE: func(parts, config): return MuteResp.new(parts, config),
+	Value.UNMUTE: func(parts, config): return UnMuteResp.new(parts, config),
+	Value.BLOCK: func(parts, config): return BlockResp.new(parts, config),
+	Value.UNBLOCK: func(parts, config): return UnBlockResp.new(parts, config),
 }
 
 static func create_resp(value: Value, parts: PackedStringArray, config: ProtocolConfig) -> Resp:

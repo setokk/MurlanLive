@@ -86,7 +86,7 @@ public class RoomHandler {
     }
 
     public synchronized boolean isPlayerSessionCurrentlyActive(@NonNull Player player) {
-        return jwtToSessionMap.containsValue(new PlayerSession(null, player));
+        return jwtToSessionMap.containsValue(new PlayerSession(null, player, null, null));
     }
 
     private void linkSessionWithRoom(@NonNull PlayerSession playerSession, @NonNull String roomId) {
@@ -257,12 +257,7 @@ public class RoomHandler {
     }
 
     public boolean joinRoom(@NonNull String roomId, @NonNull PlayerSession playerSession) {
-        Room room = getRoom(roomId);
-        if (room == null) {
-            return false;
-        }
-
-        return addPlayerToRoom(room, playerSession);
+        return false;
     }
 
     public List<PlayerSession> getPlayersInRoom(String roomId) {

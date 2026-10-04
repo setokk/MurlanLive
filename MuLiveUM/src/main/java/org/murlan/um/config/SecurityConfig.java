@@ -50,11 +50,13 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 "/api/players/login",
                                 "/api/rooms/create",
                                 "/api/players/forgot-password",
-                                "/api/players/reset-password")
+                                "/api/players/reset-password",
+                                "/api/players/verify-email")
                         .permitAll()
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/reset-password.html",
+                                "/verify-email.html",
                                 "/images/**",
                                 "/fonts/**"
                         ).permitAll()

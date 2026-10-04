@@ -12,12 +12,14 @@ import java.util.Map;
 @Service
 public class EmailTemplateService {
     public static final String FORGOT_PASSWORD = "forgot-password";
+    public static final String EMAIL_VERIFICATION = "email-verification";
 
     private final Map<String, String> templates = new HashMap<>();
 
     @PostConstruct
     private void loadTemplates() throws IOException {
         templates.put(FORGOT_PASSWORD, load("email/forgot-password.html"));
+        templates.put(EMAIL_VERIFICATION, load("email/email-verification.html"));
     }
 
     private String load(String path) throws IOException {

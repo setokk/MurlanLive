@@ -3,15 +3,18 @@ package org.murlan.um.service;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.murlan.um.error.BusinessLogicException;
+import org.murlan.um.model.PlayerEmailVerificationEntity;
 import org.murlan.um.model.PlayerEntity;
 import org.murlan.um.model.PlayerResetPasswordEntity;
 import org.murlan.um.model.dto.PlayerDetailsDto;
 import org.murlan.um.model.dto.PlayerDto;
+import org.murlan.um.repository.PlayerEmailVerificationRepository;
 import org.murlan.um.repository.PlayerRepository;
 import org.murlan.um.repository.PlayerResetPasswordEntityRepository;
 import org.murlan.um.security.TokenGenerator;
 import org.murlan.um.service.param.LoginPlayerParam;
 import org.murlan.um.service.param.RegisterPlayerParam;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,19 +25,29 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 @RequiredArgsConstructor
 public class PlayerService {
+    @Value("${mulive.email-verification-required}")
+    private boolean isEmailVerificationRequired;
+
     private final PlayerRepository playerRepository;
     private final PlayerResetPasswordEntityRepository resetPasswordRepository;
+    private final PlayerEmailVerificationRepository emailVerificationRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
     private final TokenGenerator tokenGenerator;
     private final EmailTemplateService emailTemplateService;
     private final EmailService emailService;
 
+    private static final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+
+    @Transactional
     public PlayerDto loginPlayer(LoginPlayerParam param) {
         PlayerEntity player = playerRepository
                 .findPlayerByUsernameOrEmail(param.usernameOrEmail())
@@ -45,10 +58,16 @@ public class PlayerService {
         if (!isValidCredentials) {
             throw new BusinessLogicException(HttpStatus.NOT_FOUND, "Invalid credentials");
         }
-        return new PlayerDto(player.getId(), player.getUsername(), player.getCreatedDate());
+
+        if (isEmailVerificationRequired && !player.isVerified()) {
+            throw new BusinessLogicException(HttpStatus.FORBIDDEN, "Player is not verified");
+        }
+
+        return new PlayerDto(player.getId(), player.getUsername(), player.getCreatedDate(), player.getEmail());
     }
 
-    public PlayerDto registerPlayer(RegisterPlayerParam param) {
+    @Transactional
+    public Optional<PlayerDto> registerPlayer(RegisterPlayerParam param) {
         boolean usernameExists = playerRepository.findPlayerByUsername(param.username()).isPresent();
         if (usernameExists) {
             throw new BusinessLogicException(HttpStatus.CONFLICT, "Player with username: " + param.username() + " exists");
@@ -60,13 +79,36 @@ public class PlayerService {
         }
 
         PlayerEntity savedPlayer = playerRepository.save(new PlayerEntity(param.username(), passwordEncoder.encode(param.password()), param.email(), LocalDateTime.now()));
-        return new PlayerDto(savedPlayer.getId(), savedPlayer.getUsername(), savedPlayer.getCreatedDate());
+        if (isEmailVerificationRequired) {
+            PlayerEmailVerificationEntity emailVerification = new PlayerEmailVerificationEntity(null, tokenGenerator.generateToken(), savedPlayer);
+            emailVerificationRepository.save(emailVerification);
+
+            String verifyEmailLink = ServletUriComponentsBuilder
+                    .fromCurrentContextPath()
+                    .path("/verify-email.html")
+                    .queryParam("token", emailVerification.getToken())
+                    .build()
+                    .toUriString();
+
+            sendAsyncEmailVerificationEmail(verifyEmailLink, savedPlayer);
+            return Optional.empty();
+        } else {
+            savedPlayer.setVerified(true);
+        }
+
+        return Optional.of(
+                new PlayerDto(savedPlayer.getId(), savedPlayer.getUsername(), savedPlayer.getCreatedDate(), savedPlayer.getEmail())
+        );
     }
 
     public PlayerDto getPlayer(long playerId) {
         PlayerEntity player = playerRepository.findById(playerId)
                 .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Player with id: " + playerId + " not found"));
-        return new PlayerDto(player.getId(), player.getUsername(), player.getCreatedDate());
+
+        String email = authService.getAuthenticatedUser().getId().equals(playerId)
+                ? player.getEmail()
+                : null;
+        return new PlayerDto(player.getId(), player.getUsername(), player.getCreatedDate(), email);
     }
 
     public PlayerDetailsDto getPlayerDetails() {
@@ -83,7 +125,7 @@ public class PlayerService {
             playerRepository.save(context.player());
         }
 
-        return new PlayerDto(context.playerToBlock().getId(), context.playerToBlock().getUsername(), context.playerToBlock().getCreatedDate());
+        return new PlayerDto(context.playerToBlock().getId(), context.playerToBlock().getUsername(), context.playerToBlock().getCreatedDate(), null);
     }
 
     @Transactional
@@ -95,7 +137,7 @@ public class PlayerService {
             playerRepository.save(context.player());
         }
 
-        return new PlayerDto(context.playerToBlock().getId(), context.playerToBlock().getUsername(), context.playerToBlock().getCreatedDate());
+        return new PlayerDto(context.playerToBlock().getId(), context.playerToBlock().getUsername(), context.playerToBlock().getCreatedDate(), null);
     }
 
     public List<PlayerDto> getBlockedPlayers() {
@@ -104,7 +146,7 @@ public class PlayerService {
                 .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Requesting player with id: " + playerDto.getId() + " not found"));
 
         return player.getBlockedPlayers().stream()
-                .map(p -> new PlayerDto(p.getId(), p.getUsername(), p.getCreatedDate()))
+                .map(p -> new PlayerDto(p.getId(), p.getUsername(), p.getCreatedDate(), null))
                 .toList();
     }
 
@@ -169,6 +211,43 @@ public class PlayerService {
         playerRepository.save(player);
 
         resetPasswordRepository.delete(resetPassword);
+    }
+
+    @Transactional
+    public void verifyEmail(String token) {
+        PlayerEmailVerificationEntity emailVerification = emailVerificationRepository.findByToken(token)
+                .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Email verification token not found"));
+
+        PlayerEntity player = emailVerification.getPlayer();
+        player.setVerified(true);
+
+        emailVerificationRepository.delete(emailVerification);
+    }
+
+    private void sendAsyncEmailVerificationEmail(String verifyEmailLink, PlayerEntity player) {
+        executor.execute(() -> {
+            try {
+                String renderedHtml = emailTemplateService.render(
+                        EmailTemplateService.EMAIL_VERIFICATION, Map.of(
+                                "username", player.getUsername(),
+                                "email", player.getEmail(),
+                                "verify-email-link", verifyEmailLink
+                        ));
+
+                emailService.sendMail(
+                        player.getEmail(),
+                        "MuLive: Verify your Email",
+                        renderedHtml,
+                        (helper) -> helper.addInline(
+                                "logo",
+                                new ClassPathResource("static/images/logo.png"),
+                                "image/png"
+                        )
+                );
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private PlayerBlockContext getPlayerBlockContext(long playerToBlockId) {

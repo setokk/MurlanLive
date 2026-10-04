@@ -38,11 +38,9 @@ func login(usernameOrEmail: String, password: String) -> void:
 func register(username: String, email: String, password: String) -> void:
 	var register_request: Dictionary = {
 		"username": username,
+		"email": email,
 		"password": password
 	}
-	
-	if not email.is_empty():
-		register_request["email"] = email
 		
 	var body: String = JSON.stringify(register_request)
 	

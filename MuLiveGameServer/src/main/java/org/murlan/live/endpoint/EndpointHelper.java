@@ -12,6 +12,7 @@ import org.murlan.live.protocol.api.InformGameStartResp;
 import org.murlan.live.protocol.api.InformGiveCardResp;
 import org.murlan.live.protocol.api.InformPassResp;
 import org.murlan.live.protocol.api.InformPlayHandResp;
+import org.murlan.live.protocol.api.InformPlayerChatResp;
 import org.murlan.live.protocol.api.InformPlayerJoinRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLeaveRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLostConnectionResp;
@@ -104,6 +105,16 @@ public class EndpointHelper {
                     }
                 }
                 case InformPlayerLostConnectionResp informPlayerLostConnectionResp -> send(resp, playerSession);
+                case InformPlayerChatResp informPlayerChatResp -> {
+                    if (!playerSession.equals(originPlayer)) {
+                        boolean isOriginPlayerMuted = playerSession.getMutedPlayers().contains(originPlayer.getPlayer());
+                        boolean isOriginPlayerBlocked = playerSession.getBlockedPlayers().contains(originPlayer.getPlayer());
+                        boolean isRecipientBlocked = originPlayer.getBlockedPlayers().contains(playerSession.getPlayer());
+                        if (!isOriginPlayerMuted && ! isOriginPlayerBlocked && !isRecipientBlocked) {
+                            send(resp, playerSession);
+                        }
+                    }
+                }
                 default -> {
                     if (!playerSession.equals(originPlayer)) {
                         send(resp, playerSession);

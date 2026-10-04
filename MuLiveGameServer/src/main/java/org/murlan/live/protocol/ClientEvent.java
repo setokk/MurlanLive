@@ -3,6 +3,7 @@ package org.murlan.live.protocol;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.murlan.live.protocol.api.AvailableRoomsReq;
+import org.murlan.live.protocol.api.BlockReq;
 import org.murlan.live.protocol.api.ChatReq;
 import org.murlan.live.protocol.api.CreateRoomReq;
 import org.murlan.live.protocol.api.GameStateReq;
@@ -15,6 +16,8 @@ import org.murlan.live.protocol.api.PassReq;
 import org.murlan.live.protocol.api.PlayHandReq;
 import org.murlan.live.protocol.api.ReadyReq;
 import org.murlan.live.protocol.api.Req;
+import org.murlan.live.protocol.api.UnBlockReq;
+import org.murlan.live.protocol.api.UnMuteReq;
 import org.murlan.live.protocol.api.UpdateRoomDetailsReq;
 import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ProtocolConfig;
@@ -103,9 +106,24 @@ public enum ClientEvent {
     KICK(KickReq::new),
 
     /**
-     * Indicates that a player wants to mute the messages of another player.
+     * Indicates that a player wants to mute the messages of a set of players.
      */
-    MUTE(MuteReq::new);
+    MUTE(MuteReq::new),
+
+    /**
+     * Indicates that a player wants to unmute the messages of a set of players.
+     */
+    UNMUTE(UnMuteReq::new),
+
+    /**
+     * Indicates that a player wants to block another player.
+     */
+    BLOCK(BlockReq::new),
+
+    /**
+     * Indicates that a player wants to unblock another player.
+     */
+    UNBLOCK(UnBlockReq::new);
 
     private final ReqFactory reqFactory;
 

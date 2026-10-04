@@ -63,7 +63,7 @@ public class ParserTest {
                 """,
                 "I want to put 2 dollars side by side! $$, I should be able to do this."
         );
-        }
+    }
 
     @Test
     public void testParserMovePipeline() throws InvalidDataException {

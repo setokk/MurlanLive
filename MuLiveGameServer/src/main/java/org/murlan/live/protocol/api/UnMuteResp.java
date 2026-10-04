@@ -12,14 +12,14 @@ import org.murlan.live.protocol.config.ProtocolConfig;
 @Setter
 @Getter
 @AllArgsConstructor
-public final class MuteResp implements Resp {
+public final class UnMuteResp implements Resp {
     private ResponseStatus responseStatus;
 
     @Override
     public String toMessage(ProtocolConfig config, ObjectMapper objectMapper) throws JsonProcessingException {
         return String.join(
                 config.getProtocol_delimiter(),
-                ClientEvent.MUTE.id(),
+                ClientEvent.UNMUTE.id(),
                 getResponseStatus().toString()
         );
     }

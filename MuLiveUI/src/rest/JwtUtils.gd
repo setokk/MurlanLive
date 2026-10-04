@@ -18,7 +18,8 @@ static func decode_jwt(jwt: String) -> Player:
 	return Player.new(
 		int(str(map.get("id"))),
 		str(map.get("username")),
-		str(map.get("creationDate"))
+		str(map.get("creationDate")),
+		str(map.get("email"))
 	)
 
 static func _base64_url_decode_to_string(b64url: String) -> String:

@@ -36,6 +36,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 .id(Long.parseLong(claims.getSubject()))
                 .username((String) claims.get("username"))
                 .creationDate(LocalDateTime.parse((String) claims.get("creationDate")))
+                .email((String) claims.get("email"))
                 .build();
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(authPlayer, null, Collections.emptyList());

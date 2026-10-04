@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.murlan.live.protocol.dto.Player;
 
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -16,6 +17,8 @@ import java.util.Objects;
 public class PlayerSession {
     private Session session;
     private Player player;
+    private Set<Player> mutedPlayers;
+    private Set<Player> blockedPlayers;
 
     @Override
     public boolean equals(Object o) {

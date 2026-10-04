@@ -16,22 +16,17 @@ func _on_register_pressed() -> void:
 	var email: String = email_input.text.strip_edges()
 	var password: String = password_input.text
 	
-	if username.is_empty() or password.is_empty():
-		PopupFactory.error("Please enter username and password.", "Input Error")
+	if username.is_empty() or email.is_empty() or password.is_empty():
+		PopupFactory.error("Please enter username, email and password.", "Input Error")
 		return
-		
-	if email.is_empty():
-		PopupFactory.confirmation(
-			"Are you sure you want to create an account without an email?" \
-			+ "\nYou wont be able to reset your password in case you forget it.",
-			func(): PlayerRESTClient.register(username, email, password)
-		)
 	else:
 		PlayerRESTClient.register(username, email, password)
 
 func _on_register_completed(res: ApiResponse, jwt: String):
 	if res.success:
-		PlayerSession.set_session(jwt)
+		if not PlayerSession.set_session(jwt):
+			PopupFactory.info("Register complete! Please verify your email.")
+			return
 		
 		WebSocketClient.connect_to_ws(jwt)
 		await WebSocketClient.connection_established

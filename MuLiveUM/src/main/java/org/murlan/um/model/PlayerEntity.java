@@ -76,6 +76,9 @@ public class PlayerEntity {
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PlayerResetPasswordEntity> playerResetPasswords;
 
+    @OneToOne(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
+    private PlayerEmailVerificationEntity playerEmailVerification;
+
     public PlayerEntity(String username, String password, String email, LocalDateTime createdDate) {
         this.username = username;
         this.password = password;

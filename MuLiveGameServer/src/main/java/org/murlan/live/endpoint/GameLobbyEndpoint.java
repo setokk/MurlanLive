@@ -16,6 +16,8 @@ import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.api.AvailableRoomsReq;
 import org.murlan.live.protocol.api.AvailableRoomsResp;
+import org.murlan.live.protocol.api.BlockReq;
+import org.murlan.live.protocol.api.BlockResp;
 import org.murlan.live.protocol.api.ChatReq;
 import org.murlan.live.protocol.api.ChatResp;
 import org.murlan.live.protocol.api.CreateRoomReq;
@@ -40,6 +42,8 @@ import org.murlan.live.protocol.api.KickReq;
 import org.murlan.live.protocol.api.KickResp;
 import org.murlan.live.protocol.api.LeaveRoomReq;
 import org.murlan.live.protocol.api.LeaveRoomResp;
+import org.murlan.live.protocol.api.MuteReq;
+import org.murlan.live.protocol.api.MuteResp;
 import org.murlan.live.protocol.api.PassReq;
 import org.murlan.live.protocol.api.PassResp;
 import org.murlan.live.protocol.api.PlayHandReq;
@@ -48,6 +52,10 @@ import org.murlan.live.protocol.api.ReadyReq;
 import org.murlan.live.protocol.api.ReadyResp;
 import org.murlan.live.protocol.api.Req;
 import org.murlan.live.protocol.api.Resp;
+import org.murlan.live.protocol.api.UnBlockReq;
+import org.murlan.live.protocol.api.UnBlockResp;
+import org.murlan.live.protocol.api.UnMuteReq;
+import org.murlan.live.protocol.api.UnMuteResp;
 import org.murlan.live.protocol.api.UpdateRoomDetailsReq;
 import org.murlan.live.protocol.api.UpdateRoomDetailsResp;
 import org.murlan.live.protocol.api.error.InvalidDataException;
@@ -68,8 +76,12 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 @ServerEndpoint(value = "/game-lobby")
@@ -87,7 +99,7 @@ public class GameLobbyEndpoint {
 
     private static final EndpointHelper endpointHelper = new EndpointHelper(parser, generator, config);
     private static final RoomHandler roomHandler = new RoomHandler();
-    private static final PlayerRESTClient playerRESTClient = new PlayerRESTClient(config);
+    private static final PlayerRESTClient playerRESTClient = new PlayerRESTClient(config, objectMapper);
     private static final RoomRESTClient roomRESTClient = new RoomRESTClient(config, objectMapper);
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 
@@ -140,13 +152,19 @@ public class GameLobbyEndpoint {
             return;
         }
 
-        roomHandler.addSession(new PlayerSession(session, player));
+        Set<Player> mutedPlayers = ConcurrentHashMap.newKeySet();
+        Set<Player> blockedPlayers = ConcurrentHashMap.newKeySet();
+
+        playerRESTClient.getBlockedPlayers(jwt)
+                .ifPresent(blockedPlayers::addAll);
+
+        roomHandler.addSession(new PlayerSession(session, player, mutedPlayers, blockedPlayers));
 
         log.info("Connection with sessionId: {} established! Player.id = {}, Player.username = {}", session.getId(), player.getId(), player.getUsername());
     }
 
     @OnMessage
-    public void onMessage(String message, Session session) throws IOException {
+    public void onMessage(String message, Session session) throws IOException, InterruptedException {
         log.info("From {{}}, received message: {}", session.getId(), message);
 
         Req req;
@@ -320,6 +338,52 @@ public class GameLobbyEndpoint {
                 yield new KickResp(
                         isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
                         kickedPlayerSession != null ? kickedPlayerSession.getPlayer() : null
+                );
+            }
+            case MuteReq muteReq -> {
+                boolean isSuccessful = false;
+                if (isRoomPresent) {
+                    playerSession.getMutedPlayers().addAll(muteReq.getPlayersToMute());
+                    isSuccessful = true;
+                }
+                yield new MuteResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
+            }
+            case UnMuteReq unMuteReq -> {
+                boolean isSuccessful = false;
+                if (isRoomPresent) {
+                    playerSession.getMutedPlayers().removeAll(unMuteReq.getPlayersToUnMute());
+                    isSuccessful = true;
+                }
+                yield new UnMuteResp(isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR);
+            }
+            case BlockReq blockReq -> {
+                Optional<Player> blockedPlayer = playerRESTClient.blockPlayer(
+                        player.getJwt(),
+                        blockReq.getPlayerToBlock()
+                );
+
+                blockedPlayer.ifPresent(p ->
+                        playerSession.getBlockedPlayers().add(p)
+                );
+
+                yield new BlockResp(
+                        blockedPlayer.isPresent() ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        blockedPlayer.orElse(null)
+                );
+            }
+            case UnBlockReq unBlockReq -> {
+                Optional<Player> unblockedPlayer = playerRESTClient.unblockPlayer(
+                        player.getJwt(),
+                        unBlockReq.getPlayerToUnblock()
+                );
+
+                unblockedPlayer.ifPresent(p ->
+                        playerSession.getBlockedPlayers().remove(p)
+                );
+
+                yield new UnBlockResp(
+                        unblockedPlayer.isPresent() ? ResponseStatus.OK : ResponseStatus.ERROR,
+                        unblockedPlayer.orElse(null)
                 );
             }
             default -> throw new IllegalStateException("Unexpected request: " + req);

@@ -33,6 +33,11 @@ signal leave_room_resp(resp: LeaveRoomResp)
 signal ready_resp(resp: ReadyResp)
 signal chat_resp(resp: ChatResp)
 signal update_room_details_resp(resp: UpdateRoomDetailsResp)
+signal kick_resp(resp: UpdateRoomDetailsResp)
+signal mute_resp(resp: UpdateRoomDetailsResp)
+signal unmute_resp(resp: UpdateRoomDetailsResp)
+signal block_resp(resp: UpdateRoomDetailsResp)
+signal unblock_resp(resp: UpdateRoomDetailsResp)
 
 var resp_signal_handlers: Dictionary[String, Callable] = {
 	ServerEvent.id(ServerEvent.Value.INFORM_PLAY_HAND): func(resp): inform_play_hand_resp.emit(resp),
@@ -57,7 +62,12 @@ var resp_signal_handlers: Dictionary[String, Callable] = {
 	ClientEvent.id(ClientEvent.Value.LEAVE_ROOM): func(resp): leave_room_resp.emit(resp),
 	ClientEvent.id(ClientEvent.Value.READY): func(resp): ready_resp.emit(resp),
 	ClientEvent.id(ClientEvent.Value.CHAT): func(resp): chat_resp.emit(resp),
-	ClientEvent.id(ClientEvent.Value.UPDATE_ROOM_DETAILS): func(resp): update_room_details_resp.emit(resp)
+	ClientEvent.id(ClientEvent.Value.UPDATE_ROOM_DETAILS): func(resp): update_room_details_resp.emit(resp),
+	ClientEvent.id(ClientEvent.Value.KICK): func(resp): kick_resp.emit(resp),
+	ClientEvent.id(ClientEvent.Value.MUTE): func(resp): mute_resp.emit(resp),
+	ClientEvent.id(ClientEvent.Value.UNMUTE): func(resp): unmute_resp.emit(resp),
+	ClientEvent.id(ClientEvent.Value.BLOCK): func(resp): block_resp.emit(resp),
+	ClientEvent.id(ClientEvent.Value.UNBLOCK): func(resp): unblock_resp.emit(resp)
 }
 
 func send_message(req: Req) -> bool:

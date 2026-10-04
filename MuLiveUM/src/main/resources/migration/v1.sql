@@ -117,3 +117,16 @@ CREATE TABLE IF NOT EXISTS player_rating (
     sigma DOUBLE PRECISION NOT NULL,
     rooms_played INTEGER NOT NULL
 );
+
+--
+-- player_email_verification Table
+--
+CREATE TABLE IF NOT EXISTS player_email_verification (
+    id BIGINT NOT NULL PRIMARY KEY,
+    token TEXT NOT NULL,
+    player_id BIGINT NOT NULL
+);
+CREATE SEQUENCE IF NOT EXISTS player_email_verification_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO CYCLE;

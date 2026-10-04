@@ -11,12 +11,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Getter
-public final class MuteReq implements Req {
-    private final Set<Player> playersToMute;
+public final class UnMuteReq implements Req {
+    private final Set<Player> playersToUnMute;
 
-    public MuteReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException {
+    public UnMuteReq(String[] messageParts, ProtocolConfig config) throws InvalidDataException {
         validate(messageParts);
-        playersToMute = Arrays.stream(messageParts[startIndex()].split(Pattern.quote(config.getProtocol_list_delimiter())))
+        playersToUnMute = Arrays.stream(messageParts[startIndex()].split(Pattern.quote(config.getProtocol_list_delimiter())))
                 .map(Long::valueOf)
                 .map(Player::new)
                 .collect(Collectors.toSet());

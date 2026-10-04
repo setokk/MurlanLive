@@ -26,6 +26,7 @@ public class JwtUtils {
                 Long.parseLong(map.get("id").toString()),
                 map.get("username").toString(),
                 LocalDateTime.parse(map.get("creationDate").toString()),
+                map.get("email").toString(),
                 jwt
         );
     }

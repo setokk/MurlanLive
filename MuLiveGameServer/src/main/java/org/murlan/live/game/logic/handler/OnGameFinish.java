@@ -66,7 +66,7 @@ public final class OnGameFinish implements Runnable {
                 RoomDto copyRoomDto = roomHandler.copyRoom(room.getId());
                 gameFinishDto.setRoomId(copyRoomDto.id());
 
-                executor.submit(() -> {
+                executor.execute(() -> {
                     try {
                         ResponseStatus responseStatus = ResponseStatus.OK;
 

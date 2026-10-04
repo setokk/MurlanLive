@@ -89,7 +89,7 @@ theme_override_constants/margin_top = 10
 
 [node name="Email" type="LineEdit" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=1945883949]
 layout_mode = 2
-placeholder_text = "Email (optional)"
+placeholder_text = "Email"
 emoji_menu_enabled = false
 clear_button_enabled = true
 caret_blink = true
