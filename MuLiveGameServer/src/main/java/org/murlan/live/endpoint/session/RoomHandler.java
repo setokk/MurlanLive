@@ -257,7 +257,12 @@ public class RoomHandler {
     }
 
     public boolean joinRoom(@NonNull String roomId, @NonNull PlayerSession playerSession) {
-        return false;
+        Room room = getRoom(roomId);
+        if (room == null) {
+            return false;
+        }
+
+        return addPlayerToRoom(room, playerSession);
     }
 
     public List<PlayerSession> getPlayersInRoom(String roomId) {
