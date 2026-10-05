@@ -24,14 +24,14 @@ enum GameStateEnum {
 	FINISHED
 }
 
-@onready var hand_placeholder: Panel = $BottomArea/HandArea/MarginContainer/HandPlaceholder
+@onready var hand_placeholder: Panel = $BottomArea/MarginContainer/HandPlaceholder
 @onready var play_button: Button = $BottomArea/ButtonsContainer/PlayButton
 @onready var pass_button: Button = $BottomArea/ButtonsContainer/PassButton
 @onready var played_cards: Panel = $TopArea/TableArea/TableLayout/PlayedCards
-@onready var is_ready_button: Button = $TopArea/LeftArea/RoomInfo/VBoxContainer2/ReadyButton
-@onready var leave_room_button: Button = $TopArea/LeftArea/RoomInfo/VBoxContainer2/LeaveButton
+@onready var is_ready_button: Button = $TopArea/LeftArea/MarginContainer/RoomInfo/VBoxContainer2/ReadyButton
+@onready var leave_room_button: Button = $TopArea/LeftArea/MarginContainer/RoomInfo/VBoxContainer2/LeaveButton
 @onready var give_card_button: Button = $BottomArea/ButtonsContainer/GiveCardButton
-@onready var room_info : Panel = $TopArea/LeftArea/RoomInfo
+@onready var room_info : Panel = $TopArea/LeftArea/MarginContainer/RoomInfo
 @onready var player_context_menu: PlayerContextMenu = $PlayerContextMenu
 
 @onready var seats: Array[Seat] = [

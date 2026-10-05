@@ -3,8 +3,10 @@
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_qbi84"]
 [ext_resource type="Script" uid="uid://dp5ek2top2eoq" path="res://Lobby.gd" id="2_oeg6l"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="3_1yh37"]
+[ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="4_as3ys"]
 [ext_resource type="Script" uid="uid://c5c0ntqx2ry6w" path="res://RoomButtonsContainer.gd" id="4_jp1kc"]
 [ext_resource type="Theme" uid="uid://bqn3ljfdspx6i" path="res://themes/LoginTheme.tres" id="5_oeg6l"]
+[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="6_hwwg2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_psoro"]
 bg_color = Color(1, 1, 1, 1)
@@ -22,18 +24,6 @@ shadow_offset = Vector2(0, 4)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6cc1s"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_17p60"]
-bg_color = Color(0.8980392, 0.27058825, 0.20784314, 1)
-border_width_left = 3
-border_width_top = 2
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0, 0, 0, 1)
-expand_margin_left = 2.0
-expand_margin_top = 2.0
-expand_margin_right = 2.0
-expand_margin_bottom = 2.0
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_743nf"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_borux"]
@@ -50,7 +40,6 @@ script = ExtResource("2_oeg6l")
 
 [node name="Background" parent="." unique_id=2002749364 instance=ExtResource("3_1yh37")]
 layout_mode = 1
-anchors_preset = 15
 
 [node name="LobbyPanel" type="Panel" parent="." unique_id=973502729]
 layout_mode = 1
@@ -99,22 +88,26 @@ anchor_left = 0.02
 anchor_right = 0.5
 anchor_bottom = 0.8
 grow_vertical = 2
+theme = ExtResource("4_as3ys")
 script = ExtResource("4_jp1kc")
 
-[node name="JoinRandomRoom" type="Button" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/RoomButtonsContainer" unique_id=284069281]
+[node name="JoinRandomRoom" type="Button" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/RoomButtonsContainer" unique_id=1544260793]
 layout_mode = 2
-theme_override_constants/outline_size = 0
-theme_override_styles/normal = SubResource("StyleBoxFlat_17p60")
 text = "Join Random Room"
+script = ExtResource("6_hwwg2")
+hue = 0
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="MarginContainer" type="MarginContainer" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/RoomButtonsContainer" unique_id=480878768]
 layout_mode = 2
 theme_override_constants/margin_right = 5
 
-[node name="CreateRoom" type="Button" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/RoomButtonsContainer" unique_id=66647745]
+[node name="CreateRoom" type="Button" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/RoomButtonsContainer" unique_id=1963164424]
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_17p60")
 text = "Create A Room"
+script = ExtResource("6_hwwg2")
+hue = 0
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="PanelContainer" type="PanelContainer" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel" unique_id=1936458549]
 layout_mode = 1

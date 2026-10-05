@@ -1,8 +1,21 @@
 [gd_scene format=3 uid="uid://3maglnyvccuy"]
 
-[ext_resource type="Script" uid="uid://cmdk3phi6av7y" path="res://Chat.gd" id="1_uca72"]
+[ext_resource type="Script" uid="uid://bb227ed7b0utb" path="res://Chat.gd" id="1_uca72"]
+[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="2_hv8y0"]
+[ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="2_xplp8"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7ua8r"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_loyew"]
+bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_size = 4
+shadow_offset = Vector2(4, 4)
 
 [node name="Chat" type="Panel" unique_id=603695322]
 anchors_preset = 15
@@ -13,36 +26,50 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7ua8r")
 script = ExtResource("1_uca72")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1152159968]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1253022401]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1152159968]
+layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="ChatMessagesContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1729284205]
+[node name="ChatMessagesContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer" unique_id=1729284205]
 propagate_maximum_size = true
 clip_contents = false
 layout_mode = 2
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
 
-[node name="Messages" type="VBoxContainer" parent="VBoxContainer/ChatMessagesContainer" unique_id=286181773]
+[node name="Messages" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ChatMessagesContainer" unique_id=286181773]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 10
 theme_override_constants/separation = 4
 alignment = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=240338977]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=240338977]
 layout_mode = 2
-theme_override_constants/separation = 5
+theme_override_constants/separation = 10
 
-[node name="MessageInput" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=515922352]
+[node name="MessageInput" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=515922352]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_loyew")
 
-[node name="SendButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=604778546]
+[node name="SendButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=2097755732]
 layout_mode = 2
+theme = ExtResource("2_xplp8")
+theme_override_font_sizes/font_size = 12
 text = "CHAT_SEND_BUTTON"
+script = ExtResource("2_hv8y0")
+hue = 0
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"

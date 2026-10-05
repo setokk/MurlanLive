@@ -7,21 +7,28 @@ load_path = "res://.godot/imported/seat-icon-greyscale-no-bg.png-516b6b23bc608d4
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ud1i"]
-bg_color = Color(1, 1, 1, 1)
-border_color = Color(0, 0, 0, 1)
+bg_color = Color(1, 0.8862745, 0.87058824, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 corner_detail = 10
-shadow_color = Color(0, 0, 0, 1)
+shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 shadow_size = 1
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3sa5x"]
 
 [resource]
 Button/colors/icon_focus_color = Color(0.38431373, 0.043137256, 0.007843138, 1)
 Button/colors/icon_hover_color = Color(0.38431373, 0.043137256, 0.007843138, 1)
 Button/colors/icon_hover_pressed_color = Color(0.38431373, 0.043137256, 0.007843138, 1)
-Button/colors/icon_normal_color = Color(0.8980392, 0.27058825, 0.20784314, 1)
+Button/colors/icon_normal_color = Color(0.78431374, 0.2509804, 0.18431373, 1)
 Button/colors/icon_pressed_color = Color(0.38431373, 0.043137256, 0.007843138, 1)
 Button/font_sizes/font_size = 16
 Button/icons/icon = SubResource("CompressedTexture2D_iwpck")
@@ -36,3 +43,4 @@ MarginContainer/constants/margin_left = 5
 MarginContainer/constants/margin_right = 5
 MarginContainer/constants/margin_top = 5
 Panel/styles/panel = SubResource("StyleBoxFlat_8ud1i")
+PanelContainer/styles/panel = SubResource("StyleBoxEmpty_3sa5x")

@@ -1,26 +1,49 @@
 [gd_scene format=3 uid="uid://f8in7s47ipg4"]
 
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_71axn"]
-[ext_resource type="Script" uid="uid://dshkt7a1vlh6w" path="res://Game.gd" id="2_3xj3m"]
+[ext_resource type="Script" uid="uid://d2ugnd66ke3bo" path="res://Game.gd" id="2_3xj3m"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_dahhg"]
-[ext_resource type="Script" uid="uid://qfbjwyal50vd" path="res://TableArea.gd" id="3_3so38"]
-[ext_resource type="Script" uid="uid://cvnw1l8hi3cih" path="res://RoomInfo.gd" id="4_2rd6h"]
+[ext_resource type="Script" uid="uid://cggmhq3jr6r2l" path="res://TableArea.gd" id="3_3so38"]
 [ext_resource type="Theme" uid="uid://dcg0tqtvbome4" path="res://themes/SeatTheme.tres" id="4_3cx6b"]
-[ext_resource type="Texture2D" uid="uid://b8df7a4o34kvg" path="res://assets/images/table.png" id="5_qy1jj"]
-[ext_resource type="Texture2D" uid="uid://db6p7v6k4c8d3" path="res://assets/images/1416596-200.png" id="5_r7sob"]
-[ext_resource type="Script" uid="uid://y8r0rpi50vla" path="res://Deck.gd" id="6_acvyw"]
-[ext_resource type="Texture2D" uid="uid://by11rgbb78bj5" path="res://assets/images/361082-200.png" id="6_y5y3l"]
-[ext_resource type="Script" uid="uid://dnpihega65fwq" path="res://OpponentHand.gd" id="7_alh3a"]
-[ext_resource type="Script" uid="uid://chdhko4w4etio" path="res://Seat.gd" id="8_2rd6h"]
-[ext_resource type="Script" uid="uid://cs2r8uvg6ffdb" path="res://PlayedCards.gd" id="8_4q8tf"]
-[ext_resource type="Script" uid="uid://dsvr36s1t80n1" path="res://HandPlaceholder.gd" id="9_x3xnh"]
-[ext_resource type="Script" uid="uid://755ytelsigcg" path="res://ButtonsContainer.gd" id="10_8r6kd"]
+[ext_resource type="Theme" uid="uid://cwicdyenfh6sh" path="res://themes/SideAreasTheme.tres" id="4_kyk2p"]
+[ext_resource type="PackedScene" uid="uid://ctiqqa23jajmf" path="res://scenes/RoomInfo.tscn" id="5_kyk2p"]
+[ext_resource type="Script" uid="uid://dfknfovm6tddy" path="res://Deck.gd" id="6_acvyw"]
+[ext_resource type="Script" uid="uid://c3xfjnp81ckek" path="res://OpponentHand.gd" id="7_alh3a"]
+[ext_resource type="Script" uid="uid://clxc14fpj30ha" path="res://Seat.gd" id="8_2rd6h"]
+[ext_resource type="Script" uid="uid://d3trjxyp4ubau" path="res://PlayedCards.gd" id="8_4q8tf"]
+[ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="8_45i86"]
+[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="9_sv1m6"]
+[ext_resource type="Script" uid="uid://prjme07f6efi" path="res://HandPlaceholder.gd" id="9_x3xnh"]
+[ext_resource type="Script" uid="uid://k68075chkxlf" path="res://ButtonsContainer.gd" id="10_8r6kd"]
 [ext_resource type="PackedScene" uid="uid://dfinc61m5vof" path="res://scenes/PlayerContextMenu.tscn" id="14_vjgi4"]
 [ext_resource type="PackedScene" uid="uid://3maglnyvccuy" path="res://scenes/Chat.tscn" id="14_y5y3l"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m32dw"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ud1i"]
+bg_color = Color(0.3019608, 0.09803922, 0.07058824, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.6745098, 0.5137255, 0.14509805, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_size = 5
+shadow_offset = Vector2(3, 3)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ua8r"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vjgi4"]
+bg_color = Color(0.3019608, 0.09803922, 0.07058824, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6cc1s"]
 bg_color = Color(0, 0, 0, 1)
@@ -49,39 +72,17 @@ corner_detail = 5
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5vvyt"]
 
-[sub_resource type="GDScript" id="GDScript_20pc6"]
-script/source = "extends Control
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pmplx"]
 
-@onready var player_hand = $HandArea/MarginContainer/HandPlaceholder
-@onready var buttons_container = $ButtonsContainer
-
-func _ready():
-	#buttons_container.play_hand_requested.connect(player_hand.play_hand)
-	#buttons_container.pass_requested.connect(player_hand.pass_turn)
-	pass
-"
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3xj3m"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kyk2p"]
 bg_color = Color(0.87058824, 0.6784314, 0.23921569, 1)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
-border_width_bottom = 5
+border_width_bottom = 3
 border_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c6i3y"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_17p60"]
-bg_color = Color(0.8980392, 0.27058825, 0.20784314, 1)
-border_width_left = 3
-border_width_top = 2
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0, 0, 0, 1)
-expand_margin_left = 2.0
-expand_margin_top = 2.0
-expand_margin_right = 2.0
-expand_margin_bottom = 2.0
 
 [node name="Game" type="Control" unique_id=684905153]
 z_index = -1
@@ -96,7 +97,6 @@ script = ExtResource("2_3xj3m")
 
 [node name="Background" parent="." unique_id=2002749364 instance=ExtResource("2_dahhg")]
 layout_mode = 1
-anchors_preset = 15
 
 [node name="TopArea" type="Control" parent="." unique_id=622972998]
 layout_mode = 1
@@ -106,128 +106,19 @@ anchor_bottom = 0.75
 [node name="LeftArea" type="PanelContainer" parent="TopArea" unique_id=1635814502]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 0.2
+anchor_right = 0.18
 anchor_bottom = 1.0
+theme = ExtResource("4_kyk2p")
 
-[node name="RoomInfo" type="Panel" parent="TopArea/LeftArea" unique_id=1600115500]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/LeftArea" unique_id=720962291]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_m32dw")
-script = ExtResource("4_2rd6h")
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TopArea/LeftArea/RoomInfo" unique_id=523799686]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-grow_horizontal = 2
-theme_override_constants/separation = 10
-alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="TopArea/LeftArea/RoomInfo/VBoxContainer" unique_id=4660539]
+[node name="RoomInfo" parent="TopArea/LeftArea/MarginContainer" unique_id=1833918102 instance=ExtResource("5_kyk2p")]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 3
-theme_override_constants/separation = 4
-alignment = 1
-
-[node name="RoomName" type="LineEdit" parent="TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer" unique_id=444216655]
-layout_mode = 2
-size_flags_horizontal = 10
-text = "Room Name"
-editable = false
-expand_to_text_length = true
-flat = true
-
-[node name="EditRoomNameButton" type="Button" parent="TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer" unique_id=1978942476]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("StyleBoxEmpty_7ua8r")
-text = " "
-icon = ExtResource("5_r7sob")
-icon_alignment = 1
-expand_icon = true
-
-[node name="RoomIdLabel" type="Label" parent="TopArea/LeftArea/RoomInfo/VBoxContainer" unique_id=569776824]
-layout_mode = 2
-text = "ROOM_ID_LABEL"
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="TopArea/LeftArea/RoomInfo/VBoxContainer" unique_id=30059844]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 4
-alignment = 1
-
-[node name="RoomId" type="Label" parent="TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer2" unique_id=1547995849]
-custom_minimum_size = Vector2(1, 1)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 14
-autowrap_mode = 1
-
-[node name="CopyRoomIdButton" type="Button" parent="TopArea/LeftArea/RoomInfo/VBoxContainer/HBoxContainer2" unique_id=1070905252]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
-theme_override_styles/normal = SubResource("StyleBoxEmpty_7ua8r")
-text = " "
-icon = ExtResource("6_y5y3l")
-icon_alignment = 1
-expand_icon = true
-
-[node name="TotalScoreLabel" type="Label" parent="TopArea/LeftArea/RoomInfo/VBoxContainer" unique_id=702352752]
-layout_mode = 2
-text = "TOTAL_SCORE_LABEL"
-
-[node name="TotalScore" type="HSlider" parent="TopArea/LeftArea/RoomInfo/VBoxContainer" unique_id=165797508]
-layout_mode = 2
-min_value = 3.0
-max_value = 50.0
-value = 3.0
-rounded = true
-ticks_on_borders = true
-
-[node name="TimeOptionsLabel" type="Label" parent="TopArea/LeftArea/RoomInfo/VBoxContainer" unique_id=994215542]
-layout_mode = 2
-text = "TURN_TIME_LABEL"
-
-[node name="TimeOptions" type="OptionButton" parent="TopArea/LeftArea/RoomInfo/VBoxContainer" unique_id=979919888]
-layout_mode = 2
-item_count = 7
-popup/item_0/text = "0:30"
-popup/item_0/id = 0
-popup/item_1/text = "0:45"
-popup/item_1/id = 1
-popup/item_2/text = "1:00"
-popup/item_2/id = 2
-popup/item_3/text = "1:15"
-popup/item_3/id = 3
-popup/item_4/text = "1:30"
-popup/item_4/id = 4
-popup/item_5/text = "1:45"
-popup/item_5/id = 5
-popup/item_6/text = "2:00"
-popup/item_6/id = 6
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="TopArea/LeftArea/RoomInfo" unique_id=1083195726]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -81.0
-grow_horizontal = 2
-grow_vertical = 0
-alignment = 1
-
-[node name="ReadyButton" type="Button" parent="TopArea/LeftArea/RoomInfo/VBoxContainer2" unique_id=2005863213]
-custom_minimum_size = Vector2(150, 50)
-layout_mode = 2
-text = "READY_BUTTON"
-
-[node name="LeaveButton" type="Button" parent="TopArea/LeftArea/RoomInfo/VBoxContainer2" unique_id=1687604281]
-layout_mode = 2
-text = "LEAVE_ROOM_BUTTON"
 
 [node name="TableArea" type="Control" parent="TopArea" unique_id=536433243]
 layout_mode = 1
@@ -246,7 +137,7 @@ offset_right = 345.0
 offset_bottom = 243.0
 theme = ExtResource("4_3cx6b")
 
-[node name="Table" type="TextureRect" parent="TopArea/TableArea/TableLayout" unique_id=747679814]
+[node name="Table" type="PanelContainer" parent="TopArea/TableArea/TableLayout" unique_id=334179617]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -259,8 +150,11 @@ offset_right = 311.04
 offset_bottom = 179.7919
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("5_qy1jj")
-expand_mode = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_8ud1i")
+
+[node name="Panel" type="Panel" parent="TopArea/TableArea/TableLayout/Table" unique_id=1608703430]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vjgi4")
 
 [node name="Deck" type="Node2D" parent="TopArea/TableArea/TableLayout" unique_id=1762135531]
 script = ExtResource("6_acvyw")
@@ -589,36 +483,38 @@ anchors_preset = -1
 anchor_left = 0.8
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 8.0
-offset_bottom = 8.0
+theme = ExtResource("4_kyk2p")
 
 [node name="Chat" parent="TopArea/RightArea" unique_id=603695322 instance=ExtResource("14_y5y3l")]
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_pmplx")
 
 [node name="BottomArea" type="Control" parent="." unique_id=732581692]
 layout_mode = 1
 anchor_top = 0.75
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = SubResource("GDScript_20pc6")
 
-[node name="HandArea" type="PanelContainer" parent="BottomArea" unique_id=1394942407]
+[node name="HandAreaBackground" type="PanelContainer" parent="BottomArea" unique_id=41492092]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_kyk2p")
+
+[node name="MarginContainer" type="MarginContainer" parent="BottomArea" unique_id=1686990007]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.01
-anchor_top = 0.05
-anchor_right = 0.71
-anchor_bottom = 0.95
-theme_override_styles/panel = SubResource("StyleBoxFlat_3xj3m")
-
-[node name="MarginContainer" type="MarginContainer" parent="BottomArea/HandArea" unique_id=1686990007]
-layout_mode = 2
+anchor_right = 0.8
+anchor_bottom = 1.0
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 10
 
-[node name="HandPlaceholder" type="Panel" parent="BottomArea/HandArea/MarginContainer" unique_id=299893312]
+[node name="HandPlaceholder" type="Panel" parent="BottomArea/MarginContainer" unique_id=299893312]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_c6i3y")
 script = ExtResource("9_x3xnh")
@@ -626,30 +522,39 @@ script = ExtResource("9_x3xnh")
 [node name="ButtonsContainer" type="VBoxContainer" parent="BottomArea" unique_id=1690199426]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.75
-anchor_right = 0.9
+anchor_left = 0.85
+anchor_right = 0.95
 anchor_bottom = 1.0
+theme = ExtResource("8_45i86")
 theme_override_constants/separation = 10
 alignment = 1
 script = ExtResource("10_8r6kd")
 
-[node name="PlayButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=768235351]
+[node name="PlayButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=406496635]
 layout_mode = 2
 tooltip_text = "Play Hand"
-theme_override_styles/normal = SubResource("StyleBoxFlat_17p60")
 text = "PLAY_HAND_BUTTON"
+script = ExtResource("9_sv1m6")
+hue = 0
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
-[node name="PassButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=1608814664]
+[node name="PassButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=306511266]
 layout_mode = 2
 tooltip_text = "Play Hand"
-theme_override_styles/normal = SubResource("StyleBoxFlat_17p60")
 text = "PASS_BUTTON"
+script = ExtResource("9_sv1m6")
+hue = 0
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
-[node name="GiveCardButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=1896228628]
+[node name="GiveCardButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=38815153]
 layout_mode = 2
 text = "GIVE_CARD_BUTTON"
+script = ExtResource("9_sv1m6")
+hue = 0
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="PlayerContextMenu" parent="." unique_id=695943598 instance=ExtResource("14_vjgi4")]
+visible = false
 layout_mode = 0
 offset_right = 108.000015
 offset_bottom = 131.0
