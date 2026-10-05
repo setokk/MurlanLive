@@ -20,6 +20,7 @@ import org.murlan.live.protocol.dto.Player;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -45,23 +46,27 @@ public final class OnTurnTimeout implements Consumer<GameState> {
     private void handlePlayingState(GameState gameState, List<PlayerSession> playersInRoom) {
         try {
             Player currTurnPlayer = gameState.getCurrTurnPlayer();
-            PlayerSession currTurnPlayerSession = findPlayerSession(currTurnPlayer, playersInRoom);
+            Optional<PlayerSession> currTurnPlayerSession = findPlayerSession(currTurnPlayer, playersInRoom);
 
             if (gameState.isFirstMove() && gameState.isShouldCurrTurnPlayerUseThreeOfSpades()) {
                 CardCombination playedCardCombination = new CardCombination(Card.THREE_OF_SPADES);
                 gameState.playHand(currTurnPlayer, playedCardCombination);
 
-                endpointHelper.send(new PlayHandResp(ResponseStatus.OK, playedCardCombination), currTurnPlayerSession);
+                if (currTurnPlayerSession.isPresent()) {
+                    endpointHelper.send(new PlayHandResp(ResponseStatus.OK, playedCardCombination), currTurnPlayerSession.get());
+                }
                 endpointHelper.informPlayers(new InformPlayHandResp(
                         ResponseStatus.OK,
                         currTurnPlayer.getId(),
                         playedCardCombination
-                ), currTurnPlayerSession, playersInRoom);
+                ), currTurnPlayerSession.orElse(null), playersInRoom);
             } else {
                 gameState.pass(currTurnPlayer, true);
 
                 boolean canCurrPlayerPlayAnyHand = gameState.getPassCounter().getCounter() == 0;
-                endpointHelper.send(new PassResp(ResponseStatus.OK), currTurnPlayerSession);
+                if (currTurnPlayerSession.isPresent()) {
+                    endpointHelper.send(new PassResp(ResponseStatus.OK), currTurnPlayerSession.get());
+                }
                 endpointHelper.informPlayers(new InformPassResp(
                         ResponseStatus.OK,
                         currTurnPlayer.getId(),
@@ -128,19 +133,20 @@ public final class OnTurnTimeout implements Consumer<GameState> {
         informGiveCardResp.setCard(card);
         informGiveCardResp.haveBothPlayersGivenCards(haveBothPlayersGivenCards);
 
-        PlayerSession originPlayerSession = findPlayerSession(originPlayer, playersInRoom);
+        Optional<PlayerSession> originPlayerSession = findPlayerSession(originPlayer, playersInRoom);
         try {
-            endpointHelper.send(new GiveCardResp(ResponseStatus.OK, haveBothPlayersGivenCards, card), originPlayerSession);
-            endpointHelper.informPlayers(informGiveCardResp, originPlayerSession, playersInRoom);
+            if (originPlayerSession.isPresent()) {
+                endpointHelper.send(new GiveCardResp(ResponseStatus.OK, haveBothPlayersGivenCards, card), originPlayerSession.get());
+            }
+            endpointHelper.informPlayers(informGiveCardResp, originPlayerSession.orElse(null), playersInRoom);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private PlayerSession findPlayerSession(Player player, List<PlayerSession> playersInRoom) {
+    private Optional<PlayerSession> findPlayerSession(Player player, List<PlayerSession> playersInRoom) {
         return playersInRoom.stream()
                 .filter(ps -> ps.getPlayer().equals(player))
-                .findAny()
-                .orElseThrow();
+                .findAny();
     }
 }

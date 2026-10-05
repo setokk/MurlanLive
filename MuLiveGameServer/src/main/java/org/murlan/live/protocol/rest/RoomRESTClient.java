@@ -4,6 +4,7 @@ import org.glassfish.grizzly.http.util.HttpStatus;
 import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.dto.um.UMRoomDto;
+import org.murlan.live.protocol.rest.request.UMCreateRoomRequest;
 import org.murlan.live.util.MLObjectMapper;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class RoomRESTClient {
 
     public Optional<UMRoomDto> createRoom(Room room) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(room)))
+                .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(UMCreateRoomRequest.createFrom(room))))
                 .header("Content-Type", "application/json")
                 .header(config.getMulive_gameserver_secret_header(), config.getMulive_gameserver_secret_header_val())
                 .uri(URI.create(config.getProtocol_um_server_host() + ENDPOINT + "/create"))

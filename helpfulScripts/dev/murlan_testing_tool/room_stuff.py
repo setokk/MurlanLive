@@ -19,7 +19,7 @@ def leave_room(ws):
 
 
 def create_room(user , ws):
-    ws.send(f"C5${user['user']['username']}'s Room$true$21")
+    ws.send(f"C5${user['user']['username']}'s Room$true$21$45")
 
     response = ws.recv()
 

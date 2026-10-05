@@ -19,7 +19,10 @@ static func decode_jwt(jwt: String) -> Player:
 		int(str(map.get("id"))),
 		str(map.get("username")),
 		str(map.get("creationDate")),
-		str(map.get("email"))
+		str(map.get("email")),
+		int(str(map.get("profileIconId"))),
+		map.get("rankOrdinal", null),
+		map.get("displayRating", null),
 	)
 
 static func _base64_url_decode_to_string(b64url: String) -> String:

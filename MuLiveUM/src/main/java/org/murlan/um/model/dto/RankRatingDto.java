@@ -12,8 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public final class RankRatingDto {
-    private String previousRank;
-    private String newRank;
+    private short previousRank;
+    private short newRank;
     private int previousRating;
     private int newRating;
 }

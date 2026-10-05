@@ -1,0 +1,30 @@
+<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cup -->
+  <path
+    d="M4 2H12V6
+       C12 8.5 10.5 10 8 10
+       C5.5 10 4 8.5 4 6V2Z"
+    fill="none"
+    stroke="#0F1012"
+    stroke-width="2"
+    stroke-linejoin="miter"
+  />
+
+  <!-- Handles -->
+  <path
+    d="M4 4H2V6H4
+       M12 4H14V6H12"
+    fill="none"
+    stroke="#0F1012"
+    stroke-width="2"
+    stroke-linejoin="miter"
+  />
+
+  <!-- Stem -->
+  <path
+    d="M8 10V13M5 14H11"
+    stroke="#0F1012"
+    stroke-width="2"
+    stroke-linecap="butt"
+  />
+</svg>

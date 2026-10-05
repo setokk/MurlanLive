@@ -8,6 +8,7 @@ import org.murlan.um.api.request.LoginPlayerRequest;
 import org.murlan.um.api.request.RegisterPlayerRequest;
 import org.murlan.um.api.request.ResetPasswordRequest;
 import org.murlan.um.api.request.UnblockPlayerRequest;
+import org.murlan.um.api.request.UpdatePlayerInfoRequest;
 import org.murlan.um.api.request.VerifyEmailRequest;
 import org.murlan.um.auth.JwtUtils;
 import org.murlan.um.model.dto.PlayerDetailsDto;
@@ -54,9 +55,9 @@ public class PlayerController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/user-details/{id}")
-    public ResponseEntity<PlayerDetailsDto> getUserDetails(@PathVariable(name = "id") long playerId) {
-        PlayerDetailsDto playerDetailsDto = playerService.getPlayerDetails();
+    @GetMapping({"/get-player-details", "/get-player-details/{id}"})
+    public ResponseEntity<PlayerDetailsDto> getPlayerDetails(@PathVariable(name = "id", required = false) Long playerId) {
+        PlayerDetailsDto playerDetailsDto = playerService.getPlayerDetails(playerId);
         return ResponseEntity.ok(playerDetailsDto);
     }
 
@@ -93,6 +94,12 @@ public class PlayerController {
     @PostMapping("/verify-email")
     public ResponseEntity<?> verifyEmail(@RequestBody @Valid VerifyEmailRequest request) {
         playerService.verifyEmail(request.getToken());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/update-player-info")
+    public ResponseEntity<?> updatePlayerInfo(@RequestBody @Valid UpdatePlayerInfoRequest request) {
+        playerService.updatePlayerInfo(playerMapper.toParam(request));
         return ResponseEntity.ok().build();
     }
 }

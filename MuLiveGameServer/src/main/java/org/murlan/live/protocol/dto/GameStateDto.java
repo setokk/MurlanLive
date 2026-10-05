@@ -21,26 +21,26 @@ import java.util.Set;
 public class GameStateDto {
     private int state;
     private int totalGamesPlayed;
-    private Player currTurnPlayer;
-    private List<Player> players;
+    private PlayerMinimizedDto currTurnPlayer;
+    private List<PlayerMinimizedDto> players;
     private String currCardCombination;
     private String hand;
     private Map<Long, Short> numOfCardsPerPlayerId;
-    private Player prevWinner;
-    private Player prevLoser;
+    private PlayerMinimizedDto prevWinner;
+    private PlayerMinimizedDto prevLoser;
     private long turnDurationInSeconds;
-    private List<Player> readyPlayers;
+    private List<PlayerMinimizedDto> readyPlayers;
 
     public static GameStateDto from(Room room, Player player, ProtocolConfig config) {
         GameStateDtoBuilder builder = GameStateDto.builder()
                 .state(room.getActiveGameState().getState().ordinal())
                 .totalGamesPlayed(room.getTotalFinishedGames())
-                .players(room.getActiveGameState().getPlayers())
-                .prevWinner(room.getActiveGameState().getPrevWinner())
-                .prevLoser(room.getActiveGameState().getPrevLoser())
-                .currTurnPlayer(room.getActiveGameState().getCurrTurnPlayer())
+                .players(room.getActiveGameState().getPlayers().stream().map(PlayerMinimizedDto::fromPlayer).toList())
+                .prevWinner(PlayerMinimizedDto.fromPlayer(room.getActiveGameState().getPrevWinner()))
+                .prevLoser(PlayerMinimizedDto.fromPlayer(room.getActiveGameState().getPrevLoser()))
+                .currTurnPlayer(PlayerMinimizedDto.fromPlayer(room.getActiveGameState().getCurrTurnPlayer()))
                 .turnDurationInSeconds(room.getActiveGameState().getTurnDurationInSeconds())
-                .readyPlayers(room.getActiveGameState().getReadyPlayers());
+                .readyPlayers(room.getActiveGameState().getReadyPlayers().stream().map(PlayerMinimizedDto::fromPlayer).toList());
 
         GameState.State state = room.getActiveGameState().getState();
         if (GameState.State.PLAYING.equals(state) || GameState.State.GIVING_CARDS.equals(state)) {
@@ -56,12 +56,12 @@ public class GameStateDto {
         GameStateDtoBuilder builder = GameStateDto.builder()
                 .state(gameState.getState().ordinal())
                 .totalGamesPlayed(room.getTotalFinishedGames())
-                .players(gameState.getPlayers())
-                .prevWinner(gameState.getPrevWinner())
-                .prevLoser(gameState.getPrevLoser())
-                .currTurnPlayer(gameState.getCurrTurnPlayer())
+                .players(gameState.getPlayers().stream().map(PlayerMinimizedDto::fromPlayer).toList())
+                .prevWinner(PlayerMinimizedDto.fromPlayer(gameState.getPrevWinner()))
+                .prevLoser(PlayerMinimizedDto.fromPlayer(gameState.getPrevLoser()))
+                .currTurnPlayer(PlayerMinimizedDto.fromPlayer(gameState.getCurrTurnPlayer()))
                 .turnDurationInSeconds(gameState.getTurnDurationInSeconds())
-                .readyPlayers(room.getActiveGameState().getReadyPlayers());
+                .readyPlayers(room.getActiveGameState().getReadyPlayers().stream().map(PlayerMinimizedDto::fromPlayer).toList());
 
         if (GameState.State.PLAYING.equals(gameState.getState()) || GameState.State.GIVING_CARDS.equals(gameState.getState())) {
             builder.currCardCombination(gameState.getCurrCardCombination().toMessage(config.getProtocol_list_delimiter()))

@@ -15,9 +15,11 @@ import org.murlan.live.protocol.api.MuteReq;
 import org.murlan.live.protocol.api.PassReq;
 import org.murlan.live.protocol.api.PlayHandReq;
 import org.murlan.live.protocol.api.ReadyReq;
+import org.murlan.live.protocol.api.ReconnectReq;
 import org.murlan.live.protocol.api.Req;
 import org.murlan.live.protocol.api.UnBlockReq;
 import org.murlan.live.protocol.api.UnMuteReq;
+import org.murlan.live.protocol.api.UpdatePlayerInfoReq;
 import org.murlan.live.protocol.api.UpdateRoomDetailsReq;
 import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ProtocolConfig;
@@ -123,7 +125,17 @@ public enum ClientEvent {
     /**
      * Indicates that a player wants to unblock another player.
      */
-    UNBLOCK(UnBlockReq::new);
+    UNBLOCK(UnBlockReq::new),
+
+    /**
+     * Indicates that a player wants to reconnect to the room they lost connection from, within the grace period.
+     */
+    RECONNECT(ReconnectReq::new),
+
+    /**
+     * Indicates that a player wants to change their info.
+     */
+    UPDATE_PLAYER_INFO(UpdatePlayerInfoReq::new);
 
     private final ReqFactory reqFactory;
 

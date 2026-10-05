@@ -46,12 +46,13 @@ func show_lobby() -> void:
 	
 	content.add_child(show_scene(preload("res://scenes/Lobby.tscn")))
 	
-func show_game(room: Dictionary) -> void:
+func show_game(room: Dictionary, is_reconnected: bool = false) -> void:
 	var top_bar: Control = get_top_bar()
 	if top_bar:
 		top_bar.set_mode(top_bar.TopBarMode.GAME)
 
 	var game_scene : Game = show_scene(preload("res://scenes/Game.tscn"))
 	game_scene.room = room
+	game_scene.is_reconnected = is_reconnected
 	content.add_child(game_scene)
 	

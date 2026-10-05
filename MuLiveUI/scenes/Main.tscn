@@ -1,8 +1,9 @@
 [gd_scene format=3 uid="uid://dgxlmxq4gm0y8"]
 
-[ext_resource type="Script" uid="uid://5gt4skdokr15" path="res://Main.gd" id="1_trn2v"]
+[ext_resource type="Script" uid="uid://ci2ftyxpxkaff" path="res://Main.gd" id="1_trn2v"]
+[ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_vcsgt"]
 [ext_resource type="PackedScene" uid="uid://dlcax4o11ecqq" path="res://scenes/TopBar.tscn" id="2_r0du0"]
-[ext_resource type="Script" uid="uid://iqlg787ocqvy" path="res://Content.gd" id="3_rarhs"]
+[ext_resource type="Script" uid="uid://bcls6dofdveuv" path="res://Content.gd" id="3_rarhs"]
 [ext_resource type="PackedScene" uid="uid://dwdsdol33d0u8" path="res://scenes/Home.tscn" id="4_cm0pq"]
 
 [node name="Main" type="Control" unique_id=2028910291]
@@ -12,6 +13,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_vcsgt")
 script = ExtResource("1_trn2v")
 
 [node name="TopBar" parent="." unique_id=852744569 instance=ExtResource("2_r0du0")]

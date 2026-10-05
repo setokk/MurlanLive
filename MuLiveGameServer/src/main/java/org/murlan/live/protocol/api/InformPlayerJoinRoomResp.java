@@ -9,6 +9,7 @@ import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.ServerEvent;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.dto.Player;
+import org.murlan.live.protocol.dto.PlayerMinimizedDto;
 
 @Setter
 @Getter
@@ -22,7 +23,7 @@ public final class InformPlayerJoinRoomResp implements Resp {
         return String.join(config.getProtocol_delimiter(),
                 ServerEvent.INFORM_PLAYER_JOIN_ROOM.id(),
                 getResponseStatus().toString(),
-                objectMapper.writeValueAsString(player)
+                objectMapper.writeValueAsString(PlayerMinimizedDto.fromPlayer(player))
         );
     }
 }

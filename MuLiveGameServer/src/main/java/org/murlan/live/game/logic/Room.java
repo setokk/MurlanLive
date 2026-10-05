@@ -1,8 +1,5 @@
 package org.murlan.live.game.logic;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +8,7 @@ import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.protocol.dto.Player;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -19,22 +17,23 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @Setter
 @Getter
 @Builder(setterPrefix = "with")
 @AllArgsConstructor
 public class Room {
-    private String id;
+    private UUID id;
     private String name;
-    @JsonProperty("isPublic") private final boolean isPublic;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") private final LocalDateTime creationDate;
+    private final boolean isPublic;
+    private final LocalDateTime creationDate;
     private short totalScoreToWin;
     private List<GameState> gameStates;
+    private Map<Player, Short> exitPenalties;
     private Player owner;
-    @JsonIgnore private long turnDurationInSeconds;
-    @JsonIgnore private final GameStateFactory gameStateFactory;
+    private long turnDurationInSeconds;
+    private final GameStateFactory gameStateFactory;
 
     public Room(String name,
                 boolean isPublic,
@@ -69,12 +68,10 @@ public class Room {
         }
     }
 
-    @JsonIgnore
     public synchronized GameState getActiveGameState() {
         return gameStates.getLast();
     }
 
-    @JsonIgnore
     public synchronized int getTotalFinishedGames() {
         if (GameState.State.FINISHED.equals(getActiveGameState().getState())) {
             return gameStates.size();
@@ -110,6 +107,18 @@ public class Room {
             }
         }
 
+        // penalties for players who left/disconnected mid-game, whose interrupted game state was discarded
+        if (exitPenalties != null) {
+            for (Map.Entry<Player, Short> e : exitPenalties.entrySet()) {
+                Player p = e.getKey();
+                totals.putIfAbsent(p, 0);
+                reachedAt.putIfAbsent(p, seq);
+                totals.put(p, totals.get(p) + e.getValue());
+                reachedAt.put(p, seq);
+                seq++;
+            }
+        }
+
         Map<Player, Short> result = new LinkedHashMap<>();
         totals.entrySet().stream()
                 .sorted(Comparator
@@ -122,6 +131,29 @@ public class Room {
 
     public synchronized List<Player> getPlayers() {
         return getActiveGameState().getPlayers();
+    }
+
+    public synchronized void applyExitPenalty(Player player, short penalty) {
+        if (exitPenalties == null) {
+            exitPenalties = new LinkedHashMap<>();
+        }
+        exitPenalties.put(player, penalty);
+    }
+
+    public synchronized boolean discardActiveGameStateForInterruption() {
+        if (gameStates.size() <= 1) {
+            return false;
+        }
+        gameStates.removeLast();
+        return true;
+    }
+
+    public void finishDueToPlayerExit() {
+        try {
+            getActiveGameState().getOnGameFinish().runForPlayerExit();
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public synchronized boolean playHand(Player player, CardCombination cardCombination) {

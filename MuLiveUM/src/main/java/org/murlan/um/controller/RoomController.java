@@ -2,17 +2,16 @@ package org.murlan.um.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.murlan.um.model.dto.RoomDetailsDto;
-import org.murlan.um.model.dto.RoomDto;
 import org.murlan.um.api.request.CreateRoomRequest;
 import org.murlan.um.error.BusinessLogicException;
+import org.murlan.um.model.dto.RoomDetailsDto;
+import org.murlan.um.model.dto.RoomDto;
+import org.murlan.um.model.dto.RoomItemDto;
 import org.murlan.um.service.RoomService;
 import org.murlan.um.service.mapper.RoomMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/rooms")
@@ -30,18 +30,12 @@ public class RoomController {
 
     @PostMapping("/create")
     public ResponseEntity<RoomDto> createRoom(@RequestBody @Valid CreateRoomRequest request) {
-        RoomDto roomDto = roomService.createRoom(roomMapper.toParam(request));
-        return ResponseEntity.ok(roomDto);
+        RoomDto room = roomService.createRoom(roomMapper.toParam(request));
+        return ResponseEntity.ok(room);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<RoomDetailsDto> getRoom(@PathVariable(name = "id") String roomId) {
-        RoomDetailsDto roomDetailsDto = roomService.getRoomDetails(roomId);
-        return ResponseEntity.ok(roomDetailsDto);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<RoomDto>> getRooms(
+    @GetMapping("/get-rooms")
+    public ResponseEntity<List<RoomItemDto>> getRooms(
             @RequestParam(name = "pageNumber") int pageNumber,
             @RequestParam(name = "playerId") long playerId
     ) {
@@ -51,7 +45,13 @@ public class RoomController {
         if (playerId < 0) {
             throw new BusinessLogicException(HttpStatus.BAD_REQUEST, "playerId query parameter cannot be < 0");
         }
-        List<RoomDto> rooms = roomService.getRooms(pageNumber, playerId);
+        List<RoomItemDto> rooms = roomService.getRooms(pageNumber, playerId);
         return ResponseEntity.ok(rooms);
+    }
+
+    @GetMapping("/get-room-details")
+    public ResponseEntity<RoomDetailsDto> getRoomDetails(@RequestParam(name = "roomId") UUID roomId) {
+        RoomDetailsDto roomDetails = roomService.getRoomDetails(roomId);
+        return ResponseEntity.ok(roomDetails);
     }
 }

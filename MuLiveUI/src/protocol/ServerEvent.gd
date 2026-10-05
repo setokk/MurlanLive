@@ -18,6 +18,8 @@ enum Value {
 	INFORM_PLAYER_CHAT,
 	INFORM_UPDATE_ROOM_DETAILS,
 	INFORM_PLAYER_KICKED,
+	INFORM_PLAYER_RECONNECTED,
+	INFORM_UPDATE_PLAYER_INFO
 }
 
 static var RESP_FACTORIES: Dictionary[int, Callable] = {
@@ -33,6 +35,8 @@ static var RESP_FACTORIES: Dictionary[int, Callable] = {
 	Value.INFORM_PLAYER_CHAT: func(parts, config): return InformPlayerChatResp.new(parts, config),
 	Value.INFORM_UPDATE_ROOM_DETAILS: func(parts, config): return InformUpdateRoomDetailsResp.new(parts, config),
 	Value.INFORM_PLAYER_KICKED: func(parts, config): return InformPlayerKickedResp.new(parts, config),
+	Value.INFORM_PLAYER_RECONNECTED: func(parts, config): return InformPlayerReconnectedResp.new(parts, config),
+	Value.INFORM_UPDATE_PLAYER_INFO: func(parts, config): return InformUpdatePlayerInfoResp.new(parts, config),
 }
 
 static func create_resp(value: Value, parts: PackedStringArray, config: ProtocolConfig) -> Resp:

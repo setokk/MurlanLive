@@ -1,5 +1,6 @@
 package org.murlan.live.endpoint.session;
 
+import com.github.f4b6a3.uuid.UuidCreator;
 import jakarta.websocket.Session;
 import lombok.NonNull;
 import org.murlan.live.game.GameConstants;
@@ -9,21 +10,26 @@ import org.murlan.live.protocol.dto.Player;
 import org.murlan.live.protocol.dto.RoomDetailsDto;
 import org.murlan.live.protocol.dto.RoomDto;
 import org.murlan.live.protocol.dto.UpdatedRoomDetailsDto;
+import org.murlan.live.util.DateUtils;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class RoomHandler {
     private final ConcurrentHashMap<String, PlayerSession> jwtToSessionMap = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<PlayerSession, String> sessionToRoomIdMap = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, List<PlayerSession>> roomIdToSessionMap = new ConcurrentHashMap<>(); // for efficient retrieval of players in a room
-    private final ConcurrentHashMap<String, Room> roomIdToRoomMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<PlayerSession, UUID> sessionToRoomIdMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<UUID, List<PlayerSession>> roomIdToSessionMap = new ConcurrentHashMap<>(); // for efficient retrieval of players in a room
+    private final ConcurrentHashMap<UUID, Room> roomIdToRoomMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Player, DisconnectionTask> disconnectedPlayers = new ConcurrentHashMap<>();
 
     public void addSession(@NonNull PlayerSession playerSession) {
         jwtToSessionMap.putIfAbsent(playerSession.getPlayer().getJwt(), playerSession);
@@ -44,7 +50,7 @@ public class RoomHandler {
             jwtToSessionMap.remove(playerSession.getPlayer().getJwt());
         }
 
-        String roomId = sessionToRoomIdMap.remove(playerSession);
+        UUID roomId = sessionToRoomIdMap.remove(playerSession);
         if (roomId == null) {
             return Optional.empty();
         }
@@ -55,47 +61,188 @@ public class RoomHandler {
         }
 
         synchronized (room) {
-            List<PlayerSession> playerSessions = roomIdToSessionMap.get(roomId);
-            if (playerSessions != null) {
-                playerSessions.remove(playerSession);
+            unlinkPlayerSession(roomId, playerSession);
+            return finalizePlayerRemoval(room, playerSession.getPlayer(), hasPlayerLostConnection, onPlayerLeaveOrDisconnect);
+        }
+    }
+
+    /**
+     * Handles an {@code @OnClose} (lost connection) event.
+     * If the room's active game is PLAYING/GIVING_CARDS, the player's seat is kept and a reconnection grace
+     * period is started (see {@link #reconnectPlayer}); otherwise this behaves like an immediate leave.
+     * @return the other player sessions in the room, to be informed of the lost connection (present whether
+     * or not a grace period was started).
+     */
+    public Optional<List<PlayerSession>> handleDisconnection(
+            @NonNull PlayerSession playerSession,
+            @NonNull ScheduledExecutorService scheduler,
+            Consumer<Room> onPlayerLeaveOrDisconnect,
+            BiConsumer<Player, Optional<List<PlayerSession>>> onPlayerFinallyRemoved
+    ) {
+        jwtToSessionMap.remove(playerSession.getPlayer().getJwt());
+
+        UUID roomId = sessionToRoomIdMap.get(playerSession);
+        if (roomId == null) {
+            return Optional.empty();
+        }
+
+        Room room = roomIdToRoomMap.get(roomId);
+        if (room == null) {
+            return Optional.empty();
+        }
+
+        synchronized (room) {
+            GameState.State state = room.getActiveGameState().getState();
+            boolean canStartGracePeriod = GameState.State.PLAYING.equals(state) || GameState.State.GIVING_CARDS.equals(state);
+
+            if (!canStartGracePeriod) {
+                sessionToRoomIdMap.remove(playerSession);
+                unlinkPlayerSession(roomId, playerSession);
+                return finalizePlayerRemoval(room, playerSession.getPlayer(), true, onPlayerLeaveOrDisconnect);
             }
+
+            sessionToRoomIdMap.remove(playerSession);
+            List<PlayerSession> playersInRoom = unlinkPlayerSession(roomId, playerSession);
 
             Player player = playerSession.getPlayer();
+            ScheduledFuture<?> graceTask = scheduler.schedule(
+                    () -> finalizeDisconnectedPlayer(room, player, onPlayerLeaveOrDisconnect, onPlayerFinallyRemoved),
+                    GameConstants.RECONNECTION_GRACE_PERIOD_SECONDS,
+                    TimeUnit.SECONDS
+            );
+            disconnectedPlayers.put(player, new DisconnectionTask(roomId, graceTask));
 
-            List<Player> players = room.getActiveGameState().getPlayers();
-            List<Player> readyPlayers = room.getActiveGameState().getReadyPlayers();
-            players.remove(player);
-            readyPlayers.remove(player);
+            return Optional.ofNullable(playersInRoom);
+        }
+    }
 
-            room.setOwner(!players.isEmpty() ? players.getFirst() : room.getOwner());
+    /**
+     * Reconnects a player within their grace period: cancels the pending removal and re-links the new
+     * session to the room they were disconnected from.
+     * @return the room the player was reconnected to, or empty if the grace period already expired/was
+     * cancelled (e.g. another player's exit already finished the room) or the player wasn't disconnected.
+     */
+    public Optional<Room> reconnectPlayer(@NonNull PlayerSession newPlayerSession) {
+        Player player = newPlayerSession.getPlayer();
+        DisconnectionTask pending = disconnectedPlayers.get(player);
+        if (pending == null) {
+            return Optional.empty();
+        }
 
-            // if game has not started yet (initial state where not all players have joined)
-            // do NOT remove room.
-            // remove room and player sessions ONLY in the case of active game
-            if (GameState.State.WAITING.equals(room.getActiveGameState().getState()) && !room.getPlayers().isEmpty()) {
-                return Optional.ofNullable(playerSessions);
-            }
+        Room room = roomIdToRoomMap.get(pending.roomId());
+        if (room == null) {
+            disconnectedPlayers.remove(player);
+            return Optional.empty();
+        }
 
-            room.getActiveGameState().handlePlayerNotInRoom(player, hasPlayerLostConnection);
-            onPlayerLeaveOrDisconnect.accept(room);
-
-            List<PlayerSession> playersInRoom = removeRoom(roomId);
-            if (playersInRoom == null) {
+        synchronized (room) {
+            DisconnectionTask stillPending = disconnectedPlayers.remove(player);
+            if (stillPending == null) {
                 return Optional.empty();
             }
+            stillPending.graceTask().cancel(false);
 
-            for (PlayerSession otherPlayerSession : playersInRoom) {
-                sessionToRoomIdMap.remove(otherPlayerSession);
-            }
-            return Optional.of(playersInRoom);
+            sessionToRoomIdMap.put(newPlayerSession, room.getId());
+            roomIdToSessionMap.computeIfAbsent(room.getId(), k -> new ArrayList<>()).add(newPlayerSession);
+
+            return Optional.of(room);
         }
+    }
+
+    private void finalizeDisconnectedPlayer(
+            Room room, Player player,
+            Consumer<Room> onPlayerLeaveOrDisconnect,
+            BiConsumer<Player, Optional<List<PlayerSession>>> onPlayerFinallyRemoved) {
+        synchronized (room) {
+            DisconnectionTask pending = disconnectedPlayers.get(player);
+            if (pending == null || !roomIdToRoomMap.containsKey(pending.roomId())) {
+                disconnectedPlayers.remove(player);
+                return; // reconnected already, or room already finished/removed by another player's exit
+            }
+            Optional<List<PlayerSession>> playersInRoom = finalizePlayerRemoval(room, player, true, onPlayerLeaveOrDisconnect);
+            onPlayerFinallyRemoved.accept(player, playersInRoom);
+        }
+    }
+
+    private List<PlayerSession> unlinkPlayerSession(UUID roomId, PlayerSession playerSession) {
+        List<PlayerSession> playerSessions = roomIdToSessionMap.get(roomId);
+        if (playerSessions != null) {
+            playerSessions.remove(playerSession);
+        }
+        return playerSessions;
+    }
+
+    private void cancelOtherPendingDisconnections(UUID roomId, Player excludePlayer) {
+        disconnectedPlayers.entrySet().removeIf(entry -> {
+            if (!roomId.equals(entry.getValue().roomId()) || entry.getKey().equals(excludePlayer)) {
+                return false;
+            }
+            entry.getValue().graceTask().cancel(false);
+            return true;
+        });
+    }
+
+    private Optional<List<PlayerSession>> finalizePlayerRemoval(
+            Room room,
+            Player player,
+            boolean hasPlayerLostConnection,
+            Consumer<Room> onPlayerLeaveOrDisconnect
+    ) {
+        disconnectedPlayers.remove(player);
+
+        List<Player> players = room.getActiveGameState().getPlayers();
+        List<Player> readyPlayers = room.getActiveGameState().getReadyPlayers();
+        players.remove(player);
+        readyPlayers.remove(player);
+        room.setOwner(!players.isEmpty() ? players.getFirst() : room.getOwner());
+
+        GameState.State state = room.getActiveGameState().getState();
+
+        if (GameState.State.WAITING.equals(state) && !room.getPlayers().isEmpty()) {
+            return Optional.ofNullable(roomIdToSessionMap.get(room.getId()));
+        }
+
+        boolean wasActiveGame = GameState.State.PLAYING.equals(state) || GameState.State.GIVING_CARDS.equals(state);
+
+        if (wasActiveGame) {
+            short penalty = hasPlayerLostConnection
+                    ? GameConstants.SCORE_PENALTY_LOST_CONNECTION
+                    : GameConstants.SCORE_PENALTY_LEAVE_ROOM;
+            room.applyExitPenalty(player, penalty);
+            cancelOtherPendingDisconnections(room.getId(), player);
+
+            List<PlayerSession> preHookSnapshot = roomIdToSessionMap.get(room.getId());
+            List<PlayerSession> toInform = preHookSnapshot != null ? new ArrayList<>(preHookSnapshot) : null;
+
+            onPlayerLeaveOrDisconnect.accept(room);
+
+            if (roomIdToRoomMap.containsKey(room.getId())) {
+                List<PlayerSession> playersInRoom = removeRoom(room.getId());
+                if (playersInRoom != null) {
+                    for (PlayerSession otherPlayerSession : playersInRoom) {
+                        sessionToRoomIdMap.remove(otherPlayerSession);
+                    }
+                }
+            }
+
+            return Optional.ofNullable(toInform);
+        }
+
+        List<PlayerSession> playersInRoom = removeRoom(room.getId());
+        if (playersInRoom == null) {
+            return Optional.empty();
+        }
+        for (PlayerSession otherPlayerSession : playersInRoom) {
+            sessionToRoomIdMap.remove(otherPlayerSession);
+        }
+        return Optional.of(playersInRoom);
     }
 
     public synchronized boolean isPlayerSessionCurrentlyActive(@NonNull Player player) {
         return jwtToSessionMap.containsValue(new PlayerSession(null, player, null, null));
     }
 
-    private void linkSessionWithRoom(@NonNull PlayerSession playerSession, @NonNull String roomId) {
+    private void linkSessionWithRoom(@NonNull PlayerSession playerSession, @NonNull UUID roomId) {
         if (!jwtToSessionMap.containsKey(playerSession.getPlayer().getJwt())) {
             throw new RuntimeException("Player session with JWT " + playerSession.getPlayer().getJwt() + " not found");
         }
@@ -109,16 +256,16 @@ public class RoomHandler {
             return RoomDto.invalid();
         }
 
-        room.setId(UUID.randomUUID().toString());
+        room.setId(UuidCreator.getTimeOrderedEpoch());
         room.initialGameState();
 
         roomIdToRoomMap.put(room.getId(), room);
         linkSessionWithRoom(playerSession, room.getId());
 
-        return new RoomDto(room.getId(), room.getName(), room.getPlayers(), room.getTotalScoreToWin(), room.getTurnDurationInSeconds());
+        return RoomDto.fromRoom(room);
     }
 
-    public RoomDto copyRoom(@NonNull String roomId) {
+    public RoomDto copyRoom(@NonNull UUID roomId) {
         Room room = getRoom(roomId);
         if (room == null) {
             return null;
@@ -138,7 +285,7 @@ public class RoomHandler {
             Room copyRoom = new Room(
                     room.getName(),
                     room.isPublic(),
-                    LocalDateTime.now(),
+                    DateUtils.getLocalDateTimeNowUTC(),
                     room.getTotalScoreToWin(),
                     room.getOwner(),
                     room.getTurnDurationInSeconds(),
@@ -156,7 +303,7 @@ public class RoomHandler {
         }
     }
 
-    public Optional<UpdatedRoomDetailsDto> updateRoom(@NonNull String roomId, @NonNull RoomDetailsDto roomDetailsDto, @NonNull Player player) {
+    public Optional<UpdatedRoomDetailsDto> updateRoom(@NonNull UUID roomId, @NonNull RoomDetailsDto roomDetailsDto, @NonNull Player player) {
         Room room = getRoom(roomId);
         if (room == null) {
             return Optional.empty();
@@ -189,7 +336,7 @@ public class RoomHandler {
         ));
     }
 
-    public PlayerSession kickPlayer(@NonNull String roomId, long playerToKickId, @NonNull Player player) {
+    public PlayerSession kickPlayer(@NonNull UUID roomId, long playerToKickId, @NonNull Player player) {
         Room room = getRoom(roomId);
         if (room == null) {
             return null;
@@ -215,18 +362,18 @@ public class RoomHandler {
         }
     }
 
-    public Room getRoom(@NonNull String roomId) {
+    public Room getRoom(@NonNull UUID roomId) {
         return roomIdToRoomMap.get(roomId);
     }
 
-    public List<PlayerSession> removeRoom(@NonNull String roomId) {
+    public List<PlayerSession> removeRoom(@NonNull UUID roomId) {
         List<PlayerSession> playersInRoom = roomIdToSessionMap.remove(roomId);
         roomIdToRoomMap.remove(roomId);
         return playersInRoom;
     }
 
     public Room getPlayerRoom(@NonNull PlayerSession playerSession) {
-        String roomId = sessionToRoomIdMap.get(playerSession);
+        UUID roomId = sessionToRoomIdMap.get(playerSession);
         if (roomId == null) {
             return null;
         }
@@ -258,7 +405,7 @@ public class RoomHandler {
         return roomIdToRoomMap.values()
                 .stream()
                 .filter(Room::isPublic)
-                .map(room -> new RoomDto(room.getId(), room.getName(), room.getPlayers(), room.getTotalScoreToWin(), room.getTurnDurationInSeconds()))
+                .map(RoomDto::fromRoom)
                 .collect(Collectors.toList());
     }
 
@@ -266,7 +413,7 @@ public class RoomHandler {
         return roomIdToRoomMap.values().stream().toList();
     }
 
-    public boolean joinRoom(@NonNull String roomId, @NonNull PlayerSession playerSession) {
+    public boolean joinRoom(@NonNull UUID roomId, @NonNull PlayerSession playerSession) {
         Room room = getRoom(roomId);
         if (room == null) {
             return false;
@@ -275,7 +422,7 @@ public class RoomHandler {
         return addPlayerToRoom(room, playerSession);
     }
 
-    public List<PlayerSession> getPlayersInRoom(String roomId) {
+    public List<PlayerSession> getPlayersInRoom(UUID roomId) {
         return roomIdToSessionMap.get(roomId);
     }
 }

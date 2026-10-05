@@ -9,6 +9,7 @@ import org.murlan.live.protocol.ClientEvent;
 import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.dto.Player;
+import org.murlan.live.protocol.dto.PlayerMinimizedDto;
 
 @Setter
 @Getter
@@ -23,7 +24,7 @@ public final class BlockResp implements Resp {
                 config.getProtocol_delimiter(),
                 ClientEvent.BLOCK.id(),
                 getResponseStatus().toString(),
-                blockedPlayer == null ? "{}" : objectMapper.writeValueAsString(blockedPlayer)
+                blockedPlayer == null ? "{}" : objectMapper.writeValueAsString(PlayerMinimizedDto.fromPlayer(blockedPlayer))
         );
     }
 }

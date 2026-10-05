@@ -1,8 +1,10 @@
 [gd_resource type="Theme" format=3 uid="uid://bqn3ljfdspx6i"]
 
-[ext_resource type="Texture2D" uid="uid://bxnqs7xa4gr81" path="res://assets/images/checkbox-checked.svg" id="1_glcpc"]
-[ext_resource type="Texture2D" uid="uid://b0tibommhhwmd" path="res://assets/images/checkbox-unchecked.svg" id="2_pgobs"]
 [ext_resource type="Texture2D" uid="uid://ovimrk3nmtqy" path="res://assets/images/clear-icon.svg" id="3_pgobs"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_lv2pd"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_glcpc"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pgobs"]
 
@@ -36,30 +38,18 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0, 0, 0, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ud1i"]
-bg_color = Color(1, 0.9336541, 0.92926246, 1)
-border_width_left = 5
-border_width_top = 2
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-corner_detail = 5
-shadow_offset = Vector2(2, 2)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8ud1i"]
 
 [resource]
 CheckBox/constants/h_separation = 0
 CheckBox/font_sizes/font_size = 10
-CheckBox/icons/checked = ExtResource("1_glcpc")
+CheckBox/icons/checked = SubResource("CompressedTexture2D_lv2pd")
 CheckBox/icons/checked_disabled = null
 CheckBox/icons/radio_checked = null
 CheckBox/icons/radio_checked_disabled = null
 CheckBox/icons/radio_unchecked = null
 CheckBox/icons/radio_unchecked_disabled = null
-CheckBox/icons/unchecked = ExtResource("2_pgobs")
+CheckBox/icons/unchecked = SubResource("CompressedTexture2D_glcpc")
 CheckBox/icons/unchecked_disabled = null
 CheckBox/styles/focus = null
 CheckBox/styles/hover = SubResource("StyleBoxEmpty_pgobs")
@@ -76,4 +66,4 @@ LineEdit/font_sizes/font_size = 14
 LineEdit/icons/clear = ExtResource("3_pgobs")
 LineEdit/styles/focus = SubResource("StyleBoxFlat_l3fg6")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_jsytl")
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_8ud1i")
+PanelContainer/styles/panel = SubResource("StyleBoxEmpty_8ud1i")
