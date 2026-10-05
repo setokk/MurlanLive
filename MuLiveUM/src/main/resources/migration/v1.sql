@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS player(
     password TEXT NOT NULL,
     email TEXT NOT NULL,
     creation_date TIMESTAMP NOT NULL,
-    is_verified BOOLEAN NOT NULL DEFAULT FALSE
+    is_verified BOOLEAN NOT NULL DEFAULT FALSE,
+    profile_icon_id BIGINT NOT NULL DEFAULT 1
 );
 CREATE SEQUENCE IF NOT EXISTS player_seq
     START WITH 1
@@ -28,48 +29,25 @@ CREATE TABLE IF NOT EXISTS card_skin(
 -- room Table
 --
 CREATE TABLE IF NOT EXISTS room(
-    id TEXT NOT NULL PRIMARY KEY,
+    id UUID NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     is_public BOOLEAN NOT NULL,
     total_score_to_win SMALLINT NOT NULL,
+    rounds_played SMALLINT NOT NULL,
     creation_date TIMESTAMP NOT NULL,
     finished_date TIMESTAMP NOT NULL,
-    num_players SMALLINT NOT NULL,
     owner_player_id BIGINT NOT NULL
 );
 
 --
--- game_state Table
+-- room_player Table
 --
-CREATE TABLE IF NOT EXISTS game_state(
-    id BIGINT NOT NULL PRIMARY KEY,
-    state SMALLINT NOT NULL,
-    room_id TEXT NOT NULL
-);
-CREATE SEQUENCE IF NOT EXISTS game_state_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO CYCLE;
-
---
--- score Table
---
-CREATE TABLE IF NOT EXISTS score(
-    score SMALLINT NOT NULL,
+CREATE TABLE IF NOT EXISTS room_player (
+    room_id UUID NOT NULL,
     player_id BIGINT NOT NULL,
-    game_state_id BIGINT NOT NULL,
-    PRIMARY KEY (player_id, game_state_id)
-);
-
---
--- score_total Table
---
-CREATE TABLE IF NOT EXISTS score_total(
-    score SMALLINT NOT NULL,
-    is_winner BOOLEAN NOT NULL,
-    player_id BIGINT NOT NULL,
-    room_id TEXT NOT NULL,
-    PRIMARY KEY (player_id, room_id)
+    placement_index SMALLINT NOT NULL CHECK (placement_index BETWEEN 1 AND 4),
+    total_score SMALLINT NOT NULL,
+    PRIMARY KEY (room_id, player_id)
 );
 
 --
@@ -115,7 +93,8 @@ CREATE TABLE IF NOT EXISTS player_rating (
     player_id BIGINT NOT NULL PRIMARY KEY,
     mu DOUBLE PRECISION NOT NULL,
     sigma DOUBLE PRECISION NOT NULL,
-    rooms_played INTEGER NOT NULL
+    rooms_played INTEGER NOT NULL,
+    version BIGINT NOT NULL DEFAULT 0
 );
 
 --
@@ -127,6 +106,18 @@ CREATE TABLE IF NOT EXISTS player_email_verification (
     player_id BIGINT NOT NULL
 );
 CREATE SEQUENCE IF NOT EXISTS player_email_verification_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO CYCLE;
+
+--
+-- profile_icon Table
+--
+CREATE TABLE IF NOT EXISTS profile_icon (
+    id BIGINT NOT NULL PRIMARY KEY,
+    filename TEXT NOT NULL
+);
+CREATE SEQUENCE IF NOT EXISTS profile_icon_seq
     START WITH 1
     INCREMENT BY 1
     NO CYCLE;

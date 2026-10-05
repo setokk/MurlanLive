@@ -1,14 +1,14 @@
 extends Control
 
 @onready var table_layout: Control = $TableLayout
-@onready var table_frame: TextureRect = $TableLayout/Table
+@onready var table_frame: PanelContainer = $TableLayout/Table
 
 @onready var seat1: Seat = $TableLayout/Seat1
 @onready var seat2: Seat = $TableLayout/Seat2
 @onready var seat3: Seat = $TableLayout/Seat3
 @onready var seat4: Seat = $TableLayout/Seat4
 
-@onready var player_hand: Panel = $"../../BottomArea/HandArea/MarginContainer/HandPlaceholder"
+@onready var player_hand: Panel = $"../../BottomArea/MarginContainer/HandPlaceholder"
 @onready var opponent_hand2: OpponentHand = $TableLayout/OpponentHand2
 @onready var opponent_hand3: OpponentHand = $TableLayout/OpponentHand3
 @onready var opponent_hand4: OpponentHand = $TableLayout/OpponentHand4
@@ -117,7 +117,7 @@ func calculate_initial_layout() -> void:
 	)
 
 func place_seat(
-	seat: VBoxContainer,
+	seat: Seat,
 	point: Vector2,
 	pivot: Vector2
 ) -> void:
@@ -206,6 +206,8 @@ func start_dealing(
 					)
 
 			remaining_cards[seat_index] -= 1
+	
+	deck.clear_deck()
 	
 func get_hand_card_global_position(hand: Panel) -> Vector2:
 

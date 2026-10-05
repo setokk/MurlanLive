@@ -7,6 +7,8 @@ const SCORE_REMAINING_PLAYERS_AFTER_LEAVE_ROOM: int = 1
 const SCORE_PENALTY_LOST_CONNECTION: int = 0
 const SCORE_REMAINING_PLAYERS_AFTER_LOST_CONNECTION: int = 0
 
+const ICONS_DIRECTORY: String = "res://assets/images/profile_icons/"
+
 # --- Turn duration options ---
 # The enum values ARE the option IDs your OptionButton uses
 # (0, 1, 2... in declaration order), and the names make call sites readable.

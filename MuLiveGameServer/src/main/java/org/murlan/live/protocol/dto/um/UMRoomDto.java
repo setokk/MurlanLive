@@ -23,7 +23,6 @@ public final class UMRoomDto {
     private LocalDateTime creationDate;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime finishedDate;
-    private short numPlayers;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Map<Long, UMRankRatingDto> rankRatingsByPlayerId;
 }

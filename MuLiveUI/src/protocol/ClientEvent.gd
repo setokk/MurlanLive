@@ -21,7 +21,9 @@ enum Value {
 	MUTE,
 	UNMUTE,
 	BLOCK,
-	UNBLOCK
+	UNBLOCK,
+	RECONNECT,
+	UPDATE_PLAYER_INFO
 }
 
 static var RESP_FACTORIES: Dictionary[int, Callable] = {
@@ -41,6 +43,8 @@ static var RESP_FACTORIES: Dictionary[int, Callable] = {
 	Value.UNMUTE: func(parts, config): return UnMuteResp.new(parts, config),
 	Value.BLOCK: func(parts, config): return BlockResp.new(parts, config),
 	Value.UNBLOCK: func(parts, config): return UnBlockResp.new(parts, config),
+	Value.RECONNECT: func(parts, config): return ReconnectResp.new(parts, config),
+	Value.UPDATE_PLAYER_INFO: func(parts, config): return UpdatePlayerInfoResp.new(parts, config),
 }
 
 static func create_resp(value: Value, parts: PackedStringArray, config: ProtocolConfig) -> Resp:

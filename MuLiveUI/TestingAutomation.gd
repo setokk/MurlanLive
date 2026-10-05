@@ -1,5 +1,15 @@
 extends Node
 
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.pressed and not event.echo:
+			if event.keycode == KEY_TAB:
+				force_close_this_instance()
+
+func force_close_this_instance() -> void:
+	print("Force-closing instance: ", get_instance_index())
+	OS.kill(OS.get_process_id())
+
 func _ready() -> void:
 	await get_tree().process_frame
 	await setup_window()

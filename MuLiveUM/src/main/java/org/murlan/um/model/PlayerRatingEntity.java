@@ -3,7 +3,11 @@ package org.murlan.um.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +27,11 @@ public class PlayerRatingEntity {
     @Column(name = "player_id")
     private Long playerId;
 
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "player_id")
+    private PlayerEntity player;
+
     @Column(name = "mu", nullable = false)
     private double mu;
 
@@ -32,9 +41,13 @@ public class PlayerRatingEntity {
     @Column(name = "rooms_played", nullable = false)
     private int roomsPlayed;
 
-    public static PlayerRatingEntity newFor(Long playerId) {
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version;
+
+    public static PlayerRatingEntity newFor(Long playerId, PlayerEntity playerRef) {
         Rating fresh = new Rating();
-        return new PlayerRatingEntity(playerId, fresh.mu, fresh.sigma, 0);
+        return new PlayerRatingEntity(playerId, playerRef, fresh.mu, fresh.sigma, 0, null);
     }
 
     public Rating toRating() {

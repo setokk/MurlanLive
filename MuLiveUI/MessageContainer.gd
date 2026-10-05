@@ -29,17 +29,27 @@ const MESSAGES: Array[String] = [
 ]
 
 const MESSAGE_INTERVAL: float = 5.0
+var last_message: String = ""
+var new_message: String = ""
+const ROW_OVERHEAD: float = 10.0
 
 func _ready() -> void:
+	random_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	random_message_loop()
+	_fit_message()
 
-var last_message: String = ""
-
+func _fit_message() -> void:
+	var row_width := get_parent_area_size().x
+	var available := maxf(row_width - ROW_OVERHEAD, 40.0)
+	var font := random_message.get_theme_font("font")
+	var font_size := random_message.get_theme_font_size("font_size")
+	var flags := TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE
+	var wrapped := font.get_multiline_string_size(new_message, HORIZONTAL_ALIGNMENT_CENTER, available, font_size, -1, flags)
+	random_message.custom_minimum_size = Vector2(ceilf(wrapped.x), ceilf(wrapped.y))
+	
 func random_message_loop() -> void:
-	var last_message: String = ""
-
 	while true:
-		var new_message: String = random_message.text
+		new_message = random_message.text
 		while new_message == last_message:
 			new_message = MESSAGES.pick_random()
 
@@ -60,6 +70,7 @@ func random_message_loop() -> void:
 		await fade_out.finished
 
 		random_message.text = new_message
+		_fit_message()
 
 		var fade_in := create_tween()
 
