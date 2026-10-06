@@ -1,8 +1,5 @@
 package org.murlan.live.game.logic;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,22 +16,22 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @Setter
 @Getter
 @Builder(setterPrefix = "with")
 @AllArgsConstructor
 public class Room {
-    private String id;
+    private UUID id;
     private String name;
-    @JsonProperty("isPublic") private final boolean isPublic;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") private final LocalDateTime creationDate;
+    private final boolean isPublic;
+    private final LocalDateTime creationDate;
     private short totalScoreToWin;
     private List<GameState> gameStates;
     private Player owner;
-    @JsonIgnore private long turnDurationInSeconds;
-    @JsonIgnore private final GameStateFactory gameStateFactory;
+    private long turnDurationInSeconds;
+    private final GameStateFactory gameStateFactory;
 
     public Room(String name,
                 boolean isPublic,
@@ -69,12 +66,10 @@ public class Room {
         }
     }
 
-    @JsonIgnore
     public synchronized GameState getActiveGameState() {
         return gameStates.getLast();
     }
 
-    @JsonIgnore
     public synchronized int getTotalFinishedGames() {
         if (GameState.State.FINISHED.equals(getActiveGameState().getState())) {
             return gameStates.size();

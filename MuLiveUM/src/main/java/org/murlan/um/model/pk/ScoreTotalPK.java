@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,5 +20,5 @@ public class ScoreTotalPK {
     @Column(name = "player_id", updatable = false, nullable = false)
     private Long playerId;
     @Column(name = "room_id", updatable = false, nullable = false)
-    private String roomId;
+    private UUID roomId;
 }

@@ -77,7 +77,7 @@ public class EndpointHelper {
      * @throws IOException in case of any socket error
      */
     public void informPlayers(Resp resp, PlayerSession originPlayer, List<PlayerSession> playerSessionsInRoom) throws IOException {
-        if (resp == null) {
+        if (resp == null || playerSessionsInRoom == null) {
             return;
         }
 

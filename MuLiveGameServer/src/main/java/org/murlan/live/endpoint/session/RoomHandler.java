@@ -1,5 +1,6 @@
 package org.murlan.live.endpoint.session;
 
+import com.github.f4b6a3.uuid.UuidCreator;
 import jakarta.websocket.Session;
 import lombok.NonNull;
 import org.murlan.live.game.GameConstants;
@@ -21,9 +22,9 @@ import java.util.stream.Collectors;
 
 public class RoomHandler {
     private final ConcurrentHashMap<String, PlayerSession> jwtToSessionMap = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<PlayerSession, String> sessionToRoomIdMap = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, List<PlayerSession>> roomIdToSessionMap = new ConcurrentHashMap<>(); // for efficient retrieval of players in a room
-    private final ConcurrentHashMap<String, Room> roomIdToRoomMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<PlayerSession, UUID> sessionToRoomIdMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<UUID, List<PlayerSession>> roomIdToSessionMap = new ConcurrentHashMap<>(); // for efficient retrieval of players in a room
+    private final ConcurrentHashMap<UUID, Room> roomIdToRoomMap = new ConcurrentHashMap<>();
 
     public void addSession(@NonNull PlayerSession playerSession) {
         jwtToSessionMap.putIfAbsent(playerSession.getPlayer().getJwt(), playerSession);
@@ -44,7 +45,7 @@ public class RoomHandler {
             jwtToSessionMap.remove(playerSession.getPlayer().getJwt());
         }
 
-        String roomId = sessionToRoomIdMap.remove(playerSession);
+        UUID roomId = sessionToRoomIdMap.remove(playerSession);
         if (roomId == null) {
             return Optional.empty();
         }
@@ -95,7 +96,7 @@ public class RoomHandler {
         return jwtToSessionMap.containsValue(new PlayerSession(null, player, null, null));
     }
 
-    private void linkSessionWithRoom(@NonNull PlayerSession playerSession, @NonNull String roomId) {
+    private void linkSessionWithRoom(@NonNull PlayerSession playerSession, @NonNull UUID roomId) {
         if (!jwtToSessionMap.containsKey(playerSession.getPlayer().getJwt())) {
             throw new RuntimeException("Player session with JWT " + playerSession.getPlayer().getJwt() + " not found");
         }
@@ -109,16 +110,16 @@ public class RoomHandler {
             return RoomDto.invalid();
         }
 
-        room.setId(UUID.randomUUID().toString());
+        room.setId(UuidCreator.getTimeOrderedEpoch());
         room.initialGameState();
 
         roomIdToRoomMap.put(room.getId(), room);
         linkSessionWithRoom(playerSession, room.getId());
 
-        return new RoomDto(room.getId(), room.getName(), room.getPlayers(), room.getTotalScoreToWin(), room.getTurnDurationInSeconds());
+        return new RoomDto(room.getId().toString(), room.getName(), room.getPlayers(), room.getTotalScoreToWin(), room.getTurnDurationInSeconds());
     }
 
-    public RoomDto copyRoom(@NonNull String roomId) {
+    public RoomDto copyRoom(@NonNull UUID roomId) {
         Room room = getRoom(roomId);
         if (room == null) {
             return null;
@@ -156,7 +157,7 @@ public class RoomHandler {
         }
     }
 
-    public Optional<UpdatedRoomDetailsDto> updateRoom(@NonNull String roomId, @NonNull RoomDetailsDto roomDetailsDto, @NonNull Player player) {
+    public Optional<UpdatedRoomDetailsDto> updateRoom(@NonNull UUID roomId, @NonNull RoomDetailsDto roomDetailsDto, @NonNull Player player) {
         Room room = getRoom(roomId);
         if (room == null) {
             return Optional.empty();
@@ -189,7 +190,7 @@ public class RoomHandler {
         ));
     }
 
-    public PlayerSession kickPlayer(@NonNull String roomId, long playerToKickId, @NonNull Player player) {
+    public PlayerSession kickPlayer(@NonNull UUID roomId, long playerToKickId, @NonNull Player player) {
         Room room = getRoom(roomId);
         if (room == null) {
             return null;
@@ -215,18 +216,18 @@ public class RoomHandler {
         }
     }
 
-    public Room getRoom(@NonNull String roomId) {
+    public Room getRoom(@NonNull UUID roomId) {
         return roomIdToRoomMap.get(roomId);
     }
 
-    public List<PlayerSession> removeRoom(@NonNull String roomId) {
+    public List<PlayerSession> removeRoom(@NonNull UUID roomId) {
         List<PlayerSession> playersInRoom = roomIdToSessionMap.remove(roomId);
         roomIdToRoomMap.remove(roomId);
         return playersInRoom;
     }
 
     public Room getPlayerRoom(@NonNull PlayerSession playerSession) {
-        String roomId = sessionToRoomIdMap.get(playerSession);
+        UUID roomId = sessionToRoomIdMap.get(playerSession);
         if (roomId == null) {
             return null;
         }
@@ -258,7 +259,7 @@ public class RoomHandler {
         return roomIdToRoomMap.values()
                 .stream()
                 .filter(Room::isPublic)
-                .map(room -> new RoomDto(room.getId(), room.getName(), room.getPlayers(), room.getTotalScoreToWin(), room.getTurnDurationInSeconds()))
+                .map(room -> new RoomDto(room.getId().toString(), room.getName(), room.getPlayers(), room.getTotalScoreToWin(), room.getTurnDurationInSeconds()))
                 .collect(Collectors.toList());
     }
 
@@ -266,7 +267,7 @@ public class RoomHandler {
         return roomIdToRoomMap.values().stream().toList();
     }
 
-    public boolean joinRoom(@NonNull String roomId, @NonNull PlayerSession playerSession) {
+    public boolean joinRoom(@NonNull UUID roomId, @NonNull PlayerSession playerSession) {
         Room room = getRoom(roomId);
         if (room == null) {
             return false;
@@ -275,7 +276,7 @@ public class RoomHandler {
         return addPlayerToRoom(room, playerSession);
     }
 
-    public List<PlayerSession> getPlayersInRoom(String roomId) {
+    public List<PlayerSession> getPlayersInRoom(UUID roomId) {
         return roomIdToSessionMap.get(roomId);
     }
 }

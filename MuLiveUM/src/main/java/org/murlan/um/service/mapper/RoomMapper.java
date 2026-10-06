@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -50,7 +51,7 @@ public final class RoomMapper {
 
     public RoomDto toDto(RoomEntity entity) {
         return RoomDto.builder()
-                .id(entity.getId())
+                .id(entity.getId().toString())
                 .name(entity.getName())
                 .creationDate(entity.getCreationDate())
                 .finishedDate(entity.getFinishedDate())
@@ -60,7 +61,7 @@ public final class RoomMapper {
 
     public RoomDto toDto(RoomEntity entity, Map<Long, RankRatingDto> rankRatingsByPlayerId) {
         return RoomDto.builder()
-                .id(entity.getId())
+                .id(entity.getId().toString())
                 .name(entity.getName())
                 .creationDate(entity.getCreationDate())
                 .finishedDate(entity.getFinishedDate())
@@ -71,7 +72,7 @@ public final class RoomMapper {
 
     public RoomDetailsDto toDetailsDto(RoomEntity entity) {
         return RoomDetailsDto.builder()
-                .id(entity.getId())
+                .id(entity.getId().toString())
                 .name(entity.getName())
                 .creationDate(entity.getCreationDate())
                 .finishedDate(entity.getFinishedDate())
@@ -83,7 +84,7 @@ public final class RoomMapper {
 
     public RoomEntity toEntity(CreateRoomParam param, List<GameStateEntity> gameStates) {
         return RoomEntity.builder()
-                .id(param.id())
+                .id(UUID.fromString(param.id()))
                 .name(param.name())
                 .isPublic(param.isPublic())
                 .creationDate(param.creationDate())

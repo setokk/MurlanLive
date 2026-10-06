@@ -5,6 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class UMUnblockPlayerRequest {
+public final class UMUnblockPlayerRequest {
     private final Long playerToUnblockId;
 }

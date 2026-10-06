@@ -15,6 +15,7 @@ import org.murlan.live.protocol.rest.RoomRESTClient;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -59,7 +60,7 @@ public final class OnGameFinish implements Runnable {
                             )
                     )
                     .finalWinner(isFinalWinner ? optionalFinalWinner.get() : null)
-                    .roomId(room.getId())
+                    .roomId(room.getId().toString())
                     .build();
 
             if (isFinalWinner) {
@@ -77,7 +78,10 @@ public final class OnGameFinish implements Runnable {
                             UMRoomDto umRoomDto = optionalUmRoomDto.get();
                             gameFinishDto.setRankRatingsByPlayerId(umRoomDto.getRankRatingsByPlayerId());
                         }
-                        endpointHelper.informPlayers(new InformGameFinishResp(responseStatus, gameFinishDto), null, roomHandler.getPlayersInRoom(copyRoomDto.id()));
+                        endpointHelper.informPlayers(
+                                new InformGameFinishResp(
+                                        responseStatus, gameFinishDto
+                                ), null, roomHandler.getPlayersInRoom(UUID.fromString(copyRoomDto.id())));
                     } catch (IOException | InterruptedException e) {
                         throw new RuntimeException(e);
                     }

@@ -1,6 +1,7 @@
 package org.murlan.live.protocol.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.f4b6a3.uuid.UuidCreator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.murlan.live.game.logic.GameState;
@@ -55,7 +56,7 @@ public class ObjectMapperTest {
         );
 
         return Room.builder()
-                .withId(UUID.randomUUID().toString())
+                .withId(UuidCreator.getTimeOrderedEpoch())
                 .withName("Room 1")
                 .withIsPublic(true)
                 .withCreationDate(LocalDateTime.now())

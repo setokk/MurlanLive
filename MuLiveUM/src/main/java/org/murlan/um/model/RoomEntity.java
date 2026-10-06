@@ -17,6 +17,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -27,8 +28,8 @@ import java.util.List;
 @Table(name = "room")
 public class RoomEntity {
     @Id
-    @Column(name = "id", updatable = false, nullable = false)
-    private String id;
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
+    private UUID id;
 
     @Column(name = "name", updatable = false, nullable = false)
     private String name;

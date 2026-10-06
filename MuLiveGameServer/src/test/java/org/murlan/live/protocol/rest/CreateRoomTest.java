@@ -1,5 +1,6 @@
 package org.murlan.live.protocol.rest;
 
+import com.github.f4b6a3.uuid.UuidCreator;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -85,7 +86,7 @@ public class CreateRoomTest {
         );
 
         return Room.builder()
-                .withId(UUID.randomUUID().toString())
+                .withId(UuidCreator.getTimeOrderedEpoch())
                 .withName("Room 1")
                 .withIsPublic(true)
                 .withCreationDate(LocalDateTime.now())

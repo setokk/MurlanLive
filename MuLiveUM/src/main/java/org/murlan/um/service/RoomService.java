@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -92,7 +93,7 @@ public class RoomService {
                 .toList();
     }
 
-    public RoomDetailsDto getRoomDetails(String roomId) {
+    public RoomDetailsDto getRoomDetails(UUID roomId) {
         RoomEntity room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Room with id: " + roomId + " not found"));
 

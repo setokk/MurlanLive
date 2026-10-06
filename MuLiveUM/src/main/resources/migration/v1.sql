@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS card_skin(
 -- room Table
 --
 CREATE TABLE IF NOT EXISTS room(
-    id TEXT NOT NULL PRIMARY KEY,
+    id UUID NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     is_public BOOLEAN NOT NULL,
     total_score_to_win SMALLINT NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS room(
 CREATE TABLE IF NOT EXISTS game_state(
     id BIGINT NOT NULL PRIMARY KEY,
     state SMALLINT NOT NULL,
-    room_id TEXT NOT NULL
+    room_id UUID NOT NULL
 );
 CREATE SEQUENCE IF NOT EXISTS game_state_seq
     START WITH 1
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS score_total(
     score SMALLINT NOT NULL,
     is_winner BOOLEAN NOT NULL,
     player_id BIGINT NOT NULL,
-    room_id TEXT NOT NULL,
+    room_id UUID NOT NULL,
     PRIMARY KEY (player_id, room_id)
 );
 
