@@ -7,7 +7,7 @@ load_path = "res://.godot/imported/seat-icon-greyscale-no-bg.png-516b6b23bc608d4
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ud1i"]
-bg_color = Color(1, 0.8862745, 0.87058824, 1)
+bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1

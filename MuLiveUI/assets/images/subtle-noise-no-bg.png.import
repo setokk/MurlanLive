@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8dsv6nvyx2rx"
-path="res://.godot/imported/murlan-logo.png-7e896419e8bd977465d508722b60ee86.ctex"
+uid="uid://bmdq8lj6s7iwe"
+path="res://.godot/imported/subtle-noise-no-bg.png-c9f0972436f6626076effbdf07c01d33.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/murlan-logo.png"
-dest_files=["res://.godot/imported/murlan-logo.png-7e896419e8bd977465d508722b60ee86.ctex"]
+source_file="res://assets/images/subtle-noise-no-bg.png"
+dest_files=["res://.godot/imported/subtle-noise-no-bg.png-c9f0972436f6626076effbdf07c01d33.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://btrvc406r2yhu"
-path="res://.godot/imported/bg-greyscale-2.png-8cb34d8410452dc99e6e6fd38551947c.ctex"
+uid="uid://dkcno4uyl2i3e"
+path="res://.godot/imported/yellow-bg-light-line-texture.png-fc2a278ab206cbaba28095ba5c83152a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/bg-greyscale-2.png"
-dest_files=["res://.godot/imported/bg-greyscale-2.png-8cb34d8410452dc99e6e6fd38551947c.ctex"]
+source_file="res://assets/images/yellow-bg-light-line-texture.png"
+dest_files=["res://.godot/imported/yellow-bg-light-line-texture.png-fc2a278ab206cbaba28095ba5c83152a.ctex"]
 
 [params]
 

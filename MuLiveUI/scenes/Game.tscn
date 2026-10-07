@@ -6,15 +6,18 @@
 [ext_resource type="Script" uid="uid://cggmhq3jr6r2l" path="res://TableArea.gd" id="3_3so38"]
 [ext_resource type="Theme" uid="uid://dcg0tqtvbome4" path="res://themes/SeatTheme.tres" id="4_3cx6b"]
 [ext_resource type="Theme" uid="uid://cwicdyenfh6sh" path="res://themes/SideAreasTheme.tres" id="4_kyk2p"]
+[ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="5_45i86"]
 [ext_resource type="PackedScene" uid="uid://ctiqqa23jajmf" path="res://scenes/RoomInfo.tscn" id="5_kyk2p"]
 [ext_resource type="Script" uid="uid://dfknfovm6tddy" path="res://Deck.gd" id="6_acvyw"]
 [ext_resource type="Script" uid="uid://c3xfjnp81ckek" path="res://OpponentHand.gd" id="7_alh3a"]
 [ext_resource type="Script" uid="uid://clxc14fpj30ha" path="res://Seat.gd" id="8_2rd6h"]
 [ext_resource type="Script" uid="uid://d3trjxyp4ubau" path="res://PlayedCards.gd" id="8_4q8tf"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="8_45i86"]
+[ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="9_a8wo8"]
 [ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="9_sv1m6"]
 [ext_resource type="Script" uid="uid://prjme07f6efi" path="res://HandPlaceholder.gd" id="9_x3xnh"]
 [ext_resource type="Script" uid="uid://k68075chkxlf" path="res://ButtonsContainer.gd" id="10_8r6kd"]
+[ext_resource type="Texture2D" uid="uid://dkcno4uyl2i3e" path="res://assets/images/yellow-bg-light-line-texture.png" id="13_kyk2p"]
 [ext_resource type="PackedScene" uid="uid://dfinc61m5vof" path="res://scenes/PlayerContextMenu.tscn" id="14_vjgi4"]
 [ext_resource type="PackedScene" uid="uid://3maglnyvccuy" path="res://scenes/Chat.tscn" id="14_y5y3l"]
 
@@ -72,8 +75,6 @@ corner_detail = 5
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5vvyt"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pmplx"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kyk2p"]
 bg_color = Color(0.87058824, 0.6784314, 0.23921569, 1)
 border_width_left = 3
@@ -110,14 +111,24 @@ anchor_right = 0.18
 anchor_bottom = 1.0
 theme = ExtResource("4_kyk2p")
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/LeftArea" unique_id=720962291]
+[node name="TextureRect" type="TextureRect" parent="TopArea/LeftArea" unique_id=1325152388]
 layout_mode = 2
+texture = ExtResource("5_45i86")
+expand_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/LeftArea/TextureRect" unique_id=720962291]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 10
 
-[node name="RoomInfo" parent="TopArea/LeftArea/MarginContainer" unique_id=1833918102 instance=ExtResource("5_kyk2p")]
+[node name="RoomInfo" parent="TopArea/LeftArea/TextureRect/MarginContainer" unique_id=1833918102 instance=ExtResource("5_kyk2p")]
 layout_mode = 2
 
 [node name="TableArea" type="Control" parent="TopArea" unique_id=536433243]
@@ -155,6 +166,16 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_8ud1i")
 [node name="Panel" type="Panel" parent="TopArea/TableArea/TableLayout/Table" unique_id=1608703430]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_vjgi4")
+
+[node name="TextureRect" type="TextureRect" parent="TopArea/TableArea/TableLayout/Table/Panel" unique_id=2116449421]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_a8wo8")
+expand_mode = 1
 
 [node name="Deck" type="Node2D" parent="TopArea/TableArea/TableLayout" unique_id=1762135531]
 script = ExtResource("6_acvyw")
@@ -485,9 +506,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource("4_kyk2p")
 
+[node name="TextureRect" type="TextureRect" parent="TopArea/RightArea" unique_id=303508479]
+layout_mode = 2
+texture = ExtResource("5_45i86")
+expand_mode = 1
+
 [node name="Chat" parent="TopArea/RightArea" unique_id=603695322 instance=ExtResource("14_y5y3l")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_pmplx")
 
 [node name="BottomArea" type="Control" parent="." unique_id=732581692]
 layout_mode = 1
@@ -503,6 +528,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_kyk2p")
+
+[node name="TextureRect" type="TextureRect" parent="BottomArea/HandAreaBackground" unique_id=814969105]
+layout_mode = 2
+texture = ExtResource("13_kyk2p")
+expand_mode = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="BottomArea" unique_id=1686990007]
 layout_mode = 1
@@ -525,6 +555,8 @@ anchors_preset = -1
 anchor_left = 0.85
 anchor_right = 0.95
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("8_45i86")
 theme_override_constants/separation = 10
 alignment = 1

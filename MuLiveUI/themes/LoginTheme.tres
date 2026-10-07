@@ -1,8 +1,12 @@
 [gd_resource type="Theme" format=3 uid="uid://bqn3ljfdspx6i"]
 
-[ext_resource type="Texture2D" uid="uid://bxnqs7xa4gr81" path="res://assets/images/checkbox-checked.svg" id="1_glcpc"]
-[ext_resource type="Texture2D" uid="uid://b0tibommhhwmd" path="res://assets/images/checkbox-unchecked.svg" id="2_pgobs"]
 [ext_resource type="Texture2D" uid="uid://ovimrk3nmtqy" path="res://assets/images/clear-icon.svg" id="3_pgobs"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_lv2pd"]
+load_path = "res://.godot/imported/checkbox-checked.svg-1eef7fed4d40d1a545064a67fa0ef0e0.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_glcpc"]
+load_path = "res://.godot/imported/checkbox-unchecked.svg-ac3f3ee88819587ab6bd41bc536f7ff5.ctex"
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pgobs"]
 
@@ -53,13 +57,13 @@ shadow_offset = Vector2(2, 2)
 [resource]
 CheckBox/constants/h_separation = 0
 CheckBox/font_sizes/font_size = 10
-CheckBox/icons/checked = ExtResource("1_glcpc")
+CheckBox/icons/checked = SubResource("CompressedTexture2D_lv2pd")
 CheckBox/icons/checked_disabled = null
 CheckBox/icons/radio_checked = null
 CheckBox/icons/radio_checked_disabled = null
 CheckBox/icons/radio_unchecked = null
 CheckBox/icons/radio_unchecked_disabled = null
-CheckBox/icons/unchecked = ExtResource("2_pgobs")
+CheckBox/icons/unchecked = SubResource("CompressedTexture2D_glcpc")
 CheckBox/icons/unchecked_disabled = null
 CheckBox/styles/focus = null
 CheckBox/styles/hover = SubResource("StyleBoxEmpty_pgobs")

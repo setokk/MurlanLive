@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bnkjq5vo2180i"
-path="res://.godot/imported/polka-dot-bg.png-f98ba99cdf44c3e963d5e3b1cf3683c8.ctex"
+uid="uid://dkt4rbxlikmv8"
+path="res://.godot/imported/plus-icon.svg-813e985a869c367b5cbab99d3743b246.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/polka-dot-bg.png"
-dest_files=["res://.godot/imported/polka-dot-bg.png-f98ba99cdf44c3e963d5e3b1cf3683c8.ctex"]
+source_file="res://assets/images/plus-icon.svg"
+dest_files=["res://.godot/imported/plus-icon.svg-813e985a869c367b5cbab99d3743b246.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

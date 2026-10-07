@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bfj6qo1ng8xnl"
-path="res://.godot/imported/murlan-home.png-912cfde9a6af62384942d4743dd32845.ctex"
+uid="uid://dabfi7n7nrrpg"
+path="res://.godot/imported/magnifying-glass.svg-77580598069b5e28507839d34cffcf6e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/murlan-home.png"
-dest_files=["res://.godot/imported/murlan-home.png-912cfde9a6af62384942d4743dd32845.ctex"]
+source_file="res://assets/images/magnifying-glass.svg"
+dest_files=["res://.godot/imported/magnifying-glass.svg-77580598069b5e28507839d34cffcf6e.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

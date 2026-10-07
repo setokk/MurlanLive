@@ -1,5 +1,7 @@
 extends Panel
 
+class_name Chat
+
 const CHAT_ITEM_SCENE: PackedScene = preload("res://scenes/ChatItem.tscn")
 
 @onready var message_input: LineEdit = $MarginContainer/VBoxContainer/HBoxContainer/MessageInput
@@ -16,9 +18,10 @@ func _ready() -> void:
 	WebSocketClient.chat_resp.connect(_on_message_completed)
 	WebSocketClient.inform_player_chat_resp.connect(_on_opponent_message)
 
-func add_message(username: String, mess: String) -> void:
+func add_message(username: String, show_username: bool, mess: String) -> void:
 	var chat_item: ChatItem = CHAT_ITEM_SCENE.instantiate()
-	chat_item.set_username(username)
+	if show_username:
+		chat_item.set_username(username)
 	chat_item.set_message(mess)
 	if username != "You":
 		chat_item.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
@@ -34,13 +37,12 @@ func _on_message_requested() -> void:
 
 func _on_message_completed(resp: ChatResp) -> void:
 	if resp.response_status == 200:
-		add_message("You", message)
+		add_message("You", true, message)
 		message_input.clear()
 	else:
 		PopupFactory.error("Issue with sending the message")
 
 func _on_opponent_message(resp: InformPlayerChatResp) -> void:
 	if resp.response_status == 200:
-		print(resp.player)
 		var username: String = resp.player["username"]
-		add_message(username, resp.message)
+		add_message(username, true, resp.message)

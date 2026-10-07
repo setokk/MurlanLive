@@ -1,0 +1,19 @@
+<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <!-- Lens -->
+  <circle
+    cx="6.5"
+    cy="6.5"
+    r="4.5"
+    fill="none"
+    stroke="#0F1012"
+    stroke-width="2.5"
+  />
+
+  <!-- Square handle -->
+  <path
+    d="M10 10L15 15"
+    stroke="#0F1012"
+    stroke-width="2.5"
+    stroke-linecap="butt"
+  />
+</svg>

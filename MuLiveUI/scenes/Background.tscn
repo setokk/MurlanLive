@@ -1,9 +1,23 @@
 [gd_scene format=3 uid="uid://clmyy0m2xv6vj"]
 
-[node name="Background" type="ColorRect" unique_id=615242266]
-self_modulate = Color(0.18039216, 0.18431373, 0.20784314, 1)
+[ext_resource type="Texture2D" uid="uid://bnkjq5vo2180i" path="res://assets/images/polka-dot-bg.png" id="1_274mx"]
+[ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="2_nou1y"]
+
+[node name="Background" type="TextureRect" unique_id=1542941521]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("1_274mx")
+expand_mode = 1
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1439490581]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_nou1y")
+expand_mode = 1

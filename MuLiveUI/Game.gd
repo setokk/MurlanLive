@@ -28,11 +28,12 @@ enum GameStateEnum {
 @onready var play_button: Button = $BottomArea/ButtonsContainer/PlayButton
 @onready var pass_button: Button = $BottomArea/ButtonsContainer/PassButton
 @onready var played_cards: Panel = $TopArea/TableArea/TableLayout/PlayedCards
-@onready var is_ready_button: Button = $TopArea/LeftArea/MarginContainer/RoomInfo/VBoxContainer2/ReadyButton
-@onready var leave_room_button: Button = $TopArea/LeftArea/MarginContainer/RoomInfo/VBoxContainer2/LeaveButton
+@onready var is_ready_button: Button = $TopArea/LeftArea/TextureRect/MarginContainer/RoomInfo/VBoxContainer2/ReadyButton
+@onready var leave_room_button: Button = $TopArea/LeftArea/TextureRect/MarginContainer/RoomInfo/VBoxContainer2/LeaveButton
 @onready var give_card_button: Button = $BottomArea/ButtonsContainer/GiveCardButton
-@onready var room_info : Panel = $TopArea/LeftArea/MarginContainer/RoomInfo
+@onready var room_info : Panel = $TopArea/LeftArea/TextureRect/MarginContainer/RoomInfo
 @onready var player_context_menu: PlayerContextMenu = $PlayerContextMenu
+@onready var chat: Chat = $TopArea/RightArea/Chat
 
 @onready var seats: Array[Seat] = [
 	$TopArea/TableArea/TableLayout/Seat1,
@@ -287,7 +288,8 @@ func _on_give_card_completed(resp: GiveCardResp) -> void:
 # Opponent actions functions:
 func _on_opponent_joined(resp: InformPlayerJoinRoomResp):
 	if resp.response_status == 200:
-		var player : Dictionary = resp.player
+		var player: Dictionary = resp.player
+		chat.add_message("", false, player["username"] + " joined the room")
 		players.append(player)
 		seats[find_player_seat_index(player["id"])].set_player(player)
 	else:
@@ -318,13 +320,19 @@ func _on_opponent_ready(resp: InformPlayerReadyResp) -> void:
 func _on_opponent_leave(resp: InformPlayerLeaveRoomResp) -> void:
 	if resp.response_status == 200:	
 		var was_not_owner: bool = not is_owner(PlayerSession.player)
+		var player : Dictionary = ArrayUtils.find_by(
+			players,
+			func(p: Dictionary): return int(p["id"]) == resp.player_id
+		)
 		remove_player(resp.player_id)
+		chat.add_message("", false, player["username"] + " left the room")
 		var became_owner_now: bool = is_owner(PlayerSession.player)
 		
 		if was_not_owner && became_owner_now:
 			WebSocketClient.send_message(UpdateRoomDetailsReq.new(PlayerSession.player.username + "'s Room", -1, -1))
 			room_info.set_room_info_editable(true)
 			player_context_menu.kick_button.visible = true
+			chat.add_message("", false, "You are the owner of the room now.")
 		display_players()
 				
 	else:

@@ -3,13 +3,14 @@
 [ext_resource type="Script" uid="uid://cflxw0owgud1i" path="res://TopBar.gd" id="1_7ilfs"]
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_i2wps"]
 [ext_resource type="Script" uid="uid://ckj8ax6i6654n" path="res://LoginRedirection.gd" id="1_nf15x"]
+[ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="3_xslny"]
 [ext_resource type="Texture2D" uid="uid://dabkblyx3wpt1" path="res://assets/images/language.svg" id="4_6q1hj"]
-[ext_resource type="Script" uid="uid://2urbonioe26g" path="res://scenes/LanguageDropDown.gd" id="4_f573w"]
+[ext_resource type="Script" uid="uid://oaes34tr2tti" path="res://scenes/LanguageDropDown.gd" id="4_f573w"]
 [ext_resource type="Texture2D" uid="uid://cwphjklugjlik" path="res://assets/images/Logo2.png" id="4_i2wps"]
-[ext_resource type="Script" uid="uid://jbns8goi7txj" path="res://LogoutRedirection.gd" id="4_wjcpy"]
+[ext_resource type="Script" uid="uid://dh4jlin702dy" path="res://LogoutRedirection.gd" id="4_wjcpy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cm0pq"]
-bg_color = Color(0.87058824, 0.67058825, 0.23921569, 1)
+bg_color = Color(0.85490197, 0.64705884, 0.18431373, 1)
 border_color = Color(0, 0, 0, 1)
 shadow_color = Color(0, 0, 0, 1)
 shadow_size = 5
@@ -36,6 +37,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_cm0pq")
+
+[node name="TextureRect" type="TextureRect" parent="Panel" unique_id=1143243575]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_xslny")
+expand_mode = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1444852590]
 layout_mode = 1

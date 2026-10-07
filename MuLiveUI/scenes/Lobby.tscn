@@ -5,26 +5,75 @@
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="3_1yh37"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="4_as3ys"]
 [ext_resource type="Script" uid="uid://c5c0ntqx2ry6w" path="res://RoomButtonsContainer.gd" id="4_jp1kc"]
-[ext_resource type="Theme" uid="uid://bqn3ljfdspx6i" path="res://themes/LoginTheme.tres" id="5_oeg6l"]
+[ext_resource type="Texture2D" uid="uid://ca4lafe626upe" path="res://assets/images/user-icon.png" id="4_kayix"]
+[ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="4_l31xl"]
+[ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="4_wuide"]
 [ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="6_hwwg2"]
+[ext_resource type="Texture2D" uid="uid://dkt4rbxlikmv8" path="res://assets/images/plus-icon.svg" id="6_kayix"]
+[ext_resource type="Texture2D" uid="uid://c5mlenjmrvwrv" path="res://assets/images/dice-icon.svg" id="8_l31xl"]
+[ext_resource type="Texture2D" uid="uid://dabfi7n7nrrpg" path="res://assets/images/magnifying-glass.svg" id="9_kayix"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_psoro"]
-bg_color = Color(1, 1, 1, 1)
+bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_color = Color(0, 0, 0, 1)
+shadow_size = 4
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hwwg2"]
+bg_color = Color(0.85490197, 0.64705884, 0.18431373, 1)
 border_color = Color(0, 0, 0, 1)
 shadow_color = Color(0, 0, 0, 1)
 shadow_size = 5
 shadow_offset = Vector2(0, 4)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f6xq5"]
-bg_color = Color(0.87058824, 0.6784314, 0.23921569, 1)
-border_color = Color(0, 0, 0, 1)
-shadow_color = Color(0, 0, 0, 1)
-shadow_size = 5
-shadow_offset = Vector2(0, 4)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6cc1s"]
+bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6cc1s"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_743nf"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kayix"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_size = 3
+shadow_offset = Vector2(3, 3)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l31xl"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_borux"]
 
@@ -50,99 +99,210 @@ anchor_right = 0.9
 anchor_bottom = 0.9
 theme_override_styles/panel = SubResource("StyleBoxFlat_psoro")
 
-[node name="RoomsInfo" type="Panel" parent="LobbyPanel" unique_id=926852970]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 0.2
-theme_override_styles/panel = SubResource("StyleBoxFlat_f6xq5")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="LobbyPanel/RoomsInfo" unique_id=195166437]
+[node name="TextureRect" type="TextureRect" parent="LobbyPanel" unique_id=454556023]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("4_wuide")
+expand_mode = 1
 
-[node name="LobbyLabel" type="Label" parent="LobbyPanel/RoomsInfo/VBoxContainer" unique_id=559563631]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 42
-text = "Lobby"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Panel" type="Panel" parent="LobbyPanel/RoomsInfo/VBoxContainer" unique_id=1606039710]
-custom_minimum_size = Vector2(0, 30)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_6cc1s")
-
-[node name="RoomButtonsContainer" type="HBoxContainer" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel" unique_id=1510470809]
+[node name="VBoxContainer" type="VBoxContainer" parent="LobbyPanel" unique_id=2016552205]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.02
-anchor_right = 0.5
-anchor_bottom = 0.8
+anchor_right = 1.0
+anchor_bottom = 0.22
+theme_override_constants/separation = 10
+
+[node name="Panel" type="Panel" parent="LobbyPanel/VBoxContainer" unique_id=831016565]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_hwwg2")
+
+[node name="TextureRect" type="TextureRect" parent="LobbyPanel/VBoxContainer/Panel" unique_id=966001]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("4_as3ys")
-script = ExtResource("4_jp1kc")
+texture = ExtResource("4_l31xl")
+expand_mode = 1
 
-[node name="JoinRandomRoom" type="Button" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/RoomButtonsContainer" unique_id=1544260793]
+[node name="MarginContainer" type="MarginContainer" parent="LobbyPanel/VBoxContainer/Panel" unique_id=1875146148]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.5
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 5
+
+[node name="LobbyLabel" type="Label" parent="LobbyPanel/VBoxContainer/Panel/MarginContainer" unique_id=559563631]
 layout_mode = 2
-text = "Join Random Room"
-script = ExtResource("6_hwwg2")
-hue = 0
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_constants/outline_size = 20
+theme_override_font_sizes/font_size = 34
+text = "LOBBY"
+vertical_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/RoomButtonsContainer" unique_id=480878768]
-layout_mode = 2
-theme_override_constants/margin_right = 5
-
-[node name="CreateRoom" type="Button" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/RoomButtonsContainer" unique_id=1963164424]
-layout_mode = 2
-text = "Create A Room"
-script = ExtResource("6_hwwg2")
-hue = 0
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
-
-[node name="PanelContainer" type="PanelContainer" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel" unique_id=1936458549]
+[node name="MarginContainer2" type="MarginContainer" parent="LobbyPanel/VBoxContainer/Panel" unique_id=318673330]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme_override_styles/panel = SubResource("StyleBoxEmpty_743nf")
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/PanelContainer" unique_id=940523046]
+[node name="PlayerInfo" type="HBoxContainer" parent="LobbyPanel/VBoxContainer/Panel/MarginContainer2" unique_id=534905848]
 layout_mode = 2
-size_flags_vertical = 0
+theme_override_constants/separation = 10
 alignment = 2
 
-[node name="ShowAllRoomsLabel" type="Label" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/PanelContainer/HBoxContainer" unique_id=570390243]
+[node name="VBoxContainer" type="VBoxContainer" parent="LobbyPanel/VBoxContainer/Panel/MarginContainer2/PlayerInfo" unique_id=56998007]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 12
-text = "Show All Rooms"
-horizontal_alignment = 1
-vertical_alignment = 1
+alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="LobbyPanel/RoomsInfo/VBoxContainer/Panel/PanelContainer/HBoxContainer" unique_id=1324638536]
-propagate_maximum_size = true
+[node name="Label" type="Label" parent="LobbyPanel/VBoxContainer/Panel/MarginContainer2/PlayerInfo/VBoxContainer" unique_id=1769870782]
 layout_mode = 2
-theme = ExtResource("5_oeg6l")
-alignment = 2
+text = "Rank: Diamond"
+horizontal_alignment = 2
+
+[node name="Label2" type="Label" parent="LobbyPanel/VBoxContainer/Panel/MarginContainer2/PlayerInfo/VBoxContainer" unique_id=876878751]
+layout_mode = 2
+text = "1254 pts"
+horizontal_alignment = 2
+
+[node name="Panel" type="PanelContainer" parent="LobbyPanel/VBoxContainer/Panel/MarginContainer2/PlayerInfo" unique_id=412592727]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6cc1s")
+
+[node name="MarginContainer" type="MarginContainer" parent="LobbyPanel/VBoxContainer/Panel/MarginContainer2/PlayerInfo/Panel" unique_id=1715084715]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="LobbyPanel/VBoxContainer/Panel/MarginContainer2/PlayerInfo/Panel/MarginContainer" unique_id=1379300325]
+layout_mode = 2
+texture = ExtResource("4_kayix")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="RoomOptionsPanel" type="Panel" parent="LobbyPanel/VBoxContainer" unique_id=1606039710]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_6cc1s")
+
+[node name="MarginContainer" type="MarginContainer" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel" unique_id=1214576029]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="RoomButtonsContainer" type="HBoxContainer" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel/MarginContainer" unique_id=1510470809]
+layout_mode = 2
+theme = ExtResource("4_as3ys")
+theme_override_constants/separation = 10
+script = ExtResource("4_jp1kc")
+
+[node name="CreateRoom" type="Button" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1963164424]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "CREATE A ROOM"
+icon = ExtResource("6_kayix")
+script = ExtResource("6_hwwg2")
+hue = 5
+normal_shade = 4
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
+
+[node name="JoinRandomRoom" type="Button" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1544260793]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "JOIN RANDOM ROOM"
+icon = ExtResource("8_l31xl")
+script = ExtResource("6_hwwg2")
+hue = 3
+normal_shade = 4
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
+
+[node name="MarginContainer" type="MarginContainer" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1437767730]
+layout_mode = 2
+theme_override_constants/margin_right = 10
+
+[node name="JoinRoomWithIdInput" type="LineEdit" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=580256666]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_colors/font_placeholder_color = Color(0.27058825, 0.2784314, 0.30980393, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_kayix")
+placeholder_text = "JOIN ROOM WITH ID"
+emoji_menu_enabled = false
+clear_button_enabled = true
+right_icon = ExtResource("9_kayix")
+
+[node name="JoinRoomWithIdButton" type="Button" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1694305160]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "JOIN"
+script = ExtResource("6_hwwg2")
+hue = 0
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
+
+[node name="MarginContainer2" type="MarginContainer" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1083488520]
+layout_mode = 2
+theme_override_constants/margin_right = 10
+
+[node name="ShowAvailableRooms" type="Button" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1609781662]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_l31xl")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_l31xl")
+theme_override_styles/hover = SubResource("StyleBoxFlat_l31xl")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_l31xl")
+text = "AVAILABLE"
+script = ExtResource("6_hwwg2")
+normal_shade = 4
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
+
+[node name="ShowAllRooms" type="Button" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1928211433]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_l31xl")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_l31xl")
+theme_override_styles/hover = SubResource("StyleBoxFlat_l31xl")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_l31xl")
+text = "ALL"
+script = ExtResource("6_hwwg2")
+hue = 7
+normal_shade = 2
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="RoomScrollContainer" type="ScrollContainer" parent="LobbyPanel" unique_id=145816144]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.2
+anchor_top = 0.25
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_borux")
+horizontal_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="LobbyPanel/RoomScrollContainer" unique_id=1944271219]
 layout_mode = 2

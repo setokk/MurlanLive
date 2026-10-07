@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b0tibommhhwmd"
-path="res://.godot/imported/checkbox-unchecked.svg-ac3f3ee88819587ab6bd41bc536f7ff5.ctex"
+uid="uid://boyvchvkdj8nf"
+path="res://.godot/imported/clock.svg-1ce5751c58435298eeab04a46c614424.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/checkbox-unchecked.svg"
-dest_files=["res://.godot/imported/checkbox-unchecked.svg-ac3f3ee88819587ab6bd41bc536f7ff5.ctex"]
+source_file="res://themes/clock.svg"
+dest_files=["res://.godot/imported/clock.svg-1ce5751c58435298eeab04a46c614424.ctex"]
 
 [params]
 

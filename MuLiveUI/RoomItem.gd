@@ -2,13 +2,13 @@ extends Control
 
 class_name RoomItem
 
-@onready var join_button: Button = $Panel/Panel/Panel/JoinButton
+@onready var join_button: Button = $MarginContainer/Panel/HBoxContainer/JoinButton
 
 @onready var seats: Array[Control] = [
-	$Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer/PanelContainer/Seat,
-	$Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer2/PanelContainer/Seat,
-	$Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer3/PanelContainer/Seat,
-	$Panel/Panel/RoomAvailabilityContainer/AspectRatioContainer4/PanelContainer/Seat
+	$MarginContainer/Panel/RoomItemInfo/AspectRatioContainer/PanelContainer/Seat,
+	$MarginContainer/Panel/RoomItemInfo/AspectRatioContainer2/PanelContainer/Seat,
+	$MarginContainer/Panel/RoomItemInfo/AspectRatioContainer3/PanelContainer/Seat,
+	$MarginContainer/Panel/RoomItemInfo/AspectRatioContainer4/PanelContainer/Seat
 ]
 
 const USER_ICON: Texture2D = preload("res://assets/images/user-icon.png")
