@@ -79,6 +79,7 @@ public final class RoomMapper {
                 .numPlayers(entity.getNumPlayers())
                 .gameStates(gameStateMapper.toDtos(entity.getGameStates()))
                 .totalScores(scoreTotalMapper.toDtos(entity.getTotalScores()))
+                .players(entity.getPlayers().stream().map(p -> PlayerDto.fromPlayer(p, null)).toList())
                 .build();
     }
 

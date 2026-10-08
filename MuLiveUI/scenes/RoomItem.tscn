@@ -1,13 +1,12 @@
 [gd_scene format=3 uid="uid://ce8bbqr5wercy"]
 
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_8vuc5"]
-[ext_resource type="Script" uid="uid://pa11s3kbr4lx" path="res://RoomItem.gd" id="2_m58g5"]
+[ext_resource type="Script" uid="uid://w0oiqb1d24kf" path="res://RoomItem.gd" id="2_m58g5"]
 [ext_resource type="Theme" uid="uid://ry3wsdw0iw6r" path="res://themes/RoomItemTheme.tres" id="3_8vuc5"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="3_mgixa"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="3_moc4y"]
 [ext_resource type="Texture2D" uid="uid://cdnv6c3qrdugb" path="res://assets/images/trophy.svg" id="4_ftuc3"]
-[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="4_moc4y"]
-[ext_resource type="Texture2D" uid="uid://boyvchvkdj8nf" path="res://themes/clock.svg" id="5_p31as"]
+[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="4_moc4y"]
 [ext_resource type="Texture2D" uid="uid://ca4lafe626upe" path="res://assets/images/user-icon.png" id="6_p31as"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wu61n"]
@@ -224,7 +223,7 @@ text = "killer69"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel" unique_id=1560366167]
+[node name="RoomDetails" type="HBoxContainer" parent="MarginContainer/Panel" unique_id=1560366167]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.55
@@ -234,12 +233,12 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="RoomInfo" type="VBoxContainer" parent="MarginContainer/Panel/HBoxContainer" unique_id=1572084440]
+[node name="RoomInfo" type="VBoxContainer" parent="MarginContainer/Panel/RoomDetails" unique_id=1572084440]
 layout_mode = 2
 size_flags_horizontal = 6
 alignment = 1
 
-[node name="RoomName" type="Label" parent="MarginContainer/Panel/HBoxContainer/RoomInfo" unique_id=1502903659]
+[node name="RoomName" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo" unique_id=1502903659]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
 theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
@@ -247,66 +246,65 @@ theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 24
 text = "Room Name"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/HBoxContainer/RoomInfo" unique_id=18516555]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo" unique_id=18516555]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Panel/HBoxContainer/RoomInfo/HBoxContainer" unique_id=1231862391]
+[node name="PointsPanel" type="PanelContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer" unique_id=1231862391]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ftuc3")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/HBoxContainer/RoomInfo/HBoxContainer/PanelContainer" unique_id=1791279270]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/PointsPanel" unique_id=1791279270]
 layout_mode = 2
 alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/Panel/HBoxContainer/RoomInfo/HBoxContainer/PanelContainer/HBoxContainer" unique_id=1817582661]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/PointsPanel/HBoxContainer" unique_id=1817582661]
 layout_mode = 2
 texture = ExtResource("4_ftuc3")
 
-[node name="Label" type="Label" parent="MarginContainer/Panel/HBoxContainer/RoomInfo/HBoxContainer/PanelContainer/HBoxContainer" unique_id=1629306949]
+[node name="PointsLabel" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/PointsPanel/HBoxContainer" unique_id=1629306949]
 layout_mode = 2
 text = "21 PTS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PanelContainer2" type="PanelContainer" parent="MarginContainer/Panel/HBoxContainer/RoomInfo/HBoxContainer" unique_id=1220632002]
+[node name="TurnTimePanel" type="PanelContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer" unique_id=1220632002]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ftuc3")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/HBoxContainer/RoomInfo/HBoxContainer/PanelContainer2" unique_id=2106838620]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/TurnTimePanel" unique_id=2106838620]
 layout_mode = 2
 alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/Panel/HBoxContainer/RoomInfo/HBoxContainer/PanelContainer2/HBoxContainer" unique_id=9433704]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/TurnTimePanel/HBoxContainer" unique_id=9433704]
 layout_mode = 2
-texture = ExtResource("5_p31as")
 
-[node name="Label" type="Label" parent="MarginContainer/Panel/HBoxContainer/RoomInfo/HBoxContainer/PanelContainer2/HBoxContainer" unique_id=269542961]
+[node name="TurnTimeLabel" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/TurnTimePanel/HBoxContainer" unique_id=269542961]
 layout_mode = 2
 text = "0:45"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PanelContainer3" type="PanelContainer" parent="MarginContainer/Panel/HBoxContainer/RoomInfo/HBoxContainer" unique_id=134018983]
+[node name="JoinedPlayersSizePanel" type="PanelContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer" unique_id=134018983]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ftuc3")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/HBoxContainer/RoomInfo/HBoxContainer/PanelContainer3" unique_id=669296901]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/JoinedPlayersSizePanel" unique_id=669296901]
 layout_mode = 2
 alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/Panel/HBoxContainer/RoomInfo/HBoxContainer/PanelContainer3/HBoxContainer" unique_id=780287879]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/JoinedPlayersSizePanel/HBoxContainer" unique_id=780287879]
 layout_mode = 2
 texture = ExtResource("6_p31as")
 expand_mode = 3
 
-[node name="Label" type="Label" parent="MarginContainer/Panel/HBoxContainer/RoomInfo/HBoxContainer/PanelContainer3/HBoxContainer" unique_id=458117362]
+[node name="JoinedPlayersSizeLabel" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/JoinedPlayersSizePanel/HBoxContainer" unique_id=458117362]
 layout_mode = 2
 text = "3/4"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="JoinButton" type="Button" parent="MarginContainer/Panel/HBoxContainer" unique_id=12403353]
+[node name="JoinButton" type="Button" parent="MarginContainer/Panel/RoomDetails" unique_id=12403353]
 custom_minimum_size = Vector2(120, 40)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -316,4 +314,3 @@ text = "JOIN ROOM"
 expand_icon = true
 script = ExtResource("4_moc4y")
 hue = 0
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"

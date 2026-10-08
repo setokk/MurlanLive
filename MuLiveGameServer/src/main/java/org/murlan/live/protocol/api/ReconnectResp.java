@@ -5,25 +5,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.murlan.live.protocol.ClientEvent;
 import org.murlan.live.protocol.ResponseStatus;
-import org.murlan.live.protocol.ServerEvent;
 import org.murlan.live.protocol.config.ProtocolConfig;
-import org.murlan.live.protocol.dto.Player;
-import org.murlan.live.protocol.dto.PlayerMinimizedDto;
+import org.murlan.live.protocol.dto.RoomDto;
 
 @Setter
 @Getter
 @AllArgsConstructor
-public final class InformPlayerJoinRoomResp implements Resp {
+public final class ReconnectResp implements Resp {
     private ResponseStatus responseStatus;
-    private Player player;
+    private RoomDto roomDto;
 
     @Override
     public String toMessage(ProtocolConfig config, ObjectMapper objectMapper) throws JsonProcessingException {
         return String.join(config.getProtocol_delimiter(),
-                ServerEvent.INFORM_PLAYER_JOIN_ROOM.id(),
+                ClientEvent.RECONNECT.id(),
                 getResponseStatus().toString(),
-                objectMapper.writeValueAsString(PlayerMinimizedDto.fromPlayer(player))
+                objectMapper.writeValueAsString(roomDto)
         );
     }
 }

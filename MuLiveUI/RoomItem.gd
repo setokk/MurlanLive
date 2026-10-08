@@ -2,7 +2,7 @@ extends Control
 
 class_name RoomItem
 
-@onready var join_button: Button = $MarginContainer/Panel/HBoxContainer/JoinButton
+@onready var join_button: Button = $MarginContainer/Panel/RoomDetails/JoinButton
 
 @onready var seats: Array[Control] = [
 	$MarginContainer/Panel/RoomItemInfo/AspectRatioContainer/PanelContainer/Seat,
@@ -10,6 +10,11 @@ class_name RoomItem
 	$MarginContainer/Panel/RoomItemInfo/AspectRatioContainer3/PanelContainer/Seat,
 	$MarginContainer/Panel/RoomItemInfo/AspectRatioContainer4/PanelContainer/Seat
 ]
+
+@onready var room_name_label: Label = $MarginContainer/Panel/RoomDetails/RoomInfo/RoomName
+@onready var points_label: Label = $MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/PointsPanel/HBoxContainer/PointsLabel
+@onready var turn_time_label: Label = $MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/TurnTimePanel/HBoxContainer/TurnTimeLabel
+@onready var joined_players_size_label: Label = $MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/JoinedPlayersSizePanel/HBoxContainer/JoinedPlayersSizeLabel
 
 const USER_ICON: Texture2D = preload("res://assets/images/user-icon.png")
 const EMPTY_SEAT_ICON: Texture2D = preload("res://assets/images/seat-icon-greyscale-no-bg.png")
@@ -22,8 +27,13 @@ func _ready() -> void:
 	prepare_room_item()
 
 func prepare_room_item() -> void:
-	var room_id: String = room.id
-	var players: Array = room.players
+	var room_id: String = room["id"]
+	var players: Array = room["players"]
+	
+	room_name_label.text = str(room["name"])
+	points_label.text = str(int(room["totalScoreToWin"])) + " " + tr("PTS_TEXT")
+	turn_time_label.text = format_seconds(int(room["turnDurationInSeconds"]))
+	joined_players_size_label.text = str(players.size()) + "/4"
 	
 	var player_count: int = players.size()
 	var occupied_seats: Array[int] = []
@@ -92,6 +102,10 @@ func get_player_count() -> int:
 
 	return count
 
+func format_seconds(total_seconds: int) -> String:
+	var minutes: int = total_seconds / 60
+	var seconds: int = total_seconds % 60
+	return "%d:%02d" % [minutes, seconds]
 
 func is_full() -> bool:
 	return get_player_count() >= seats.size()
@@ -100,7 +114,7 @@ func update_join_button() -> void:
 	join_button.disabled = is_full()
 	
 func _on_join_requested() -> void:
-	WebSocketClient.send_message(JoinRoomReq.new(room.id))
+	WebSocketClient.send_message(JoinRoomReq.new(room["id"]))
 	
 func _on_join_completed(resp : JoinRoomResp) -> void:
 	if resp.response_status == 200:

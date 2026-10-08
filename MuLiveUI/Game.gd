@@ -147,7 +147,7 @@ func _on_game_start(resp: InformGameStartResp) -> void:
 
 func _on_game_finish(resp: InformGameFinishResp) -> void:
 	if resp.response_status == 200:
-		var score_per_player_id : Dictionary = resp.game_finish["scorePerPlayerId"]
+		var score_per_player_id : Dictionary = DictUtils.get_or_default("scorePerPlayerId", {}, resp.game_finish)
 		for player_id in score_per_player_id:
 			var id: int = int(player_id)
 			var score: int = int(score_per_player_id[str(id)])
@@ -155,11 +155,10 @@ func _on_game_finish(resp: InformGameFinishResp) -> void:
 			if resp.game_finish["finalWinner"]:
 				print("Winner is: " + resp.game_finish["finalWinner"]["username"])
 				
-				room_info.set_room_id(resp.game_finish["roomId"])
-				
-				is_ready_button.disabled = false
-				if is_owner(PlayerSession.player):
-					room_info.set_room_info_editable(true)
+		room_info.set_room_id(resp.game_finish["roomId"])
+		is_ready_button.disabled = false
+		if is_owner(PlayerSession.player):
+			room_info.set_room_info_editable(true)
 	else:
 		print("error bruh: ", resp)
 

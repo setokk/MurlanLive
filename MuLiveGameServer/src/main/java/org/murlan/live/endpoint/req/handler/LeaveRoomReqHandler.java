@@ -6,6 +6,7 @@ import org.murlan.live.endpoint.req.ReqContext;
 import org.murlan.live.endpoint.req.ReqHandlerResult;
 import org.murlan.live.endpoint.session.PlayerSession;
 import org.murlan.live.endpoint.session.RoomHandler;
+import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.api.InformPlayerLeaveRoomResp;
 import org.murlan.live.protocol.api.LeaveRoomReq;
@@ -31,7 +32,7 @@ public final class LeaveRoomReqHandler implements ReqHandler<LeaveRoomReq> {
             return ReqHandlerResult.reply(new LeaveRoomResp(ResponseStatus.ERROR));
         }
 
-        Optional<List<PlayerSession>> playersInRoom = roomHandler.removeSession(context.playerSession(), false, (r) -> {});
+        Optional<List<PlayerSession>> playersInRoom = roomHandler.removeSession(context.playerSession(), false, Room::finishDueToPlayerExit);
 
         boolean isSuccessful = playersInRoom.isPresent();
         if (isSuccessful) {

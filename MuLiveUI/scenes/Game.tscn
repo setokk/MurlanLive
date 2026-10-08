@@ -1,22 +1,23 @@
 [gd_scene format=3 uid="uid://f8in7s47ipg4"]
 
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_71axn"]
-[ext_resource type="Script" uid="uid://d2ugnd66ke3bo" path="res://Game.gd" id="2_3xj3m"]
+[ext_resource type="Script" uid="uid://dshkt7a1vlh6w" path="res://Game.gd" id="2_3xj3m"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_dahhg"]
-[ext_resource type="Script" uid="uid://cggmhq3jr6r2l" path="res://TableArea.gd" id="3_3so38"]
+[ext_resource type="Script" uid="uid://qfbjwyal50vd" path="res://TableArea.gd" id="3_3so38"]
 [ext_resource type="Theme" uid="uid://dcg0tqtvbome4" path="res://themes/SeatTheme.tres" id="4_3cx6b"]
+[ext_resource type="Texture2D" uid="uid://c4de00wk83x2i" path="res://assets/images/MuLive Background Transparent.png" id="4_a8wo8"]
 [ext_resource type="Theme" uid="uid://cwicdyenfh6sh" path="res://themes/SideAreasTheme.tres" id="4_kyk2p"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="5_45i86"]
 [ext_resource type="PackedScene" uid="uid://ctiqqa23jajmf" path="res://scenes/RoomInfo.tscn" id="5_kyk2p"]
-[ext_resource type="Script" uid="uid://dfknfovm6tddy" path="res://Deck.gd" id="6_acvyw"]
-[ext_resource type="Script" uid="uid://c3xfjnp81ckek" path="res://OpponentHand.gd" id="7_alh3a"]
-[ext_resource type="Script" uid="uid://clxc14fpj30ha" path="res://Seat.gd" id="8_2rd6h"]
-[ext_resource type="Script" uid="uid://d3trjxyp4ubau" path="res://PlayedCards.gd" id="8_4q8tf"]
+[ext_resource type="Script" uid="uid://y8r0rpi50vla" path="res://Deck.gd" id="6_acvyw"]
+[ext_resource type="Script" uid="uid://dnpihega65fwq" path="res://OpponentHand.gd" id="7_alh3a"]
+[ext_resource type="Script" uid="uid://chdhko4w4etio" path="res://Seat.gd" id="8_2rd6h"]
+[ext_resource type="Script" uid="uid://cs2r8uvg6ffdb" path="res://PlayedCards.gd" id="8_4q8tf"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="8_45i86"]
 [ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="9_a8wo8"]
-[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="9_sv1m6"]
-[ext_resource type="Script" uid="uid://prjme07f6efi" path="res://HandPlaceholder.gd" id="9_x3xnh"]
-[ext_resource type="Script" uid="uid://k68075chkxlf" path="res://ButtonsContainer.gd" id="10_8r6kd"]
+[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="9_sv1m6"]
+[ext_resource type="Script" uid="uid://dsvr36s1t80n1" path="res://HandPlaceholder.gd" id="9_x3xnh"]
+[ext_resource type="Script" uid="uid://755ytelsigcg" path="res://ButtonsContainer.gd" id="10_8r6kd"]
 [ext_resource type="Texture2D" uid="uid://dkcno4uyl2i3e" path="res://assets/images/yellow-bg-light-line-texture.png" id="13_kyk2p"]
 [ext_resource type="PackedScene" uid="uid://dfinc61m5vof" path="res://scenes/PlayerContextMenu.tscn" id="14_vjgi4"]
 [ext_resource type="PackedScene" uid="uid://3maglnyvccuy" path="res://scenes/Chat.tscn" id="14_y5y3l"]
@@ -98,6 +99,16 @@ script = ExtResource("2_3xj3m")
 
 [node name="Background" parent="." unique_id=2002749364 instance=ExtResource("2_dahhg")]
 layout_mode = 1
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1072973520]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_a8wo8")
+expand_mode = 1
 
 [node name="TopArea" type="Control" parent="." unique_id=622972998]
 layout_mode = 1
@@ -568,7 +579,6 @@ tooltip_text = "Play Hand"
 text = "PLAY_HAND_BUTTON"
 script = ExtResource("9_sv1m6")
 hue = 0
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="PassButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=306511266]
 layout_mode = 2
@@ -576,14 +586,12 @@ tooltip_text = "Play Hand"
 text = "PASS_BUTTON"
 script = ExtResource("9_sv1m6")
 hue = 0
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="GiveCardButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=38815153]
 layout_mode = 2
 text = "GIVE_CARD_BUTTON"
 script = ExtResource("9_sv1m6")
 hue = 0
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="PlayerContextMenu" parent="." unique_id=695943598 instance=ExtResource("14_vjgi4")]
 visible = false

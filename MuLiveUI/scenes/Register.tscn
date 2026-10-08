@@ -3,13 +3,13 @@
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_fvamt"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="1_pr50c"]
 [ext_resource type="Theme" uid="uid://bqn3ljfdspx6i" path="res://themes/LoginTheme.tres" id="2_fvamt"]
-[ext_resource type="Script" uid="uid://chwj4l3pbsa8" path="res://scripts/register/RegisterInfo.gd" id="4_afkia"]
+[ext_resource type="Script" uid="uid://b50bl1ungtcem" path="res://scripts/register/RegisterInfo.gd" id="4_afkia"]
 [ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="5_1alyd"]
 [ext_resource type="Script" uid="uid://beuyhyaeynanw" path="res://MessageContainer.gd" id="5_8mejn"]
 [ext_resource type="Texture2D" uid="uid://m4o3m877n0nb" path="res://assets/images/checkbox-checked.svg" id="6_wlfwt"]
 [ext_resource type="Texture2D" uid="uid://gkig57tyr62y" path="res://assets/images/checkbox-unchecked.svg" id="7_54e3n"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="8_oou7e"]
-[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="9_a81xy"]
+[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="9_a81xy"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="11_qkn4w"]
 [ext_resource type="Texture2D" uid="uid://cg1o8k7xy2gmx" path="res://assets/images/lines-texture-no-bg.png" id="12_jik4v"]
 
@@ -146,7 +146,7 @@ theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
 theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 theme_override_constants/outline_size = 20
 theme_override_font_sizes/font_size = 30
-text = "REGISTER TO PLAY!"
+text = "REGISTER_TO_PLAY_TEXT"
 vertical_alignment = 1
 
 [node name="HBoxContainer2" type="VBoxContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer" unique_id=479480417]
@@ -161,7 +161,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_dq6oh")
-placeholder_text = "Username or Email"
+placeholder_text = "Username"
 clear_button_enabled = true
 
 [node name="MarginContainer3" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/HBoxContainer" unique_id=1225542396]
@@ -174,7 +174,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_7awho")
-placeholder_text = "Password"
+placeholder_text = "PASSWORD_PLACEHOLDER"
 emoji_menu_enabled = false
 clear_button_enabled = true
 caret_blink = true
@@ -218,7 +218,7 @@ size_flags_horizontal = 3
 theme_override_colors/font_outline_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 14
-text = "Remember me"
+text = "REMEMBER_ME_CHECKBOX"
 horizontal_alignment = 2
 vertical_alignment = 1
 
@@ -254,10 +254,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("8_oou7e")
 theme_override_font_sizes/font_size = 20
-text = "REGISTER"
+text = "REGISTER_BUTTON"
 script = ExtResource("9_a81xy")
 hue = 0
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="MarginContainer2" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/RegisterContainer" unique_id=1166979817]
 layout_mode = 2
@@ -337,7 +336,7 @@ theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
 theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 theme_override_constants/outline_size = 20
 theme_override_font_sizes/font_size = 30
-text = "Already have an account?"
+text = "HAVE_ACCOUNT_TEXT"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
@@ -347,7 +346,6 @@ custom_minimum_size = Vector2(120, 60)
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("8_oou7e")
-text = "LOGIN!"
+text = "LOGIN_BUTTON_EXCL"
 script = ExtResource("9_a81xy")
 hue = 2
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"

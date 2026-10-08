@@ -1,18 +1,18 @@
 [gd_scene format=3 uid="uid://c127j2awg5s3w"]
 
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_qbi84"]
-[ext_resource type="Script" uid="uid://dp5ek2top2eoq" path="res://Lobby.gd" id="2_oeg6l"]
+[ext_resource type="Script" uid="uid://bjrp1twxhdl6p" path="res://Lobby.gd" id="2_oeg6l"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="3_1yh37"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="4_as3ys"]
+[ext_resource type="Texture2D" uid="uid://c4de00wk83x2i" path="res://assets/images/MuLive Background Transparent.png" id="4_h77bf"]
 [ext_resource type="Script" uid="uid://c5c0ntqx2ry6w" path="res://RoomButtonsContainer.gd" id="4_jp1kc"]
 [ext_resource type="Texture2D" uid="uid://ca4lafe626upe" path="res://assets/images/user-icon.png" id="4_kayix"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="4_l31xl"]
 [ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="4_wuide"]
-[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="6_hwwg2"]
+[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="6_hwwg2"]
 [ext_resource type="Texture2D" uid="uid://dkt4rbxlikmv8" path="res://assets/images/plus-icon.svg" id="6_kayix"]
 [ext_resource type="Texture2D" uid="uid://c5mlenjmrvwrv" path="res://assets/images/dice-icon.svg" id="8_l31xl"]
 [ext_resource type="Texture2D" uid="uid://dabfi7n7nrrpg" path="res://assets/images/magnifying-glass.svg" id="9_kayix"]
-[ext_resource type="StyleBox" uid="uid://cajfymmg8sndv" path="res://themes/LineEditTheme.tres" id="12_h77bf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_psoro"]
 bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
@@ -46,6 +46,17 @@ corner_radius_bottom_left = 50
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6cc1s"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h77bf"]
+bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_size = 4
+shadow_offset = Vector2(4, 4)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l31xl"]
 content_margin_left = 6.0
 content_margin_top = 6.0
@@ -75,6 +86,16 @@ script = ExtResource("2_oeg6l")
 
 [node name="Background" parent="." unique_id=2002749364 instance=ExtResource("3_1yh37")]
 layout_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="." unique_id=1692301484]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_h77bf")
+expand_mode = 1
 
 [node name="LobbyPanel" type="Panel" parent="." unique_id=973502729]
 layout_mode = 1
@@ -135,7 +156,7 @@ theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
 theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 theme_override_constants/outline_size = 20
 theme_override_font_sizes/font_size = 34
-text = "LOBBY"
+text = "LOBBY_TEXT"
 vertical_alignment = 1
 
 [node name="MarginContainer2" type="MarginContainer" parent="LobbyPanel/VBoxContainer/Panel" unique_id=318673330]
@@ -211,22 +232,20 @@ script = ExtResource("4_jp1kc")
 [node name="CreateRoom" type="Button" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1963164424]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
-text = "CREATE A ROOM"
+text = "CREATE_ROOM_BUTTON"
 icon = ExtResource("6_kayix")
 script = ExtResource("6_hwwg2")
 hue = 5
 normal_shade = 4
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="JoinRandomRoom" type="Button" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1544260793]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
-text = "JOIN RANDOM ROOM"
+text = "JOIN_RANDOM_ROOM_BUTTON"
 icon = ExtResource("8_l31xl")
 script = ExtResource("6_hwwg2")
 hue = 3
 normal_shade = 4
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="MarginContainer" type="MarginContainer" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1437767730]
 layout_mode = 2
@@ -238,8 +257,8 @@ size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 theme_override_colors/font_placeholder_color = Color(0.27058825, 0.2784314, 0.30980393, 1)
 theme_override_font_sizes/font_size = 13
-theme_override_styles/normal = ExtResource("12_h77bf")
-placeholder_text = "JOIN ROOM WITH ID"
+theme_override_styles/normal = SubResource("StyleBoxFlat_h77bf")
+placeholder_text = "JOIN_ROOM_WITH_ID_PLACEHOLDER"
 emoji_menu_enabled = false
 clear_button_enabled = true
 right_icon = ExtResource("9_kayix")
@@ -247,10 +266,9 @@ right_icon = ExtResource("9_kayix")
 [node name="JoinRoomWithIdButton" type="Button" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1694305160]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
-text = "JOIN"
+text = "JOIN_ROOM_BUTTON"
 script = ExtResource("6_hwwg2")
 hue = 0
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="MarginContainer2" type="MarginContainer" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1083488520]
 layout_mode = 2
@@ -263,10 +281,9 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_l31xl")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_l31xl")
 theme_override_styles/hover = SubResource("StyleBoxFlat_l31xl")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_l31xl")
-text = "AVAILABLE"
+text = "AVAILABLE_ROOMS_TEXT"
 script = ExtResource("6_hwwg2")
 normal_shade = 4
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="ShowAllRooms" type="Button" parent="LobbyPanel/VBoxContainer/RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1928211433]
 layout_mode = 2
@@ -275,11 +292,10 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_l31xl")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_l31xl")
 theme_override_styles/hover = SubResource("StyleBoxFlat_l31xl")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_l31xl")
-text = "ALL"
+text = "ALL_ROOMS_TEXT"
 script = ExtResource("6_hwwg2")
 hue = 7
 normal_shade = 2
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="RoomScrollContainer" type="ScrollContainer" parent="LobbyPanel" unique_id=145816144]
 layout_mode = 1

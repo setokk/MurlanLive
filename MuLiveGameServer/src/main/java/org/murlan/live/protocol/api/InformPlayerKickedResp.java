@@ -9,6 +9,7 @@ import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.ServerEvent;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.dto.Player;
+import org.murlan.live.protocol.dto.PlayerMinimizedDto;
 
 @Setter
 @Getter
@@ -23,7 +24,7 @@ public class InformPlayerKickedResp implements Resp {
                 config.getProtocol_delimiter(),
                 ServerEvent.INFORM_PLAYER_KICKED.id(),
                 getResponseStatus().toString(),
-                objectMapper.writeValueAsString(kickedPlayer)
+                objectMapper.writeValueAsString(PlayerMinimizedDto.fromPlayer(kickedPlayer))
         );
     }
 }

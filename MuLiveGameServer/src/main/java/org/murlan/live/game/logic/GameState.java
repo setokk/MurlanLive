@@ -236,23 +236,6 @@ public class GameState {
         return true;
     }
 
-    public void handlePlayerNotInRoom(Player player, boolean hasLostConnection) {
-        Optional<Player> optionalPlayer = this.players.stream().filter(player::equals).findAny();
-        if (optionalPlayer.isEmpty()) {
-            return;
-        }
-
-        if (this.state == State.PLAYING) {
-            short scorePenalty = hasLostConnection
-                    ? GameConstants.SCORE_PENALTY_LOST_CONNECTION
-                    : GameConstants.SCORE_PENALTY_LEAVE_ROOM;
-
-            this.score.put(optionalPlayer.get(), scorePenalty);
-        } else if (this.state == State.WAITING) {
-            this.readyPlayers.remove(player);
-        }
-    }
-
     public synchronized void startGame() {
         onGameStart.accept(this);
     }

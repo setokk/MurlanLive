@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_jbclg"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_xpxjw"]
 [ext_resource type="Theme" uid="uid://bqn3ljfdspx6i" path="res://themes/LoginTheme.tres" id="3_na214"]
-[ext_resource type="Script" uid="uid://bt6nn883cv0ps" path="res://scripts/login/LoginInfo.gd" id="4_7hd5n"]
+[ext_resource type="Script" uid="uid://bhbpva4sor3de" path="res://scripts/login/LoginInfo.gd" id="4_7hd5n"]
 [ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="6_cmygb"]
 [ext_resource type="Script" uid="uid://beuyhyaeynanw" path="res://MessageContainer.gd" id="6_egi27"]
 [ext_resource type="Texture2D" uid="uid://d0emioldemt72" path="res://assets/images/scattered_cards.png" id="6_unb0q"]
@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://gkig57tyr62y" path="res://assets/images/checkbox-unchecked.svg" id="8_cmygb"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="9_qbsxj"]
 [ext_resource type="Texture2D" uid="uid://b6i8p27giqxxu" path="res://assets/images/comic-2.png" id="10_qbsxj"]
-[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="10_unb0q"]
+[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="10_unb0q"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="11_qbsxj"]
 [ext_resource type="Texture2D" uid="uid://dxdheemm2l6o1" path="res://assets/images/comic-1.png" id="12_7b01v"]
 [ext_resource type="Texture2D" uid="uid://cg1o8k7xy2gmx" path="res://assets/images/lines-texture-no-bg.png" id="12_unb0q"]
@@ -187,7 +187,7 @@ theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
 theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 theme_override_constants/outline_size = 20
 theme_override_font_sizes/font_size = 30
-text = "LOGIN TO PLAY!"
+text = "LOGIN_TO_PLAY_TEXT"
 vertical_alignment = 1
 
 [node name="MarginContainer3" type="MarginContainer" parent="LoginInfo/VBoxContainer/1/LoginPanel/Panel/PanelContainer/MarginContainer/HBoxContainer" unique_id=998001352]
@@ -203,7 +203,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_7b01v")
-placeholder_text = "Username or Email"
+placeholder_text = "USERNAME_OR_EMAIL_PLACEHOLDER"
 clear_button_enabled = true
 
 [node name="MarginContainer3" type="MarginContainer" parent="LoginInfo/VBoxContainer/1/LoginPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer" unique_id=926057085]
@@ -216,7 +216,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_nr1om")
-placeholder_text = "Password"
+placeholder_text = "PASSWORD_PLACEHOLDER"
 emoji_menu_enabled = false
 clear_button_enabled = true
 caret_blink = true
@@ -246,7 +246,7 @@ size_flags_horizontal = 3
 theme_override_colors/font_outline_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 14
-text = "Remember me"
+text = "REMEMBER_ME_CHECKBOX"
 vertical_alignment = 1
 
 [node name="ForgotPasswordButton" type="Button" parent="LoginInfo/VBoxContainer/1/LoginPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/RememberInfoContainer" unique_id=1039380383]
@@ -258,7 +258,7 @@ theme_override_colors/font_outline_color = Color(0.9607843, 0.9607843, 0.9607843
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 14
 theme_override_styles/normal = SubResource("StyleBoxEmpty_m32dw")
-text = "I forgot my password"
+text = "FORGOT_PASSWORD_TEXT"
 
 [node name="MarginContainer2" type="MarginContainer" parent="LoginInfo/VBoxContainer/1/LoginPanel/Panel/PanelContainer/MarginContainer/HBoxContainer" unique_id=1692463475]
 layout_mode = 2
@@ -282,10 +282,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("9_qbsxj")
 theme_override_font_sizes/font_size = 20
-text = "LOGIN"
+text = "LOGIN_BUTTON"
 script = ExtResource("10_unb0q")
 hue = 0
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="MarginContainer2" type="MarginContainer" parent="LoginInfo/VBoxContainer/1/LoginPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/LoginContainer" unique_id=2026212984]
 layout_mode = 2
@@ -300,7 +299,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_p7dna")
 [node name="TextureRect" type="TextureRect" parent="LoginInfo/VBoxContainer/3" unique_id=2033902787]
 layout_mode = 2
 texture = ExtResource("10_qbsxj")
-expand_mode = 3
+expand_mode = 1
 
 [node name="MessageContainer" type="CenterContainer" parent="LoginInfo/VBoxContainer/3" unique_id=220067377]
 layout_mode = 2
@@ -358,7 +357,7 @@ theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
 theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 theme_override_constants/outline_size = 20
 theme_override_font_sizes/font_size = 30
-text = "Don't have an account?"
+text = "DONT_HAVE_ACCOUNT_TEXT"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
@@ -368,7 +367,6 @@ custom_minimum_size = Vector2(120, 60)
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("9_qbsxj")
-text = "REGISTER!"
+text = "REGISTER_BUTTON_EXCL"
 script = ExtResource("10_unb0q")
 hue = 2
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"

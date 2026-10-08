@@ -9,6 +9,7 @@ import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.ServerEvent;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.dto.Player;
+import org.murlan.live.protocol.dto.PlayerMinimizedDto;
 
 @Setter
 @Getter
@@ -25,7 +26,7 @@ public final class InformPlayerChatResp implements Resp {
                 ServerEvent.INFORM_PLAYER_CHAT.id(),
                 getResponseStatus().toString(),
                 escape(message, config),
-                objectMapper.writeValueAsString(player)
+                objectMapper.writeValueAsString(PlayerMinimizedDto.fromPlayer(player))
         );
     }
 }

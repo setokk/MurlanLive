@@ -8,6 +8,7 @@ import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
 import org.murlan.live.protocol.dto.Player;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -29,6 +30,7 @@ public class Room {
     private final LocalDateTime creationDate;
     private short totalScoreToWin;
     private List<GameState> gameStates;
+    private Map<Player, Short> exitPenalties;
     private Player owner;
     private long turnDurationInSeconds;
     private final GameStateFactory gameStateFactory;
@@ -105,6 +107,18 @@ public class Room {
             }
         }
 
+        // penalties for players who left/disconnected mid-game, whose interrupted game state was discarded
+        if (exitPenalties != null) {
+            for (Map.Entry<Player, Short> e : exitPenalties.entrySet()) {
+                Player p = e.getKey();
+                totals.putIfAbsent(p, 0);
+                reachedAt.putIfAbsent(p, seq);
+                totals.put(p, totals.get(p) + e.getValue());
+                reachedAt.put(p, seq);
+                seq++;
+            }
+        }
+
         Map<Player, Short> result = new LinkedHashMap<>();
         totals.entrySet().stream()
                 .sorted(Comparator
@@ -117,6 +131,29 @@ public class Room {
 
     public synchronized List<Player> getPlayers() {
         return getActiveGameState().getPlayers();
+    }
+
+    public synchronized void applyExitPenalty(Player player, short penalty) {
+        if (exitPenalties == null) {
+            exitPenalties = new LinkedHashMap<>();
+        }
+        exitPenalties.put(player, penalty);
+    }
+
+    public synchronized boolean discardActiveGameStateForInterruption() {
+        if (gameStates.size() <= 1) {
+            return false;
+        }
+        gameStates.removeLast();
+        return true;
+    }
+
+    public void finishDueToPlayerExit() {
+        try {
+            getActiveGameState().getOnGameFinish().runForPlayerExit();
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public synchronized boolean playHand(Player player, CardCombination cardCombination) {

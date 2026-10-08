@@ -26,4 +26,5 @@ public final class RoomDetailsDto {
     private short numPlayers;
     private List<GameStateDto> gameStates;
     private Map<String, Short> totalScores;
+    private List<PlayerDto> players;
 }

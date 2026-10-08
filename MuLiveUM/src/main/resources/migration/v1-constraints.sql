@@ -228,3 +228,42 @@ ALTER TABLE ONLY player_email_verification
     UNIQUE (token);
 END IF;
 END $$;
+
+-- Foreign key constraint fk_player_profile_icon
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE table_name = 'player'
+        AND constraint_name = 'fk_player_profile_icon'
+    ) THEN
+ALTER TABLE ONLY player
+    ADD CONSTRAINT fk_player_profile_icon FOREIGN KEY (profile_icon_id) REFERENCES profile_icon(id);
+END IF;
+END $$;
+
+-- Foreign key constraint fk_room_player_room
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE table_name = 'room_player'
+        AND constraint_name = 'fk_room_player_room'
+    ) THEN
+ALTER TABLE ONLY room_player
+    ADD CONSTRAINT fk_room_player_room FOREIGN KEY (room_id) REFERENCES room(id);
+END IF;
+END $$;
+
+-- Foreign key constraint fk_room_player_player
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE table_name = 'room_player'
+        AND constraint_name = 'fk_room_player_player'
+    ) THEN
+ALTER TABLE ONLY room_player
+    ADD CONSTRAINT fk_room_player_player FOREIGN KEY (player_id) REFERENCES player(id);
+END IF;
+END $$;

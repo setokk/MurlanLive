@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
@@ -62,6 +63,9 @@ public class PlayerEntity {
     @Column(name = "is_verified", nullable = false)
     private boolean isVerified;
 
+    @ManyToMany(mappedBy = "players", fetch = FetchType.LAZY)
+    private Set<RoomEntity> rooms = new HashSet<>();
+
     @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
     private HandLayoutConfigurationEntity handLayoutConfiguration;
 
@@ -79,14 +83,29 @@ public class PlayerEntity {
     @OneToOne(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
     private PlayerEmailVerificationEntity playerEmailVerification;
 
+    @OneToOne(
+            mappedBy = "player",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private PlayerRatingEntity rating;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+            name = "profile_icon_id",
+            nullable = false
+    )
+    private ProfileIconEntity profileIcon;
+
     public PlayerEntity(String username, String password, String email, LocalDateTime createdDate) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.createdDate = createdDate;
+        this.profileIcon = ProfileIconEntity.defaultProfileIcon();
     }
 
-    public PlayerEntity(Long id) {
+    public PlayerEntity(long id) {
         this.id = id;
     }
 

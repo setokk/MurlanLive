@@ -2,6 +2,7 @@ package org.murlan.live.game.logic.handler;
 
 import lombok.RequiredArgsConstructor;
 import org.murlan.live.endpoint.EndpointHelper;
+import org.murlan.live.endpoint.session.PlayerSession;
 import org.murlan.live.endpoint.session.RoomHandler;
 import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.ResponseStatus;
@@ -13,6 +14,7 @@ import org.murlan.live.protocol.dto.um.UMRoomDto;
 import org.murlan.live.protocol.rest.RoomRESTClient;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -89,6 +91,49 @@ public final class OnGameFinish implements Runnable {
             } else {
                 room.startNewGameFromPreviousGame(winner, loser);
             }
+        }
+    }
+
+    public void runForPlayerExit() throws IOException, InterruptedException {
+        synchronized (room) {
+            GameFinishDto.GameFinishDtoBuilder dtoBuilder = GameFinishDto.builder();
+
+            RoomDto copyRoomDto = roomHandler.copyRoom(room.getId());
+            dtoBuilder.roomId(copyRoomDto.id());
+
+            boolean hasPreviousFinishedGame = room.discardActiveGameStateForInterruption();
+            if (!hasPreviousFinishedGame) {
+                List<PlayerSession> playersInRoom = roomHandler.getPlayersInRoom(UUID.fromString(copyRoomDto.id()));
+                endpointHelper.informPlayers(new InformGameFinishResp(ResponseStatus.OK, dtoBuilder.build()), null, playersInRoom);
+                return;
+            }
+
+            room.getTotalScores().entrySet().stream()
+                    .max(Map.Entry.comparingByValue())
+                    .map(Map.Entry::getKey)
+                    .ifPresent(dtoBuilder::finalWinner);
+
+            GameFinishDto gameFinishDto = dtoBuilder.build();
+
+            executor.execute(() -> {
+                try {
+                    ResponseStatus responseStatus = ResponseStatus.OK;
+
+                    Optional<UMRoomDto> optionalUmRoomDto = roomRESTClient.createRoom(room);
+                    if (optionalUmRoomDto.isEmpty()) {
+                        responseStatus = ResponseStatus.ERROR;
+                    } else {
+                        gameFinishDto.setRankRatingsByPlayerId(optionalUmRoomDto.get().getRankRatingsByPlayerId());
+                    }
+                    endpointHelper.informPlayers(
+                            new InformGameFinishResp(responseStatus, gameFinishDto),
+                            null,
+                            roomHandler.getPlayersInRoom(UUID.fromString(copyRoomDto.id()))
+                    );
+                } catch (IOException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
     }
 }

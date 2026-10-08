@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://difvxjo3u6xdg"
-path="res://.godot/imported/MuLive_Background-Cropped-1920x1080-Transparent.png-c508b6965fd9f6253705fada03010d29.ctex"
+uid="uid://b7t0kisnneddd"
+path="res://.godot/imported/MuLive Background.png-f83af80700109af0f2b37b5bfdcb3b2b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/MuLive_Background-Cropped-1920x1080-Transparent.png"
-dest_files=["res://.godot/imported/MuLive_Background-Cropped-1920x1080-Transparent.png-c508b6965fd9f6253705fada03010d29.ctex"]
+source_file="res://assets/images/MuLive Background.png"
+dest_files=["res://.godot/imported/MuLive Background.png-f83af80700109af0f2b37b5bfdcb3b2b.ctex"]
 
 [params]
 

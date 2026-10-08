@@ -1,5 +1,6 @@
 package org.murlan.um.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,9 +18,13 @@ import java.util.Objects;
 public final class PlayerDetailsDto {
     private Long id;
     private String username;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime creationDate;
     private String email;
-    private Object rank;
+    private long profileIconId;
+    private String rank;
+    private Integer rating;
+    private long totalRoomsPlayed;
 
     @Override
     public boolean equals(Object o) {

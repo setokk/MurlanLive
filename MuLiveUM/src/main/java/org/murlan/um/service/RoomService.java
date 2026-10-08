@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.murlan.um.core.logic.GameStateEnum;
 import org.murlan.um.error.BusinessLogicException;
 import org.murlan.um.model.GameStateEntity;
+import org.murlan.um.model.PlayerEntity;
 import org.murlan.um.model.RoomEntity;
 import org.murlan.um.model.ScoreTotalEntity;
 import org.murlan.um.model.dto.PlayerDto;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -63,11 +65,11 @@ public class RoomService {
                 .toList();
         scoreTotalRepository.saveAll(totalScores);
 
+        Set<PlayerEntity> players = totalScores.stream().map(ste -> new PlayerEntity(ste.getId().getPlayerId())).collect(Collectors.toSet());
+        savedRoom.setPlayers(players);
+
         Map<Long, RankRatingDto> rankRatingsByPlayerId = null;
         if (GameStateEnum.FINISHED.equals(gameStates.getLast().getState())) {
-            // get first score in case a game was interrupted in the middle
-            // which means we cannot use totalMaxScore of the room to update ranks
-            // getting the first score will always result in the correct ranking since it is the score of the winner
             Short firstScore = winnerEntry.getValue();
 
             Map<Long, Short> pointsByPlayerId = param.totalScores().entrySet().stream()

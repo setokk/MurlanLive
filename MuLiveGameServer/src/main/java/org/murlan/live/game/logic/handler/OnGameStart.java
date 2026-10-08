@@ -42,6 +42,7 @@ public final class OnGameStart implements Consumer<GameState> {
             }
 
             gameState.setCurrCardCombination(GameConstants.EMPTY_CARD_COMBINATION);
+            gameState.setTurnDurationInSeconds(room.getTurnDurationInSeconds());
             gameState.setScheduler(scheduler);
 
             List<Player> players = gameState.getPlayers();

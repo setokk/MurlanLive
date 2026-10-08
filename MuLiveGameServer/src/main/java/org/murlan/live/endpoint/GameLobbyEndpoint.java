@@ -24,6 +24,7 @@ import org.murlan.live.endpoint.req.handler.MuteReqHandler;
 import org.murlan.live.endpoint.req.handler.PassReqHandler;
 import org.murlan.live.endpoint.req.handler.PlayHandReqHandler;
 import org.murlan.live.endpoint.req.handler.ReadyReqHandler;
+import org.murlan.live.endpoint.req.handler.ReconnectReqHandler;
 import org.murlan.live.endpoint.req.handler.UnBlockReqHandler;
 import org.murlan.live.endpoint.req.handler.UnMuteReqHandler;
 import org.murlan.live.endpoint.req.handler.UpdateRoomDetailsReqHandler;
@@ -34,6 +35,7 @@ import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.ResponseStatus;
 import org.murlan.live.protocol.api.InformPlayerLostConnectionResp;
 import org.murlan.live.protocol.api.JoinRoomReq;
+import org.murlan.live.protocol.api.ReconnectReq;
 import org.murlan.live.protocol.api.Req;
 import org.murlan.live.protocol.api.error.InvalidDataException;
 import org.murlan.live.protocol.config.ConfigProvider;
@@ -89,7 +91,8 @@ public class GameLobbyEndpoint {
             new MuteReqHandler(),
             new UnMuteReqHandler(),
             new BlockReqHandler(playerRESTClient),
-            new UnBlockReqHandler(playerRESTClient)
+            new UnBlockReqHandler(playerRESTClient),
+            new ReconnectReqHandler(roomHandler)
     ));
 
     @OnOpen
@@ -157,7 +160,7 @@ public class GameLobbyEndpoint {
         ReqHandlerResult result = reqDispatcher.dispatch(req, new ReqContext(playerSession, room));
         endpointHelper.send(result.resp(), playerSession);
 
-        if (req instanceof JoinRoomReq) {
+        if (req instanceof JoinRoomReq || req instanceof ReconnectReq) {
             room = roomHandler.getPlayerRoom(playerSession);
         }
 
@@ -177,7 +180,7 @@ public class GameLobbyEndpoint {
         }
         PlayerSession playerSession = optionalPlayerSession.get();
 
-        Optional<List<PlayerSession>> playersInRoom = roomHandler.removeSession(playerSession, true, (r) -> {});
+        Optional<List<PlayerSession>> playersInRoom = roomHandler.handleDisconnection(playerSession, scheduler, Room::finishDueToPlayerExit);
         if (playersInRoom.isEmpty()) {
             return;
         }

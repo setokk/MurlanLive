@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS player(
     password TEXT NOT NULL,
     email TEXT NOT NULL,
     creation_date TIMESTAMP NOT NULL,
-    is_verified BOOLEAN NOT NULL DEFAULT FALSE
+    is_verified BOOLEAN NOT NULL DEFAULT FALSE,
+    profile_icon_id BIGINT NOT NULL DEFAULT 1
 );
 CREATE SEQUENCE IF NOT EXISTS player_seq
     START WITH 1
@@ -36,6 +37,15 @@ CREATE TABLE IF NOT EXISTS room(
     finished_date TIMESTAMP NOT NULL,
     num_players SMALLINT NOT NULL,
     owner_player_id BIGINT NOT NULL
+);
+
+--
+-- room_player Table
+--
+CREATE TABLE IF NOT EXISTS room_player (
+    room_id UUID NOT NULL,
+    player_id BIGINT NOT NULL,
+    PRIMARY KEY (room_id, player_id)
 );
 
 --
@@ -127,6 +137,18 @@ CREATE TABLE IF NOT EXISTS player_email_verification (
     player_id BIGINT NOT NULL
 );
 CREATE SEQUENCE IF NOT EXISTS player_email_verification_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO CYCLE;
+
+--
+-- profile_icon Table
+--
+CREATE TABLE IF NOT EXISTS profile_icon (
+    id BIGINT NOT NULL PRIMARY KEY,
+    filename TEXT NOT NULL
+);
+CREATE SEQUENCE IF NOT EXISTS profile_icon_seq
     START WITH 1
     INCREMENT BY 1
     NO CYCLE;

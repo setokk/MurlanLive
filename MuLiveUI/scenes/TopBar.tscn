@@ -5,9 +5,9 @@
 [ext_resource type="Script" uid="uid://ckj8ax6i6654n" path="res://LoginRedirection.gd" id="1_nf15x"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="3_xslny"]
 [ext_resource type="Texture2D" uid="uid://dabkblyx3wpt1" path="res://assets/images/language.svg" id="4_6q1hj"]
-[ext_resource type="Script" uid="uid://oaes34tr2tti" path="res://scenes/LanguageDropDown.gd" id="4_f573w"]
+[ext_resource type="Script" uid="uid://2urbonioe26g" path="res://scenes/LanguageDropDown.gd" id="4_f573w"]
 [ext_resource type="Texture2D" uid="uid://cwphjklugjlik" path="res://assets/images/Logo2.png" id="4_i2wps"]
-[ext_resource type="Script" uid="uid://dh4jlin702dy" path="res://LogoutRedirection.gd" id="4_wjcpy"]
+[ext_resource type="Script" uid="uid://jbns8goi7txj" path="res://LogoutRedirection.gd" id="4_wjcpy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cm0pq"]
 bg_color = Color(0.85490197, 0.64705884, 0.18431373, 1)
@@ -67,7 +67,7 @@ script = ExtResource("4_f573w")
 layout_mode = 2
 theme_override_colors/font_color = Color(0.21176471, 0.015686275, 0, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_r0du0")
-text = " Login/Register "
+text = "LOGIN_REGISTER_BUTTON"
 script = ExtResource("1_nf15x")
 
 [node name="LogoutRedirection" type="Button" parent="HBoxContainer" unique_id=483029564]
@@ -75,7 +75,7 @@ visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.21176471, 0.015686275, 0, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_r0du0")
-text = " Logout "
+text = "LOGOUT_BUTTON"
 script = ExtResource("4_wjcpy")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1220546518]
