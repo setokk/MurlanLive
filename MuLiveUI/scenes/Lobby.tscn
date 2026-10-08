@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://dkt4rbxlikmv8" path="res://assets/images/plus-icon.svg" id="6_kayix"]
 [ext_resource type="Texture2D" uid="uid://c5mlenjmrvwrv" path="res://assets/images/dice-icon.svg" id="8_l31xl"]
 [ext_resource type="Texture2D" uid="uid://dabfi7n7nrrpg" path="res://assets/images/magnifying-glass.svg" id="9_kayix"]
+[ext_resource type="StyleBox" uid="uid://cajfymmg8sndv" path="res://themes/LineEditTheme.tres" id="12_h77bf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_psoro"]
 bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
@@ -44,21 +45,6 @@ corner_radius_bottom_right = 50
 corner_radius_bottom_left = 50
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6cc1s"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kayix"]
-content_margin_left = 6.0
-content_margin_top = 6.0
-content_margin_right = 6.0
-content_margin_bottom = 6.0
-bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
-shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
-shadow_size = 3
-shadow_offset = Vector2(3, 3)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l31xl"]
 content_margin_left = 6.0
@@ -252,7 +238,7 @@ size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 theme_override_colors/font_placeholder_color = Color(0.27058825, 0.2784314, 0.30980393, 1)
 theme_override_font_sizes/font_size = 13
-theme_override_styles/normal = SubResource("StyleBoxFlat_kayix")
+theme_override_styles/normal = ExtResource("12_h77bf")
 placeholder_text = "JOIN ROOM WITH ID"
 emoji_menu_enabled = false
 clear_button_enabled = true

@@ -3,10 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://ovimrk3nmtqy" path="res://assets/images/clear-icon.svg" id="3_pgobs"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_lv2pd"]
-load_path = "res://.godot/imported/checkbox-checked.svg-1eef7fed4d40d1a545064a67fa0ef0e0.ctex"
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_glcpc"]
-load_path = "res://.godot/imported/checkbox-unchecked.svg-ac3f3ee88819587ab6bd41bc536f7ff5.ctex"
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pgobs"]
 
@@ -40,19 +38,7 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0, 0, 0, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ud1i"]
-bg_color = Color(1, 0.9336541, 0.92926246, 1)
-border_width_left = 5
-border_width_top = 2
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-corner_detail = 5
-shadow_offset = Vector2(2, 2)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8ud1i"]
 
 [resource]
 CheckBox/constants/h_separation = 0
@@ -80,4 +66,4 @@ LineEdit/font_sizes/font_size = 14
 LineEdit/icons/clear = ExtResource("3_pgobs")
 LineEdit/styles/focus = SubResource("StyleBoxFlat_l3fg6")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_jsytl")
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_8ud1i")
+PanelContainer/styles/panel = SubResource("StyleBoxEmpty_8ud1i")

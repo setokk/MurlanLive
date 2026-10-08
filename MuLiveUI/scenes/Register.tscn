@@ -3,39 +3,81 @@
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_fvamt"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="1_pr50c"]
 [ext_resource type="Theme" uid="uid://bqn3ljfdspx6i" path="res://themes/LoginTheme.tres" id="2_fvamt"]
-[ext_resource type="Script" uid="uid://b50bl1ungtcem" path="res://scripts/register/RegisterInfo.gd" id="4_afkia"]
+[ext_resource type="Script" uid="uid://chwj4l3pbsa8" path="res://scripts/register/RegisterInfo.gd" id="4_afkia"]
+[ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="5_1alyd"]
 [ext_resource type="Script" uid="uid://beuyhyaeynanw" path="res://MessageContainer.gd" id="5_8mejn"]
-[ext_resource type="Script" uid="uid://d1is7b8hy45hu" path="res://scripts/register/RegisterLoginButtons.gd" id="5_pr50c"]
+[ext_resource type="Texture2D" uid="uid://m4o3m877n0nb" path="res://assets/images/checkbox-checked.svg" id="6_wlfwt"]
+[ext_resource type="Texture2D" uid="uid://gkig57tyr62y" path="res://assets/images/checkbox-unchecked.svg" id="7_54e3n"]
+[ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="8_oou7e"]
+[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="9_a81xy"]
+[ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="11_qkn4w"]
+[ext_resource type="Texture2D" uid="uid://cg1o8k7xy2gmx" path="res://assets/images/lines-texture-no-bg.png" id="12_jik4v"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m3v72"]
-bg_color = Color(0.8980392, 0.27058825, 0.20784314, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7e8dj"]
+bg_color = Color(0.8392157, 0.3882353, 0.32941177, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7jho6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dq6oh"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
 border_width_left = 2
-border_width_top = 1
+border_width_top = 2
 border_width_right = 2
-border_width_bottom = 4
-border_color = Color(0, 0, 0, 1)
+border_width_bottom = 2
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_size = 3
+shadow_offset = Vector2(3, 3)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_avmqu"]
-bg_color = Color(0.5348032, 0.123425655, 0.08523319, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7awho"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
 border_width_left = 2
-border_width_top = 1
+border_width_top = 2
 border_width_right = 2
-border_width_bottom = 4
-border_color = Color(0, 0, 0, 1)
+border_width_bottom = 2
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_size = 3
+shadow_offset = Vector2(3, 3)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1alyd"]
-bg_color = Color(0.7436663, 0.19260594, 0.14184436, 1)
-border_width_left = 2
-border_width_top = 1
-border_width_right = 2
-border_width_bottom = 4
-border_color = Color(0, 0, 0, 1)
+[sub_resource type="GDScript" id="GDScript_x4ce0"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a81xy"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3hytt"]
+bg_color = Color(0.3254902, 0.8117647, 0.41568628, 1)
+border_width_left = 6
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 6
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qkn4w"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vw7w7"]
+bg_color = Color(0.29411766, 0.54901963, 0.9254902, 1)
+border_width_left = 3
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 3
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jik4v"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yfegi"]
+bg_color = Color(0.8901961, 0.72156864, 0.3372549, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 
 [node name="Register" type="Control" unique_id=1403697454]
 layout_mode = 3
@@ -48,60 +90,90 @@ theme = ExtResource("1_fvamt")
 
 [node name="Background" parent="." unique_id=2002749364 instance=ExtResource("1_pr50c")]
 layout_mode = 1
-anchors_preset = 15
 
-[node name="RegisterPanel" type="PanelContainer" parent="." unique_id=2005304679]
+[node name="RegisterInfo" type="HBoxContainer" parent="." unique_id=1872138406]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.35
-anchor_top = 0.1
-anchor_right = 0.65
-anchor_bottom = 0.65
-theme = ExtResource("2_fvamt")
-
-[node name="MarginContainer" type="MarginContainer" parent="RegisterPanel" unique_id=2129265561]
-layout_mode = 2
-theme_override_constants/margin_left = 40
-theme_override_constants/margin_top = 50
-theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 50
-
-[node name="RegisterSignupInfo" type="VBoxContainer" parent="RegisterPanel/MarginContainer" unique_id=1607066056]
-layout_mode = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
 script = ExtResource("4_afkia")
 
-[node name="Label" type="Label" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=2025770063]
+[node name="VBoxContainer" type="VBoxContainer" parent="RegisterInfo" unique_id=682981723]
 layout_mode = 2
-text = "Welcome to Murlan!"
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
 
-[node name="MarginContainer3" type="MarginContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=510900598]
+[node name="1" type="PanelContainer" parent="RegisterInfo/VBoxContainer" unique_id=221808849]
 layout_mode = 2
-theme_override_constants/margin_top = 8
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_7e8dj")
 
-[node name="Username" type="LineEdit" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=752133016]
+[node name="LoginPanel" type="PanelContainer" parent="RegisterInfo/VBoxContainer/1" unique_id=833965890]
 layout_mode = 2
-placeholder_text = "Username"
+theme = ExtResource("2_fvamt")
+
+[node name="TextureRect" type="TextureRect" parent="RegisterInfo/VBoxContainer/1/LoginPanel" unique_id=1834390277]
+layout_mode = 2
+texture = ExtResource("5_1alyd")
+expand_mode = 1
+
+[node name="PanelContainer" type="Panel" parent="RegisterInfo/VBoxContainer/1/LoginPanel" unique_id=1580210364]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_7jho6")
+
+[node name="MarginContainer" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer" unique_id=827322980]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="HBoxContainer" type="VBoxContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer" unique_id=860581835]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer" unique_id=1822811254]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_constants/outline_size = 20
+theme_override_font_sizes/font_size = 30
+text = "REGISTER TO PLAY!"
+vertical_alignment = 1
+
+[node name="HBoxContainer2" type="VBoxContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer" unique_id=479480417]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2" unique_id=441488800]
+layout_mode = 2
+alignment = 1
+
+[node name="Username" type="LineEdit" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/HBoxContainer" unique_id=671627753]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_dq6oh")
+placeholder_text = "Username or Email"
 clear_button_enabled = true
 
-[node name="MarginContainer" type="MarginContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=941646736]
+[node name="MarginContainer3" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/HBoxContainer" unique_id=1225542396]
 layout_mode = 2
-theme_override_constants/margin_top = 10
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
 
-[node name="Email" type="LineEdit" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=1945883949]
+[node name="Password" type="LineEdit" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/HBoxContainer" unique_id=1375092824]
 layout_mode = 2
-placeholder_text = "Email"
-emoji_menu_enabled = false
-clear_button_enabled = true
-caret_blink = true
-caret_blink_interval = 0.5
-secret_character = "*"
-
-[node name="MarginContainer4" type="MarginContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=1964041775]
-layout_mode = 2
-theme_override_constants/margin_top = 10
-
-[node name="Password" type="LineEdit" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=1140952530]
-layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_7awho")
 placeholder_text = "Password"
 emoji_menu_enabled = false
 clear_button_enabled = true
@@ -110,80 +182,172 @@ caret_blink_interval = 0.5
 secret = true
 secret_character = "*"
 
-[node name="RememberInfoContainer" type="HBoxContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=312858873]
+[node name="MarginContainer" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2" unique_id=1258628456]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+
+[node name="LoginContainer" type="HBoxContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2" unique_id=1712728417]
+layout_mode = 2
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoginContainer" unique_id=1245696584]
+layout_mode = 2
+theme_override_constants/margin_right = 80
+
+[node name="Email" type="LineEdit" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoginContainer" unique_id=1492412861]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_dq6oh")
+placeholder_text = "Email"
+clear_button_enabled = true
+
+[node name="MarginContainer2" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoginContainer" unique_id=468576616]
+layout_mode = 2
+theme_override_constants/margin_right = 80
+
+[node name="RememberInfoContainer" type="HBoxContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer" unique_id=1432633083]
 layout_mode = 2
 size_flags_vertical = 8
 theme_override_constants/separation = 6
 alignment = 2
 
-[node name="Label" type="Label" parent="RegisterPanel/MarginContainer/RegisterSignupInfo/RememberInfoContainer" unique_id=1543224456]
+[node name="Label" type="Label" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/RememberInfoContainer" unique_id=1735279119]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 12
+theme_override_colors/font_outline_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 14
 text = "Remember me"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="RememberInfoCheckbox" type="CheckBox" parent="RegisterPanel/MarginContainer/RegisterSignupInfo/RememberInfoContainer" unique_id=284617600]
+[node name="RememberInfoCheckbox" type="CheckBox" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/RememberInfoContainer" unique_id=649635542]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+theme_override_icons/checked = ExtResource("6_wlfwt")
+theme_override_icons/unchecked = ExtResource("7_54e3n")
 alignment = 1
 icon_alignment = 1
 expand_icon = true
 
-[node name="MarginContainer2" type="MarginContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=1117951467]
+[node name="MarginContainer2" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer" unique_id=485485018]
 layout_mode = 2
-theme_override_constants/margin_top = 25
+theme_override_constants/margin_top = 20
 
-[node name="RegisterLoginButtons" type="VBoxContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo" unique_id=516353426]
+[node name="VBoxContainer" type="VBoxContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer" unique_id=881216597]
 layout_mode = 2
-script = ExtResource("5_pr50c")
+script = SubResource("GDScript_x4ce0")
 
-[node name="RegisterButton" type="Button" parent="RegisterPanel/MarginContainer/RegisterSignupInfo/RegisterLoginButtons" unique_id=952653970]
-custom_minimum_size = Vector2(140, 30)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_styles/normal = SubResource("StyleBoxFlat_m3v72")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_avmqu")
-theme_override_styles/hover = SubResource("StyleBoxFlat_1alyd")
-text = "Register"
-
-[node name="MarginContainer2" type="MarginContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo/RegisterLoginButtons" unique_id=671378359]
-layout_mode = 2
-theme_override_constants/margin_top = 40
-
-[node name="LoginPageContainer" type="HBoxContainer" parent="RegisterPanel/MarginContainer/RegisterSignupInfo/RegisterLoginButtons" unique_id=1840873148]
+[node name="RegisterContainer" type="HBoxContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1379381018]
 layout_mode = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="RegisterPanel/MarginContainer/RegisterSignupInfo/RegisterLoginButtons/LoginPageContainer" unique_id=2053756134]
+[node name="MarginContainer" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/RegisterContainer" unique_id=761524960]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "Already have an account?"
+theme_override_constants/margin_right = 30
 
-[node name="LoginPageButton" type="Button" parent="RegisterPanel/MarginContainer/RegisterSignupInfo/RegisterLoginButtons/LoginPageContainer" unique_id=487384030]
+[node name="RegisterButton" type="Button" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/RegisterContainer" unique_id=1287509806]
+custom_minimum_size = Vector2(140, 30)
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_pressed_color = Color(0.08235294, 0.003921569, 0.3254902, 1)
-theme_override_colors/font_hover_color = Color(0, 0, 1, 1)
-theme_override_font_sizes/font_size = 13
-theme_override_styles/normal = SubResource("StyleBoxEmpty_a81xy")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_qkn4w")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_jik4v")
-text = "Login"
+size_flags_horizontal = 3
+theme = ExtResource("8_oou7e")
+theme_override_font_sizes/font_size = 20
+text = "REGISTER"
+script = ExtResource("9_a81xy")
+hue = 0
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
-[node name="MessageContainer" type="CenterContainer" parent="." unique_id=1852871827]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.8
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="MarginContainer2" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/RegisterContainer" unique_id=1166979817]
+layout_mode = 2
+theme_override_constants/margin_right = 30
+
+[node name="MarginContainer3" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1333716741]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+
+[node name="MarginContainer2" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=717593152]
+layout_mode = 2
+theme_override_constants/margin_top = 40
+
+[node name="3" type="PanelContainer" parent="RegisterInfo/VBoxContainer" unique_id=490842926]
+custom_maximum_size = Vector2(-1, 250)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_3hytt")
+
+[node name="TextureRect" type="TextureRect" parent="RegisterInfo/VBoxContainer/3" unique_id=169719443]
+layout_mode = 2
+texture = ExtResource("5_1alyd")
+expand_mode = 1
+
+[node name="MessageContainer" type="CenterContainer" parent="RegisterInfo/VBoxContainer/3" unique_id=171851582]
+layout_mode = 2
 script = ExtResource("5_8mejn")
 
-[node name="RandomMessage" type="Label" parent="MessageContainer" unique_id=1753980306]
+[node name="RandomMessage" type="Label" parent="RegisterInfo/VBoxContainer/3/MessageContainer" unique_id=1092183885]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 13
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_constants/outline_size = 20
+theme_override_font_sizes/font_size = 24
 horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="RegisterInfo" unique_id=1457876054]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="2" type="PanelContainer" parent="RegisterInfo/VBoxContainer2" unique_id=1360329783]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_vw7w7")
+
+[node name="TextureRect" type="TextureRect" parent="RegisterInfo/VBoxContainer2/2" unique_id=111790492]
+layout_mode = 2
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="RegisterInfo/VBoxContainer2/2" unique_id=1341376581]
+layout_mode = 2
+texture = ExtResource("11_qkn4w")
+expand_mode = 1
+
+[node name="4" type="PanelContainer" parent="RegisterInfo/VBoxContainer2" unique_id=1754750812]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_yfegi")
+
+[node name="TextureRect" type="TextureRect" parent="RegisterInfo/VBoxContainer2/4" unique_id=1842127582]
+layout_mode = 2
+texture = ExtResource("12_jik4v")
+expand_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="RegisterInfo/VBoxContainer2/4" unique_id=1597206927]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="LobbyLabel" type="Label" parent="RegisterInfo/VBoxContainer2/4/VBoxContainer" unique_id=40794517]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_constants/outline_size = 20
+theme_override_font_sizes/font_size = 30
+text = "Already have an account?"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="LoginPageButton" type="Button" parent="RegisterInfo/VBoxContainer2/4/VBoxContainer" unique_id=1354638869]
+custom_minimum_size = Vector2(120, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("8_oou7e")
+text = "LOGIN!"
+script = ExtResource("9_a81xy")
+hue = 2
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"

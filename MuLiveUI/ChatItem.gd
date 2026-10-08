@@ -20,7 +20,7 @@ func _ready() -> void:
 	_fit_message()
 
 func _fit_message() -> void:
-	var row_width := get_parent_area_size().x
+	var row_width := size.x
 	var username_length: float
 	if username_label.visible:
 		username_length = username_label.get_minimum_size().x

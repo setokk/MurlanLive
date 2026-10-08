@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://boyvchvkdj8nf"
-path="res://.godot/imported/clock.svg-1ce5751c58435298eeab04a46c614424.ctex"
+uid="uid://cav0wwnoy15kw"
+path="res://.godot/imported/ace_of_hearts_bg.png-d1ddc562226ea91de677f2e5460fcff8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://themes/clock.svg"
-dest_files=["res://.godot/imported/clock.svg-1ce5751c58435298eeab04a46c614424.ctex"]
+source_file="res://assets/images/ace_of_hearts_bg.png"
+dest_files=["res://.godot/imported/ace_of_hearts_bg.png-d1ddc562226ea91de677f2e5460fcff8.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false
