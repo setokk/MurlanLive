@@ -3,18 +3,21 @@
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_fvamt"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="1_pr50c"]
 [ext_resource type="Theme" uid="uid://bqn3ljfdspx6i" path="res://themes/LoginTheme.tres" id="2_fvamt"]
-[ext_resource type="Script" uid="uid://b50bl1ungtcem" path="res://scripts/register/RegisterInfo.gd" id="4_afkia"]
+[ext_resource type="Script" uid="uid://chwj4l3pbsa8" path="res://scripts/register/RegisterInfo.gd" id="4_afkia"]
 [ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="5_1alyd"]
 [ext_resource type="Script" uid="uid://beuyhyaeynanw" path="res://MessageContainer.gd" id="5_8mejn"]
+[ext_resource type="Texture2D" uid="uid://d0emioldemt72" path="res://assets/images/scattered_cards.png" id="5_wlfwt"]
 [ext_resource type="Texture2D" uid="uid://m4o3m877n0nb" path="res://assets/images/checkbox-checked.svg" id="6_wlfwt"]
 [ext_resource type="Texture2D" uid="uid://gkig57tyr62y" path="res://assets/images/checkbox-unchecked.svg" id="7_54e3n"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="8_oou7e"]
-[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="9_a81xy"]
+[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="9_a81xy"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="11_qkn4w"]
 [ext_resource type="Texture2D" uid="uid://cg1o8k7xy2gmx" path="res://assets/images/lines-texture-no-bg.png" id="12_jik4v"]
+[ext_resource type="Texture2D" uid="uid://b6i8p27giqxxu" path="res://assets/images/comic-2.png" id="12_oou7e"]
+[ext_resource type="Texture2D" uid="uid://dxdheemm2l6o1" path="res://assets/images/comic-1.png" id="14_a81xy"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7e8dj"]
-bg_color = Color(0.8392157, 0.3882353, 0.32941177, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_54e3n"]
+bg_color = Color(0.05882353, 0.0627451, 0.07058824, 0)
 border_width_left = 6
 border_width_top = 6
 border_width_right = 3
@@ -22,6 +25,17 @@ border_width_bottom = 3
 border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7jho6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oou7e"]
+bg_color = Color(1, 0.8862745, 0.87058824, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_size = 1
+shadow_offset = Vector2(1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dq6oh"]
 content_margin_left = 10.0
@@ -56,7 +70,7 @@ shadow_offset = Vector2(3, 3)
 [sub_resource type="GDScript" id="GDScript_x4ce0"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3hytt"]
-bg_color = Color(0.3254902, 0.8117647, 0.41568628, 1)
+bg_color = Color(0.3254902, 0.8117647, 0.41568628, 0)
 border_width_left = 6
 border_width_top = 3
 border_width_right = 3
@@ -64,7 +78,7 @@ border_width_bottom = 6
 border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vw7w7"]
-bg_color = Color(0.29411766, 0.54901963, 0.9254902, 1)
+bg_color = Color(0.29411766, 0.54901963, 0.9254902, 0)
 border_width_left = 3
 border_width_top = 6
 border_width_right = 6
@@ -109,37 +123,54 @@ theme_override_constants/separation = 0
 [node name="1" type="PanelContainer" parent="RegisterInfo/VBoxContainer" unique_id=221808849]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_7e8dj")
+theme_override_styles/panel = SubResource("StyleBoxFlat_54e3n")
 
-[node name="LoginPanel" type="PanelContainer" parent="RegisterInfo/VBoxContainer/1" unique_id=833965890]
+[node name="RegisterPanel" type="PanelContainer" parent="RegisterInfo/VBoxContainer/1" unique_id=833965890]
 layout_mode = 2
 theme = ExtResource("2_fvamt")
 
-[node name="TextureRect" type="TextureRect" parent="RegisterInfo/VBoxContainer/1/LoginPanel" unique_id=1834390277]
+[node name="ScatteredCards" type="TextureRect" parent="RegisterInfo/VBoxContainer/1/RegisterPanel" unique_id=1444203644]
+layout_mode = 2
+texture = ExtResource("5_wlfwt")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Noise" type="TextureRect" parent="RegisterInfo/VBoxContainer/1/RegisterPanel" unique_id=549446097]
+layout_mode = 2
+texture = ExtResource("11_qkn4w")
+expand_mode = 1
+
+[node name="Panel" type="Panel" parent="RegisterInfo/VBoxContainer/1/RegisterPanel" unique_id=1580210364]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_7jho6")
+
+[node name="PanelContainer" type="PanelContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel" unique_id=467655291]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.1
+anchor_right = 0.8
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_oou7e")
+
+[node name="TextureRect" type="TextureRect" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer" unique_id=1466105876]
 layout_mode = 2
 texture = ExtResource("5_1alyd")
 expand_mode = 1
 
-[node name="PanelContainer" type="Panel" parent="RegisterInfo/VBoxContainer/1/LoginPanel" unique_id=1580210364]
+[node name="MarginContainer" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer" unique_id=827322980]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_7jho6")
-
-[node name="MarginContainer" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer" unique_id=827322980]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="HBoxContainer" type="VBoxContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer" unique_id=860581835]
+[node name="HBoxContainer" type="VBoxContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer" unique_id=860581835]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer" unique_id=1822811254]
+[node name="Label" type="Label" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer" unique_id=1822811254]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
@@ -149,14 +180,14 @@ theme_override_font_sizes/font_size = 30
 text = "REGISTER_TO_PLAY_TEXT"
 vertical_alignment = 1
 
-[node name="HBoxContainer2" type="VBoxContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer" unique_id=479480417]
+[node name="HBoxContainer2" type="VBoxContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer" unique_id=479480417]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2" unique_id=441488800]
+[node name="HBoxContainer" type="HBoxContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2" unique_id=441488800]
 layout_mode = 2
 alignment = 1
 
-[node name="Username" type="LineEdit" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/HBoxContainer" unique_id=671627753]
+[node name="Username" type="LineEdit" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/HBoxContainer" unique_id=671627753]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
@@ -164,12 +195,12 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_dq6oh")
 placeholder_text = "Username"
 clear_button_enabled = true
 
-[node name="MarginContainer3" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/HBoxContainer" unique_id=1225542396]
+[node name="MarginContainer3" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/HBoxContainer" unique_id=1225542396]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
-[node name="Password" type="LineEdit" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/HBoxContainer" unique_id=1375092824]
+[node name="Password" type="LineEdit" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/HBoxContainer" unique_id=1375092824]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
@@ -182,19 +213,19 @@ caret_blink_interval = 0.5
 secret = true
 secret_character = "*"
 
-[node name="MarginContainer" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2" unique_id=1258628456]
+[node name="MarginContainer" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2" unique_id=1258628456]
 layout_mode = 2
 theme_override_constants/margin_top = 10
 
-[node name="LoginContainer" type="HBoxContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2" unique_id=1712728417]
+[node name="LoginContainer" type="HBoxContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2" unique_id=1712728417]
 layout_mode = 2
 alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoginContainer" unique_id=1245696584]
+[node name="MarginContainer" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoginContainer" unique_id=1245696584]
 layout_mode = 2
 theme_override_constants/margin_right = 80
 
-[node name="Email" type="LineEdit" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoginContainer" unique_id=1492412861]
+[node name="Email" type="LineEdit" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoginContainer" unique_id=1492412861]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
@@ -202,17 +233,17 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_dq6oh")
 placeholder_text = "Email"
 clear_button_enabled = true
 
-[node name="MarginContainer2" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoginContainer" unique_id=468576616]
+[node name="MarginContainer2" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoginContainer" unique_id=468576616]
 layout_mode = 2
 theme_override_constants/margin_right = 80
 
-[node name="RememberInfoContainer" type="HBoxContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer" unique_id=1432633083]
+[node name="RememberInfoContainer" type="HBoxContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer" unique_id=1432633083]
 layout_mode = 2
 size_flags_vertical = 8
 theme_override_constants/separation = 6
 alignment = 2
 
-[node name="Label" type="Label" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/RememberInfoContainer" unique_id=1735279119]
+[node name="Label" type="Label" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/RememberInfoContainer" unique_id=1735279119]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_outline_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
@@ -222,7 +253,7 @@ text = "REMEMBER_ME_CHECKBOX"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="RememberInfoCheckbox" type="CheckBox" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/RememberInfoContainer" unique_id=649635542]
+[node name="RememberInfoCheckbox" type="CheckBox" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/RememberInfoContainer" unique_id=649635542]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -232,23 +263,23 @@ alignment = 1
 icon_alignment = 1
 expand_icon = true
 
-[node name="MarginContainer2" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer" unique_id=485485018]
+[node name="MarginContainer2" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer" unique_id=485485018]
 layout_mode = 2
 theme_override_constants/margin_top = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer" unique_id=881216597]
+[node name="VBoxContainer" type="VBoxContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer" unique_id=881216597]
 layout_mode = 2
 script = SubResource("GDScript_x4ce0")
 
-[node name="RegisterContainer" type="HBoxContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1379381018]
+[node name="RegisterContainer" type="HBoxContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1379381018]
 layout_mode = 2
 alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/RegisterContainer" unique_id=761524960]
+[node name="MarginContainer" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/RegisterContainer" unique_id=761524960]
 layout_mode = 2
 theme_override_constants/margin_right = 30
 
-[node name="RegisterButton" type="Button" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/RegisterContainer" unique_id=1287509806]
+[node name="RegisterButton" type="Button" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/RegisterContainer" unique_id=1287509806]
 custom_minimum_size = Vector2(140, 30)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -258,17 +289,9 @@ text = "REGISTER_BUTTON"
 script = ExtResource("9_a81xy")
 hue = 0
 
-[node name="MarginContainer2" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/RegisterContainer" unique_id=1166979817]
+[node name="MarginContainer2" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/RegisterContainer" unique_id=1166979817]
 layout_mode = 2
 theme_override_constants/margin_right = 30
-
-[node name="MarginContainer3" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1333716741]
-layout_mode = 2
-theme_override_constants/margin_top = 10
-
-[node name="MarginContainer2" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=717593152]
-layout_mode = 2
-theme_override_constants/margin_top = 40
 
 [node name="3" type="PanelContainer" parent="RegisterInfo/VBoxContainer" unique_id=490842926]
 custom_maximum_size = Vector2(-1, 250)
@@ -276,9 +299,9 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_3hytt")
 
-[node name="TextureRect" type="TextureRect" parent="RegisterInfo/VBoxContainer/3" unique_id=169719443]
+[node name="ComicImage" type="TextureRect" parent="RegisterInfo/VBoxContainer/3" unique_id=166216300]
 layout_mode = 2
-texture = ExtResource("5_1alyd")
+texture = ExtResource("12_oou7e")
 expand_mode = 1
 
 [node name="MessageContainer" type="CenterContainer" parent="RegisterInfo/VBoxContainer/3" unique_id=171851582]
@@ -304,11 +327,12 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_vw7w7")
 
-[node name="TextureRect" type="TextureRect" parent="RegisterInfo/VBoxContainer2/2" unique_id=111790492]
+[node name="ComicImage" type="TextureRect" parent="RegisterInfo/VBoxContainer2/2" unique_id=1246165682]
 layout_mode = 2
+texture = ExtResource("14_a81xy")
 expand_mode = 1
 
-[node name="TextureRect2" type="TextureRect" parent="RegisterInfo/VBoxContainer2/2" unique_id=1341376581]
+[node name="Noise" type="TextureRect" parent="RegisterInfo/VBoxContainer2/2" unique_id=775228619]
 layout_mode = 2
 texture = ExtResource("11_qkn4w")
 expand_mode = 1

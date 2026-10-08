@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_jbclg"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_xpxjw"]
 [ext_resource type="Theme" uid="uid://bqn3ljfdspx6i" path="res://themes/LoginTheme.tres" id="3_na214"]
-[ext_resource type="Script" uid="uid://bhbpva4sor3de" path="res://scripts/login/LoginInfo.gd" id="4_7hd5n"]
+[ext_resource type="Script" uid="uid://bt6nn883cv0ps" path="res://scripts/login/LoginInfo.gd" id="4_7hd5n"]
 [ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="6_cmygb"]
 [ext_resource type="Script" uid="uid://beuyhyaeynanw" path="res://MessageContainer.gd" id="6_egi27"]
 [ext_resource type="Texture2D" uid="uid://d0emioldemt72" path="res://assets/images/scattered_cards.png" id="6_unb0q"]
@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://gkig57tyr62y" path="res://assets/images/checkbox-unchecked.svg" id="8_cmygb"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="9_qbsxj"]
 [ext_resource type="Texture2D" uid="uid://b6i8p27giqxxu" path="res://assets/images/comic-2.png" id="10_qbsxj"]
-[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="10_unb0q"]
+[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="10_unb0q"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="11_qbsxj"]
 [ext_resource type="Texture2D" uid="uid://dxdheemm2l6o1" path="res://assets/images/comic-1.png" id="12_7b01v"]
 [ext_resource type="Texture2D" uid="uid://cg1o8k7xy2gmx" path="res://assets/images/lines-texture-no-bg.png" id="12_unb0q"]
@@ -80,7 +80,7 @@ border_width_bottom = 6
 border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cmygb"]
-bg_color = Color(0.8392157, 0.3882353, 0.32941177, 1)
+bg_color = Color(0.8392157, 0.3882353, 0.32941177, 0)
 border_width_left = 3
 border_width_top = 6
 border_width_right = 6
@@ -107,14 +107,6 @@ theme = ExtResource("1_jbclg")
 [node name="Background" parent="." unique_id=2002749364 instance=ExtResource("2_xpxjw")]
 layout_mode = 1
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=885069183]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
 [node name="LoginInfo" type="HBoxContainer" parent="." unique_id=1851649727]
 layout_mode = 1
 anchors_preset = 15
@@ -139,13 +131,13 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_6cc1s")
 layout_mode = 2
 theme = ExtResource("3_na214")
 
-[node name="TextureRect3" type="TextureRect" parent="LoginInfo/VBoxContainer/1/LoginPanel" unique_id=1529751738]
+[node name="ScatteredCards" type="TextureRect" parent="LoginInfo/VBoxContainer/1/LoginPanel" unique_id=1483772222]
 layout_mode = 2
 texture = ExtResource("6_unb0q")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="TextureRect2" type="TextureRect" parent="LoginInfo/VBoxContainer/1/LoginPanel" unique_id=489766565]
+[node name="Noise" type="TextureRect" parent="LoginInfo/VBoxContainer/1/LoginPanel" unique_id=489766565]
 layout_mode = 2
 texture = ExtResource("11_qbsxj")
 expand_mode = 1
@@ -296,7 +288,7 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_p7dna")
 
-[node name="TextureRect" type="TextureRect" parent="LoginInfo/VBoxContainer/3" unique_id=2033902787]
+[node name="ComicImage" type="TextureRect" parent="LoginInfo/VBoxContainer/3" unique_id=2033902787]
 layout_mode = 2
 texture = ExtResource("10_qbsxj")
 expand_mode = 1
@@ -324,12 +316,12 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_cmygb")
 
-[node name="TextureRect" type="TextureRect" parent="LoginInfo/VBoxContainer2/2" unique_id=883758480]
+[node name="ComicImage" type="TextureRect" parent="LoginInfo/VBoxContainer2/2" unique_id=883758480]
 layout_mode = 2
 texture = ExtResource("12_7b01v")
 expand_mode = 1
 
-[node name="TextureRect2" type="TextureRect" parent="LoginInfo/VBoxContainer2/2" unique_id=362524902]
+[node name="Noise" type="TextureRect" parent="LoginInfo/VBoxContainer2/2" unique_id=362524902]
 layout_mode = 2
 texture = ExtResource("11_qbsxj")
 expand_mode = 1

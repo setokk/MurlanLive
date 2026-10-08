@@ -1,11 +1,11 @@
 extends HBoxContainer
 
-@onready var username_input: LineEdit = $"VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/HBoxContainer/Username"
-@onready var email_input: LineEdit = $"VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoginContainer/Email"
-@onready var password_input: LineEdit = $"VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/HBoxContainer/Password"
-@onready var register_button: MainButton = $"VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/RegisterContainer/RegisterButton"
+@onready var username_input: LineEdit = $"VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/HBoxContainer/Username"
+@onready var email_input: LineEdit = $"VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoginContainer/Email"
+@onready var password_input: LineEdit = $"VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/HBoxContainer/Password"
+@onready var register_button: MainButton = $"VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/RegisterContainer/RegisterButton"
 @onready var login_page_button: MainButton = $"VBoxContainer2/4/VBoxContainer/LoginPageButton"
-@onready var remember_me_checkbox: CheckBox = $"VBoxContainer/1/LoginPanel/PanelContainer/MarginContainer/HBoxContainer/RememberInfoContainer/RememberInfoCheckbox"
+@onready var remember_me_checkbox: CheckBox = $"VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/RememberInfoContainer/RememberInfoCheckbox"
 
 func _ready() -> void:
 	register_button.pressed.connect(_on_register_pressed)
