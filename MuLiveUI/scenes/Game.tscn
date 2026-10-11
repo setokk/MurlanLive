@@ -204,6 +204,7 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
+offset_bottom = 15.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
@@ -237,9 +238,9 @@ fill_mode = 4
 nine_patch_stretch = true
 texture_under = ExtResource("13_ocgqw")
 texture_progress = ExtResource("13_ocgqw")
-tint_progress = Color(0.18431373, 0.7490196, 0.2901961, 1)
+tint_progress = Color(0.972549, 0.6627451, 0.3019608, 1)
 
-[node name="IsReadyPowEffect" type="TextureRect" parent="TopArea/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual" unique_id=1282224943]
+[node name="IsReadyVisual" type="TextureRect" parent="TopArea/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual" unique_id=1282224943]
 layout_mode = 2
 texture = ExtResource("13_ocgqw")
 expand_mode = 3
@@ -292,14 +293,14 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Seat2" type="Control" parent="TopArea/TableArea/TableLayout" unique_id=261027752]
+[node name="Seat2" type="Control" parent="TopArea/TableArea/TableLayout" unique_id=1132758457]
 custom_minimum_size = Vector2(100, 100)
 anchors_preset = 0
 offset_right = 100.0
 offset_bottom = 100.0
 script = ExtResource("8_2rd6h")
 
-[node name="Panel" type="Panel" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=879820629]
+[node name="Panel" type="Panel" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=317400645]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -308,11 +309,12 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ql5b0")
 
-[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat2/Panel" unique_id=1432244147]
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat2/Panel" unique_id=109762529]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
+offset_bottom = 15.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
@@ -322,7 +324,7 @@ text = "Username"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CenterContainer" type="CenterContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel" unique_id=96948853]
+[node name="CenterContainer" type="CenterContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel" unique_id=817940471]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -330,11 +332,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer" unique_id=1910981576]
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer" unique_id=917524114]
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 
-[node name="TurnTimerBar" type="TextureProgressBar" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=45337249]
+[node name="TurnTimerBar" type="TextureProgressBar" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=193524243]
 visible = false
 custom_minimum_size = Vector2(80, 80)
 custom_maximum_size = Vector2(80, 80)
@@ -346,38 +348,38 @@ fill_mode = 4
 nine_patch_stretch = true
 texture_under = ExtResource("13_ocgqw")
 texture_progress = ExtResource("13_ocgqw")
-tint_progress = Color(0.18431373, 0.7490196, 0.2901961, 1)
+tint_progress = Color(0.972549, 0.6627451, 0.3019608, 1)
 
-[node name="IsReadyPowEffect" type="TextureRect" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=1555186153]
+[node name="IsReadyVisual" type="TextureRect" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=1185831802]
 layout_mode = 2
 texture = ExtResource("13_ocgqw")
 expand_mode = 3
 
-[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=1803013544]
+[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=1387259256]
 one_shot = true
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=1586221600]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=538643868]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="PanelContainer" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer" unique_id=1456998364]
+[node name="PanelContainer" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer" unique_id=228349317]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_attvq")
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer" unique_id=701211868]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer" unique_id=1245287497]
 layout_mode = 2
 theme_override_constants/margin_left = 7
 theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer" unique_id=2006424242]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer" unique_id=1707843366]
 layout_mode = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer" unique_id=820440477]
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer" unique_id=660804574]
 self_modulate = Color(0.78431374, 0.2509804, 0.18431373, 1)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_attvq")
@@ -385,7 +387,7 @@ icon = ExtResource("14_bneo8")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Score" type="Label" parent="TopArea/TableArea/TableLayout/Seat2/Panel" unique_id=1308414385]
+[node name="Score" type="Label" parent="TopArea/TableArea/TableLayout/Seat2/Panel" unique_id=403350613]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
@@ -401,14 +403,14 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Seat3" type="Control" parent="TopArea/TableArea/TableLayout" unique_id=261493960]
+[node name="Seat3" type="Control" parent="TopArea/TableArea/TableLayout" unique_id=1870034493]
 custom_minimum_size = Vector2(100, 100)
 anchors_preset = 0
 offset_right = 100.0
 offset_bottom = 100.0
 script = ExtResource("8_2rd6h")
 
-[node name="Panel" type="Panel" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1393439288]
+[node name="Panel" type="Panel" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1643594014]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -417,11 +419,12 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ql5b0")
 
-[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat3/Panel" unique_id=1184105268]
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat3/Panel" unique_id=622713749]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
+offset_bottom = 15.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
@@ -431,7 +434,7 @@ text = "Username"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CenterContainer" type="CenterContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel" unique_id=336408751]
+[node name="CenterContainer" type="CenterContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel" unique_id=955017202]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -439,11 +442,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer" unique_id=1908077308]
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer" unique_id=1384302547]
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 
-[node name="TurnTimerBar" type="TextureProgressBar" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=1614925801]
+[node name="TurnTimerBar" type="TextureProgressBar" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=171341581]
 visible = false
 custom_minimum_size = Vector2(80, 80)
 custom_maximum_size = Vector2(80, 80)
@@ -455,38 +458,38 @@ fill_mode = 4
 nine_patch_stretch = true
 texture_under = ExtResource("13_ocgqw")
 texture_progress = ExtResource("13_ocgqw")
-tint_progress = Color(0.18431373, 0.7490196, 0.2901961, 1)
+tint_progress = Color(0.972549, 0.6627451, 0.3019608, 1)
 
-[node name="IsReadyPowEffect" type="TextureRect" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=1451748193]
+[node name="IsReadyVisual" type="TextureRect" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=664386641]
 layout_mode = 2
 texture = ExtResource("13_ocgqw")
 expand_mode = 3
 
-[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=922292949]
+[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=427253343]
 one_shot = true
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=660404411]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=2074139256]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="PanelContainer" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer" unique_id=1273313348]
+[node name="PanelContainer" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer" unique_id=331009312]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_attvq")
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer" unique_id=694634953]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer" unique_id=1241849071]
 layout_mode = 2
 theme_override_constants/margin_left = 7
 theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer" unique_id=781387245]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer" unique_id=533860840]
 layout_mode = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer" unique_id=626002682]
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer" unique_id=275498265]
 self_modulate = Color(0.78431374, 0.2509804, 0.18431373, 1)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_attvq")
@@ -494,7 +497,7 @@ icon = ExtResource("14_bneo8")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Score" type="Label" parent="TopArea/TableArea/TableLayout/Seat3/Panel" unique_id=1654983928]
+[node name="Score" type="Label" parent="TopArea/TableArea/TableLayout/Seat3/Panel" unique_id=726476234]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
@@ -510,14 +513,14 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Seat4" type="Control" parent="TopArea/TableArea/TableLayout" unique_id=1917209781]
+[node name="Seat4" type="Control" parent="TopArea/TableArea/TableLayout" unique_id=747622361]
 custom_minimum_size = Vector2(100, 100)
 anchors_preset = 0
 offset_right = 100.0
 offset_bottom = 100.0
 script = ExtResource("8_2rd6h")
 
-[node name="Panel" type="Panel" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1792609328]
+[node name="Panel" type="Panel" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1112743013]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -526,11 +529,12 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ql5b0")
 
-[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat4/Panel" unique_id=1484526069]
+[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat4/Panel" unique_id=1085267964]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
+offset_bottom = 15.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
@@ -540,7 +544,7 @@ text = "Username"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CenterContainer" type="CenterContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel" unique_id=1837997058]
+[node name="CenterContainer" type="CenterContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel" unique_id=235905941]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -548,11 +552,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer" unique_id=68596945]
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer" unique_id=2096740028]
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 
-[node name="TurnTimerBar" type="TextureProgressBar" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=34340260]
+[node name="TurnTimerBar" type="TextureProgressBar" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=620643111]
 visible = false
 custom_minimum_size = Vector2(80, 80)
 custom_maximum_size = Vector2(80, 80)
@@ -564,38 +568,38 @@ fill_mode = 4
 nine_patch_stretch = true
 texture_under = ExtResource("13_ocgqw")
 texture_progress = ExtResource("13_ocgqw")
-tint_progress = Color(0.18431373, 0.7490196, 0.2901961, 1)
+tint_progress = Color(0.972549, 0.6627451, 0.3019608, 1)
 
-[node name="IsReadyPowEffect" type="TextureRect" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=2049930500]
+[node name="IsReadyVisual" type="TextureRect" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=793559454]
 layout_mode = 2
 texture = ExtResource("13_ocgqw")
 expand_mode = 3
 
-[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=1922763246]
+[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=877164238]
 one_shot = true
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=1771560698]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=2102757052]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="PanelContainer" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer" unique_id=2038058433]
+[node name="PanelContainer" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer" unique_id=778451388]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_attvq")
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer" unique_id=1735377924]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer" unique_id=819417663]
 layout_mode = 2
 theme_override_constants/margin_left = 7
 theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer" unique_id=1621317085]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer" unique_id=1998513386]
 layout_mode = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer" unique_id=2132312286]
+[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer" unique_id=1110545808]
 self_modulate = Color(0.78431374, 0.2509804, 0.18431373, 1)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_attvq")
@@ -603,7 +607,7 @@ icon = ExtResource("14_bneo8")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Score" type="Label" parent="TopArea/TableArea/TableLayout/Seat4/Panel" unique_id=1250676412]
+[node name="Score" type="Label" parent="TopArea/TableArea/TableLayout/Seat4/Panel" unique_id=1754173067]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0

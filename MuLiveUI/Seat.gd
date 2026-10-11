@@ -12,7 +12,7 @@ const SEAT_ICON: Texture2D = preload(
 
 signal on_taken_seat_pressed
 
-@onready var is_ready_pow_effect: TextureRect = $Panel/CenterContainer/SeatVisual/IsReadyPowEffect
+@onready var is_ready_visual: TextureRect = $Panel/CenterContainer/SeatVisual/IsReadyVisual
 @onready var seat_icon: Button = $Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer/SeatIcon
 @onready var username: Label = $Panel/Username
 @onready var score: Label = $Panel/Score
@@ -25,7 +25,7 @@ var player_id: int = -1
 
 func _ready() -> void:
 	username.visible = false
-	is_ready_pow_effect.visible = false
+	is_ready_visual.visible = false
 	score.visible = false
 	turn_timer_bar.visible = false
 	turn_timer_bar.min_value = 0.0
@@ -37,10 +37,12 @@ func start_turn(turn_time) -> void:
 	turn_timer.wait_time = turn_time
 	turn_timer.start()
 	turn_timer_bar.value = turn_time
+	username.set_anchor_and_offset(SIDE_BOTTOM, anchor_bottom, 0)
 	
 func stop_turn() -> void:
 	turn_timer_bar.visible = false
 	turn_timer.stop()
+	username.set_anchor_and_offset(SIDE_BOTTOM, anchor_bottom, 15)
 
 func _process(_delta: float) -> void:
 	if not turn_timer.is_stopped():
@@ -50,25 +52,25 @@ func set_player(player: Dictionary) -> void:
 	seat_icon.icon = USER_ICON
 	username.visible = true
 	username.text = player["username"]
-	is_ready_pow_effect.visible = true
+	username.set_anchor_and_offset(SIDE_BOTTOM, anchor_bottom, 0)
+	is_ready_visual.visible = true
 	is_seat_taken = true
 	player_id = player["id"]
 
 func remove_player() -> void:
 	seat_icon.icon = SEAT_ICON
 	username.visible = false
-	remove_ready_label()
+	remove_ready()
 	is_seat_taken = false
 	player_id = -1
 	
 func set_ready() -> void:
-	is_ready_pow_effect.self_modulate = MainPalette.get_color(MainPalette.Hue.YELLOW)
-	#is_ready_label.visible = true
-	#is_ready_label.text = "Ready"
+	is_ready_visual.self_modulate = MainPalette.get_color(MainPalette.Hue.GREEN, 4)
 	
-func remove_ready_label() -> void:
-	is_ready_pow_effect.self_modulate = MainPalette.get_color(MainPalette.Hue.NEUTRAL_GRAY,3)
-	is_ready_pow_effect.visible = false
+func remove_ready() -> void:
+	is_ready_visual.self_modulate = MainPalette.get_color(MainPalette.Hue.NEUTRAL_GRAY,3)
+	is_ready_visual.visible = false
+	username.set_anchor_and_offset(SIDE_BOTTOM, anchor_bottom, 15)
 	
 func set_score(value) -> void:
 	score.visible = true

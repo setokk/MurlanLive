@@ -7,11 +7,12 @@
 [ext_resource type="Texture2D" uid="uid://cnbp1yk6x4ylm" path="res://assets/images/grabber.svg" id="4_e1r5k"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="4_msm78"]
 [ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="5_koah1"]
+[ext_resource type="Texture2D" uid="uid://be31gmt5m06ip" path="res://assets/images/grabber_disabled.svg" id="6_msm78"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bm31b"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jjnu3"]
-bg_color = Color(0.9647059, 0.8745098, 0.68235296, 1)
+bg_color = Color(0.84705883, 0.84705883, 0.84705883, 1)
 border_width_bottom = 4
 border_color = Color(0, 0, 0, 1)
 shadow_color = Color(0, 0, 0, 1)
@@ -71,6 +72,7 @@ anchor_bottom = 0.08
 theme_override_styles/panel = SubResource("StyleBoxFlat_jjnu3")
 
 [node name="TextureRect" type="TextureRect" parent="Panel" unique_id=279441740]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -79,7 +81,7 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("3_msm78")
 expand_mode = 1
-stretch_mode = 1
+stretch_mode = 6
 
 [node name="MarginContainer2" type="MarginContainer" parent="Panel" unique_id=93844574]
 layout_mode = 1
@@ -104,10 +106,10 @@ alignment = 1
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
-theme_override_colors/font_uneditable_color = Color(1, 0.8862745, 0.87058824, 1)
-theme_override_colors/font_selected_color = Color(1, 0.8862745, 0.87058824, 1)
+theme_override_colors/font_uneditable_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_colors/font_selected_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
 theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
-theme_override_colors/font_placeholder_color = Color(1, 0.8862745, 0.87058824, 1)
+theme_override_colors/font_placeholder_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
 theme_override_colors/caret_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 16
@@ -179,6 +181,7 @@ text = "TOTAL_SCORE_LABEL"
 layout_mode = 2
 theme_override_icons/grabber = ExtResource("4_e1r5k")
 theme_override_icons/grabber_highlight = ExtResource("4_e1r5k")
+theme_override_icons/grabber_disabled = ExtResource("6_msm78")
 theme_override_styles/slider = SubResource("StyleBoxFlat_msm78")
 theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_koah1")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_jjnu3")

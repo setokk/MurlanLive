@@ -8,7 +8,7 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8ud1i"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xplp8"]
-bg_color = Color(0.9647059, 0.8745098, 0.68235296, 1)
+bg_color = Color(0.84705883, 0.84705883, 0.84705883, 1)
 border_width_bottom = 4
 border_color = Color(0, 0, 0, 1)
 shadow_color = Color(0, 0, 0, 1)
@@ -43,6 +43,7 @@ grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_xplp8")
 
 [node name="TextureRect" type="TextureRect" parent="Panel" unique_id=2011450348]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

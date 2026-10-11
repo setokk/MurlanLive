@@ -106,7 +106,7 @@ func init_active_game(game_state: Dictionary) -> void:
 		
 	if int(game_state["totalGamesPlayed"]) < 1:
 		for player in players:
-			seats[find_player_seat_index(player["id"])].remove_ready_label()
+			seats[find_player_seat_index(player["id"])].remove_ready()
 		turn_time = float(game_state["turnDurationInSeconds"])
 	
 	var my_hand: Array[int] = []
