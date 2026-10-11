@@ -28,10 +28,10 @@ enum GameStateEnum {
 @onready var play_button: Button = $BottomArea/ButtonsContainer/PlayButton
 @onready var pass_button: Button = $BottomArea/ButtonsContainer/PassButton
 @onready var played_cards: Panel = $TopArea/TableArea/TableLayout/PlayedCards
-@onready var is_ready_button: Button = $TopArea/LeftArea/TextureRect/MarginContainer/RoomInfo/VBoxContainer2/ReadyButton
-@onready var leave_room_button: Button = $TopArea/LeftArea/TextureRect/MarginContainer/RoomInfo/VBoxContainer2/LeaveButton
+@onready var is_ready_button: Button = $TopArea/LeftArea/TextureRect/RoomInfo/MarginContainer/VBoxContainer/VBoxContainer2/ReadyButton
+@onready var leave_room_button: Button = $TopArea/LeftArea/TextureRect/RoomInfo/MarginContainer/VBoxContainer/VBoxContainer2/LeaveButton
 @onready var give_card_button: Button = $BottomArea/ButtonsContainer/GiveCardButton
-@onready var room_info : Panel = $TopArea/LeftArea/TextureRect/MarginContainer/RoomInfo
+@onready var room_info : Panel = $TopArea/LeftArea/TextureRect/RoomInfo
 @onready var player_context_menu: PlayerContextMenu = $PlayerContextMenu
 @onready var chat: Chat = $TopArea/RightArea/Chat
 

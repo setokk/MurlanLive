@@ -117,7 +117,7 @@ func calculate_initial_layout() -> void:
 	)
 
 func place_seat(
-	seat: VBoxContainer,
+	seat: Seat,
 	point: Vector2,
 	pivot: Vector2
 ) -> void:

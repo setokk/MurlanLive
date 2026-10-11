@@ -2,9 +2,16 @@
 
 [ext_resource type="Script" uid="uid://bb227ed7b0utb" path="res://Chat.gd" id="1_uca72"]
 [ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="2_hv8y0"]
+[ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="2_loyew"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="2_xplp8"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8ud1i"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xplp8"]
+bg_color = Color(0.9647059, 0.8745098, 0.68235296, 1)
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+shadow_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_loyew"]
 bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
@@ -26,13 +33,55 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_8ud1i")
 script = ExtResource("1_uca72")
 
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1253022401]
+[node name="Panel" type="Panel" parent="." unique_id=1403980799]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.08
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_xplp8")
+
+[node name="TextureRect" type="TextureRect" parent="Panel" unique_id=2011450348]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("2_loyew")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=487884247]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="ChatLabel" type="Label" parent="Panel/MarginContainer" unique_id=1155879014]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 16
+text = "CHAT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1253022401]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.1
+anchor_right = 1.0
+anchor_bottom = 1.0
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 8
