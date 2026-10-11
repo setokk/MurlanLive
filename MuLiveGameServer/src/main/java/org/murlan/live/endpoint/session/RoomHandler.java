@@ -24,8 +24,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class RoomHandler {
-    private record DisconnectionTask(UUID roomId, ScheduledFuture<?> graceTask) {}
-
     private final ConcurrentHashMap<String, PlayerSession> jwtToSessionMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<PlayerSession, UUID> sessionToRoomIdMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, List<PlayerSession>> roomIdToSessionMap = new ConcurrentHashMap<>(); // for efficient retrieval of players in a room

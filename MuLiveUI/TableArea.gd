@@ -207,6 +207,8 @@ func start_dealing(
 
 			remaining_cards[seat_index] -= 1
 	
+	deck.clear_deck()
+	
 func get_hand_card_global_position(hand: Panel) -> Vector2:
 
 	var local_position: Vector2 = (

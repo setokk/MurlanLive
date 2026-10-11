@@ -7,6 +7,7 @@ import org.murlan.um.core.ranking.Rating;
 import org.murlan.um.model.PlayerRatingEntity;
 import org.murlan.um.model.dto.RankRatingDto;
 import org.murlan.um.repository.PlayerRatingRepository;
+import org.murlan.um.repository.PlayerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PlayerRatingService {
     private final PlayerRatingRepository ratingRepository;
+    private final PlayerRepository playerRepository;
 
     public Map<Long, RankRatingDto> updatePlayerRatings(
             Map<Long, Short> pointsByPlayerId,
@@ -34,7 +36,7 @@ public class PlayerRatingService {
                 ));
 
         for (Long id : ids) {
-            entities.computeIfAbsent(id, PlayerRatingEntity::newFor);
+            entities.computeIfAbsent(id, pid -> PlayerRatingEntity.newFor(pid, playerRepository.getReferenceById(pid)));
         }
 
         List<Rating> ratings = new ArrayList<>(ids.size());

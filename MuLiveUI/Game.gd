@@ -4,7 +4,10 @@ class_name Game
 
 const CARD_SCENE: PackedScene = preload("res://scenes/Card.tscn")
 
+var is_reconnected: bool
+
 var room: Dictionary
+var game_state_status: int
 var current_player: Dictionary
 var current_player_seat_index: int
 var players: Array[Dictionary] = []
@@ -53,6 +56,7 @@ func _ready() -> void:
 	room_info.set_room_name(room["name"])
 	room_info.set_slider_value(int(room["totalScoreToWin"]))
 	room_info.set_time_option(int(room["turnDurationInSeconds"]))
+	turn_time = float(room["turnDurationInSeconds"])
 	room_info.set_room_info_editable(false)
 	
 	for i in seats.size() - 1:
@@ -85,21 +89,16 @@ func _ready() -> void:
 	WebSocketClient.unmute_resp.connect(_on_unmute_completed)
 	WebSocketClient.block_resp.connect(_on_block_completed)
 	WebSocketClient.unblock_resp.connect(_on_unblock_completed)
+	WebSocketClient.inform_player_lost_connection_resp.connect(_on_opponent_lost_connection)
+	WebSocketClient.inform_player_reconnected_resp.connect(_on_opponent_reconnected)
 	player_context_menu.mute_button_pressed.connect(_on_mute_requested)
 	player_context_menu.block_button_pressed.connect(_on_block_requested)
 	player_context_menu.kick_button_pressed.connect(_on_kick_requested)
 	WebSocketClient.send_message(GameStateReq.new())
 	
-
-func _on_game_start(resp: InformGameStartResp) -> void:
-	print("Game started")
-	var game_state: Dictionary = resp.game_state
-	var game_state_status: int = int(game_state["state"])
-
-	if typeof(game_state) != TYPE_DICTIONARY:
-		print("Unexpected data: ", game_state)
-		return
-		
+func init_active_game(game_state: Dictionary) -> void:
+	game_state_status = int(game_state["state"])
+	
 	played_cards.clear_cards()
 	hand_placeholder.clear_hand()
 	for opponent in opponent_hands:
@@ -107,7 +106,7 @@ func _on_game_start(resp: InformGameStartResp) -> void:
 		
 	if int(game_state["totalGamesPlayed"]) < 1:
 		for player in players:
-			seats[find_player_seat_index(player["id"])].remove_ready_label()	
+			seats[find_player_seat_index(player["id"])].remove_ready_label()
 		turn_time = float(game_state["turnDurationInSeconds"])
 	
 	var my_hand: Array[int] = []
@@ -145,6 +144,9 @@ func _on_game_start(resp: InformGameStartResp) -> void:
 				play_button.disabled = false
 				pass_button.disabled = false
 
+func _on_game_start(resp: InformGameStartResp) -> void:
+	init_active_game(resp.game_state)
+
 func _on_game_finish(resp: InformGameFinishResp) -> void:
 	if resp.response_status == 200:
 		var score_per_player_id : Dictionary = DictUtils.get_or_default("scorePerPlayerId", {}, resp.game_finish)
@@ -164,17 +166,33 @@ func _on_game_finish(resp: InformGameFinishResp) -> void:
 
 func _on_game_state(resp: GameStateResp) -> void:
 	var game_state: Dictionary = resp.game_state
-	var game_state_status: int = int(game_state["state"])
-
-	if typeof(game_state) != TYPE_DICTIONARY:
-		print("Unexpected data: ", game_state)
+	if is_reconnected:
+		is_reconnected = false
+		is_ready_button.disabled = true
+		room_info.set_room_info_editable(false)
+		assign_and_display_players(game_state)
+		init_active_game(game_state)
+		
+		var curr_card_combination: CardCombination = CardCombination.parse_card_combination(
+			str(game_state["currCardCombination"]),
+			ProtocolConfigProvider.get_config()
+		)
+		
+		var curr_cards: Array[Card] = []
+		curr_cards.assign(curr_card_combination.cards.map(
+				func(value: _Card):
+					var card: Card = CARD_SCENE.instantiate()
+					card.set_value(value)
+					return card))
+		played_cards.receive_cards(curr_cards, true, 0.025)
+		
 		return
+	
+	game_state_status = int(game_state["state"])
 	
 	match game_state_status:
 		GameStateEnum.WAITING:
-			players.assign(game_state["players"])
-			ready_players.assign(game_state["readyPlayers"])
-			display_players()
+			assign_and_display_players(game_state)
 		GameStateEnum.GIVING_CARDS:
 			pass
 		GameStateEnum.PLAYING:
@@ -246,6 +264,10 @@ func _on_ready_completed(resp: ReadyResp):
 		seats[0].set_ready()
 		is_ready_button.disabled = true
 		room_info.set_room_info_editable(false)
+		ready_players.append(ArrayUtils.find_by(
+			players,
+			func(p: Dictionary): return int(p["id"]) == PlayerSession.player.id
+		))
 	else:
 		print("error bruh: ", resp)
 
@@ -313,30 +335,29 @@ func _on_opponent_passed_hand(resp: InformPassResp) -> void:
 func _on_opponent_ready(resp: InformPlayerReadyResp) -> void:
 	if resp.response_status == 200:
 		seats[find_player_seat_index(resp.player["id"])].set_ready()
+		ready_players.append(resp.player)
 	else:
 		print("Error: ", resp)
-			
-func _on_opponent_leave(resp: InformPlayerLeaveRoomResp) -> void:
-	if resp.response_status == 200:	
-		var was_not_owner: bool = not is_owner(PlayerSession.player)
-		var player : Dictionary = ArrayUtils.find_by(
-			players,
-			func(p: Dictionary): return int(p["id"]) == resp.player_id
-		)
-		remove_player(resp.player_id)
-		chat.add_message("", false, player["username"] + " left the room")
-		var became_owner_now: bool = is_owner(PlayerSession.player)
-		
-		if was_not_owner && became_owner_now:
-			WebSocketClient.send_message(UpdateRoomDetailsReq.new(PlayerSession.player.username + "'s Room", -1, -1))
-			room_info.set_room_info_editable(true)
-			player_context_menu.kick_button.visible = true
-			chat.add_message("", false, "You are the owner of the room now.")
-		display_players()
-				
-	else:
-		print("Error: ", resp)
-		
+	
+func _on_opponent_leave(resp: InformPlayerLeaveRoomResp) -> void:	
+	handle_player_not_in_room(resp.response_status, false, func(): return resp.player_id)
+	
+	if not (GameStateEnum.WAITING == game_state_status):
+		ready_players.clear()
+		current_player_seat_index = find_player_seat_index(current_player["id"])
+		seats[current_player_seat_index].stop_turn()
+	display_players()
+	
+
+
+func _on_opponent_lost_connection(resp: InformPlayerLostConnectionResp) -> void:
+	handle_player_not_in_room(resp.response_status, true, func(): return resp.player_id)
+	display_players()
+
+func _on_opponent_reconnected(resp: InformPlayerReconnectedResp) -> void:
+	if resp.response_status == 200:
+		chat.add_message("", false, resp.player["username"] + " just reconnected")
+
 func _on_opponent_give_card(resp: InformGiveCardResp) -> void:
 	if resp.response_status == 200:
 		var opponent_hand_index = find_player_seat_index(int(resp.origin_player_id)) - 1
@@ -452,6 +473,42 @@ func find_player_seat_index(id) -> int:
 			return posmod(i-local_player_index,seats.size())
 	return 0
 
+func assign_and_display_players(game_state: Dictionary) -> void:
+	players.assign(game_state["players"])
+	ready_players.assign(game_state["readyPlayers"])
+	display_players()
+
+func handle_player_not_in_room(
+	response_status: int,
+	has_disconnected: bool,
+	player_id_resolver: Callable,
+	
+	) -> void:
+	var player_id: int = player_id_resolver.call()
+	if response_status == 200:	
+		var was_not_owner: bool = not is_owner(PlayerSession.player)
+		var player : Dictionary = ArrayUtils.find_by(
+			players,
+			func(p: Dictionary): return int(p["id"]) == player_id
+		)
+		
+		var removed_player: Dictionary = remove_player(player_id)
+		
+		var chat_message: String = " disconnected from the room" if has_disconnected else " left the room"
+		chat.add_message("", false, player["username"] + chat_message)
+		var became_owner_now: bool = is_owner(PlayerSession.player)
+		
+		if was_not_owner && became_owner_now:
+			WebSocketClient.send_message(UpdateRoomDetailsReq.new(PlayerSession.player.username + "'s Room", -1, -1))
+			room_info.set_room_info_editable(true)
+			player_context_menu.kick_button.visible = true
+			chat.add_message("", false, "You are the owner of the room now.")
+		
+		if has_disconnected:
+			add_player(removed_player)
+	else:
+		print("Error")
+
 func is_owner(player: Player) -> bool:
 	if players.is_empty():
 		return false
@@ -470,7 +527,7 @@ func update_room_details(room_details: Dictionary) -> void:
 	room_info.set_slider_value(int(room["totalScoreToWin"]))
 	room_info.set_time_option(int(room["turnDurationInSeconds"]))
 
-func remove_player(player_id: int) -> void:
+func remove_player(player_id: int) -> Dictionary:
 	var player: Dictionary = ArrayUtils.find_by(
 			players,
 			func(p: Dictionary): return int(p["id"]) == player_id
@@ -479,5 +536,15 @@ func remove_player(player_id: int) -> void:
 			ready_players,
 			func(p: Dictionary): return int(p["id"]) == player_id
 	)
+	
 	players.erase(player)
 	ready_players.erase(ready_player)
+	
+	return {
+		"player": player,
+		"ready_player": ready_player
+	}
+
+func add_player(removed_player: Dictionary) -> void:
+	players.append(removed_player["player"])
+	ready_players.append(removed_player["ready_player"])

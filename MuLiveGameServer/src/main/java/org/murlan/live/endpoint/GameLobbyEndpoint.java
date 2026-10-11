@@ -27,6 +27,7 @@ import org.murlan.live.endpoint.req.handler.ReadyReqHandler;
 import org.murlan.live.endpoint.req.handler.ReconnectReqHandler;
 import org.murlan.live.endpoint.req.handler.UnBlockReqHandler;
 import org.murlan.live.endpoint.req.handler.UnMuteReqHandler;
+import org.murlan.live.endpoint.req.handler.UpdatePlayerInfoReqHandler;
 import org.murlan.live.endpoint.req.handler.UpdateRoomDetailsReqHandler;
 import org.murlan.live.endpoint.session.PlayerSession;
 import org.murlan.live.endpoint.session.RoomHandler;
@@ -92,7 +93,8 @@ public class GameLobbyEndpoint {
             new UnMuteReqHandler(),
             new BlockReqHandler(playerRESTClient),
             new UnBlockReqHandler(playerRESTClient),
-            new ReconnectReqHandler(roomHandler)
+            new ReconnectReqHandler(roomHandler),
+            new UpdatePlayerInfoReqHandler(playerRESTClient)
     ));
 
     @OnOpen

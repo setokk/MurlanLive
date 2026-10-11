@@ -6,6 +6,7 @@ import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.dto.Player;
 import org.murlan.live.protocol.rest.request.UMBlockPlayerRequest;
 import org.murlan.live.protocol.rest.request.UMUnblockPlayerRequest;
+import org.murlan.live.protocol.rest.request.UMUpdatePlayerInfoRequest;
 import org.murlan.live.util.MLObjectMapper;
 
 import java.io.IOException;
@@ -89,5 +90,18 @@ public class PlayerRESTClient {
         }
 
         return Optional.of(objectMapper.readValue(response.body(), new TypeReference<>() {}));
+    }
+
+    public boolean updatePlayerInfo(String jwt, UMUpdatePlayerInfoRequest updatePlayerInfoRequest) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(config.getProtocol_um_server_host() + ENDPOINT + "/update-player-info"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + jwt)
+                .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(updatePlayerInfoRequest)))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return response.statusCode() == HttpStatus.OK_200.getStatusCode();
     }
 }

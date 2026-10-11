@@ -21,6 +21,8 @@ signal inform_player_ready_resp(resp: InformPlayerReadyResp)
 signal inform_player_chat_resp(resp: InformPlayerChatResp)
 signal inform_update_room_details_resp(resp: InformUpdateRoomDetailsResp)
 signal inform_player_kicked_resp(resp: InformPlayerKickedResp)
+signal inform_player_reconnected_resp(resp: InformPlayerReconnectedResp)
+signal inform_update_player_info_resp(resp: InformUpdatePlayerInfoResp)
 
 # Client Events
 signal game_state_resp(resp: GameStateResp)
@@ -39,6 +41,8 @@ signal mute_resp(resp: UpdateRoomDetailsResp)
 signal unmute_resp(resp: UpdateRoomDetailsResp)
 signal block_resp(resp: UpdateRoomDetailsResp)
 signal unblock_resp(resp: UpdateRoomDetailsResp)
+signal reconnect_resp(resp: ReconnectResp)
+signal update_player_info_resp(resp: UpdatePlayerInfoResp)
 
 var resp_signal_handlers: Dictionary[String, Callable] = {
 	ServerEvent.id(ServerEvent.Value.INFORM_PLAY_HAND): func(resp): inform_play_hand_resp.emit(resp),
@@ -53,6 +57,8 @@ var resp_signal_handlers: Dictionary[String, Callable] = {
 	ServerEvent.id(ServerEvent.Value.INFORM_PLAYER_CHAT): func(resp): inform_player_chat_resp.emit(resp),
 	ServerEvent.id(ServerEvent.Value.INFORM_UPDATE_ROOM_DETAILS): func(resp): inform_update_room_details_resp.emit(resp),
 	ServerEvent.id(ServerEvent.Value.INFORM_PLAYER_KICKED): func(resp): inform_player_kicked_resp.emit(resp),
+	ServerEvent.id(ServerEvent.Value.INFORM_PLAYER_RECONNECTED): func(resp): inform_player_reconnected_resp.emit(resp),
+	ServerEvent.id(ServerEvent.Value.INFORM_UPDATE_PLAYER_INFO): func(resp): inform_update_player_info_resp.emit(resp),
 	
 	ClientEvent.id(ClientEvent.Value.GAME_STATE): func(resp): game_state_resp.emit(resp),
 	ClientEvent.id(ClientEvent.Value.PLAY_HAND): func(resp): play_hand_resp.emit(resp),
@@ -69,7 +75,9 @@ var resp_signal_handlers: Dictionary[String, Callable] = {
 	ClientEvent.id(ClientEvent.Value.MUTE): func(resp): mute_resp.emit(resp),
 	ClientEvent.id(ClientEvent.Value.UNMUTE): func(resp): unmute_resp.emit(resp),
 	ClientEvent.id(ClientEvent.Value.BLOCK): func(resp): block_resp.emit(resp),
-	ClientEvent.id(ClientEvent.Value.UNBLOCK): func(resp): unblock_resp.emit(resp)
+	ClientEvent.id(ClientEvent.Value.UNBLOCK): func(resp): unblock_resp.emit(resp),
+	ClientEvent.id(ClientEvent.Value.RECONNECT): func(resp): reconnect_resp.emit(resp),
+	ClientEvent.id(ClientEvent.Value.UPDATE_PLAYER_INFO): func(resp): update_player_info_resp.emit(resp)
 }
 
 func send_message(req: Req) -> bool:

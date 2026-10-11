@@ -48,7 +48,7 @@ public final class OnGameFinish implements Runnable {
             Optional<Player> optionalFinalWinner = room.getTotalScores().entrySet().stream()
                     .filter(s -> s.getValue() >= room.getTotalScoreToWin())
                     .map(Map.Entry::getKey)
-                    .findAny();
+                    .findFirst();
 
             boolean isFinalWinner = optionalFinalWinner.isPresent();
 

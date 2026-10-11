@@ -125,7 +125,8 @@ CREATE TABLE IF NOT EXISTS player_rating (
     player_id BIGINT NOT NULL PRIMARY KEY,
     mu DOUBLE PRECISION NOT NULL,
     sigma DOUBLE PRECISION NOT NULL,
-    rooms_played INTEGER NOT NULL
+    rooms_played INTEGER NOT NULL,
+    version BIGINT NOT NULL DEFAULT 0
 );
 
 --

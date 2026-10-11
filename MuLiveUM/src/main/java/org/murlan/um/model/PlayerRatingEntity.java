@@ -7,6 +7,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,9 +41,13 @@ public class PlayerRatingEntity {
     @Column(name = "rooms_played", nullable = false)
     private int roomsPlayed;
 
-    public static PlayerRatingEntity newFor(Long playerId) {
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version;
+
+    public static PlayerRatingEntity newFor(Long playerId, PlayerEntity playerRef) {
         Rating fresh = new Rating();
-        return new PlayerRatingEntity(playerId, new PlayerEntity(playerId), fresh.mu, fresh.sigma, 0);
+        return new PlayerRatingEntity(playerId, playerRef, fresh.mu, fresh.sigma, 0, null);
     }
 
     public Rating toRating() {

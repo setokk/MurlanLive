@@ -34,6 +34,14 @@ public final class ReconnectReqHandler implements ReqHandler<ReconnectReq> {
         }
 
         Room room = optionalRoom.get();
+        context.player().setHand(
+                room.getActiveGameState().getPlayers()
+                        .stream()
+                        .filter(context.player()::equals)
+                        .findAny()
+                        .orElse(context.player())
+                        .getHand()
+        );
 
         Resp informResp = new InformPlayerReconnectedResp(ResponseStatus.OK, context.player());
 

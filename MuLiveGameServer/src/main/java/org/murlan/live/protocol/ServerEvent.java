@@ -37,7 +37,8 @@ public enum ServerEvent {
     INFORM_PLAYER_CHAT(),
     INFORM_UPDATE_ROOM_DETAILS(),
     INFORM_PLAYER_KICKED(),
-    INFORM_PLAYER_RECONNECTED();
+    INFORM_PLAYER_RECONNECTED(),
+    INFORM_UPDATE_PLAYER_INFO();
 
     public String id() {
         return "S" + ordinal();
