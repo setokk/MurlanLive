@@ -2,7 +2,6 @@ package org.murlan.um.service;
 
 import lombok.RequiredArgsConstructor;
 import org.murlan.um.core.logic.GameStateEnum;
-import org.murlan.um.error.BusinessLogicException;
 import org.murlan.um.model.GameStateEntity;
 import org.murlan.um.model.PlayerEntity;
 import org.murlan.um.model.RoomEntity;
@@ -21,14 +20,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,7 +77,7 @@ public class RoomService {
         return roomMapper.toDto(savedRoom, rankRatingsByPlayerId);
     }
 
-    public List<RoomDto> getRooms(int pageNumber, long playerId) {
+    public List<RoomDetailsDto> getRooms(int pageNumber, long playerId) {
         Pageable pageable = PageRequest.of(
                 pageNumber, pageSize,
                 Sort.by("creationDate").descending()
@@ -91,26 +88,7 @@ public class RoomService {
                 : roomRepository.findPublicRoomsByPlayerId(playerId, pageable);
 
         return rooms.stream()
-                .map(roomMapper::toDto)
+                .map(roomMapper::toDetailsDto)
                 .toList();
-    }
-
-    public RoomDetailsDto getRoomDetails(UUID roomId) {
-        RoomEntity room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Room with id: " + roomId + " not found"));
-
-        if (!room.getIsPublic()) {
-            PlayerDto player = authService.getAuthenticatedUser();
-
-            boolean isPlayerNotInRoom = room.getTotalScores().stream().noneMatch(ts -> player.getId().equals(ts.getId().getPlayerId()));
-            if (isPlayerNotInRoom) {
-                throw new BusinessLogicException(
-                        HttpStatus.FORBIDDEN,
-                        "Access denied to room with id: " + roomId
-                );
-            }
-        }
-
-        return roomMapper.toDetailsDto(room);
     }
 }

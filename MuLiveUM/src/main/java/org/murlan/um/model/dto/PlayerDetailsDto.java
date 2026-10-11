@@ -22,7 +22,7 @@ public final class PlayerDetailsDto {
     private LocalDateTime creationDate;
     private String email;
     private long profileIconId;
-    private String rank;
+    private Short rank;
     private Integer rating;
     private long totalRoomsPlayed;
 

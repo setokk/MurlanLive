@@ -74,7 +74,7 @@ func update_seat(
 	)
 
 	if is_occupied and !players.is_empty():
-		icon.texture_normal = USER_ICON
+		icon.texture_normal = ProfileIconUtils.load_image(int(players[seat_index].profileIconId))
 
 		username_label.text = (
 			players[seat_index].username

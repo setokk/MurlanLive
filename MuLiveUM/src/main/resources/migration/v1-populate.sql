@@ -2,4 +2,19 @@ INSERT INTO card_skin (id, name, total_score_required, combined_sha)
 VALUES (0, 'MuLive Default Skin', 0,'3d4aad3a2280a6a82d6c605bfb8304e76259a4e1bb8e41b56a99564183ac63e6');
 
 INSERT INTO profile_icon(id, filename)
-VALUES (nextval('profile_icon_seq'), currval('profile_icon_seq') || '.png')
+VALUES (nextval('profile_icon_seq'), currval('profile_icon_seq') || '.png');
+
+INSERT INTO profile_icon(id, filename)
+VALUES (nextval('profile_icon_seq'), currval('profile_icon_seq') || '.webp');
+
+INSERT INTO profile_icon(id, filename)
+VALUES (nextval('profile_icon_seq'), currval('profile_icon_seq') || '.webp');
+
+INSERT INTO profile_icon(id, filename)
+VALUES (nextval('profile_icon_seq'), currval('profile_icon_seq') || '.webp');
+
+INSERT INTO profile_icon(id, filename)
+VALUES (nextval('profile_icon_seq'), currval('profile_icon_seq') || '.webp');
+
+INSERT INTO profile_icon(id, filename)
+VALUES (nextval('profile_icon_seq'), currval('profile_icon_seq') || '.webp');

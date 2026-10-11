@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="4_wuide"]
 [ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="6_hwwg2"]
 [ext_resource type="Texture2D" uid="uid://dkt4rbxlikmv8" path="res://assets/images/plus-icon.svg" id="6_kayix"]
+[ext_resource type="Script" uid="uid://blwblqa8lh8vb" path="res://ClickableMarginContainer.gd" id="7_4hpk5"]
 [ext_resource type="Texture2D" uid="uid://c5mlenjmrvwrv" path="res://assets/images/dice-icon.svg" id="8_l31xl"]
 [ext_resource type="Texture2D" uid="uid://dabfi7n7nrrpg" path="res://assets/images/magnifying-glass.svg" id="9_kayix"]
 
@@ -199,6 +200,7 @@ theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
+script = ExtResource("7_4hpk5")
 
 [node name="TextureRect" type="TextureRect" parent="LobbyPanel/VBoxContainer/Panel/MarginContainer2/PlayerInfo/Panel/MarginContainer" unique_id=1379300325]
 layout_mode = 2

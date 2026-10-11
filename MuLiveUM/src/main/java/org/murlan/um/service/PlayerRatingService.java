@@ -67,8 +67,8 @@ public class PlayerRatingService {
             ratingRepository.save(entity);
 
             result.put(playerId, RankRatingDto.builder()
-                    .previousRank(Rank.of(previous).displayName())
-                    .newRank(Rank.of(current).displayName())
+                    .previousRank((short) Rank.of(previous).ordinal())
+                    .newRank((short) Rank.of(current).ordinal())
                     .previousRating(previous.displayRating())
                     .newRating(current.displayRating())
                     .build());

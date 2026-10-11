@@ -24,6 +24,8 @@ public class Player {
     private LocalDateTime creationDate;
     private String email;
     private long profileIconId;
+    private Short rankOrdinal;
+    private Integer displayRating;
     @JsonIgnore private String jwt;
     @JsonIgnore private Hand hand;
 
@@ -31,13 +33,24 @@ public class Player {
         this.id = id;
     }
 
-    public Player(long id, String username, LocalDateTime creationDate, String email, long profileIconId, String jwt) {
+    public Player(
+            long id,
+            String username,
+            LocalDateTime creationDate,
+            String email,
+            long profileIconId,
+            Short rankOrdinal,
+            Integer displayRating,
+            String jwt
+    ) {
         this.id = id;
         this.username = username;
         this.creationDate = creationDate;
         this.email = email;
         this.profileIconId = profileIconId;
         this.jwt = jwt;
+        this.rankOrdinal = rankOrdinal;
+        this.displayRating = displayRating;
     }
 
     public Player(long id, String username, LocalDateTime creationDate, String jwt) {

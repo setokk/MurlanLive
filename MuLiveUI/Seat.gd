@@ -49,7 +49,7 @@ func _process(_delta: float) -> void:
 		turn_timer_bar.value = turn_timer.time_left
 
 func set_player(player: Dictionary) -> void:
-	seat_icon.icon = USER_ICON
+	seat_icon.icon = ProfileIconUtils.load_image(int(player["profileIconId"]))
 	username.visible = true
 	username.text = player["username"]
 	username.set_anchor_and_offset(SIDE_BOTTOM, anchor_bottom, 0)

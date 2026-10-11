@@ -14,7 +14,8 @@ var value: _Card
 
 func _ready() -> void:
 	original_position = position
-	
+	if value:
+		sprite.texture = CardTextureLoader.CARD_TEXTURES[value._ordinal]
 
 func set_selected(selected: bool):
 	if selected:
@@ -24,7 +25,9 @@ func set_selected(selected: bool):
 
 func set_value(new_value: _Card):
 	self.value = new_value
-	sprite.texture = CardTextureLoader.CARD_TEXTURES[new_value._ordinal]
+	if is_node_ready():
+		sprite.texture = CardTextureLoader.CARD_TEXTURES[new_value._ordinal]
+	
 
 func set_face_down() -> void:
 	sprite.texture = CARD_BACK_TEXTURE

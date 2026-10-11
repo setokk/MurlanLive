@@ -34,6 +34,7 @@ import org.murlan.live.endpoint.session.RoomHandler;
 import org.murlan.live.game.logic.GameState;
 import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.ResponseStatus;
+import org.murlan.live.protocol.api.InformPlayerLeaveRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLostConnectionResp;
 import org.murlan.live.protocol.api.JoinRoomReq;
 import org.murlan.live.protocol.api.ReconnectReq;
@@ -56,6 +57,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.BiConsumer;
 
 @ServerEndpoint(value = "/game-lobby")
 public class GameLobbyEndpoint {
@@ -182,7 +184,20 @@ public class GameLobbyEndpoint {
         }
         PlayerSession playerSession = optionalPlayerSession.get();
 
-        Optional<List<PlayerSession>> playersInRoom = roomHandler.handleDisconnection(playerSession, scheduler, Room::finishDueToPlayerExit);
+        BiConsumer<Player, Optional<List<PlayerSession>>> onPlayerFinallyRemoved = (removedPlayer, afterRemovalPlayersInRoom) ->
+                afterRemovalPlayersInRoom.ifPresent(list -> {
+                    InformPlayerLeaveRoomResp resp = new InformPlayerLeaveRoomResp(ResponseStatus.OK, removedPlayer.getId());
+                    try {
+                        endpointHelper.informPlayers(resp, null, list);
+                    } catch (IOException e) {
+                        log.error("Failed to inform players of player {} leaving after disconnect grace period", removedPlayer.getId(), e);
+                    }
+                });
+
+        Optional<List<PlayerSession>> playersInRoom = roomHandler.handleDisconnection(
+                playerSession, scheduler, Room::finishDueToPlayerExit, onPlayerFinallyRemoved
+        );
+
         if (playersInRoom.isEmpty()) {
             return;
         }

@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://vt2qhvorrvf"]
+
+[ext_resource type="Script" uid="uid://dtfrgbahb3s2s" path="res://ProfileIconPicker.gd" id="1_pfic0"]
+[ext_resource type="Texture2D" uid="uid://bnkjq5vo2180i" path="res://assets/images/polka-dot-bg.png" id="2_5mu11"]
+[ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="2_pfic0"]
+[ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="3_pfic0"]
+[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="4_pfic0"]
+
+[node name="ProfileIconPicker" type="Control" unique_id=1165413645]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pfic0")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=809980635]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ContentPanel" type="PanelContainer" parent="CenterContainer" unique_id=887659183]
+custom_minimum_size = Vector2(300, 340)
+layout_mode = 2
+theme = ExtResource("2_pfic0")
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/ContentPanel" unique_id=150258154]
+layout_mode = 2
+texture = ExtResource("2_5mu11")
+expand_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="CenterContainer/ContentPanel" unique_id=2057792852]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/ContentPanel/Margin" unique_id=1069324837]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="CenterContainer/ContentPanel/Margin/VBox" unique_id=-1017257195]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="CenterContainer/ContentPanel/Margin/VBox/Header" unique_id=-1017257194]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "x"
+alignment = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/ContentPanel/Margin/VBox" unique_id=1965423593]
+custom_minimum_size = Vector2(260, 240)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="IconsGrid" type="GridContainer" parent="CenterContainer/ContentPanel/Margin/VBox/ScrollContainer" unique_id=1970872943]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 4
+
+[node name="SaveButton" type="Button" parent="CenterContainer/ContentPanel/Margin/VBox" unique_id=1225152935]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("3_pfic0")
+disabled = true
+text = "SAVE_BUTTON"
+script = ExtResource("4_pfic0")
+hue = 0
+normal_shade = 4

@@ -179,6 +179,9 @@ func _on_game_state(resp: GameStateResp) -> void:
 		)
 		
 		var curr_cards: Array[Card] = []
+		if curr_card_combination.cards.is_empty():
+			return
+		
 		curr_cards.assign(curr_card_combination.cards.map(
 				func(value: _Card):
 					var card: Card = CARD_SCENE.instantiate()
@@ -340,19 +343,16 @@ func _on_opponent_ready(resp: InformPlayerReadyResp) -> void:
 		print("Error: ", resp)
 	
 func _on_opponent_leave(resp: InformPlayerLeaveRoomResp) -> void:	
-	handle_player_not_in_room(resp.response_status, false, func(): return resp.player_id)
+	handle_player_not_in_room(resp.response_status, true, func(): return resp.player_id)
 	
 	if not (GameStateEnum.WAITING == game_state_status):
 		ready_players.clear()
 		current_player_seat_index = find_player_seat_index(current_player["id"])
 		seats[current_player_seat_index].stop_turn()
 	display_players()
-	
-
 
 func _on_opponent_lost_connection(resp: InformPlayerLostConnectionResp) -> void:
-	handle_player_not_in_room(resp.response_status, true, func(): return resp.player_id)
-	display_players()
+	handle_player_not_in_room(resp.response_status, false, func(): return resp.player_id)
 
 func _on_opponent_reconnected(resp: InformPlayerReconnectedResp) -> void:
 	if resp.response_status == 200:
@@ -463,7 +463,7 @@ func display_players() -> void:
 	for i in range(min(players.size(), seats.size())):
 		var seat_index: int = posmod(i-local_player_index,seats.size())
 		seats[seat_index].set_player(players[i])
-		
+	
 	for player in ready_players:
 		seats[find_player_seat_index(player["id"])].set_ready()
 
@@ -480,7 +480,7 @@ func assign_and_display_players(game_state: Dictionary) -> void:
 
 func handle_player_not_in_room(
 	response_status: int,
-	has_disconnected: bool,
+	has_left_room: bool,
 	player_id_resolver: Callable,
 	
 	) -> void:
@@ -492,20 +492,18 @@ func handle_player_not_in_room(
 			func(p: Dictionary): return int(p["id"]) == player_id
 		)
 		
-		var removed_player: Dictionary = remove_player(player_id)
+		if has_left_room:
+			remove_player(player_id)
 		
-		var chat_message: String = " disconnected from the room" if has_disconnected else " left the room"
+		var chat_message: String = " left the room" if has_left_room else " disconnected from the room"
 		chat.add_message("", false, player["username"] + chat_message)
 		var became_owner_now: bool = is_owner(PlayerSession.player)
 		
-		if was_not_owner && became_owner_now:
+		if has_left_room and (was_not_owner && became_owner_now):
 			WebSocketClient.send_message(UpdateRoomDetailsReq.new(PlayerSession.player.username + "'s Room", -1, -1))
 			room_info.set_room_info_editable(true)
 			player_context_menu.kick_button.visible = true
 			chat.add_message("", false, "You are the owner of the room now.")
-		
-		if has_disconnected:
-			add_player(removed_player)
 	else:
 		print("Error")
 
@@ -527,7 +525,7 @@ func update_room_details(room_details: Dictionary) -> void:
 	room_info.set_slider_value(int(room["totalScoreToWin"]))
 	room_info.set_time_option(int(room["turnDurationInSeconds"]))
 
-func remove_player(player_id: int) -> Dictionary:
+func remove_player(player_id: int) -> void:
 	var player: Dictionary = ArrayUtils.find_by(
 			players,
 			func(p: Dictionary): return int(p["id"]) == player_id
@@ -539,12 +537,3 @@ func remove_player(player_id: int) -> Dictionary:
 	
 	players.erase(player)
 	ready_players.erase(ready_player)
-	
-	return {
-		"player": player,
-		"ready_player": ready_player
-	}
-
-func add_player(removed_player: Dictionary) -> void:
-	players.append(removed_player["player"])
-	ready_players.append(removed_player["ready_player"])

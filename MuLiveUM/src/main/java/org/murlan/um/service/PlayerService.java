@@ -121,14 +121,14 @@ public class PlayerService {
                 ? player.getEmail()
                 : null;
 
-        String displayRank = "UNRANKED";
+        Short rank = null;
         Integer displayRating = null;
         int roomsPlayed = 0;
 
         PlayerRatingEntity playerRating = player.getRating();
         if (playerRating != null) {
             Rating rating = playerRating.toRating();
-            displayRank = Rank.of(rating).displayName();
+            rank = (short) Rank.of(rating).ordinal();
             displayRating = rating.displayRating();
             roomsPlayed = rating.roomsPlayed;
         }
@@ -139,7 +139,7 @@ public class PlayerService {
                 player.getCreatedDate(),
                 email,
                 player.getProfileIcon().getId(),
-                displayRank,
+                rank,
                 displayRating,
                 roomsPlayed
         );

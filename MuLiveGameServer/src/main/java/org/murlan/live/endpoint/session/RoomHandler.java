@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -75,7 +76,8 @@ public class RoomHandler {
     public Optional<List<PlayerSession>> handleDisconnection(
             @NonNull PlayerSession playerSession,
             @NonNull ScheduledExecutorService scheduler,
-            Consumer<Room> onPlayerLeaveOrDisconnect
+            Consumer<Room> onPlayerLeaveOrDisconnect,
+            BiConsumer<Player, Optional<List<PlayerSession>>> onPlayerFinallyRemoved
     ) {
         jwtToSessionMap.remove(playerSession.getPlayer().getJwt());
 
@@ -104,7 +106,7 @@ public class RoomHandler {
 
             Player player = playerSession.getPlayer();
             ScheduledFuture<?> graceTask = scheduler.schedule(
-                    () -> finalizeDisconnectedPlayer(room, player, onPlayerLeaveOrDisconnect),
+                    () -> finalizeDisconnectedPlayer(room, player, onPlayerLeaveOrDisconnect, onPlayerFinallyRemoved),
                     GameConstants.RECONNECTION_GRACE_PERIOD_SECONDS,
                     TimeUnit.SECONDS
             );
@@ -147,14 +149,18 @@ public class RoomHandler {
         }
     }
 
-    private void finalizeDisconnectedPlayer(Room room, Player player, Consumer<Room> onPlayerLeaveOrDisconnect) {
+    private void finalizeDisconnectedPlayer(
+            Room room, Player player,
+            Consumer<Room> onPlayerLeaveOrDisconnect,
+            BiConsumer<Player, Optional<List<PlayerSession>>> onPlayerFinallyRemoved) {
         synchronized (room) {
             DisconnectionTask pending = disconnectedPlayers.get(player);
             if (pending == null || !roomIdToRoomMap.containsKey(pending.roomId())) {
                 disconnectedPlayers.remove(player);
                 return; // reconnected already, or room already finished/removed by another player's exit
             }
-            finalizePlayerRemoval(room, player, true, onPlayerLeaveOrDisconnect);
+            Optional<List<PlayerSession>> playersInRoom = finalizePlayerRemoval(room, player, true, onPlayerLeaveOrDisconnect);
+            onPlayerFinallyRemoved.accept(player, playersInRoom);
         }
     }
 

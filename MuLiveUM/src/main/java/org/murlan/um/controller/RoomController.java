@@ -11,7 +11,6 @@ import org.murlan.um.service.mapper.RoomMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/rooms")
@@ -34,14 +32,8 @@ public class RoomController {
         return ResponseEntity.ok(roomDto);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<RoomDetailsDto> getRoom(@PathVariable(name = "id") String roomId) {
-        RoomDetailsDto roomDetailsDto = roomService.getRoomDetails(UUID.fromString(roomId));
-        return ResponseEntity.ok(roomDetailsDto);
-    }
-
     @GetMapping
-    public ResponseEntity<List<RoomDto>> getRooms(
+    public ResponseEntity<List<RoomDetailsDto>> getRooms(
             @RequestParam(name = "pageNumber") int pageNumber,
             @RequestParam(name = "playerId") long playerId
     ) {
@@ -51,7 +43,7 @@ public class RoomController {
         if (playerId < 0) {
             throw new BusinessLogicException(HttpStatus.BAD_REQUEST, "playerId query parameter cannot be < 0");
         }
-        List<RoomDto> rooms = roomService.getRooms(pageNumber, playerId);
+        List<RoomDetailsDto> rooms = roomService.getRooms(pageNumber, playerId);
         return ResponseEntity.ok(rooms);
     }
 }
