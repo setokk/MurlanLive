@@ -23,8 +23,7 @@ public final class RoomDetailsDto {
     private LocalDateTime creationDate;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime finishedDate;
-    private short numPlayers;
-    private List<GameStateDto> gameStates;
-    private Map<String, Short> totalScores;
-    private List<PlayerDto> players;
+    private short totalScoreToWin;
+    private short roundsPlayed;
+    private List<PlayerScoreDto> playerScores;
 }

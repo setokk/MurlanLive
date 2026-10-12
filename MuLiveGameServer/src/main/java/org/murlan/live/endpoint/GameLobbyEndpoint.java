@@ -161,18 +161,29 @@ public class GameLobbyEndpoint {
                 playerSession.getSession().getId()
         );
 
-        ReqHandlerResult result = reqDispatcher.dispatch(req, new ReqContext(playerSession, room));
-        endpointHelper.send(result.resp(), playerSession);
-
-        if (req instanceof JoinRoomReq || req instanceof ReconnectReq) {
-            room = roomHandler.getPlayerRoom(playerSession);
+        ReqHandlerResult result;
+        endpointHelper.beginDelayedInforms();
+        try {
+            result = reqDispatcher.dispatch(req, new ReqContext(playerSession, room));
+        } finally {
+            endpointHelper.pauseDelayedInforms();
         }
 
-        if (room != null) {
-            endpointHelper.informPlayers(result.informResp(), playerSession, roomHandler.getPlayersInRoom(room.getId()));
-            if (room.getActiveGameState().shouldGameStart()) {
-                room.getActiveGameState().startGame();
+        try {
+            endpointHelper.send(result.resp(), playerSession);
+
+            if (req instanceof JoinRoomReq || req instanceof ReconnectReq) {
+                room = roomHandler.getPlayerRoom(playerSession);
             }
+
+            if (room != null) {
+                endpointHelper.informPlayers(result.informResp(), playerSession, roomHandler.getPlayersInRoom(room.getId()));
+                if (room.getActiveGameState().shouldGameStart()) {
+                    room.getActiveGameState().startGame();
+                }
+            }
+        } finally {
+            endpointHelper.flushDelayedInforms();
         }
     }
 

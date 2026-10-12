@@ -9,6 +9,7 @@ import org.murlan.live.protocol.api.InformPlayerJoinRoomResp;
 import org.murlan.live.protocol.api.JoinRoomReq;
 import org.murlan.live.protocol.api.JoinRoomResp;
 import org.murlan.live.protocol.api.Resp;
+import org.murlan.live.protocol.dto.RoomDto;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -28,18 +29,21 @@ public final class JoinRoomReqHandler implements ReqHandler<JoinRoomReq> {
         try {
             roomId = UUID.fromString(req.getRoomId());
         } catch (IllegalArgumentException | NullPointerException e) {
-            return ReqHandlerResult.reply(new JoinRoomResp(ResponseStatus.ERROR));
+            return ReqHandlerResult.reply(new JoinRoomResp(ResponseStatus.ERROR, null));
         }
 
         Resp informResp = null;
+        RoomDto roomDto = null;
 
         boolean isSuccessful = roomHandler.joinRoom(roomId, context.playerSession());
         if (isSuccessful) {
             informResp = new InformPlayerJoinRoomResp(ResponseStatus.OK, context.player());
+            roomDto = RoomDto.fromRoom(roomHandler.getRoom(roomId));
         }
 
         return ReqHandlerResult.replyAndInform(new JoinRoomResp(
-                isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR
+                isSuccessful ? ResponseStatus.OK : ResponseStatus.ERROR,
+                roomDto
         ), informResp);
     }
 }

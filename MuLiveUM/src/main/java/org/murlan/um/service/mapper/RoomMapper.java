@@ -1,62 +1,77 @@
 package org.murlan.um.service.mapper;
 
-import org.murlan.um.model.dto.PlayerDto;
+import lombok.RequiredArgsConstructor;
+import org.murlan.um.api.request.CreateRoomRequest;
+import org.murlan.um.model.PlayerEntity;
+import org.murlan.um.model.RoomEntity;
+import org.murlan.um.model.RoomPlayerEntity;
+import org.murlan.um.model.dto.PlayerScoreDto;
 import org.murlan.um.model.dto.RankRatingDto;
 import org.murlan.um.model.dto.RoomDetailsDto;
 import org.murlan.um.model.dto.RoomDto;
-import org.murlan.um.api.request.CreateRoomRequest;
-import org.murlan.um.model.GameStateEntity;
-import org.murlan.um.model.PlayerEntity;
-import org.murlan.um.model.RoomEntity;
+import org.murlan.um.model.dto.RoomItemDto;
+import org.murlan.um.model.pk.RoomPlayerId;
+import org.murlan.um.repository.PlayerRepository;
 import org.murlan.um.service.param.CreateRoomParam;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.murlan.um.util.DateUtils;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public final class RoomMapper {
-    private final GameStateMapper gameStateMapper;
-    private final ScoreTotalMapper scoreTotalMapper;
-
-    @Autowired
-    public RoomMapper(GameStateMapper gameStateMapper, ScoreTotalMapper scoreTotalMapper) {
-        this.gameStateMapper = gameStateMapper;
-        this.scoreTotalMapper = scoreTotalMapper;
-    }
+    private final PlayerRepository playerRepository;
 
     public CreateRoomParam toParam(CreateRoomRequest request) {
-        Map<PlayerDto, Short> totalScores = request.getTotalScores().entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                        entry -> PlayerDto.builder().id(Long.valueOf(entry.getKey())).build(),
-                        Map.Entry::getValue
-                ));
         return new CreateRoomParam(
                 request.getId(),
                 request.getName(),
                 request.getIsPublic(),
                 request.getCreationDate(),
                 request.getTotalScoreToWin(),
-                request.getGameStates(),
-                totalScores,
-                (short) totalScores.size(),
-                request.getOwner()
+                request.getRoundsPlayed(),
+                request.getTotalScores(),
+                request.getOwnerId()
         );
     }
 
-    public RoomDto toDto(RoomEntity entity) {
-        return RoomDto.builder()
-                .id(entity.getId().toString())
-                .name(entity.getName())
-                .creationDate(entity.getCreationDate())
-                .finishedDate(entity.getFinishedDate())
-                .numPlayers(entity.getNumPlayers())
+    public RoomEntity toEntity(CreateRoomParam param) {
+        return RoomEntity.builder()
+                .id(UUID.fromString(param.id()))
+                .name(param.name())
+                .isPublic(param.isPublic())
+                .creationDate(param.creationDate())
+                .finishedDate(DateUtils.getLocalDateTimeNowUTC())
+                .totalScoreToWin(param.totalScoreToWin())
+                .roundsPlayed(param.roundsPlayed())
+                .owner(new PlayerEntity(param.ownerId()))
                 .build();
+    }
+
+    public List<RoomPlayerEntity> toRoomPlayerEntities(RoomEntity room, Map<Long, Short> totalScores) {
+        List<RoomPlayerEntity> roomPlayers = new ArrayList<>();
+
+        short placement = 1;
+        for (Map.Entry<Long, Short> entry : totalScores.entrySet()) {
+            Long playerId = entry.getKey();
+            Short score = entry.getValue();
+
+            roomPlayers.add(RoomPlayerEntity.builder()
+                    .id(new RoomPlayerId(room.getId(), playerId))
+                    .room(room)
+                    .player(playerRepository.getReferenceById(playerId))
+                    .placementIndex(placement)
+                    .totalScore(score)
+                    .build());
+
+            placement++;
+        }
+        return roomPlayers;
     }
 
     public RoomDto toDto(RoomEntity entity, Map<Long, RankRatingDto> rankRatingsByPlayerId) {
@@ -65,8 +80,16 @@ public final class RoomMapper {
                 .name(entity.getName())
                 .creationDate(entity.getCreationDate())
                 .finishedDate(entity.getFinishedDate())
-                .numPlayers(entity.getNumPlayers())
                 .rankRatingsByPlayerId(rankRatingsByPlayerId)
+                .build();
+    }
+
+    public RoomItemDto toItemDto(RoomEntity entity) {
+        return RoomItemDto.builder()
+                .id(entity.getId().toString())
+                .name(entity.getName())
+                .creationDate(entity.getCreationDate())
+                .finishedDate(entity.getFinishedDate())
                 .build();
     }
 
@@ -76,24 +99,21 @@ public final class RoomMapper {
                 .name(entity.getName())
                 .creationDate(entity.getCreationDate())
                 .finishedDate(entity.getFinishedDate())
-                .numPlayers(entity.getNumPlayers())
-                .gameStates(gameStateMapper.toDtos(entity.getGameStates()))
-                .totalScores(scoreTotalMapper.toDtos(entity.getTotalScores()))
-                .players(entity.getPlayers().stream().map(p -> PlayerDto.fromPlayer(p, null)).toList())
+                .totalScoreToWin(entity.getTotalScoreToWin())
+                .roundsPlayed(entity.getRoundsPlayed())
+                .playerScores(toPlayerScores(entity.getRoomPlayers()))
                 .build();
     }
 
-    public RoomEntity toEntity(CreateRoomParam param, List<GameStateEntity> gameStates) {
-        return RoomEntity.builder()
-                .id(UUID.fromString(param.id()))
-                .name(param.name())
-                .isPublic(param.isPublic())
-                .creationDate(param.creationDate())
-                .finishedDate(LocalDateTime.now())
-                .totalScoreToWin(param.totalScoreToWin())
-                .numPlayers(param.numPlayers())
-                .gameStates(gameStates)
-                .owner(PlayerEntity.builder().id(param.owner().getId()).build())
-                .build();
+    private List<PlayerScoreDto> toPlayerScores(List<RoomPlayerEntity> entities) {
+        return entities.stream()
+                .sorted(Comparator.comparingInt(RoomPlayerEntity::getPlacementIndex))
+                .map(rp -> new PlayerScoreDto(
+                        rp.getId().getPlayerId(),
+                        rp.getPlayer().getUsername(),
+                        rp.getPlayer().getProfileIcon().getId(),
+                        rp.getTotalScore())
+                )
+                .toList();
     }
 }

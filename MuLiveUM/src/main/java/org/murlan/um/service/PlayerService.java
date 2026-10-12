@@ -20,6 +20,7 @@ import org.murlan.um.security.TokenGenerator;
 import org.murlan.um.service.param.LoginPlayerParam;
 import org.murlan.um.service.param.RegisterPlayerParam;
 import org.murlan.um.service.param.UpdatePlayerInfoParam;
+import org.murlan.um.util.DateUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
@@ -85,7 +86,7 @@ public class PlayerService {
             throw new BusinessLogicException(HttpStatus.CONFLICT, "Player with email: " + param.email() + " exists");
         }
 
-        PlayerEntity savedPlayer = playerRepository.save(new PlayerEntity(param.username(), passwordEncoder.encode(param.password()), param.email(), LocalDateTime.now()));
+        PlayerEntity savedPlayer = playerRepository.save(new PlayerEntity(param.username(), passwordEncoder.encode(param.password()), param.email(), DateUtils.getLocalDateTimeNowUTC()));
         if (isEmailVerificationRequired) {
             PlayerEmailVerificationEntity emailVerification = new PlayerEmailVerificationEntity(null, tokenGenerator.generateToken(), savedPlayer);
             emailVerificationRepository.save(emailVerification);
@@ -191,7 +192,7 @@ public class PlayerService {
         PlayerResetPasswordEntity resetPassword = new PlayerResetPasswordEntity(
                 null,
                 tokenGenerator.generateToken(),
-                LocalDateTime.now().plusHours(12),
+                DateUtils.getLocalDateTimeNowUTC().plusHours(12),
                 player
         );
         PlayerResetPasswordEntity savedResetPassword = resetPasswordRepository.save(resetPassword);
@@ -231,7 +232,7 @@ public class PlayerService {
         PlayerResetPasswordEntity resetPassword = resetPasswordRepository.findByToken(token)
                 .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Reset password token not found"));
 
-        if (LocalDateTime.now().isAfter(resetPassword.getExpiresAt())) {
+        if (DateUtils.getLocalDateTimeNowUTC().isAfter(resetPassword.getExpiresAt())) {
             return;
         }
 

@@ -8,15 +8,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+import java.util.UUID;
+
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 @Embeddable
-public class ScorePK {
+public class RoomPlayerId implements Serializable {
+    @Column(name = "room_id", updatable = false, nullable = false, columnDefinition = "uuid")
+    private UUID roomId;
+
     @Column(name = "player_id", updatable = false, nullable = false)
     private Long playerId;
-    @Column(name = "game_state_id", updatable = false, nullable = false)
-    private Long gameStateId;
 }

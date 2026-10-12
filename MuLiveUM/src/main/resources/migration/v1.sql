@@ -33,9 +33,9 @@ CREATE TABLE IF NOT EXISTS room(
     name TEXT NOT NULL,
     is_public BOOLEAN NOT NULL,
     total_score_to_win SMALLINT NOT NULL,
+    rounds_played SMALLINT NOT NULL,
     creation_date TIMESTAMP NOT NULL,
     finished_date TIMESTAMP NOT NULL,
-    num_players SMALLINT NOT NULL,
     owner_player_id BIGINT NOT NULL
 );
 
@@ -45,41 +45,9 @@ CREATE TABLE IF NOT EXISTS room(
 CREATE TABLE IF NOT EXISTS room_player (
     room_id UUID NOT NULL,
     player_id BIGINT NOT NULL,
+    placement_index SMALLINT NOT NULL CHECK (placement_index BETWEEN 1 AND 4),
+    total_score SMALLINT NOT NULL,
     PRIMARY KEY (room_id, player_id)
-);
-
---
--- game_state Table
---
-CREATE TABLE IF NOT EXISTS game_state(
-    id BIGINT NOT NULL PRIMARY KEY,
-    state SMALLINT NOT NULL,
-    room_id UUID NOT NULL
-);
-CREATE SEQUENCE IF NOT EXISTS game_state_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO CYCLE;
-
---
--- score Table
---
-CREATE TABLE IF NOT EXISTS score(
-    score SMALLINT NOT NULL,
-    player_id BIGINT NOT NULL,
-    game_state_id BIGINT NOT NULL,
-    PRIMARY KEY (player_id, game_state_id)
-);
-
---
--- score_total Table
---
-CREATE TABLE IF NOT EXISTS score_total(
-    score SMALLINT NOT NULL,
-    is_winner BOOLEAN NOT NULL,
-    player_id BIGINT NOT NULL,
-    room_id UUID NOT NULL,
-    PRIMARY KEY (player_id, room_id)
 );
 
 --

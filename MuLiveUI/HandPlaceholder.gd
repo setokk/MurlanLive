@@ -86,8 +86,11 @@ func get_card_to_give(isLoser: bool) -> _Card:
 	return card_to_give.value
 	
 func give_card(card: _Card) -> Card:
-	var index_of_card_to_give: int = cards.find(func(c: Card): return c.value.ordinal() == card.ordinal())
-	var card_to_give: Card = cards[index_of_card_to_give]
+	var matches: Array[Card] = cards.filter(func(c: Card): return c.value.ordinal() == card.ordinal())
+	if matches.is_empty():
+		return null
+
+	var card_to_give: Card = matches[0]
 	
 	cards.erase(card_to_give)
 	selected_cards.clear()

@@ -5,14 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import org.murlan.um.model.dto.PlayerDto;
-import org.murlan.um.model.dto.GameStateDto;
 import org.murlan.um.api.validation.IRequest;
-import org.murlan.um.error.BusinessLogicException;
-import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -31,36 +26,18 @@ public class CreateRoomRequest implements IRequest {
     @NotNull(message = "[CreateRoomRequest]: creationDate cannot be null")
     private final LocalDateTime creationDate;
 
-    @NotNull(message = "[CreateRoomRequest]: isPublic cannot be null")
+    @NotNull(message = "[CreateRoomRequest]: totalScoreToWin cannot be null")
     private final Short totalScoreToWin;
 
-    @NotNull(message = "[CreateRoomRequest]: gameStates cannot be null")
-    @NotEmpty(message = "[CreateRoomRequest]: gameStates cannot be empty")
-    private final List<GameStateDto> gameStates;
+    @NotNull(message = "[CreateRoomRequest]: roundsPlayed cannot be null")
+    private final Short roundsPlayed;
 
     @NotNull(message = "[CreateRoomRequest]: totalScores cannot be null")
     @NotEmpty(message = "[CreateRoomRequest]: totalScores cannot be empty")
-    private final Map<String, Short> totalScores;
+    private final Map<Long, Short> totalScores;
 
     @NotNull(message = "[CreateRoomRequest]: owner cannot be null")
-    private final PlayerDto owner;
-
-    @Override
-    public void preValidate() throws BusinessLogicException {
-        BusinessLogicException e = new BusinessLogicException(HttpStatus.BAD_REQUEST);
-
-        if (owner.getId() == null) {
-            e.addErrorMessage("[CreateRoomRequest]: owner.id cannot be null");
-        }
-        if (owner.getUsername() == null) {
-            e.addErrorMessage("[CreateRoomRequest]: owner.username cannot be null");
-        }
-        if (owner.getCreationDate() == null) {
-            e.addErrorMessage("[CreateRoomRequest]: owner.creationDate cannot be null");
-        }
-
-        if (e.hasErrorMessages()) throw e;
-    }
+    private final Long ownerId;
 
     @JsonCreator
     public CreateRoomRequest(
@@ -69,17 +46,17 @@ public class CreateRoomRequest implements IRequest {
             @JsonProperty("isPublic") Boolean isPublic,
             @JsonProperty("creationDate") LocalDateTime creationDate,
             @JsonProperty("totalScoreToWin") Short totalScoreToWin,
-            @JsonProperty("gameStates") List<GameStateDto> gameStates,
-            @JsonProperty("totalScores") Map<String, Short> totalScores,
-            @JsonProperty("owner") PlayerDto owner
+            @JsonProperty("roundsPlayed") Short roundsPlayed,
+            @JsonProperty("totalScores") Map<Long, Short> totalScores,
+            @JsonProperty("ownerId") Long ownerId
     ) {
         this.id = id;
         this.name = name;
         this.isPublic = isPublic;
         this.creationDate = creationDate;
         this.totalScoreToWin = totalScoreToWin;
-        this.gameStates = gameStates;
+        this.roundsPlayed = roundsPlayed;
         this.totalScores = totalScores;
-        this.owner = owner;
+        this.ownerId = ownerId;
     }
 }

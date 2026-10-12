@@ -116,9 +116,9 @@ func update_join_button() -> void:
 func _on_join_requested() -> void:
 	WebSocketClient.send_message(JoinRoomReq.new(room["id"]))
 	
-func _on_join_completed(resp : JoinRoomResp) -> void:
+func _on_join_completed(resp: JoinRoomResp) -> void:
 	if resp.response_status == 200:
-		SceneManager.show_game(room)
+		SceneManager.show_game(resp.room)
 		print("Joined successfully")
 	else:
 		print("Cannot join")

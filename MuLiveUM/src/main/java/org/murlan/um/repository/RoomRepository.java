@@ -10,21 +10,19 @@ import java.util.List;
 import java.util.UUID;
 
 public interface RoomRepository extends JpaRepository<RoomEntity, UUID> {
-    @Query(
-    """
+    @Query("""
         SELECT DISTINCT r
         FROM RoomEntity r
-        JOIN r.totalScores ts
-        WHERE ts.id.playerId=:playerId
+        JOIN r.roomPlayers rp
+        WHERE rp.player.id = :playerId
     """)
     List<RoomEntity> findAllRoomsByPlayerId(@Param("playerId") Long playerId, Pageable pageable);
 
-    @Query(
-    """
+    @Query("""
         SELECT DISTINCT r
         FROM RoomEntity r
-        JOIN r.totalScores ts
-        WHERE r.isPublic=true AND ts.id.playerId=:playerId
+        JOIN r.roomPlayers rp
+        WHERE r.isPublic = true AND rp.player.id = :playerId
     """)
     List<RoomEntity> findPublicRoomsByPlayerId(@Param("playerId") Long playerId, Pageable pageable);
 }

@@ -22,6 +22,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -63,8 +64,19 @@ public class PlayerEntity {
     @Column(name = "is_verified", nullable = false)
     private boolean isVerified;
 
-    @ManyToMany(mappedBy = "players", fetch = FetchType.LAZY)
-    private Set<RoomEntity> rooms = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+            name = "profile_icon_id",
+            nullable = false
+    )
+    private ProfileIconEntity profileIcon;
+
+    @OneToOne(
+            mappedBy = "player",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private PlayerRatingEntity rating;
 
     @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
     private HandLayoutConfigurationEntity handLayoutConfiguration;
@@ -83,19 +95,8 @@ public class PlayerEntity {
     @OneToOne(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
     private PlayerEmailVerificationEntity playerEmailVerification;
 
-    @OneToOne(
-            mappedBy = "player",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private PlayerRatingEntity rating;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(
-            name = "profile_icon_id",
-            nullable = false
-    )
-    private ProfileIconEntity profileIcon;
+    @OneToMany(mappedBy = "player", fetch = FetchType.LAZY)
+    private List<RoomPlayerEntity> roomPlayers = new ArrayList<>();
 
     public PlayerEntity(String username, String password, String email, LocalDateTime createdDate) {
         this.username = username;

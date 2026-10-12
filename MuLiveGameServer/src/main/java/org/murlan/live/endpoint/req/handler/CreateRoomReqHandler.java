@@ -13,9 +13,9 @@ import org.murlan.live.protocol.api.CreateRoomResp;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.dto.RoomDto;
 import org.murlan.live.protocol.rest.RoomRESTClient;
+import org.murlan.live.util.DateUtils;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.concurrent.ScheduledExecutorService;
 
 @RequiredArgsConstructor
@@ -36,7 +36,7 @@ public final class CreateRoomReqHandler implements ReqHandler<CreateRoomReq> {
         Room newRoom = new Room(
                 req.getRoomName(),
                 req.isPublic(),
-                LocalDateTime.now(),
+                DateUtils.getLocalDateTimeNowUTC(),
                 req.getTotalScoreToWin(),
                 context.player(),
                 req.getTurnDurationInSeconds(),

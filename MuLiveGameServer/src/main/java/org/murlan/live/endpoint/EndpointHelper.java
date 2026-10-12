@@ -11,18 +11,15 @@ import org.murlan.live.protocol.api.InformGameFinishResp;
 import org.murlan.live.protocol.api.InformGameStartResp;
 import org.murlan.live.protocol.api.InformGiveCardResp;
 import org.murlan.live.protocol.api.InformPassResp;
-import org.murlan.live.protocol.api.InformPlayHandResp;
 import org.murlan.live.protocol.api.InformPlayerChatResp;
-import org.murlan.live.protocol.api.InformPlayerJoinRoomResp;
-import org.murlan.live.protocol.api.InformPlayerLeaveRoomResp;
 import org.murlan.live.protocol.api.InformPlayerLostConnectionResp;
-import org.murlan.live.protocol.api.InformPlayerReadyResp;
 import org.murlan.live.protocol.api.Resp;
 import org.murlan.live.protocol.config.ProtocolConfig;
 import org.murlan.live.protocol.util.Generator;
 import org.murlan.live.protocol.util.Parser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,6 +31,10 @@ public class EndpointHelper {
     private final Parser parser;
     private final Generator generator;
     private final ProtocolConfig config;
+
+    private static final ThreadLocal<Boolean> capturing = ThreadLocal.withInitial(() -> false);
+    private static final ThreadLocal<List<DelayedInform>> delayedQueue = new ThreadLocal<>();
+    private record DelayedInform(Resp resp, PlayerSession originPlayer, List<PlayerSession> playerSessionsInRoom) {}
 
     public void send(Resp resp, PlayerSession playerSession) throws IOException {
         String message = generator.generateMessage(resp);
@@ -57,6 +58,37 @@ public class EndpointHelper {
         session.close(closeReason.create());
     }
 
+    public void beginDelayedInforms() {
+        capturing.set(true);
+        delayedQueue.set(new ArrayList<>());
+    }
+
+    public void pauseDelayedInforms() {
+        capturing.set(false);
+    }
+
+    /** Sends everything queued since beginDelayedInforms(), in the order it was queued. */
+    public void flushDelayedInforms() throws IOException {
+        List<DelayedInform> queue = delayedQueue.get();
+        capturing.remove();
+        delayedQueue.remove();
+
+        if (queue == null) {
+            return;
+        }
+        for (DelayedInform d : queue) {
+            doInformPlayers(d.resp(), d.originPlayer(), d.playerSessionsInRoom());
+        }
+    }
+
+    public void informPlayers(Resp resp, PlayerSession originPlayer, List<PlayerSession> playerSessionsInRoom) throws IOException {
+        if (Boolean.TRUE.equals(capturing.get())) {
+            delayedQueue.get().add(new DelayedInform(resp, originPlayer, playerSessionsInRoom));
+            return;
+        }
+        doInformPlayers(resp, originPlayer, playerSessionsInRoom);
+    }
+
     /**
      * Sends a server event to a list of players.
      * </br>
@@ -76,7 +108,7 @@ public class EndpointHelper {
      * @param playerSessionsInRoom the players that are in the room.
      * @throws IOException in case of any socket error
      */
-    public void informPlayers(Resp resp, PlayerSession originPlayer, List<PlayerSession> playerSessionsInRoom) throws IOException {
+    public void doInformPlayers(Resp resp, PlayerSession originPlayer, List<PlayerSession> playerSessionsInRoom) throws IOException {
         if (resp == null || playerSessionsInRoom == null) {
             return;
         }

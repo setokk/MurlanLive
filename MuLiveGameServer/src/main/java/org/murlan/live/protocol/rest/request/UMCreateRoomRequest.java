@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.murlan.live.game.logic.GameState;
 import org.murlan.live.game.logic.Room;
 import org.murlan.live.protocol.dto.Player;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
@@ -22,9 +22,9 @@ public final class UMCreateRoomRequest {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private final LocalDateTime creationDate;
     private final short totalScoreToWin;
-    private final List<GameState> gameStates;
-    private final Player owner;
-    private final Map<Player, Short> totalScores;
+    private final short roundsPlayed;
+    private final Map<Long, Short> totalScores;
+    private final Long ownerId;
 
     public static UMCreateRoomRequest createFrom(Room room) {
         return new UMCreateRoomRequest(
@@ -33,9 +33,15 @@ public final class UMCreateRoomRequest {
                 room.isPublic(),
                 room.getCreationDate(),
                 room.getTotalScoreToWin(),
-                room.getGameStates(),
-                room.getOwner(),
-                room.getTotalScores()
+                (short) room.getGameStates().size(),
+                room.getTotalScores().entrySet().stream()
+                        .collect(Collectors.toMap(
+                                entry -> entry.getKey().getId(),
+                                Map.Entry::getValue,
+                                (existing, replacement) -> existing,
+                                LinkedHashMap::new
+                        )),
+                room.getOwner().getId()
         );
     }
 }

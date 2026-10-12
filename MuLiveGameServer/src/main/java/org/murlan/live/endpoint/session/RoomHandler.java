@@ -10,8 +10,8 @@ import org.murlan.live.protocol.dto.Player;
 import org.murlan.live.protocol.dto.RoomDetailsDto;
 import org.murlan.live.protocol.dto.RoomDto;
 import org.murlan.live.protocol.dto.UpdatedRoomDetailsDto;
+import org.murlan.live.util.DateUtils;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -285,7 +285,7 @@ public class RoomHandler {
             Room copyRoom = new Room(
                     room.getName(),
                     room.isPublic(),
-                    LocalDateTime.now(),
+                    DateUtils.getLocalDateTimeNowUTC(),
                     room.getTotalScoreToWin(),
                     room.getOwner(),
                     room.getTurnDurationInSeconds(),

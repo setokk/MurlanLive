@@ -1,41 +1,32 @@
 package org.murlan.um.service;
 
 import lombok.RequiredArgsConstructor;
-import org.murlan.um.core.logic.GameStateEnum;
-import org.murlan.um.model.GameStateEntity;
-import org.murlan.um.model.PlayerEntity;
+import org.murlan.um.error.BusinessLogicException;
 import org.murlan.um.model.RoomEntity;
-import org.murlan.um.model.ScoreTotalEntity;
-import org.murlan.um.model.dto.PlayerDto;
 import org.murlan.um.model.dto.RankRatingDto;
 import org.murlan.um.model.dto.RoomDetailsDto;
 import org.murlan.um.model.dto.RoomDto;
+import org.murlan.um.model.dto.RoomItemDto;
 import org.murlan.um.repository.RoomRepository;
-import org.murlan.um.repository.ScoreTotalRepository;
-import org.murlan.um.service.mapper.GameStateMapper;
 import org.murlan.um.service.mapper.RoomMapper;
-import org.murlan.um.service.mapper.ScoreTotalMapper;
 import org.murlan.um.service.param.CreateRoomParam;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class RoomService {
     private final RoomRepository roomRepository;
-    private final ScoreTotalRepository scoreTotalRepository;
     private final RoomMapper roomMapper;
-    private final GameStateMapper gameStateMapper;
-    private final ScoreTotalMapper scoreTotalMapper;
     private final AuthService authService;
     private final PlayerRatingService playerRatingService;
 
@@ -44,40 +35,15 @@ public class RoomService {
 
     @Transactional
     public RoomDto createRoom(CreateRoomParam param) {
-        List<GameStateEntity> gameStates = param.gameStates().stream()
-                .map(gameStateMapper::toEntity)
-                .toList();
+        RoomEntity room = roomRepository.save(roomMapper.toEntity(param));
+        room.setRoomPlayers(roomMapper.toRoomPlayerEntities(room, param.totalScores()));
 
-        RoomEntity room = roomMapper.toEntity(param, gameStates);
-        gameStates.forEach(gs -> gs.setRoom(room));
-        RoomEntity savedRoom = roomRepository.save(room);
-
-        Map.Entry<PlayerDto, Short> winnerEntry = param.totalScores().entrySet().iterator().next();
-
-        List<ScoreTotalEntity> totalScores = param.totalScores().entrySet().stream()
-                .map(totalScore -> {
-                    boolean isWinner = winnerEntry.getKey().equals(totalScore.getKey());
-                    return scoreTotalMapper.toEntity(totalScore, savedRoom, isWinner);
-                })
-                .toList();
-        scoreTotalRepository.saveAll(totalScores);
-
-        Set<PlayerEntity> players = totalScores.stream().map(ste -> new PlayerEntity(ste.getId().getPlayerId())).collect(Collectors.toSet());
-        savedRoom.setPlayers(players);
-
-        Map<Long, RankRatingDto> rankRatingsByPlayerId = null;
-        if (GameStateEnum.FINISHED.equals(gameStates.getLast().getState())) {
-            Short firstScore = winnerEntry.getValue();
-
-            Map<Long, Short> pointsByPlayerId = param.totalScores().entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey().getId(), Map.Entry::getValue));
-            rankRatingsByPlayerId = playerRatingService.updatePlayerRatings(pointsByPlayerId, firstScore);
-        }
-
-        return roomMapper.toDto(savedRoom, rankRatingsByPlayerId);
+        Short winnerScore = param.totalScores().values().iterator().next();
+        Map<Long, RankRatingDto> playerRankings = playerRatingService.updatePlayerRatings(param.totalScores(), winnerScore);
+        return roomMapper.toDto(room, playerRankings);
     }
 
-    public List<RoomDetailsDto> getRooms(int pageNumber, long playerId) {
+    public List<RoomItemDto> getRooms(int pageNumber, long playerId) {
         Pageable pageable = PageRequest.of(
                 pageNumber, pageSize,
                 Sort.by("creationDate").descending()
@@ -88,7 +54,13 @@ public class RoomService {
                 : roomRepository.findPublicRoomsByPlayerId(playerId, pageable);
 
         return rooms.stream()
-                .map(roomMapper::toDetailsDto)
+                .map(roomMapper::toItemDto)
                 .toList();
+    }
+
+    public RoomDetailsDto getRoomDetails(UUID roomId) {
+        RoomEntity room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Room with id: " + roomId + " not found"));
+        return roomMapper.toDetailsDto(room);
     }
 }
