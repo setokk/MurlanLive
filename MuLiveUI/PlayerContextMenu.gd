@@ -1,4 +1,4 @@
-extends PanelContainer
+extends Popup
 
 class_name PlayerContextMenu
 
@@ -6,7 +6,6 @@ signal mute_button_pressed(player_id: int, is_muted: bool)
 signal block_button_pressed(player_id: int, is_blocked: bool)
 signal kick_button_pressed(player_id: int)
 
-@onready var close_button: Button = $MarginContainer/VBoxContainer/CloseButton
 @onready var profile_button: Button = $MarginContainer/VBoxContainer/ProfileButton
 @onready var mute_button: Button = $MarginContainer/VBoxContainer/MuteButton
 @onready var block_button: Button = $MarginContainer/VBoxContainer/BlockButton
@@ -17,6 +16,7 @@ var is_blocked: bool = false
 var player_id: int = -1
 
 func _ready() -> void:
+	close_requested.connect(_on_close_requested)
 	set_mute_and_block_buttons_text()
 	kick_button.visible = false
 	visible = false
@@ -33,8 +33,6 @@ func _ready() -> void:
 		_on_close_requested()
 		kick_button_pressed.emit(player_id)
 	)
-	
-	close_button.pressed.connect(_on_close_requested)
 
 func open_for_seat(seat: Seat) -> void:
 	player_id = seat.player_id
@@ -42,8 +40,7 @@ func open_for_seat(seat: Seat) -> void:
 	is_blocked = PlayerSession.is_blocked(player_id)
 	
 	set_mute_and_block_buttons_text()
-	
-	global_position = seat.global_position + Vector2(seat.size.x + 10, 0)
+	position = seat.global_position + Vector2(seat.size.x + 5, 0)
 	visible = true
 
 func set_mute_and_block_buttons_text():

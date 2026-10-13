@@ -1,4 +1,4 @@
-extends Control
+extends Popup
 class_name ProfileIconPicker
 
 @export var icons_directory: String = GameConstants.ICONS_DIRECTORY

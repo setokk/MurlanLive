@@ -7,7 +7,6 @@ import org.murlan.um.model.RoomEntity;
 import org.murlan.um.model.RoomPlayerEntity;
 import org.murlan.um.model.dto.PlayerScoreDto;
 import org.murlan.um.model.dto.RankRatingDto;
-import org.murlan.um.model.dto.RoomDetailsDto;
 import org.murlan.um.model.dto.RoomDto;
 import org.murlan.um.model.dto.RoomItemDto;
 import org.murlan.um.model.pk.RoomPlayerId;
@@ -34,6 +33,7 @@ public final class RoomMapper {
                 request.getIsPublic(),
                 request.getCreationDate(),
                 request.getTotalScoreToWin(),
+                request.getTurnDurationInSeconds(),
                 request.getRoundsPlayed(),
                 request.getTotalScores(),
                 request.getOwnerId()
@@ -48,6 +48,7 @@ public final class RoomMapper {
                 .creationDate(param.creationDate())
                 .finishedDate(DateUtils.getLocalDateTimeNowUTC())
                 .totalScoreToWin(param.totalScoreToWin())
+                .turnDurationInSeconds(param.turnDurationInSeconds())
                 .roundsPlayed(param.roundsPlayed())
                 .owner(new PlayerEntity(param.ownerId()))
                 .build();
@@ -90,18 +91,11 @@ public final class RoomMapper {
                 .name(entity.getName())
                 .creationDate(entity.getCreationDate())
                 .finishedDate(entity.getFinishedDate())
-                .build();
-    }
-
-    public RoomDetailsDto toDetailsDto(RoomEntity entity) {
-        return RoomDetailsDto.builder()
-                .id(entity.getId().toString())
-                .name(entity.getName())
-                .creationDate(entity.getCreationDate())
-                .finishedDate(entity.getFinishedDate())
                 .totalScoreToWin(entity.getTotalScoreToWin())
+                .turnDurationInSeconds(entity.getTurnDurationInSeconds())
                 .roundsPlayed(entity.getRoundsPlayed())
                 .playerScores(toPlayerScores(entity.getRoomPlayers()))
+                .ownerId(entity.getOwner().getId())
                 .build();
     }
 

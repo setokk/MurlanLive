@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.murlan.um.api.request.CreateRoomRequest;
 import org.murlan.um.error.BusinessLogicException;
-import org.murlan.um.model.dto.RoomDetailsDto;
 import org.murlan.um.model.dto.RoomDto;
 import org.murlan.um.model.dto.RoomItemDto;
 import org.murlan.um.service.RoomService;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/rooms")
@@ -47,11 +45,5 @@ public class RoomController {
         }
         List<RoomItemDto> rooms = roomService.getRooms(pageNumber, playerId);
         return ResponseEntity.ok(rooms);
-    }
-
-    @GetMapping("/get-room-details")
-    public ResponseEntity<RoomDetailsDto> getRoomDetails(@RequestParam(name = "roomId") UUID roomId) {
-        RoomDetailsDto roomDetails = roomService.getRoomDetails(roomId);
-        return ResponseEntity.ok(roomDetails);
     }
 }

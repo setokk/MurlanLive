@@ -34,6 +34,15 @@ func _on_login_completed(res: ApiResponse, jwt: String):
 		var blockedPlayersRes: ApiResponse = await PlayerRESTClient.get_blocked_players_completed
 		_on_get_blocked_players_completed(blockedPlayersRes)
 		
+		var layouts_json: String = JSON.stringify(
+			HandLayoutDto.array_to_dicts(HandLayoutConfig.layouts),
+			"",
+			false
+		)
+		HandLayoutRESTClient.check(FileUtils.sha256_file(layouts_json), jwt)
+		var handLayoutCheckRes: ApiResponse = await HandLayoutRESTClient.check_completed
+		_on_hand_layout_check_completed(handLayoutCheckRes)
+		
 		WebSocketClient.connect_to_ws(PlayerSession.jwt)
 		await WebSocketClient.connection_established
 		
@@ -72,3 +81,10 @@ func _on_get_blocked_players_completed(res: ApiResponse) -> void:
 		PlayerSession.init_blocked_players(blocked_players)
 	else:
 		PopupFactory.error("Errors:\n" + res.error_message())
+		
+func _on_hand_layout_check_completed(res: ApiResponse) -> void:
+	if res.status_code == 200:
+		HandLayoutConfig.layouts.assign(res.data)
+		HandLayoutConfig.save_layouts()
+	elif res.status_code == 204:
+		print("_on_hand_layout_check_completed -> 204 No Content")

@@ -30,24 +30,24 @@ enum GameStateEnum {
 @onready var hand_placeholder: Panel = $BottomArea/MarginContainer/HandPlaceholder
 @onready var play_button: Button = $BottomArea/ButtonsContainer/PlayButton
 @onready var pass_button: Button = $BottomArea/ButtonsContainer/PassButton
-@onready var played_cards: Panel = $TopArea/TableArea/TableLayout/PlayedCards
-@onready var is_ready_button: Button = $TopArea/LeftArea/TextureRect/RoomInfo/MarginContainer/VBoxContainer/VBoxContainer2/ReadyButton
-@onready var leave_room_button: Button = $TopArea/LeftArea/TextureRect/RoomInfo/MarginContainer/VBoxContainer/VBoxContainer2/LeaveButton
+@onready var played_cards: Panel = $TopArea/HBoxContainer/TableArea/TableLayout/PlayedCards
+@onready var is_ready_button: Button = $TopArea/HBoxContainer/LeftArea/TextureRect/RoomInfo/MarginContainer/VBoxContainer/VBoxContainer2/ReadyButton
+@onready var leave_room_button: Button = $TopArea/HBoxContainer/LeftArea/TextureRect/RoomInfo/MarginContainer/VBoxContainer/VBoxContainer2/LeaveButton
 @onready var give_card_button: Button = $BottomArea/ButtonsContainer/GiveCardButton
-@onready var room_info : Panel = $TopArea/LeftArea/TextureRect/RoomInfo
+@onready var room_info : Panel = $TopArea/HBoxContainer/LeftArea/TextureRect/RoomInfo
 @onready var player_context_menu: PlayerContextMenu = $PlayerContextMenu
-@onready var chat: Chat = $TopArea/RightArea/Chat
+@onready var chat: Chat = $TopArea/HBoxContainer/RightArea/Chat
 
 @onready var seats: Array[Seat] = [
-	$TopArea/TableArea/TableLayout/Seat1,
-	$TopArea/TableArea/TableLayout/Seat2,
-	$TopArea/TableArea/TableLayout/Seat3,
-	$TopArea/TableArea/TableLayout/Seat4
+	$TopArea/HBoxContainer/TableArea/TableLayout/Seat1,
+	$TopArea/HBoxContainer/TableArea/TableLayout/Seat2,
+	$TopArea/HBoxContainer/TableArea/TableLayout/Seat3,
+	$TopArea/HBoxContainer/TableArea/TableLayout/Seat4
 ]
 @onready var opponent_hands: Array[OpponentHand] = [
-	$TopArea/TableArea/TableLayout/OpponentHand2,
-	$TopArea/TableArea/TableLayout/OpponentHand3,
-	$TopArea/TableArea/TableLayout/OpponentHand4
+	$TopArea/HBoxContainer/TableArea/TableLayout/OpponentHand2,
+	$TopArea/HBoxContainer/TableArea/TableLayout/OpponentHand3,
+	$TopArea/HBoxContainer/TableArea/TableLayout/OpponentHand4
 ]
 
 func _ready() -> void:
@@ -91,6 +91,8 @@ func _ready() -> void:
 	WebSocketClient.unblock_resp.connect(_on_unblock_completed)
 	WebSocketClient.inform_player_lost_connection_resp.connect(_on_opponent_lost_connection)
 	WebSocketClient.inform_player_reconnected_resp.connect(_on_opponent_reconnected)
+	WebSocketClient.inform_update_player_info_resp.connect(_on_opponent_update_player_info)
+	WebSocketClient.update_player_info_resp.connect(_on_update_player_info_completed)
 	player_context_menu.mute_button_pressed.connect(_on_mute_requested)
 	player_context_menu.block_button_pressed.connect(_on_block_requested)
 	player_context_menu.kick_button_pressed.connect(_on_kick_requested)
@@ -107,14 +109,13 @@ func init_active_game(game_state: Dictionary) -> void:
 	if int(game_state["totalGamesPlayed"]) < 1:
 		for player in players:
 			seats[find_player_seat_index(player["id"])].remove_ready()
-		turn_time = float(game_state["turnDurationInSeconds"])
 	
 	var my_hand: Array[int] = []
 
-	for value in game_state["hand"].split("_"):
+	for value in game_state["hand"].split(ProtocolConfigProvider.get_config().protocol_list_delimiter):
 		my_hand.append(int(value))
 		
-	$TopArea/TableArea.start_dealing(
+	$TopArea/HBoxContainer/TableArea.start_dealing(
 		my_hand,
 		game_state["numOfCardsPerPlayerId"],
 		players,
@@ -132,10 +133,10 @@ func init_active_game(game_state: Dictionary) -> void:
 				is_local_player_loser = true
 				give_card_button.visible = true
 				
-		GameStateEnum.PLAYING:	
+		GameStateEnum.PLAYING:
 			current_player = game_state["currTurnPlayer"]
 			current_player_seat_index = find_player_seat_index(current_player["id"])
-			seats[current_player_seat_index].start_turn(turn_time)
+			seats[current_player_seat_index].start_turn(float(game_state["turnDurationInSeconds"]))
 
 			if current_player["id"] != PlayerSession.player.id:
 				play_button.disabled = true
@@ -203,11 +204,11 @@ func _on_game_state(resp: GameStateResp) -> void:
 				played_cards.clear_cards()
 			current_player = game_state["currTurnPlayer"]
 			current_player_seat_index = find_player_seat_index(current_player["id"])
-			seats[current_player_seat_index].start_turn(turn_time)
+			seats[current_player_seat_index].start_turn(float(game_state["turnDurationInSeconds"]))
 			
 			var my_hand: Array[int] = []
 
-			for value in game_state["hand"].split("_"):
+			for value in game_state["hand"].split(ProtocolConfigProvider.get_config().protocol_list_delimiter):
 				my_hand.append(int(value))
 
 			if current_player["id"] != PlayerSession.player.id:
@@ -315,7 +316,7 @@ func _on_opponent_joined(resp: InformPlayerJoinRoomResp):
 		var player: Dictionary = resp.player
 		chat.add_message("", false, player["username"] + " joined the room")
 		players.append(player)
-		seats[find_player_seat_index(player["id"])].set_player(player)
+		seats[find_player_seat_index(player["id"])].set_player(player, false)
 	else:
 		print("Error: ", resp)
 	
@@ -447,6 +448,28 @@ func _on_unblock_completed(resp: UnBlockResp) -> void:
 	if resp.response_status == 200:
 		PlayerSession.remove_blocked(int(resp.unblocked_player["id"]))
 		
+func _on_opponent_update_player_info(resp: InformUpdatePlayerInfoResp) -> void:
+	var updated_player: Dictionary = resp.player
+	var updated_player_id: int = int(updated_player["id"])
+	var updated_player_icon_id: int = int(updated_player["profileIconId"])
+	
+	var player: Dictionary = ArrayUtils.find_by(
+		players,
+		func(p: Dictionary): return int(p["id"] == updated_player_id)
+	)
+	
+	player["username"] = updated_player["username"]
+	player["profileIconId"] = updated_player_icon_id
+	
+	seats[find_player_seat_index(updated_player_id)].seat_icon.icon = ProfileIconUtils.load_image(updated_player_icon_id)
+
+func _on_update_player_info_completed(resp: UpdatePlayerInfoResp) -> void:
+	if resp.response_status != 200:
+		return
+	
+	PlayerSession.player.profile_icon_id = int(resp.player["profileIconId"])
+	seats[find_player_seat_index(PlayerSession.player.id)].seat_icon.icon = ProfileIconUtils.load_image(PlayerSession.player.profile_icon_id)
+
 # Helper functions
 func display_players() -> void:
 	local_player_index = 0
@@ -462,7 +485,7 @@ func display_players() -> void:
 	# Fill the seats in order with local player starting at seats[0]
 	for i in range(min(players.size(), seats.size())):
 		var seat_index: int = posmod(i-local_player_index,seats.size())
-		seats[seat_index].set_player(players[i])
+		seats[seat_index].set_player(players[i], i==0)
 	
 	for player in ready_players:
 		seats[find_player_seat_index(player["id"])].set_ready()

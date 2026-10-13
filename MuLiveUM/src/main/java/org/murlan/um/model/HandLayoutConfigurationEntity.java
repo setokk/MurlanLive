@@ -7,7 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -18,7 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import org.murlan.um.model.dto.HandLayoutConfigurationDto;
+import org.murlan.um.model.dto.HandLayoutDto;
 
 import java.util.List;
 
@@ -45,7 +44,10 @@ public class HandLayoutConfigurationEntity {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "hand_layouts", nullable = false, columnDefinition = "jsonb")
-    private List<HandLayoutConfigurationDto.HandLayoutDto> handLayouts;
+    private List<HandLayoutDto> handLayouts;
+
+    @Column(name = "sha", nullable = false)
+    private String sha;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "player_id", nullable = false, unique = true)

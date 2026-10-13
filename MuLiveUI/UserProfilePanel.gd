@@ -1,5 +1,4 @@
-extends MarginContainer
-class_name ClickableMarginContainer
+extends PanelContainer
 
 signal pressed
 

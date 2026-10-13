@@ -27,9 +27,11 @@ PopupFactory="*res://globals/PopupFactory.gd"
 SceneManager="*res://globals/SceneManager.gd"
 ProtocolConfigProvider="*res://globals/ProtocolConfigProvider.gd"
 PlayerSession="*res://globals/rest/PlayerSession.gd"
+HandLayoutConfig="*res://globals/HandLayoutConfig.gd"
 CardTextureLoader="*res://globals/CardTextureLoader.gd"
 PlayerRESTClient="*res://globals/rest/PlayerRESTClient.gd"
 RoomRESTClient="*res://globals/rest/RoomRESTClient.gd"
+HandLayoutRESTClient="*res://globals/rest/HandLayoutRESTClient.gd"
 WebSocketClient="*res://globals/ws/WebSocketClient.gd"
 
 [debug]

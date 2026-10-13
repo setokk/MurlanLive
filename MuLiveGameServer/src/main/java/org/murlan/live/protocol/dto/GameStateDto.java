@@ -39,7 +39,7 @@ public class GameStateDto {
                 .prevWinner(PlayerMinimizedDto.fromPlayer(room.getActiveGameState().getPrevWinner()))
                 .prevLoser(PlayerMinimizedDto.fromPlayer(room.getActiveGameState().getPrevLoser()))
                 .currTurnPlayer(PlayerMinimizedDto.fromPlayer(room.getActiveGameState().getCurrTurnPlayer()))
-                .turnDurationInSeconds(room.getActiveGameState().getTurnDurationInSeconds())
+                .turnDurationInSeconds(room.getActiveGameState().getTurnDurationLeftInSeconds())
                 .readyPlayers(room.getActiveGameState().getReadyPlayers().stream().map(PlayerMinimizedDto::fromPlayer).toList());
 
         GameState.State state = room.getActiveGameState().getState();
@@ -60,7 +60,7 @@ public class GameStateDto {
                 .prevWinner(PlayerMinimizedDto.fromPlayer(gameState.getPrevWinner()))
                 .prevLoser(PlayerMinimizedDto.fromPlayer(gameState.getPrevLoser()))
                 .currTurnPlayer(PlayerMinimizedDto.fromPlayer(gameState.getCurrTurnPlayer()))
-                .turnDurationInSeconds(gameState.getTurnDurationInSeconds())
+                .turnDurationInSeconds(gameState.getTurnDurationLeftInSeconds())
                 .readyPlayers(room.getActiveGameState().getReadyPlayers().stream().map(PlayerMinimizedDto::fromPlayer).toList());
 
         if (GameState.State.PLAYING.equals(gameState.getState()) || GameState.State.GIVING_CARDS.equals(gameState.getState())) {

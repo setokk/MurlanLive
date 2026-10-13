@@ -1,10 +1,8 @@
 package org.murlan.um.service;
 
 import lombok.RequiredArgsConstructor;
-import org.murlan.um.error.BusinessLogicException;
 import org.murlan.um.model.RoomEntity;
 import org.murlan.um.model.dto.RankRatingDto;
-import org.murlan.um.model.dto.RoomDetailsDto;
 import org.murlan.um.model.dto.RoomDto;
 import org.murlan.um.model.dto.RoomItemDto;
 import org.murlan.um.repository.RoomRepository;
@@ -14,13 +12,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -56,11 +52,5 @@ public class RoomService {
         return rooms.stream()
                 .map(roomMapper::toItemDto)
                 .toList();
-    }
-
-    public RoomDetailsDto getRoomDetails(UUID roomId) {
-        RoomEntity room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Room with id: " + roomId + " not found"));
-        return roomMapper.toDetailsDto(room);
     }
 }
