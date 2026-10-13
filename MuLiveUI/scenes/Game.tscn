@@ -1,23 +1,23 @@
 [gd_scene format=3 uid="uid://f8in7s47ipg4"]
 
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_71axn"]
-[ext_resource type="Script" uid="uid://dshkt7a1vlh6w" path="res://Game.gd" id="2_3xj3m"]
+[ext_resource type="Script" uid="uid://d2ugnd66ke3bo" path="res://Game.gd" id="2_3xj3m"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="2_dahhg"]
-[ext_resource type="Script" uid="uid://qfbjwyal50vd" path="res://TableArea.gd" id="3_3so38"]
+[ext_resource type="Script" uid="uid://cggmhq3jr6r2l" path="res://TableArea.gd" id="3_3so38"]
 [ext_resource type="Theme" uid="uid://dcg0tqtvbome4" path="res://themes/SeatTheme.tres" id="4_3cx6b"]
 [ext_resource type="Texture2D" uid="uid://c4de00wk83x2i" path="res://assets/images/MuLive Background Transparent.png" id="4_a8wo8"]
 [ext_resource type="Theme" uid="uid://cwicdyenfh6sh" path="res://themes/SideAreasTheme.tres" id="4_kyk2p"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="5_45i86"]
 [ext_resource type="PackedScene" uid="uid://ctiqqa23jajmf" path="res://scenes/RoomInfo.tscn" id="5_kyk2p"]
-[ext_resource type="Script" uid="uid://y8r0rpi50vla" path="res://Deck.gd" id="6_acvyw"]
-[ext_resource type="Script" uid="uid://dnpihega65fwq" path="res://OpponentHand.gd" id="7_alh3a"]
-[ext_resource type="Script" uid="uid://chdhko4w4etio" path="res://Seat.gd" id="8_2rd6h"]
-[ext_resource type="Script" uid="uid://cs2r8uvg6ffdb" path="res://PlayedCards.gd" id="8_4q8tf"]
+[ext_resource type="Script" uid="uid://dfknfovm6tddy" path="res://Deck.gd" id="6_acvyw"]
+[ext_resource type="Script" uid="uid://c3xfjnp81ckek" path="res://OpponentHand.gd" id="7_alh3a"]
+[ext_resource type="Script" uid="uid://clxc14fpj30ha" path="res://Seat.gd" id="8_2rd6h"]
+[ext_resource type="Script" uid="uid://d3trjxyp4ubau" path="res://PlayedCards.gd" id="8_4q8tf"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="8_45i86"]
 [ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="9_a8wo8"]
-[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="9_sv1m6"]
-[ext_resource type="Script" uid="uid://dsvr36s1t80n1" path="res://HandPlaceholder.gd" id="9_x3xnh"]
-[ext_resource type="Script" uid="uid://755ytelsigcg" path="res://ButtonsContainer.gd" id="10_8r6kd"]
+[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="9_sv1m6"]
+[ext_resource type="Script" uid="uid://prjme07f6efi" path="res://HandPlaceholder.gd" id="9_x3xnh"]
+[ext_resource type="Script" uid="uid://k68075chkxlf" path="res://ButtonsContainer.gd" id="10_8r6kd"]
 [ext_resource type="Texture2D" uid="uid://dkcno4uyl2i3e" path="res://assets/images/yellow-bg-light-line-texture.png" id="13_kyk2p"]
 [ext_resource type="Texture2D" uid="uid://ck56fk7o04w8t" path="res://assets/images/circle-bg.png" id="13_ocgqw"]
 [ext_resource type="Texture2D" uid="uid://bvex6hofx3bhv" path="res://assets/images/seat-icon-greyscale-no-bg.png" id="14_bneo8"]
@@ -118,59 +118,57 @@ layout_mode = 1
 anchor_right = 1.0
 anchor_bottom = 0.75
 
-[node name="LeftArea" type="PanelContainer" parent="TopArea" unique_id=1635814502]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 0.18
-anchor_bottom = 1.0
-theme = ExtResource("4_kyk2p")
-
-[node name="TextureRect" type="TextureRect" parent="TopArea/LeftArea" unique_id=1325152388]
-layout_mode = 2
-texture = ExtResource("5_45i86")
-expand_mode = 1
-
-[node name="RoomInfo" parent="TopArea/LeftArea/TextureRect" unique_id=1833918102 instance=ExtResource("5_kyk2p")]
-layout_mode = 1
-
-[node name="TableArea" type="Control" parent="TopArea" unique_id=536433243]
-layout_mode = 1
-anchor_left = 0.2
-anchor_right = 0.8
-anchor_bottom = 1.0
-offset_top = 4.0
-offset_bottom = 4.0
-script = ExtResource("3_3so38")
-
-[node name="TableLayout" type="Control" parent="TopArea/TableArea" unique_id=324252698]
+[node name="HBoxContainer" type="HBoxContainer" parent="TopArea" unique_id=856039051]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="LeftArea" type="PanelContainer" parent="TopArea/HBoxContainer" unique_id=1635814502]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.33
+theme = ExtResource("4_kyk2p")
+
+[node name="TextureRect" type="TextureRect" parent="TopArea/HBoxContainer/LeftArea" unique_id=1325152388]
+layout_mode = 2
+texture = ExtResource("5_45i86")
+expand_mode = 1
+
+[node name="RoomInfo" parent="TopArea/HBoxContainer/LeftArea/TextureRect" unique_id=1833918102 instance=ExtResource("5_kyk2p")]
+layout_mode = 1
+
+[node name="TableArea" type="Control" parent="TopArea/HBoxContainer" unique_id=536433243]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("3_3so38")
+
+[node name="TableLayout" type="Control" parent="TopArea/HBoxContainer/TableArea" unique_id=324252698]
+layout_mode = 1
+anchor_left = 0.05
+anchor_top = 0.15
+anchor_right = 0.95
+anchor_bottom = 0.85
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("4_3cx6b")
 
-[node name="Table" type="PanelContainer" parent="TopArea/TableArea/TableLayout" unique_id=334179617]
+[node name="Table" type="PanelContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout" unique_id=334179617]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -311.04
-offset_top = -179.7919
-offset_right = 311.04
-offset_bottom = 179.7919
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8ud1i")
 
-[node name="Panel" type="Panel" parent="TopArea/TableArea/TableLayout/Table" unique_id=1608703430]
+[node name="Panel" type="Panel" parent="TopArea/HBoxContainer/TableArea/TableLayout/Table" unique_id=1608703430]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_vjgi4")
 
-[node name="TextureRect" type="TextureRect" parent="TopArea/TableArea/TableLayout/Table/Panel" unique_id=2116449421]
+[node name="TextureRect" type="TextureRect" parent="TopArea/HBoxContainer/TableArea/TableLayout/Table/Panel" unique_id=2116449421]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -180,17 +178,17 @@ grow_vertical = 2
 texture = ExtResource("9_a8wo8")
 expand_mode = 1
 
-[node name="Deck" type="Node2D" parent="TopArea/TableArea/TableLayout" unique_id=1762135531]
+[node name="Deck" type="Node2D" parent="TopArea/HBoxContainer/TableArea/TableLayout" unique_id=1762135531]
 script = ExtResource("6_acvyw")
 
-[node name="Seat1" type="Control" parent="TopArea/TableArea/TableLayout" unique_id=156552987]
+[node name="Seat1" type="Control" parent="TopArea/HBoxContainer/TableArea/TableLayout" unique_id=156552987]
 custom_minimum_size = Vector2(100, 100)
 anchors_preset = 0
 offset_right = 100.0
 offset_bottom = 100.0
 script = ExtResource("8_2rd6h")
 
-[node name="Panel" type="Panel" parent="TopArea/TableArea/TableLayout/Seat1" unique_id=2023517097]
+[node name="Panel" type="Panel" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat1" unique_id=2023517097]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -199,7 +197,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ql5b0")
 
-[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat1/Panel" unique_id=1311941104]
+[node name="Username" type="Label" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat1/Panel" unique_id=1311941104]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -214,7 +212,7 @@ text = "Username"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CenterContainer" type="CenterContainer" parent="TopArea/TableArea/TableLayout/Seat1/Panel" unique_id=321513462]
+[node name="CenterContainer" type="CenterContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat1/Panel" unique_id=321513462]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -222,11 +220,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat1/Panel/CenterContainer" unique_id=2732000]
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat1/Panel/CenterContainer" unique_id=2732000]
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 
-[node name="TurnTimerBar" type="TextureProgressBar" parent="TopArea/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual" unique_id=861606205]
+[node name="TurnTimerBar" type="TextureProgressBar" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual" unique_id=861606205]
 visible = false
 custom_minimum_size = Vector2(80, 80)
 custom_maximum_size = Vector2(80, 80)
@@ -240,43 +238,43 @@ texture_under = ExtResource("13_ocgqw")
 texture_progress = ExtResource("13_ocgqw")
 tint_progress = Color(0.972549, 0.6627451, 0.3019608, 1)
 
-[node name="IsReadyVisual" type="TextureRect" parent="TopArea/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual" unique_id=1282224943]
+[node name="IsReadyVisual" type="TextureRect" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual" unique_id=1282224943]
 layout_mode = 2
 texture = ExtResource("13_ocgqw")
 expand_mode = 3
 
-[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual" unique_id=618590435]
+[node name="TurnTimer" type="Timer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual" unique_id=618590435]
 one_shot = true
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual" unique_id=1068835102]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual" unique_id=1068835102]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="PanelContainer" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual/MarginContainer" unique_id=1869386030]
+[node name="PanelContainer" type="PanelContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual/MarginContainer" unique_id=1869386030]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_attvq")
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer" unique_id=2058660272]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer" unique_id=2058660272]
 layout_mode = 2
 theme_override_constants/margin_left = 7
 theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="TopArea/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer" unique_id=766051349]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer" unique_id=766051349]
 layout_mode = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer" unique_id=1655331115]
+[node name="SeatIcon" type="Button" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat1/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer" unique_id=1655331115]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_attvq")
 icon = ExtResource("14_bneo8")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Score" type="Label" parent="TopArea/TableArea/TableLayout/Seat1/Panel" unique_id=1118864690]
+[node name="Score" type="Label" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat1/Panel" unique_id=1118864690]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
@@ -292,14 +290,14 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Seat2" type="Control" parent="TopArea/TableArea/TableLayout" unique_id=1132758457]
+[node name="Seat2" type="Control" parent="TopArea/HBoxContainer/TableArea/TableLayout" unique_id=1132758457]
 custom_minimum_size = Vector2(100, 100)
 anchors_preset = 0
 offset_right = 100.0
 offset_bottom = 100.0
 script = ExtResource("8_2rd6h")
 
-[node name="Panel" type="Panel" parent="TopArea/TableArea/TableLayout/Seat2" unique_id=317400645]
+[node name="Panel" type="Panel" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat2" unique_id=317400645]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -308,7 +306,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ql5b0")
 
-[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat2/Panel" unique_id=109762529]
+[node name="Username" type="Label" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat2/Panel" unique_id=109762529]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -323,7 +321,7 @@ text = "Username"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CenterContainer" type="CenterContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel" unique_id=817940471]
+[node name="CenterContainer" type="CenterContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat2/Panel" unique_id=817940471]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -331,11 +329,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer" unique_id=917524114]
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat2/Panel/CenterContainer" unique_id=917524114]
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 
-[node name="TurnTimerBar" type="TextureProgressBar" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=193524243]
+[node name="TurnTimerBar" type="TextureProgressBar" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=193524243]
 visible = false
 custom_minimum_size = Vector2(80, 80)
 custom_maximum_size = Vector2(80, 80)
@@ -349,43 +347,43 @@ texture_under = ExtResource("13_ocgqw")
 texture_progress = ExtResource("13_ocgqw")
 tint_progress = Color(0.972549, 0.6627451, 0.3019608, 1)
 
-[node name="IsReadyVisual" type="TextureRect" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=1185831802]
+[node name="IsReadyVisual" type="TextureRect" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=1185831802]
 layout_mode = 2
 texture = ExtResource("13_ocgqw")
 expand_mode = 3
 
-[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=1387259256]
+[node name="TurnTimer" type="Timer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=1387259256]
 one_shot = true
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=538643868]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual" unique_id=538643868]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="PanelContainer" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer" unique_id=228349317]
+[node name="PanelContainer" type="PanelContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer" unique_id=228349317]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_attvq")
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer" unique_id=1245287497]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer" unique_id=1245287497]
 layout_mode = 2
 theme_override_constants/margin_left = 7
 theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer" unique_id=1707843366]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer" unique_id=1707843366]
 layout_mode = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer" unique_id=820440477]
+[node name="SeatIcon" type="Button" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat2/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer" unique_id=820440477]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_attvq")
 icon = ExtResource("14_bneo8")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Score" type="Label" parent="TopArea/TableArea/TableLayout/Seat2/Panel" unique_id=403350613]
+[node name="Score" type="Label" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat2/Panel" unique_id=403350613]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
@@ -401,14 +399,14 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Seat3" type="Control" parent="TopArea/TableArea/TableLayout" unique_id=1870034493]
+[node name="Seat3" type="Control" parent="TopArea/HBoxContainer/TableArea/TableLayout" unique_id=1870034493]
 custom_minimum_size = Vector2(100, 100)
 anchors_preset = 0
 offset_right = 100.0
 offset_bottom = 100.0
 script = ExtResource("8_2rd6h")
 
-[node name="Panel" type="Panel" parent="TopArea/TableArea/TableLayout/Seat3" unique_id=1643594014]
+[node name="Panel" type="Panel" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat3" unique_id=1643594014]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -417,7 +415,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ql5b0")
 
-[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat3/Panel" unique_id=622713749]
+[node name="Username" type="Label" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat3/Panel" unique_id=622713749]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -432,7 +430,7 @@ text = "Username"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CenterContainer" type="CenterContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel" unique_id=955017202]
+[node name="CenterContainer" type="CenterContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat3/Panel" unique_id=955017202]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -440,11 +438,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer" unique_id=1384302547]
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat3/Panel/CenterContainer" unique_id=1384302547]
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 
-[node name="TurnTimerBar" type="TextureProgressBar" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=171341581]
+[node name="TurnTimerBar" type="TextureProgressBar" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=171341581]
 visible = false
 custom_minimum_size = Vector2(80, 80)
 custom_maximum_size = Vector2(80, 80)
@@ -458,43 +456,43 @@ texture_under = ExtResource("13_ocgqw")
 texture_progress = ExtResource("13_ocgqw")
 tint_progress = Color(0.972549, 0.6627451, 0.3019608, 1)
 
-[node name="IsReadyVisual" type="TextureRect" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=664386641]
+[node name="IsReadyVisual" type="TextureRect" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=664386641]
 layout_mode = 2
 texture = ExtResource("13_ocgqw")
 expand_mode = 3
 
-[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=427253343]
+[node name="TurnTimer" type="Timer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=427253343]
 one_shot = true
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=2074139256]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual" unique_id=2074139256]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="PanelContainer" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer" unique_id=331009312]
+[node name="PanelContainer" type="PanelContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer" unique_id=331009312]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_attvq")
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer" unique_id=1241849071]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer" unique_id=1241849071]
 layout_mode = 2
 theme_override_constants/margin_left = 7
 theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer" unique_id=533860840]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer" unique_id=533860840]
 layout_mode = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer" unique_id=626002682]
+[node name="SeatIcon" type="Button" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat3/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer" unique_id=626002682]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_attvq")
 icon = ExtResource("14_bneo8")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Score" type="Label" parent="TopArea/TableArea/TableLayout/Seat3/Panel" unique_id=726476234]
+[node name="Score" type="Label" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat3/Panel" unique_id=726476234]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
@@ -510,14 +508,14 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Seat4" type="Control" parent="TopArea/TableArea/TableLayout" unique_id=747622361]
+[node name="Seat4" type="Control" parent="TopArea/HBoxContainer/TableArea/TableLayout" unique_id=747622361]
 custom_minimum_size = Vector2(100, 100)
 anchors_preset = 0
 offset_right = 100.0
 offset_bottom = 100.0
 script = ExtResource("8_2rd6h")
 
-[node name="Panel" type="Panel" parent="TopArea/TableArea/TableLayout/Seat4" unique_id=1112743013]
+[node name="Panel" type="Panel" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat4" unique_id=1112743013]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -526,7 +524,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ql5b0")
 
-[node name="Username" type="Label" parent="TopArea/TableArea/TableLayout/Seat4/Panel" unique_id=1085267964]
+[node name="Username" type="Label" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat4/Panel" unique_id=1085267964]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -541,7 +539,7 @@ text = "Username"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CenterContainer" type="CenterContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel" unique_id=235905941]
+[node name="CenterContainer" type="CenterContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat4/Panel" unique_id=235905941]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -549,11 +547,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SeatVisual" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer" unique_id=2096740028]
+[node name="SeatVisual" type="PanelContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat4/Panel/CenterContainer" unique_id=2096740028]
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 
-[node name="TurnTimerBar" type="TextureProgressBar" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=620643111]
+[node name="TurnTimerBar" type="TextureProgressBar" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=620643111]
 visible = false
 custom_minimum_size = Vector2(80, 80)
 custom_maximum_size = Vector2(80, 80)
@@ -567,43 +565,43 @@ texture_under = ExtResource("13_ocgqw")
 texture_progress = ExtResource("13_ocgqw")
 tint_progress = Color(0.972549, 0.6627451, 0.3019608, 1)
 
-[node name="IsReadyVisual" type="TextureRect" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=793559454]
+[node name="IsReadyVisual" type="TextureRect" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=793559454]
 layout_mode = 2
 texture = ExtResource("13_ocgqw")
 expand_mode = 3
 
-[node name="TurnTimer" type="Timer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=877164238]
+[node name="TurnTimer" type="Timer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=877164238]
 one_shot = true
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=2102757052]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual" unique_id=2102757052]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="PanelContainer" type="PanelContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer" unique_id=778451388]
+[node name="PanelContainer" type="PanelContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer" unique_id=778451388]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_attvq")
 
-[node name="MarginContainer" type="MarginContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer" unique_id=819417663]
+[node name="MarginContainer" type="MarginContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer" unique_id=819417663]
 layout_mode = 2
 theme_override_constants/margin_left = 7
 theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer" unique_id=1998513386]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer" unique_id=1998513386]
 layout_mode = 2
 
-[node name="SeatIcon" type="Button" parent="TopArea/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer" unique_id=2132312286]
+[node name="SeatIcon" type="Button" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat4/Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer" unique_id=2132312286]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_attvq")
 icon = ExtResource("14_bneo8")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Score" type="Label" parent="TopArea/TableArea/TableLayout/Seat4/Panel" unique_id=1754173067]
+[node name="Score" type="Label" parent="TopArea/HBoxContainer/TableArea/TableLayout/Seat4/Panel" unique_id=1754173067]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
@@ -619,46 +617,44 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="OpponentHand2" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=1267263257]
+[node name="OpponentHand2" type="Panel" parent="TopArea/HBoxContainer/TableArea/TableLayout" unique_id=1267263257]
 layout_mode = 0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_trn2v")
 script = ExtResource("7_alh3a")
 
-[node name="OpponentHand3" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=454168365]
+[node name="OpponentHand3" type="Panel" parent="TopArea/HBoxContainer/TableArea/TableLayout" unique_id=454168365]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_03owx")
 script = ExtResource("7_alh3a")
 
-[node name="OpponentHand4" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=246364564]
+[node name="OpponentHand4" type="Panel" parent="TopArea/HBoxContainer/TableArea/TableLayout" unique_id=246364564]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_wkp8b")
 script = ExtResource("7_alh3a")
 
-[node name="PlayedCards" type="Panel" parent="TopArea/TableArea/TableLayout" unique_id=452367580]
+[node name="PlayedCards" type="Panel" parent="TopArea/HBoxContainer/TableArea/TableLayout" unique_id=452367580]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_5vvyt")
 script = ExtResource("8_4q8tf")
 
-[node name="RightArea" type="PanelContainer" parent="TopArea" unique_id=302092956]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.8
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="RightArea" type="PanelContainer" parent="TopArea/HBoxContainer" unique_id=302092956]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.33
 theme = ExtResource("4_kyk2p")
 
-[node name="TextureRect" type="TextureRect" parent="TopArea/RightArea" unique_id=303508479]
+[node name="TextureRect" type="TextureRect" parent="TopArea/HBoxContainer/RightArea" unique_id=303508479]
 layout_mode = 2
 texture = ExtResource("5_45i86")
 expand_mode = 1
 
-[node name="Chat" parent="TopArea/RightArea" unique_id=603695322 instance=ExtResource("14_y5y3l")]
+[node name="Chat" parent="TopArea/HBoxContainer/RightArea" unique_id=603695322 instance=ExtResource("14_y5y3l")]
 layout_mode = 2
 
 [node name="BottomArea" type="Control" parent="." unique_id=732581692]
@@ -731,6 +727,3 @@ hue = 0
 
 [node name="PlayerContextMenu" parent="." unique_id=695943598 instance=ExtResource("14_vjgi4")]
 visible = false
-layout_mode = 0
-offset_right = 108.000015
-offset_bottom = 131.0

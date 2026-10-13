@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ctiqqa23jajmf"]
 
 [ext_resource type="Script" uid="uid://cnfr068ybvthk" path="res://RoomInfo.gd" id="1_rdgol"]
-[ext_resource type="Texture2D" uid="uid://db6p7v6k4c8d3" path="res://assets/images/1416596-200.png" id="2_e1r5k"]
+[ext_resource type="Texture2D" uid="uid://db6p7v6k4c8d3" path="res://assets/images/edit-icon.png" id="2_e1r5k"]
 [ext_resource type="Texture2D" uid="uid://by11rgbb78bj5" path="res://assets/images/361082-200.png" id="3_2y4yk"]
 [ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="3_msm78"]
 [ext_resource type="Texture2D" uid="uid://cnbp1yk6x4ylm" path="res://assets/images/grabber.svg" id="4_e1r5k"]

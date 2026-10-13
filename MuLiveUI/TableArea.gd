@@ -8,7 +8,7 @@ extends Control
 @onready var seat3: Seat = $TableLayout/Seat3
 @onready var seat4: Seat = $TableLayout/Seat4
 
-@onready var player_hand: Panel = $"../../BottomArea/MarginContainer/HandPlaceholder"
+@onready var player_hand: Panel = $"../../../BottomArea/MarginContainer/HandPlaceholder"
 @onready var opponent_hand2: OpponentHand = $TableLayout/OpponentHand2
 @onready var opponent_hand3: OpponentHand = $TableLayout/OpponentHand3
 @onready var opponent_hand4: OpponentHand = $TableLayout/OpponentHand4
@@ -27,14 +27,16 @@ const MAX_SEAT_HEIGHT: float = 800.0
 var original_layout_size: Vector2
 
 func _ready() -> void:
+	call_deferred("initialize_layout")
+
+
+func initialize_layout() -> void:
 	original_layout_size = size
-	
-	table_layout.position = Vector2.ZERO
-	table_layout.size = original_layout_size
 
 	calculate_initial_layout()
 	setup_opponent_hands()
 	setup_played_cards()
+
 
 	# From now on, only scale the whole composition
 	resized.connect(scale_whole_layout) # TODO: Maybe remove this, not needed?

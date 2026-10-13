@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dfinc61m5vof"]
 
-[ext_resource type="Script" uid="uid://cluvfm5tn3x65" path="res://PlayerContextMenu.gd" id="1_g1k4k"]
+[ext_resource type="Script" uid="uid://b057gfdcui1on" path="res://PlayerContextMenu.gd" id="1_g1k4k"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sseyb"]
 content_margin_left = 5.0
@@ -8,13 +8,25 @@ content_margin_top = 5.0
 content_margin_right = 5.0
 content_margin_bottom = 5.0
 
-[node name="PlayerContextMenu" type="PanelContainer" unique_id=695943598]
-offset_right = 133.0
-offset_bottom = 111.0
+[node name="PlayerContextMenu" type="PopupPanel" unique_id=911066526]
+oversampling_override = 1.0
+title = "Player Info"
+size = Vector2i(141, 114)
+visible = true
+always_on_top = true
+sharp_corners = true
 script = ExtResource("1_g1k4k")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=2116272190]
-layout_mode = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
@@ -22,9 +34,9 @@ theme_override_constants/margin_bottom = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=592980970]
 layout_mode = 2
-theme_override_constants/separation = 5
 
 [node name="CloseButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=254004954]
+visible = false
 layout_mode = 2
 text = "x"
 alignment = 2

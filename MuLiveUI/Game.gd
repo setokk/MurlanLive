@@ -30,24 +30,24 @@ enum GameStateEnum {
 @onready var hand_placeholder: Panel = $BottomArea/MarginContainer/HandPlaceholder
 @onready var play_button: Button = $BottomArea/ButtonsContainer/PlayButton
 @onready var pass_button: Button = $BottomArea/ButtonsContainer/PassButton
-@onready var played_cards: Panel = $TopArea/TableArea/TableLayout/PlayedCards
-@onready var is_ready_button: Button = $TopArea/LeftArea/TextureRect/RoomInfo/MarginContainer/VBoxContainer/VBoxContainer2/ReadyButton
-@onready var leave_room_button: Button = $TopArea/LeftArea/TextureRect/RoomInfo/MarginContainer/VBoxContainer/VBoxContainer2/LeaveButton
+@onready var played_cards: Panel = $TopArea/HBoxContainer/TableArea/TableLayout/PlayedCards
+@onready var is_ready_button: Button = $TopArea/HBoxContainer/LeftArea/TextureRect/RoomInfo/MarginContainer/VBoxContainer/VBoxContainer2/ReadyButton
+@onready var leave_room_button: Button = $TopArea/HBoxContainer/LeftArea/TextureRect/RoomInfo/MarginContainer/VBoxContainer/VBoxContainer2/LeaveButton
 @onready var give_card_button: Button = $BottomArea/ButtonsContainer/GiveCardButton
-@onready var room_info : Panel = $TopArea/LeftArea/TextureRect/RoomInfo
+@onready var room_info : Panel = $TopArea/HBoxContainer/LeftArea/TextureRect/RoomInfo
 @onready var player_context_menu: PlayerContextMenu = $PlayerContextMenu
-@onready var chat: Chat = $TopArea/RightArea/Chat
+@onready var chat: Chat = $TopArea/HBoxContainer/RightArea/Chat
 
 @onready var seats: Array[Seat] = [
-	$TopArea/TableArea/TableLayout/Seat1,
-	$TopArea/TableArea/TableLayout/Seat2,
-	$TopArea/TableArea/TableLayout/Seat3,
-	$TopArea/TableArea/TableLayout/Seat4
+	$TopArea/HBoxContainer/TableArea/TableLayout/Seat1,
+	$TopArea/HBoxContainer/TableArea/TableLayout/Seat2,
+	$TopArea/HBoxContainer/TableArea/TableLayout/Seat3,
+	$TopArea/HBoxContainer/TableArea/TableLayout/Seat4
 ]
 @onready var opponent_hands: Array[OpponentHand] = [
-	$TopArea/TableArea/TableLayout/OpponentHand2,
-	$TopArea/TableArea/TableLayout/OpponentHand3,
-	$TopArea/TableArea/TableLayout/OpponentHand4
+	$TopArea/HBoxContainer/TableArea/TableLayout/OpponentHand2,
+	$TopArea/HBoxContainer/TableArea/TableLayout/OpponentHand3,
+	$TopArea/HBoxContainer/TableArea/TableLayout/OpponentHand4
 ]
 
 func _ready() -> void:
@@ -114,7 +114,7 @@ func init_active_game(game_state: Dictionary) -> void:
 	for value in game_state["hand"].split("_"):
 		my_hand.append(int(value))
 		
-	$TopArea/TableArea.start_dealing(
+	$TopArea/HBoxContainer/TableArea.start_dealing(
 		my_hand,
 		game_state["numOfCardsPerPlayerId"],
 		players,

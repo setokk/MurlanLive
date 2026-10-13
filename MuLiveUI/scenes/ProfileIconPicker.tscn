@@ -1,25 +1,26 @@
 [gd_scene format=3 uid="uid://vt2qhvorrvf"]
 
-[ext_resource type="Script" uid="uid://dtfrgbahb3s2s" path="res://ProfileIconPicker.gd" id="1_pfic0"]
+[ext_resource type="Script" uid="uid://b1xs48utoc7vm" path="res://ProfileIconPicker.gd" id="1_pfic0"]
 [ext_resource type="Texture2D" uid="uid://bnkjq5vo2180i" path="res://assets/images/polka-dot-bg.png" id="2_5mu11"]
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="2_pfic0"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="3_pfic0"]
-[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="4_pfic0"]
+[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="4_pfic0"]
 
-[node name="ProfileIconPicker" type="Control" unique_id=1165413645]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="ProfileIconPicker" type="Popup" unique_id=992175981]
+oversampling_override = 1.0
+initial_position = 2
+size = Vector2i(275, 327)
+visible = true
 script = ExtResource("1_pfic0")
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=809980635]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -25.0
+offset_top = -32.0
+offset_right = 25.0
+offset_bottom = 32.0
 grow_horizontal = 2
 grow_vertical = 2
 

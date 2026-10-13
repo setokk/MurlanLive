@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://cwuah0vga1gfn"]
 
-[ext_resource type="Script" uid="uid://dboi8lg65hepo" path="res://PopupBase.gd" id="1_w68m2"]
+[ext_resource type="Script" uid="uid://dwk500x56gv8t" path="res://PopupBase.gd" id="1_w68m2"]
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="2_ir5qc"]
 
 [node name="PopupBase" type="PopupPanel" unique_id=1882400134]
 oversampling_override = 1.0
+position = Vector2i(526, 274)
 visible = true
 script = ExtResource("1_w68m2")
 
