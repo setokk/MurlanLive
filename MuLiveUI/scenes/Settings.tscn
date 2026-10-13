@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://d3ol323p5xy1c"]
+
+[node name="Settings" type="Popup" unique_id=836536916]
+oversampling_override = 1.0
+initial_position = 2
+visible = true

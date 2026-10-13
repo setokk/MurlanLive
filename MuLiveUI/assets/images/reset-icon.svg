@@ -1,0 +1,21 @@
+<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <!-- Square loop -->
+  <path
+    d="M3 8V13H13V4H4"
+    fill="none"
+    stroke="#0F1012"
+    stroke-width="1.5"
+    stroke-linecap="butt"
+    stroke-linejoin="miter"
+  />
+
+  <!-- Arrowhead -->
+  <path
+    d="M6 2L3 4L6 6"
+    fill="none"
+    stroke="#0F1012"
+    stroke-width="1.5"
+    stroke-linecap="butt"
+    stroke-linejoin="miter"
+  />
+</svg>

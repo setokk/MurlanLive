@@ -64,7 +64,7 @@ func automate_login_flow() -> void:
 
 	# Wait until the Home login button exists
 	var login_redirect_button :Button = await wait_for_node(
-		"TopBar/HBoxContainer/LoginRedirection"
+		"TopBar/Panel/MarginContainer/HBoxContainer/LoginRedirection"
 	)
 
 	if login_redirect_button == null:

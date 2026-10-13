@@ -40,8 +40,11 @@ import java.util.concurrent.Executors;
 @Service
 @RequiredArgsConstructor
 public class PlayerService {
-    @Value("${mulive.email-verification-required}")
+    @Value("${mulive.email-verification-required:true}")
     private boolean isEmailVerificationRequired;
+
+    @Value("${mulive.password-hashing-required:true}")
+    private boolean hashingRequired;
 
     private final PlayerRepository playerRepository;
     private final PlayerResetPasswordEntityRepository resetPasswordRepository;
@@ -62,7 +65,7 @@ public class PlayerService {
                 .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Invalid credentials"));
 
         String actualHashedPassword = player.getPassword();
-        boolean isValidCredentials = passwordEncoder.matches(param.password(), actualHashedPassword);
+        boolean isValidCredentials = matches(param.password(), actualHashedPassword);
         if (!isValidCredentials) {
             throw new BusinessLogicException(HttpStatus.NOT_FOUND, "Invalid credentials");
         }
@@ -86,7 +89,7 @@ public class PlayerService {
             throw new BusinessLogicException(HttpStatus.CONFLICT, "Player with email: " + param.email() + " exists");
         }
 
-        PlayerEntity savedPlayer = playerRepository.save(new PlayerEntity(param.username(), passwordEncoder.encode(param.password()), param.email(), DateUtils.getLocalDateTimeNowUTC()));
+        PlayerEntity savedPlayer = playerRepository.save(new PlayerEntity(param.username(), encode(param.password()), param.email(), DateUtils.getLocalDateTimeNowUTC()));
         if (isEmailVerificationRequired) {
             PlayerEmailVerificationEntity emailVerification = new PlayerEmailVerificationEntity(null, tokenGenerator.generateToken(), savedPlayer);
             emailVerificationRepository.save(emailVerification);
@@ -265,6 +268,18 @@ public class PlayerService {
         }
 
         player.setProfileIcon(new ProfileIconEntity(param.profileIconId()));
+    }
+
+    private String encode(String rawPassword) {
+        return hashingRequired
+                ? passwordEncoder.encode(rawPassword)
+                : rawPassword;
+    }
+
+    private boolean matches(String rawPassword, String storedPassword) {
+        return hashingRequired
+                ? passwordEncoder.matches(rawPassword, storedPassword)
+                : rawPassword.equals(storedPassword);
     }
 
     private void sendAsyncEmailVerificationEmail(String verifyEmailLink, PlayerEntity player) {

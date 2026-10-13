@@ -29,6 +29,9 @@ public class CreateRoomRequest implements IRequest {
     @NotNull(message = "[CreateRoomRequest]: totalScoreToWin cannot be null")
     private final Short totalScoreToWin;
 
+    @NotNull(message = "[CreateRoomRequest]: turnDurationInSeconds cannot be null")
+    private final Short turnDurationInSeconds;
+
     @NotNull(message = "[CreateRoomRequest]: roundsPlayed cannot be null")
     private final Short roundsPlayed;
 
@@ -46,6 +49,7 @@ public class CreateRoomRequest implements IRequest {
             @JsonProperty("isPublic") Boolean isPublic,
             @JsonProperty("creationDate") LocalDateTime creationDate,
             @JsonProperty("totalScoreToWin") Short totalScoreToWin,
+            @JsonProperty("turnDurationInSeconds") Short turnDurationInSeconds,
             @JsonProperty("roundsPlayed") Short roundsPlayed,
             @JsonProperty("totalScores") Map<Long, Short> totalScores,
             @JsonProperty("ownerId") Long ownerId
@@ -55,6 +59,7 @@ public class CreateRoomRequest implements IRequest {
         this.isPublic = isPublic;
         this.creationDate = creationDate;
         this.totalScoreToWin = totalScoreToWin;
+        this.turnDurationInSeconds = turnDurationInSeconds;
         this.roundsPlayed = roundsPlayed;
         this.totalScores = totalScores;
         this.ownerId = ownerId;
