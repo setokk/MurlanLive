@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,4 +22,9 @@ public final class RoomItemDto {
     private LocalDateTime creationDate;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime finishedDate;
+    private short totalScoreToWin;
+    private short turnDurationInSeconds;
+    private short roundsPlayed;
+    private List<PlayerScoreDto> playerScores;
+    private long ownerId;
 }

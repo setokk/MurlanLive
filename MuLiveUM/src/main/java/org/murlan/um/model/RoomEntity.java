@@ -41,6 +41,9 @@ public class RoomEntity {
     @Column(name = "total_score_to_win", updatable = false, nullable = false)
     private Short totalScoreToWin;
 
+    @Column(name = "turn_duration_in_seconds", updatable = false, nullable = false)
+    private Short turnDurationInSeconds;
+
     @Column(name = "rounds_played", updatable = false, nullable = false)
     private Short roundsPlayed;
 

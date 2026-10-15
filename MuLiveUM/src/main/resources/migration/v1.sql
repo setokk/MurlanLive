@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS room(
     name TEXT NOT NULL,
     is_public BOOLEAN NOT NULL,
     total_score_to_win SMALLINT NOT NULL,
+    turn_duration_in_seconds SMALLINT NOT NULL,
     rounds_played SMALLINT NOT NULL,
     creation_date TIMESTAMP NOT NULL,
     finished_date TIMESTAMP NOT NULL,

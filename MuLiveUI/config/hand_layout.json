@@ -1,0 +1,32 @@
+[
+  {
+	"name": "Default (Random)",
+	"isActive": true,
+	"cardCombinationPlacements": [
+	  {
+		"cardCombinationPlacementType": "DEFAULT",
+		"sortMode": "RANDOM"
+	  }
+	]
+  },
+  {
+	"name": "Default (Ascending)",
+	"isActive": false,
+	"cardCombinationPlacements": [
+	  {
+		"cardCombinationPlacementType": "DEFAULT",
+		"sortMode": "ASC"
+	  }
+	]
+  },
+  {
+	"name": "Default (Descending)",
+	"isActive": false,
+	"cardCombinationPlacements": [
+	  {
+		"cardCombinationPlacementType": "DEFAULT",
+		"sortMode": "DESC"
+	  }
+	]
+  }
+]

@@ -1,7 +1,5 @@
 package org.murlan.um.service.param;
 
-import org.murlan.um.model.dto.PlayerDto;
-
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -11,6 +9,7 @@ public record CreateRoomParam (
         boolean isPublic,
         LocalDateTime creationDate,
         short totalScoreToWin,
+        short turnDurationInSeconds,
         short roundsPlayed,
         Map<Long, Short> totalScores,
         Long ownerId

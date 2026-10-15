@@ -22,6 +22,7 @@ public final class UMCreateRoomRequest {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private final LocalDateTime creationDate;
     private final short totalScoreToWin;
+    private final short turnDurationInSeconds;
     private final short roundsPlayed;
     private final Map<Long, Short> totalScores;
     private final Long ownerId;
@@ -33,6 +34,7 @@ public final class UMCreateRoomRequest {
                 room.isPublic(),
                 room.getCreationDate(),
                 room.getTotalScoreToWin(),
+                (short) room.getTurnDurationInSeconds(),
                 (short) room.getGameStates().size(),
                 room.getTotalScores().entrySet().stream()
                         .collect(Collectors.toMap(

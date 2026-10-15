@@ -89,6 +89,7 @@ DECLARE
     v_room_id            UUID;
     v_owner_id           BIGINT;
     v_total_score_to_win SMALLINT;
+    v_turn_duration_in_seconds SMALLINT;
     v_rounds_played      SMALLINT;
 
     v_placement          SMALLINT;
@@ -163,16 +164,18 @@ BEGIN
 
         v_owner_id := v_player_ids[v_selected_idx[1 + floor(random() * array_length(v_selected_idx, 1))::int]];
         v_total_score_to_win := (ARRAY[25, 50, 75, 100])[1 + floor(random() * 4)::int];
+        v_turn_duration_in_seconds := (ARRAY[30, 45, 60, 75, 90, 105, 120])[1 + floor(random() * 7)::int];
         v_rounds_played := (4 + floor(random() * 20))::smallint;
 
         v_room_id := uuid_generate_v7(v_room_creation AT TIME ZONE 'utc');
 
-        INSERT INTO room (id, name, is_public, total_score_to_win, rounds_played, creation_date, finished_date, owner_player_id)
+        INSERT INTO room (id, name, is_public, total_score_to_win, turn_duration_in_seconds, rounds_played, creation_date, finished_date, owner_player_id)
         VALUES (
             v_room_id,
             'Test Room ' || j,
             (random() < 0.5),
             v_total_score_to_win,
+            v_turn_duration_in_seconds,
             v_rounds_played,
             v_room_creation,
             v_room_finish,
