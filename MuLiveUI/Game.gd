@@ -315,7 +315,7 @@ func _on_opponent_joined(resp: InformPlayerJoinRoomResp):
 		var player: Dictionary = resp.player
 		chat.add_message("", false, player["username"] + " joined the room")
 		players.append(player)
-		seats[find_player_seat_index(player["id"])].set_player(player)
+		seats[find_player_seat_index(player["id"])].set_player(player, false)
 	else:
 		print("Error: ", resp)
 	
@@ -462,7 +462,7 @@ func display_players() -> void:
 	# Fill the seats in order with local player starting at seats[0]
 	for i in range(min(players.size(), seats.size())):
 		var seat_index: int = posmod(i-local_player_index,seats.size())
-		seats[seat_index].set_player(players[i])
+		seats[seat_index].set_player(players[i], i==0)
 	
 	for player in ready_players:
 		seats[find_player_seat_index(player["id"])].set_ready()

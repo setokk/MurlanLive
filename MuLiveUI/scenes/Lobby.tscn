@@ -31,19 +31,6 @@ shadow_color = Color(0, 0, 0, 1)
 shadow_size = 5
 shadow_offset = Vector2(0, 4)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6cc1s"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h77bf"]
-bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
-shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
-shadow_size = 4
-shadow_offset = Vector2(4, 4)
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l31xl"]
 content_margin_left = 6.0
 content_margin_top = 6.0
@@ -58,6 +45,19 @@ corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6cc1s"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h77bf"]
+bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_size = 4
+shadow_offset = Vector2(4, 4)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_borux"]
 
@@ -150,11 +150,19 @@ theme_override_font_sizes/font_size = 34
 text = "LOBBY_TEXT"
 vertical_alignment = 1
 
-[node name="RoomHistoryButton" type="Button" parent="LobbyPanel/Panel/MarginContainer/HBoxContainer" unique_id=276615775]
+[node name="RoomHistoryButton" type="Button" parent="LobbyPanel/Panel/MarginContainer/HBoxContainer" unique_id=1490800323]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-text = "Room History"
+theme = ExtResource("4_as3ys")
+theme_override_styles/normal = SubResource("StyleBoxFlat_l31xl")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_l31xl")
+theme_override_styles/hover = SubResource("StyleBoxFlat_l31xl")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_l31xl")
+text = "Show Room History"
+script = ExtResource("6_hwwg2")
+normal_shade = 4
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="RoomOptionsPanel" type="Panel" parent="LobbyPanel" unique_id=1606039710]
 custom_minimum_size = Vector2(0, 30)

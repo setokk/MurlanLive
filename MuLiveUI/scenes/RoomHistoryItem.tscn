@@ -1,0 +1,322 @@
+[gd_scene format=3 uid="uid://dry4me0btsro2"]
+
+[ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_3qcha"]
+[ext_resource type="Script" uid="uid://dom6a1hhl5weo" path="res://RoomHistoryItem.gd" id="2_y5ruh"]
+[ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="3_nqu86"]
+[ext_resource type="Texture2D" uid="uid://fm1quphn3o62" path="res://assets/images/crown-icon.png" id="4_q37kb"]
+[ext_resource type="Texture2D" uid="uid://co41il6cypa66" path="res://assets/images/number2-icon.png" id="5_3qcha"]
+[ext_resource type="Texture2D" uid="uid://cdnv6c3qrdugb" path="res://assets/images/trophy.svg" id="5_47s6j"]
+[ext_resource type="Texture2D" uid="uid://5b0uvqo0a8ki" path="res://assets/images/clock.svg" id="5_y5ruh"]
+[ext_resource type="Texture2D" uid="uid://dyp5eeaq7gafl" path="res://assets/images/number3-icon.png" id="6_y5ruh"]
+[ext_resource type="Texture2D" uid="uid://cjd4qpcnp68d6" path="res://assets/images/number4-icon.png" id="7_nqu86"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2ep3f"]
+bg_color = Color(1, 0.9607843, 0.87058824, 1)
+border_color = Color(0, 0, 0, 1)
+shadow_color = Color(0, 0, 0, 1)
+shadow_size = 5
+shadow_offset = Vector2(3, 3)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hkmwm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3qcha"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.98039216, 0.7529412, 0.4862745, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y5ruh"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.98039216, 0.7529412, 0.4862745, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1abgy"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_size = 2
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_47s6j"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_size = 2
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j0cjt"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_size = 2
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uo1al"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_size = 2
+shadow_offset = Vector2(2, 2)
+
+[node name="RoomHistoryItem" type="PanelContainer" unique_id=1212699660]
+custom_minimum_size = Vector2(0, 100)
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.15
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_3qcha")
+theme_override_styles/panel = SubResource("StyleBoxFlat_2ep3f")
+script = ExtResource("2_y5ruh")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1031033127]
+layout_mode = 2
+texture = ExtResource("3_nqu86")
+expand_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1050946063]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Panel" type="Panel" parent="MarginContainer" unique_id=1123245433]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_hkmwm")
+
+[node name="RoomDetails" type="HBoxContainer" parent="MarginContainer/Panel" unique_id=125025871]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RoomInfo" type="VBoxContainer" parent="MarginContainer/Panel/RoomDetails" unique_id=1446933441]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="GeneralRoomInfo" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo" unique_id=1781849668]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RoomName" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo" unique_id=1037349079]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 24
+text = "Room Name"
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo" unique_id=1193884233]
+layout_mode = 2
+
+[node name="PointsPanel" type="PanelContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo" unique_id=1349620088]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3qcha")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo/PointsPanel" unique_id=990448862]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo/PointsPanel/HBoxContainer" unique_id=58530142]
+layout_mode = 2
+texture = ExtResource("5_47s6j")
+
+[node name="PointsLabel" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo/PointsPanel/HBoxContainer" unique_id=1606397145]
+layout_mode = 2
+text = "21 PTS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TurnTimePanel" type="PanelContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo" unique_id=637684726]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_y5ruh")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo/TurnTimePanel" unique_id=1860671394]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo/TurnTimePanel/HBoxContainer" unique_id=640289410]
+layout_mode = 2
+texture = ExtResource("5_y5ruh")
+expand_mode = 3
+
+[node name="TurnTimeLabel" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo/TurnTimePanel/HBoxContainer" unique_id=105191679]
+layout_mode = 2
+text = "0:45"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Date" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo" unique_id=1509276130]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "21/02/2026 - 13:35"
+
+[node name="PlayersInfo" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo" unique_id=638424286]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Player1" type="PanelContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo" unique_id=870650518]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1abgy")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player1" unique_id=1392496792]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player1/HBoxContainer" unique_id=667913266]
+layout_mode = 2
+texture = ExtResource("4_q37kb")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="player_username" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player1/HBoxContainer" unique_id=1142572225]
+layout_mode = 2
+text = "username"
+
+[node name="label" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player1/HBoxContainer" unique_id=188492820]
+layout_mode = 2
+text = ":"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="score" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player1/HBoxContainer" unique_id=1545885428]
+layout_mode = 2
+text = " 21"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Player2" type="PanelContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo" unique_id=1474537322]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_47s6j")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player2" unique_id=152513761]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player2/HBoxContainer" unique_id=916854920]
+layout_mode = 2
+texture = ExtResource("5_3qcha")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="player_username" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player2/HBoxContainer" unique_id=462285762]
+layout_mode = 2
+text = "username"
+
+[node name="label" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player2/HBoxContainer" unique_id=879436732]
+layout_mode = 2
+text = ":"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="score" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player2/HBoxContainer" unique_id=1917357847]
+layout_mode = 2
+text = " 21"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Player3" type="PanelContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo" unique_id=1675349748]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_j0cjt")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player3" unique_id=281411728]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player3/HBoxContainer" unique_id=2144052884]
+layout_mode = 2
+texture = ExtResource("6_y5ruh")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="player_username" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player3/HBoxContainer" unique_id=1998008120]
+layout_mode = 2
+text = "username"
+
+[node name="label" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player3/HBoxContainer" unique_id=240097444]
+layout_mode = 2
+text = ":"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="score" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player3/HBoxContainer" unique_id=530868147]
+layout_mode = 2
+text = " 21"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Player4" type="PanelContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo" unique_id=173358648]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uo1al")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player4" unique_id=2073780183]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player4/HBoxContainer" unique_id=951505471]
+layout_mode = 2
+texture = ExtResource("7_nqu86")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="player_username" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player4/HBoxContainer" unique_id=1955856361]
+layout_mode = 2
+text = "username"
+
+[node name="label" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player4/HBoxContainer" unique_id=1422527466]
+layout_mode = 2
+text = ":"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="score" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/PlayersInfo/Player4/HBoxContainer" unique_id=156131387]
+layout_mode = 2
+text = " 21"
+horizontal_alignment = 1
+vertical_alignment = 1

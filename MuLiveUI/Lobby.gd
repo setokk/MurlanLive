@@ -1,13 +1,20 @@
 extends Control
 
 const ROOM_ITEM_SCENE: PackedScene = preload("res://scenes/RoomItem.tscn")
+const ROOM_HISTORY_ITEM_SCENE: PackedScene = preload("res://scenes/RoomHistoryItem.tscn")
 
 @onready var room_list: VBoxContainer = $LobbyPanel/RoomScrollContainer/MarginContainer/RoomList
 @onready var room_buttons_container : HBoxContainer = $LobbyPanel/RoomOptionsPanel/MarginContainer/RoomButtonsContainer
 @onready var show_all_rooms: MainButton = $LobbyPanel/RoomOptionsPanel/MarginContainer/RoomButtonsContainer/ShowAllRooms
 @onready var show_available_rooms: MainButton = $LobbyPanel/RoomOptionsPanel/MarginContainer/RoomButtonsContainer/ShowAvailableRooms
 @onready var join_room_with_id_input: LineEdit = $LobbyPanel/RoomOptionsPanel/MarginContainer/RoomButtonsContainer/JoinRoomWithIdInput
+@onready var room_options_panel: Panel = $LobbyPanel/RoomOptionsPanel
+@onready var room_history_button: Button = $LobbyPanel/Panel/MarginContainer/HBoxContainer/RoomHistoryButton
+@onready var room_history_list: VBoxContainer = $LobbyPanel/RoomHistoryScrollContainer/MarginContainer/RoomHistoryList
+@onready var room_scroll_container: ScrollContainer = $LobbyPanel/RoomScrollContainer
+@onready var room_history_scroll_container: ScrollContainer = $LobbyPanel/RoomHistoryScrollContainer
 
+var is_room_history_showing: bool = false
 var refresh_timer: Timer
 var all_rooms: Array = []
 
@@ -21,6 +28,7 @@ func _ready() -> void:
 	room_buttons_container.join_room_with_id_requested.connect(_on_join_with_id_requested)
 	room_buttons_container.show_all_rooms_requested.connect(_on_show_all_rooms_requested)
 	room_buttons_container.show_available_rooms_requested.connect(_on_show_available_rooms_requested)
+	room_history_button.pressed.connect(_on_room_history_requested)
 	
 	WebSocketClient.available_rooms_resp.connect(populate_rooms)
 	WebSocketClient.create_room_resp.connect(_on_create_completed)
@@ -111,3 +119,24 @@ func _on_join_with_id_requested() -> void:
 		PopupFactory.warning("Room id is empty!")
 	else:
 		WebSocketClient.send_message(JoinRoomReq.new(join_room_with_id_input.text.strip_edges()))
+
+func _on_room_history_requested() -> void:
+	if is_room_history_showing:
+		room_history_scroll_container.visible = false
+		room_scroll_container.visible = true
+		room_options_panel.visible = true
+		
+		room_history_button.text = "Show Room History"
+		is_room_history_showing = false
+	else:
+		for child in room_history_list.get_children():
+			child.queue_free()
+		for i in range(5):
+			var room_history_item: RoomHistoryItem= ROOM_HISTORY_ITEM_SCENE.instantiate()
+			room_history_list.add_child(room_history_item)
+		room_history_scroll_container.visible = true
+		room_scroll_container.visible = false
+		room_options_panel.visible = false
+		
+		room_history_button.text = "Show Lobby"
+		is_room_history_showing = true

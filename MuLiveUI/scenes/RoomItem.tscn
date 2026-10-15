@@ -1,12 +1,13 @@
 [gd_scene format=3 uid="uid://ce8bbqr5wercy"]
 
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_8vuc5"]
-[ext_resource type="Script" uid="uid://w0oiqb1d24kf" path="res://RoomItem.gd" id="2_m58g5"]
+[ext_resource type="Script" uid="uid://pa11s3kbr4lx" path="res://RoomItem.gd" id="2_m58g5"]
 [ext_resource type="Theme" uid="uid://ry3wsdw0iw6r" path="res://themes/RoomItemTheme.tres" id="3_8vuc5"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="3_mgixa"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="3_moc4y"]
 [ext_resource type="Texture2D" uid="uid://cdnv6c3qrdugb" path="res://assets/images/trophy.svg" id="4_ftuc3"]
-[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="4_moc4y"]
+[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="4_moc4y"]
+[ext_resource type="Texture2D" uid="uid://5b0uvqo0a8ki" path="res://assets/images/clock.svg" id="6_mgixa"]
 [ext_resource type="Texture2D" uid="uid://ca4lafe626upe" path="res://assets/images/user-icon.png" id="6_p31as"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wu61n"]
@@ -19,10 +20,10 @@ shadow_offset = Vector2(3, 3)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_743nf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ftuc3"]
-content_margin_left = 2.0
-content_margin_top = 2.0
-content_margin_right = 2.0
-content_margin_bottom = 2.0
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
 bg_color = Color(0.98039216, 0.7529412, 0.4862745, 1)
 border_width_left = 2
 border_width_top = 2
@@ -278,6 +279,8 @@ alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/TurnTimePanel/HBoxContainer" unique_id=9433704]
 layout_mode = 2
+texture = ExtResource("6_mgixa")
+expand_mode = 3
 
 [node name="TurnTimeLabel" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/TurnTimePanel/HBoxContainer" unique_id=269542961]
 layout_mode = 2
@@ -296,7 +299,7 @@ alignment = 1
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/JoinedPlayersSizePanel/HBoxContainer" unique_id=780287879]
 layout_mode = 2
 texture = ExtResource("6_p31as")
-expand_mode = 3
+expand_mode = 2
 
 [node name="JoinedPlayersSizeLabel" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/JoinedPlayersSizePanel/HBoxContainer" unique_id=458117362]
 layout_mode = 2

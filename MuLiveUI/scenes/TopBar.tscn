@@ -137,7 +137,7 @@ expand_mode = 5
 [node name="UserOptionsPopup" type="Popup" parent="." unique_id=436642583 node_paths=PackedStringArray("profile_icon")]
 oversampling_override = 1.0
 position = Vector2i(467, 50)
-size = Vector2i(207, 256)
+size = Vector2i(207, 265)
 visible = true
 unresizable = false
 always_on_top = true
@@ -226,6 +226,10 @@ text = "How to play"
 layout_mode = 2
 text = "Report Bugs &
 Feedback"
+
+[node name="MarginContainer" type="MarginContainer" parent="UserOptionsPopup/PanelContainer/MarginContainer/VBoxContainer" unique_id=128182375]
+layout_mode = 2
+theme_override_constants/margin_top = 5
 
 [node name="LogoutRedirection" type="Button" parent="UserOptionsPopup/PanelContainer/MarginContainer/VBoxContainer" unique_id=221191016]
 layout_mode = 2
