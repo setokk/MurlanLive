@@ -33,6 +33,8 @@ func _ready() -> void:
 	WebSocketClient.available_rooms_resp.connect(populate_rooms)
 	WebSocketClient.create_room_resp.connect(_on_create_completed)
 	WebSocketClient.send_message(AvailableRoomsReq.new())
+	
+	RoomRESTClient.get_rooms_completed.connect(_on_get_rooms_completed)
 
 	refresh_timer = Timer.new()
 	refresh_timer.wait_time = 2.0
@@ -129,14 +131,24 @@ func _on_room_history_requested() -> void:
 		room_history_button.text = "Show Room History"
 		is_room_history_showing = false
 	else:
-		for child in room_history_list.get_children():
-			child.queue_free()
-		for i in range(5):
-			var room_history_item: RoomHistoryItem= ROOM_HISTORY_ITEM_SCENE.instantiate()
-			room_history_list.add_child(room_history_item)
-		room_history_scroll_container.visible = true
-		room_scroll_container.visible = false
-		room_options_panel.visible = false
+		RoomRESTClient.get_rooms(PlayerSession.player.id, 0, PlayerSession.jwt)
+
+func _on_get_rooms_completed(res: ApiResponse) -> void:
+	if not res.success:
+		return
+	
+	for child in room_history_list.get_children():
+		child.queue_free()
 		
-		room_history_button.text = "Show Lobby"
-		is_room_history_showing = true
+	var rooms: Array[RoomItemDto] = res.data
+	for room in rooms:
+		var room_history_item: RoomHistoryItem = ROOM_HISTORY_ITEM_SCENE.instantiate()
+		room_history_item.room = room
+		room_history_list.add_child(room_history_item)
+		
+	room_history_scroll_container.visible = true
+	room_scroll_container.visible = false
+	room_options_panel.visible = false
+	
+	room_history_button.text = "Show Lobby"
+	is_room_history_showing = true

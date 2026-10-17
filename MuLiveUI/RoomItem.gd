@@ -32,7 +32,7 @@ func prepare_room_item() -> void:
 	
 	room_name_label.text = str(room["name"])
 	points_label.text = str(int(room["totalScoreToWin"])) + " " + tr("PTS_TEXT")
-	turn_time_label.text = format_seconds(int(room["turnDurationInSeconds"]))
+	turn_time_label.text = TimeUtils.format_seconds(int(room["turnDurationInSeconds"]))
 	joined_players_size_label.text = str(players.size()) + "/4"
 	
 	var player_count: int = players.size()
@@ -101,11 +101,6 @@ func get_player_count() -> int:
 			count += 1
 
 	return count
-
-func format_seconds(total_seconds: int) -> String:
-	var minutes: int = total_seconds / 60
-	var seconds: int = total_seconds % 60
-	return "%d:%02d" % [minutes, seconds]
 
 func is_full() -> bool:
 	return get_player_count() >= seats.size()
