@@ -1,0 +1,94 @@
+[gd_scene format=3 uid="uid://cxekyk1hyvykn"]
+
+[ext_resource type="Script" uid="uid://bshhwxae4k4tx" path="res://HandLayoutItem.gd" id="1_hlit"]
+[ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="2_hlit"]
+[ext_resource type="Texture2D" uid="uid://m4o3m877n0nb" path="res://assets/images/checkbox-checked.svg" id="3_hlit"]
+[ext_resource type="Texture2D" uid="uid://gkig57tyr62y" path="res://assets/images/checkbox-unchecked.svg" id="4_hlit"]
+[ext_resource type="Texture2D" uid="uid://dkcno4uyl2i3e" path="res://assets/images/yellow-bg-light-line-texture.png" id="5_hlit"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_preview"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.87058824, 0.6784314, 0.23921569, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_size = 3
+shadow_offset = Vector2(3, 3)
+
+[node name="HandLayoutItem" type="VBoxContainer" unique_id=1841621073]
+theme = ExtResource("2_hlit")
+theme_override_constants/separation = 8
+script = ExtResource("1_hlit")
+
+[node name="NameLabel" type="Label" parent="." unique_id=759821506]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Layout Name"
+
+[node name="Row" type="HBoxContainer" parent="." unique_id=667256344]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="PreviewPanel" type="PanelContainer" parent="Row" unique_id=1391897671]
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_preview")
+
+[node name="TextureRect" type="TextureRect" parent="Row/PreviewPanel"]
+layout_mode = 2
+texture = ExtResource("5_hlit")
+expand_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Row/PreviewPanel" unique_id=979009338]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="PreviewContent" type="HBoxContainer" parent="Row/PreviewPanel/MarginContainer" unique_id=1867799766]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CardPreviewContainer" type="HBoxContainer" parent="Row/PreviewPanel/MarginContainer/PreviewContent" unique_id=2070526345]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Spacer" type="Control" parent="Row/PreviewPanel/MarginContainer/PreviewContent" unique_id=54084197]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MoreLabel" type="Label" parent="Row/PreviewPanel/MarginContainer/PreviewContent" unique_id=1044144042]
+layout_mode = 2
+tooltip_text = "More card combination placements (triple cards, kolor, bomb, etc.) will be configurable here."
+mouse_filter = 0
+theme_override_colors/font_color = Color(0.17254902, 0.33333334, 0.8392157, 1)
+theme_override_font_sizes/font_size = 14
+text = "..."
+
+[node name="ActiveContainer" type="HBoxContainer" parent="Row" unique_id=621766748]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 8
+
+[node name="ActiveCheckbox" type="CheckBox" parent="Row/ActiveContainer" unique_id=1210262216]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_icons/checked = ExtResource("3_hlit")
+theme_override_icons/unchecked = ExtResource("4_hlit")
+alignment = 1
+icon_alignment = 1
+expand_icon = true
+
+[node name="ActiveLabel" type="Label" parent="Row/ActiveContainer" unique_id=2127499996]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "ACTIVE_HAND_LAYOUT_TEXT"

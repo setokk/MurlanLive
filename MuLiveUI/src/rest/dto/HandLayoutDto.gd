@@ -6,8 +6,8 @@ enum CardCombinationPlacementType {
 	SINGLE_CARD,
 	DOUBLE_CARDS,
 	TRIPLE_CARDS,
-	BOMB,
 	KOLOR,
+	BOMB,
 	BOMB_KOLOR,
 }
 

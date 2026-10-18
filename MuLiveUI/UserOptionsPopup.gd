@@ -2,11 +2,13 @@ extends Popup
 
 const PROFILE_ICON_PICKER_SCENE: PackedScene = preload("res://scenes/ProfileIconPicker.tscn")
 
-@onready var change_profile_button: Button = $PanelContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/ChangeProfilePanel/MarginContainer/AspectRatioContainer/ChangeProfileButton
 @export var profile_icon: TextureRect
+@onready var change_profile_button: Button = $PanelContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/ChangeProfilePanel/MarginContainer/AspectRatioContainer/ChangeProfileButton
+@onready var hand_layout_configuration_settings: Button = $PanelContainer/MarginContainer/VBoxContainer/HandLayoutConfigurationSettings
 
 func _ready() -> void:
 	change_profile_button.pressed.connect(_on_profile_icon_pressed)
+	hand_layout_configuration_settings.pressed.connect(func(): SceneManager.show_hand_layout_configuration())
 	WebSocketClient.update_player_info_resp.connect(_on_update_player_info_completed)
 
 func _on_profile_icon_pressed() -> void:

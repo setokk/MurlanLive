@@ -5,13 +5,13 @@
 [ext_resource type="Script" uid="uid://ckj8ax6i6654n" path="res://LoginRedirection.gd" id="1_nf15x"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="3_xslny"]
 [ext_resource type="Texture2D" uid="uid://dabkblyx3wpt1" path="res://assets/images/language.svg" id="4_6q1hj"]
-[ext_resource type="Script" uid="uid://oaes34tr2tti" path="res://LanguageDropDown.gd" id="4_f573w"]
+[ext_resource type="Script" uid="uid://chlapdfvl4ylp" path="res://LanguageDropDown.gd" id="4_f573w"]
 [ext_resource type="Texture2D" uid="uid://cwphjklugjlik" path="res://assets/images/Logo2.png" id="4_i2wps"]
-[ext_resource type="Script" uid="uid://dh4jlin702dy" path="res://LogoutRedirection.gd" id="4_wjcpy"]
+[ext_resource type="Script" uid="uid://jbns8goi7txj" path="res://LogoutRedirection.gd" id="4_wjcpy"]
 [ext_resource type="Texture2D" uid="uid://ca4lafe626upe" path="res://assets/images/user-icon.png" id="6_44j3a"]
-[ext_resource type="Script" uid="uid://di1cl8b38ap6m" path="res://UserProfilePanel.gd" id="8_58m83"]
+[ext_resource type="Script" uid="uid://c11sy3ydtbg85" path="res://UserProfilePanel.gd" id="8_58m83"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="11_8onit"]
-[ext_resource type="Script" uid="uid://bxoyeimrv1kos" path="res://UserOptionsPopup.gd" id="11_44j3a"]
+[ext_resource type="Script" uid="uid://bly3c1743kq4u" path="res://UserOptionsPopup.gd" id="11_44j3a"]
 [ext_resource type="Texture2D" uid="uid://1dew80hfdhcj" path="res://assets/images/edit-profile-icon.svg" id="12_8onit"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cm0pq"]
@@ -137,7 +137,7 @@ expand_mode = 5
 [node name="UserOptionsPopup" type="Popup" parent="." unique_id=436642583 node_paths=PackedStringArray("profile_icon")]
 oversampling_override = 1.0
 position = Vector2i(467, 50)
-size = Vector2i(207, 265)
+size = Vector2i(466, 265)
 visible = true
 unresizable = false
 always_on_top = true
@@ -216,16 +216,16 @@ text = "Points: 420"
 
 [node name="Settings" type="Button" parent="UserOptionsPopup/PanelContainer/MarginContainer/VBoxContainer" unique_id=592855561]
 layout_mode = 2
-text = "Settings"
+text = "SETTINGS_SETTINGS"
 
-[node name="Settings2" type="Button" parent="UserOptionsPopup/PanelContainer/MarginContainer/VBoxContainer" unique_id=1525341589]
+[node name="HowToPlaySettings" type="Button" parent="UserOptionsPopup/PanelContainer/MarginContainer/VBoxContainer" unique_id=1525341589]
 layout_mode = 2
-text = "How to play"
+text = "HOW_TO_PLAY_SETTINGS"
 
-[node name="Settings3" type="Button" parent="UserOptionsPopup/PanelContainer/MarginContainer/VBoxContainer" unique_id=129298885]
+[node name="HandLayoutConfigurationSettings" type="Button" parent="UserOptionsPopup/PanelContainer/MarginContainer/VBoxContainer" unique_id=129298885]
 layout_mode = 2
-text = "Report Bugs &
-Feedback"
+text = "HAND_LAYOUT_CONFIGURATION_SETTINGS"
+autowrap_mode = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="UserOptionsPopup/PanelContainer/MarginContainer/VBoxContainer" unique_id=128182375]
 layout_mode = 2
@@ -235,4 +235,3 @@ theme_override_constants/margin_top = 5
 layout_mode = 2
 text = "LOGOUT_BUTTON"
 script = ExtResource("4_wjcpy")
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
