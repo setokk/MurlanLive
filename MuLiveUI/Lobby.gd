@@ -3,6 +3,8 @@ extends Control
 const ROOM_ITEM_SCENE: PackedScene = preload("res://scenes/RoomItem.tscn")
 const ROOM_HISTORY_ITEM_SCENE: PackedScene = preload("res://scenes/RoomHistoryItem.tscn")
 
+@onready var lobby_label: Label = $LobbyPanel/Panel/MarginContainer/HBoxContainer/LobbyLabel
+@onready var room_history_label: Label = $LobbyPanel/Panel/MarginContainer/HBoxContainer/RoomHistoryLabel
 @onready var room_list: VBoxContainer = $LobbyPanel/RoomScrollContainer/MarginContainer/RoomList
 @onready var room_buttons_container : HBoxContainer = $LobbyPanel/RoomOptionsPanel/MarginContainer/RoomButtonsContainer
 @onready var show_all_rooms: MainButton = $LobbyPanel/RoomOptionsPanel/MarginContainer/RoomButtonsContainer/ShowAllRooms
@@ -13,6 +15,7 @@ const ROOM_HISTORY_ITEM_SCENE: PackedScene = preload("res://scenes/RoomHistoryIt
 @onready var room_history_list: VBoxContainer = $LobbyPanel/RoomHistoryScrollContainer/MarginContainer/RoomHistoryList
 @onready var room_scroll_container: ScrollContainer = $LobbyPanel/RoomScrollContainer
 @onready var room_history_scroll_container: ScrollContainer = $LobbyPanel/RoomHistoryScrollContainer
+@onready var refresh_rooms_button: TextureButton = $LobbyPanel/Panel/MarginContainer/HBoxContainer/RefreshRoomsButton
 
 var is_room_history_showing: bool = false
 var refresh_timer: Timer
@@ -23,32 +26,21 @@ const default_total_score_to_win: int = 9
 
 func _ready() -> void:
 	room_buttons_container.random_join_requested.connect(_on_random_join_requested)
-	# Normally we would call the join_room_resp but it's already handled in the room item
 	room_buttons_container.create_room_requested.connect(_on_create_requested)
 	room_buttons_container.join_room_with_id_requested.connect(_on_join_with_id_requested)
 	room_buttons_container.show_all_rooms_requested.connect(_on_show_all_rooms_requested)
 	room_buttons_container.show_available_rooms_requested.connect(_on_show_available_rooms_requested)
 	room_history_button.pressed.connect(_on_room_history_requested)
 	
-	WebSocketClient.available_rooms_resp.connect(populate_rooms)
+	WebSocketClient.available_rooms_resp.connect(_on_available_rooms_completed)
 	WebSocketClient.create_room_resp.connect(_on_create_completed)
 	WebSocketClient.send_message(AvailableRoomsReq.new())
 	
+	refresh_rooms_button.pressed.connect(func(): WebSocketClient.send_message(AvailableRoomsReq.new()))
+	
 	RoomRESTClient.get_rooms_completed.connect(_on_get_rooms_completed)
 
-	refresh_timer = Timer.new()
-	refresh_timer.wait_time = 2.0
-	refresh_timer.timeout.connect(request_rooms)
-	add_child(refresh_timer)
-	refresh_timer.start()
-	
-	update_room_visibility()
-
-func request_rooms() -> void:
-	WebSocketClient.send_message(AvailableRoomsReq.new())
-	update_room_visibility()
-
-func populate_rooms(resp: AvailableRoomsResp) -> void:
+func _on_available_rooms_completed(resp: AvailableRoomsResp) -> void:
 	for child in room_list.get_children():
 		child.queue_free()
 
@@ -59,8 +51,11 @@ func populate_rooms(resp: AvailableRoomsResp) -> void:
 			ROOM_ITEM_SCENE.instantiate()
 		)
 		room_item.room = all_rooms[i]
-		
 		room_list.add_child(room_item)
+		update_room_visibility(room_item)
+
+func update_room_visibility(room_item: RoomItem) -> void:
+	room_item.visible = not room_item.is_full() if (show_available_rooms.hue == MainPalette.Hue.ORANGE) else true
 
 func _on_show_all_rooms_requested() -> void:
 	show_all_rooms.hue = MainPalette.Hue.ORANGE
@@ -87,16 +82,6 @@ func _on_show_available_rooms_requested() -> void:
 			continue
 		var room: RoomItem = child
 		room.visible = not room.is_full()
-			
-func update_room_visibility() -> void:
-	for child in room_list.get_children():
-		if child is not RoomItem:
-			continue
-		var room: RoomItem = child
-		if show_available_rooms.hue == MainPalette.Hue.ORANGE:
-			room.visible = not room.is_full()
-		else:
-			room.visible = true
 
 func _on_create_requested() -> void:
 	var room_name: String = PlayerSession.player.username + "'s " + "Room"
@@ -108,7 +93,6 @@ func _on_create_completed(resp: CreateRoomResp) -> void:
 	SceneManager.show_game(resp.room)
 
 func _on_random_join_requested() -> void:
-	request_rooms()
 	if all_rooms.size() < 1:
 		print("No available rooms")
 	else:
@@ -128,9 +112,13 @@ func _on_room_history_requested() -> void:
 		room_scroll_container.visible = true
 		room_options_panel.visible = true
 		
-		room_history_button.text = "Show Room History"
+		room_history_button.text = tr("ROOM_HISTORY_BUTTON")
 		is_room_history_showing = false
+		lobby_label.visible = true
+		room_history_label.visible = false
 	else:
+		lobby_label.visible = false
+		room_history_label.visible = true
 		RoomRESTClient.get_rooms(PlayerSession.player.id, 0, PlayerSession.jwt)
 
 func _on_get_rooms_completed(res: ApiResponse) -> void:
@@ -150,5 +138,10 @@ func _on_get_rooms_completed(res: ApiResponse) -> void:
 	room_scroll_container.visible = false
 	room_options_panel.visible = false
 	
-	room_history_button.text = "Show Lobby"
+	room_history_button.text = tr("LOBBY_BUTTON")
 	is_room_history_showing = true
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED:
+		if is_node_ready():
+			room_history_button.text = tr("LOBBY_BUTTON") if is_room_history_showing else tr("ROOM_HISTORY_BUTTON")

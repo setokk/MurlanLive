@@ -40,25 +40,25 @@ public class GameState {
     private List<Player> players;
     private Map<Player, Short> score;
 
-    @JsonIgnore private long turnDurationInSeconds;
-    @JsonIgnore private Player currTurnPlayer;
-    @JsonIgnore private boolean shouldCurrTurnPlayerUseThreeOfSpades;
-    @JsonIgnore private CardCombination currCardCombination;
+    private long turnDurationInSeconds;
+    private Player currTurnPlayer;
+    private boolean shouldCurrTurnPlayerUseThreeOfSpades;
+    private CardCombination currCardCombination;
 
-    @JsonIgnore private OnGameStart onGameStart;
-    @JsonIgnore private OnGameFinish onGameFinish;
-    @JsonIgnore private OnTurnTimeout onTurnTimeout;
+    private OnGameStart onGameStart;
+    private OnGameFinish onGameFinish;
+    private OnTurnTimeout onTurnTimeout;
 
-    @JsonIgnore private Player prevWinner;
-    @JsonIgnore private Player prevLoser;
-    @JsonIgnore private Set<Player> givenCards;
-    @JsonIgnore private PassCounter passCounter;
-    @JsonIgnore private boolean isFirstMove;
-    @JsonIgnore private List<Player> readyPlayers = new ArrayList<>();
+    private Player prevWinner;
+    private Player prevLoser;
+    private Set<Player> givenCards;
+    private PassCounter passCounter;
+    private boolean isFirstMove;
+    private List<Player> readyPlayers = new ArrayList<>();
 
     /* Turn timer */
-    @JsonIgnore private ScheduledExecutorService scheduler;
-    @JsonIgnore private ScheduledFuture<?> turnTimer;
+    private ScheduledExecutorService scheduler;
+    private ScheduledFuture<?> turnTimer;
 
     public GameState(State state,
                      Player player,
@@ -93,7 +93,6 @@ public class GameState {
                 .build();
     }
 
-    @JsonIgnore
     public boolean isFromPrevious() {
         return prevLoser != null && prevWinner != null;
     }
@@ -267,7 +266,6 @@ public class GameState {
         }
     }
 
-    @JsonIgnore
     private boolean isNotPlayerTurn(Player player) {
         return !player.equals(this.currTurnPlayer);
     }
@@ -283,7 +281,6 @@ public class GameState {
         return isFromPrevious() && getPrevLoser().getHand().contains(new CardCombination(Card.BLACK_JOKER, Card.RED_JOKER));
     }
 
-    @JsonIgnore
     public boolean haveBothPlayersGivenCards() {
         return getGivenCards().size() == 2;
     }
@@ -305,13 +302,18 @@ public class GameState {
         }
     }
 
-    @JsonIgnore
+    public long getTurnDurationLeftInSeconds() {
+        if (turnTimer == null) {
+            return turnDurationInSeconds;
+        }
+        return Math.max(0, turnTimer.getDelay(TimeUnit.SECONDS));
+    }
+
     public Map<Long, Short> getNumOfCardsPerPlayerId() {
         return players.stream()
                 .collect(Collectors.toMap(Player::getId, p -> (short) p.getHand().size()));
     }
 
-    @JsonIgnore
     public boolean shouldGameStart() {
         return this.state == State.WAITING && this.readyPlayers.size() == GameConstants.MAX_PLAYERS;
     }

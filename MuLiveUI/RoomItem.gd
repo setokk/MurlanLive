@@ -87,20 +87,9 @@ func update_seat(
 		username_label.text = ""
 		username_label.visible = false
 
-
 func get_player_count() -> int:
-	var count: int = 0
-
-	for seat in seats:
-
-		var username_label: Label = (
-			seat.get_node("UsernameLabel")
-		)
-
-		if username_label.visible:
-			count += 1
-
-	return count
+	var players: Array = room["players"]
+	return players.size()
 
 func is_full() -> bool:
 	return get_player_count() >= seats.size()

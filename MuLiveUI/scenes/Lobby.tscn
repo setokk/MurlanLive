@@ -1,16 +1,17 @@
 [gd_scene format=3 uid="uid://c127j2awg5s3w"]
 
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_qbi84"]
-[ext_resource type="Script" uid="uid://dp5ek2top2eoq" path="res://Lobby.gd" id="2_oeg6l"]
+[ext_resource type="Script" uid="uid://bjrp1twxhdl6p" path="res://Lobby.gd" id="2_oeg6l"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="3_1yh37"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="4_as3ys"]
 [ext_resource type="Texture2D" uid="uid://c4de00wk83x2i" path="res://assets/images/MuLive Background Transparent.png" id="4_h77bf"]
 [ext_resource type="Script" uid="uid://c5c0ntqx2ry6w" path="res://RoomButtonsContainer.gd" id="4_jp1kc"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="4_l31xl"]
 [ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="4_wuide"]
-[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="6_hwwg2"]
+[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="6_hwwg2"]
 [ext_resource type="Texture2D" uid="uid://dkt4rbxlikmv8" path="res://assets/images/plus-icon.svg" id="6_kayix"]
 [ext_resource type="Texture2D" uid="uid://c5mlenjmrvwrv" path="res://assets/images/dice-icon.svg" id="8_l31xl"]
+[ext_resource type="Texture2D" uid="uid://dbfh4c0al253p" path="res://assets/images/refresh.svg" id="9_h77bf"]
 [ext_resource type="Texture2D" uid="uid://dabfi7n7nrrpg" path="res://assets/images/magnifying-glass.svg" id="9_kayix"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_psoro"]
@@ -150,6 +151,18 @@ theme_override_font_sizes/font_size = 34
 text = "LOBBY_TEXT"
 vertical_alignment = 1
 
+[node name="RoomHistoryLabel" type="Label" parent="LobbyPanel/Panel/MarginContainer/HBoxContainer" unique_id=356821589]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_constants/outline_size = 20
+theme_override_font_sizes/font_size = 34
+text = "ROOM_HISTORY_TEXT"
+vertical_alignment = 1
+
 [node name="RoomHistoryButton" type="Button" parent="LobbyPanel/Panel/MarginContainer/HBoxContainer" unique_id=1490800323]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -159,10 +172,17 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_l31xl")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_l31xl")
 theme_override_styles/hover = SubResource("StyleBoxFlat_l31xl")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_l31xl")
-text = "Show Room History"
+text = "ROOM_HISTORY_BUTTON"
 script = ExtResource("6_hwwg2")
 normal_shade = 4
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
+
+[node name="RefreshRoomsButton" type="TextureButton" parent="LobbyPanel/Panel/MarginContainer/HBoxContainer" unique_id=323799538]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+texture_normal = ExtResource("9_h77bf")
+ignore_texture_size = true
+stretch_mode = 0
 
 [node name="RoomOptionsPanel" type="Panel" parent="LobbyPanel" unique_id=1606039710]
 custom_minimum_size = Vector2(0, 30)

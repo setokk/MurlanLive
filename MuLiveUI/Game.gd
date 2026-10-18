@@ -91,6 +91,8 @@ func _ready() -> void:
 	WebSocketClient.unblock_resp.connect(_on_unblock_completed)
 	WebSocketClient.inform_player_lost_connection_resp.connect(_on_opponent_lost_connection)
 	WebSocketClient.inform_player_reconnected_resp.connect(_on_opponent_reconnected)
+	WebSocketClient.inform_update_player_info_resp.connect(_on_opponent_update_player_info)
+	WebSocketClient.update_player_info_resp.connect(_on_update_player_info_completed)
 	player_context_menu.mute_button_pressed.connect(_on_mute_requested)
 	player_context_menu.block_button_pressed.connect(_on_block_requested)
 	player_context_menu.kick_button_pressed.connect(_on_kick_requested)
@@ -107,7 +109,6 @@ func init_active_game(game_state: Dictionary) -> void:
 	if int(game_state["totalGamesPlayed"]) < 1:
 		for player in players:
 			seats[find_player_seat_index(player["id"])].remove_ready()
-		turn_time = float(game_state["turnDurationInSeconds"])
 	
 	var my_hand: Array[int] = []
 
@@ -132,10 +133,10 @@ func init_active_game(game_state: Dictionary) -> void:
 				is_local_player_loser = true
 				give_card_button.visible = true
 				
-		GameStateEnum.PLAYING:	
+		GameStateEnum.PLAYING:
 			current_player = game_state["currTurnPlayer"]
 			current_player_seat_index = find_player_seat_index(current_player["id"])
-			seats[current_player_seat_index].start_turn(turn_time)
+			seats[current_player_seat_index].start_turn(float(game_state["turnDurationInSeconds"]))
 
 			if current_player["id"] != PlayerSession.player.id:
 				play_button.disabled = true
@@ -203,7 +204,7 @@ func _on_game_state(resp: GameStateResp) -> void:
 				played_cards.clear_cards()
 			current_player = game_state["currTurnPlayer"]
 			current_player_seat_index = find_player_seat_index(current_player["id"])
-			seats[current_player_seat_index].start_turn(turn_time)
+			seats[current_player_seat_index].start_turn(float(game_state["turnDurationInSeconds"]))
 			
 			var my_hand: Array[int] = []
 
@@ -447,6 +448,28 @@ func _on_unblock_completed(resp: UnBlockResp) -> void:
 	if resp.response_status == 200:
 		PlayerSession.remove_blocked(int(resp.unblocked_player["id"]))
 		
+func _on_opponent_update_player_info(resp: InformUpdatePlayerInfoResp) -> void:
+	var updated_player: Dictionary = resp.player
+	var updated_player_id: int = int(updated_player["id"])
+	var updated_player_icon_id: int = int(updated_player["profileIconId"])
+	
+	var player: Dictionary = ArrayUtils.find_by(
+		players,
+		func(p: Dictionary): return int(p["id"] == updated_player_id)
+	)
+	
+	player["username"] = updated_player["username"]
+	player["profileIconId"] = updated_player_icon_id
+	
+	seats[find_player_seat_index(updated_player_id)].seat_icon.icon = ProfileIconUtils.load_image(updated_player_icon_id)
+
+func _on_update_player_info_completed(resp: UpdatePlayerInfoResp) -> void:
+	if resp.response_status != 200:
+		return
+	
+	PlayerSession.player.profile_icon_id = int(resp.player["profileIconId"])
+	seats[find_player_seat_index(PlayerSession.player.id)].seat_icon.icon = ProfileIconUtils.load_image(PlayerSession.player.profile_icon_id)
+
 # Helper functions
 func display_players() -> void:
 	local_player_index = 0
