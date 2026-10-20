@@ -20,11 +20,15 @@ func _ready() -> void:
 
 func add_message(username: String, show_username: bool, mess: String) -> void:
 	var chat_item: ChatItem = CHAT_ITEM_SCENE.instantiate()
-	if show_username:
+	if not show_username:
+		chat_item.set_type(ChatItem.Type.SYSTEM)
+	elif username == "You":
+		chat_item.set_type(ChatItem.Type.OWN)
+		chat_item.set_username(username)
+	else:
+		chat_item.set_type(ChatItem.Type.OTHER)
 		chat_item.set_username(username)
 	chat_item.set_message(mess)
-	if username != "You":
-		chat_item.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	messages.add_child(chat_item)
 	
 func _on_message_requested() -> void:
@@ -39,6 +43,7 @@ func _on_message_completed(resp: ChatResp) -> void:
 	if resp.response_status == 200:
 		add_message("You", true, message)
 		message_input.clear()
+		message_input.release_focus()
 	else:
 		PopupFactory.error("Issue with sending the message")
 

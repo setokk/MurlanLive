@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://i3k8fpgdyexl"]
 
-[ext_resource type="Script" uid="uid://dl4p6lrmpom0s" path="res://HandLayoutConfiguration.gd" id="1_hlc"]
+[ext_resource type="Script" uid="uid://dmon1buonfmcj" path="res://HandLayoutConfiguration.gd" id="1_hlc"]
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="2_hlc"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="3_hlc"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="4_hlc"]
 [ext_resource type="Texture2D" uid="uid://c4de00wk83x2i" path="res://assets/images/MuLive Background Transparent.png" id="4_klcbg"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="5_hlc"]
 [ext_resource type="Texture2D" uid="uid://dkt4rbxlikmv8" path="res://assets/images/plus-icon.svg" id="6_hlc"]
-[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="7_hlc"]
+[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="7_hlc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mainpanel"]
 bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)

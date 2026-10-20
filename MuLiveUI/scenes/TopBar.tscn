@@ -5,13 +5,13 @@
 [ext_resource type="Script" uid="uid://ckj8ax6i6654n" path="res://LoginRedirection.gd" id="1_nf15x"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="3_xslny"]
 [ext_resource type="Texture2D" uid="uid://dabkblyx3wpt1" path="res://assets/images/language.svg" id="4_6q1hj"]
-[ext_resource type="Script" uid="uid://chlapdfvl4ylp" path="res://LanguageDropDown.gd" id="4_f573w"]
+[ext_resource type="Script" uid="uid://oaes34tr2tti" path="res://LanguageDropDown.gd" id="4_f573w"]
 [ext_resource type="Texture2D" uid="uid://cwphjklugjlik" path="res://assets/images/Logo2.png" id="4_i2wps"]
-[ext_resource type="Script" uid="uid://jbns8goi7txj" path="res://LogoutRedirection.gd" id="4_wjcpy"]
+[ext_resource type="Script" uid="uid://dh4jlin702dy" path="res://LogoutRedirection.gd" id="4_wjcpy"]
 [ext_resource type="Texture2D" uid="uid://ca4lafe626upe" path="res://assets/images/user-icon.png" id="6_44j3a"]
-[ext_resource type="Script" uid="uid://c11sy3ydtbg85" path="res://UserProfilePanel.gd" id="8_58m83"]
+[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="9_8onit"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="11_8onit"]
-[ext_resource type="Script" uid="uid://bly3c1743kq4u" path="res://UserOptionsPopup.gd" id="11_44j3a"]
+[ext_resource type="Script" uid="uid://bxoyeimrv1kos" path="res://UserOptionsPopup.gd" id="11_44j3a"]
 [ext_resource type="Texture2D" uid="uid://1dew80hfdhcj" path="res://assets/images/edit-profile-icon.svg" id="12_8onit"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cm0pq"]
@@ -26,6 +26,30 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 border_width_left = 1
 border_color = Color(0.21176471, 0.015686275, 0, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ud1i"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+anti_aliasing_size = 0.7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hkuug"]
+bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_58m83"]
 bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
 border_width_left = 5
@@ -37,14 +61,6 @@ corner_radius_top_left = 50
 corner_radius_top_right = 50
 corner_radius_bottom_right = 50
 corner_radius_bottom_left = 50
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hkuug"]
-bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8ud1i"]
 
@@ -116,34 +132,38 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_r0du0")
 text = "LOGIN_REGISTER_BUTTON"
 script = ExtResource("1_nf15x")
 
-[node name="UserProfilePanel" type="PanelContainer" parent="Panel/MarginContainer/HBoxContainer" unique_id=449790079]
+[node name="UserProfileButton" type="Button" parent="Panel/MarginContainer/HBoxContainer" unique_id=2044744570]
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_58m83")
-script = ExtResource("8_58m83")
+theme_override_styles/normal = SubResource("StyleBoxFlat_8ud1i")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_8ud1i")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_8ud1i")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_8ud1i")
+theme_override_styles/hover = SubResource("StyleBoxFlat_8ud1i")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_8ud1i")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_8ud1i")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_8ud1i")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_8ud1i")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_8ud1i")
+theme_override_styles/focus = SubResource("StyleBoxFlat_8ud1i")
+icon = ExtResource("6_44j3a")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("9_8onit")
+hue = 7
+normal_shade = 1
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/HBoxContainer/UserProfilePanel" unique_id=788041597]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="ProfileIcon" type="TextureRect" parent="Panel/MarginContainer/HBoxContainer/UserProfilePanel/MarginContainer" unique_id=2100545531]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-texture = ExtResource("6_44j3a")
-expand_mode = 5
-
-[node name="UserOptionsPopup" type="Popup" parent="." unique_id=436642583 node_paths=PackedStringArray("profile_icon")]
+[node name="UserOptionsPopup" type="Popup" parent="." unique_id=436642583 node_paths=PackedStringArray("user_profile_button")]
 oversampling_override = 1.0
 position = Vector2i(467, 50)
-size = Vector2i(466, 265)
+size = Vector2i(243, 265)
 visible = true
 unresizable = false
 always_on_top = true
 content_scale_aspect = 3
 script = ExtResource("11_44j3a")
-profile_icon = NodePath("../Panel/MarginContainer/HBoxContainer/UserProfilePanel/MarginContainer/ProfileIcon")
+user_profile_button = NodePath("../Panel/MarginContainer/HBoxContainer/UserProfileButton")
 
 [node name="PanelContainer" type="PanelContainer" parent="UserOptionsPopup" unique_id=1647342832]
 anchors_preset = 15

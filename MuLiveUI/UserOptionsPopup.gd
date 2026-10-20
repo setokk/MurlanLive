@@ -2,7 +2,7 @@ extends Popup
 
 const PROFILE_ICON_PICKER_SCENE: PackedScene = preload("res://scenes/ProfileIconPicker.tscn")
 
-@export var profile_icon: TextureRect
+@export var user_profile_button: MainButton
 @onready var change_profile_button: Button = $PanelContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/ChangeProfilePanel/MarginContainer/AspectRatioContainer/ChangeProfileButton
 @onready var hand_layout_configuration_settings: Button = $PanelContainer/MarginContainer/VBoxContainer/HandLayoutConfigurationSettings
 
@@ -25,4 +25,4 @@ func _on_update_player_info_completed(resp: UpdatePlayerInfoResp) -> void:
 		return
 	
 	PlayerSession.player.profile_icon_id = int(resp.player["profileIconId"])
-	profile_icon.texture = ProfileIconUtils.load_image(PlayerSession.player.profile_icon_id)
+	user_profile_button.icon = ProfileIconUtils.load_image(PlayerSession.player.profile_icon_id)

@@ -41,7 +41,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_preview")
 
-[node name="TextureRect" type="TextureRect" parent="Row/PreviewPanel"]
+[node name="TextureRect" type="TextureRect" parent="Row/PreviewPanel" unique_id=1278142630]
 layout_mode = 2
 texture = ExtResource("5_hlit")
 expand_mode = 1
