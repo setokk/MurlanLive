@@ -1,6 +1,8 @@
 package org.murlan.um.service.param;
 
-import org.murlan.um.model.dto.HandLayoutConfigurationDto;
+import org.murlan.um.model.dto.HandLayoutDto;
 
-public record UpdateHandLayoutConfigurationParam(HandLayoutConfigurationDto handLayoutConfiguration) {
+import java.util.List;
+
+public record UpdateHandLayoutConfigurationParam(List<HandLayoutDto> handLayouts) {
 }

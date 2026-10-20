@@ -3,7 +3,6 @@ extends RefCounted
 
 enum CardCombinationPlacementType {
 	DEFAULT,
-	SINGLE_CARD,
 	DOUBLE_CARDS,
 	TRIPLE_CARDS,
 	KOLOR,

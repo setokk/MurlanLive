@@ -31,6 +31,7 @@ HandLayoutConfig="*res://globals/HandLayoutConfig.gd"
 CardTextureLoader="*res://globals/CardTextureLoader.gd"
 PlayerRESTClient="*res://globals/rest/PlayerRESTClient.gd"
 RoomRESTClient="*res://globals/rest/RoomRESTClient.gd"
+HandLayoutRESTClient="*res://globals/rest/HandLayoutRESTClient.gd"
 WebSocketClient="*res://globals/ws/WebSocketClient.gd"
 
 [debug]

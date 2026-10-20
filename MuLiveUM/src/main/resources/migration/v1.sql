@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS room_player (
 CREATE TABLE IF NOT EXISTS hand_layout_configuration(
     id BIGINT NOT NULL PRIMARY KEY,
     hand_layouts JSONB NOT NULL,
+    sha TEXT NOT NULL,
     player_id BIGINT NOT NULL
 );
 CREATE SEQUENCE IF NOT EXISTS hand_layout_configuration_seq

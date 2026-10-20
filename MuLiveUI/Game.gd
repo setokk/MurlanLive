@@ -112,7 +112,7 @@ func init_active_game(game_state: Dictionary) -> void:
 	
 	var my_hand: Array[int] = []
 
-	for value in game_state["hand"].split("_"):
+	for value in game_state["hand"].split(ProtocolConfigProvider.get_config().protocol_list_delimiter):
 		my_hand.append(int(value))
 		
 	$TopArea/HBoxContainer/TableArea.start_dealing(
@@ -208,7 +208,7 @@ func _on_game_state(resp: GameStateResp) -> void:
 			
 			var my_hand: Array[int] = []
 
-			for value in game_state["hand"].split("_"):
+			for value in game_state["hand"].split(ProtocolConfigProvider.get_config().protocol_list_delimiter):
 				my_hand.append(int(value))
 
 			if current_player["id"] != PlayerSession.player.id:

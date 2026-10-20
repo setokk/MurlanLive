@@ -30,3 +30,19 @@ func _read_file_as_text(path: String) -> String:
 	var text: String = file.get_as_text()
 	file.close()
 	return text
+
+func save_layouts() -> bool:
+	var dict_array: Array = []
+	for layout in layouts:
+		dict_array.append(layout.to_dict())
+
+	var json_text: String = JSON.stringify(dict_array, "  ", false)
+
+	var file: FileAccess = FileAccess.open(HAND_LAYOUT_JSON_PATH, FileAccess.WRITE)
+	if file == null:
+		push_error("Failed to open file for writing: %s (error %d)" % [HAND_LAYOUT_JSON_PATH, FileAccess.get_open_error()])
+		return false
+
+	file.store_string(json_text)
+	file.close()
+	return true
