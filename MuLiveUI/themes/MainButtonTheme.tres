@@ -15,6 +15,8 @@ shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 shadow_size = 3
 shadow_offset = Vector2(3, 3)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3gwrr"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p04b4"]
 content_margin_left = 6.0
 content_margin_top = 6.0
@@ -71,6 +73,7 @@ Button/colors/font_pressed_color = Color(0.7294118, 0.7294118, 0.7294118, 1)
 Button/constants/outline_size = 8
 Button/font_sizes/font_size = 16
 Button/styles/disabled = SubResource("StyleBoxFlat_3sa5x")
+Button/styles/focus = SubResource("StyleBoxEmpty_3gwrr")
 Button/styles/hover = SubResource("StyleBoxFlat_p04b4")
 Button/styles/normal = SubResource("StyleBoxFlat_pmplx")
 Button/styles/pressed = SubResource("StyleBoxFlat_8eksg")

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bvu11ilqfcyuu"]
 
 [ext_resource type="Texture2D" uid="uid://b3r143j55a1wa" path="res://assets/images/decks/0/_poster.png" id="1_dd2wi"]
-[ext_resource type="Script" uid="uid://dh6s4fyx0u08f" path="res://Card.gd" id="1_hael8"]
+[ext_resource type="Script" uid="uid://c4neslytisfa" path="res://Card.gd" id="1_hael8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u4fkt"]
 size = Vector2(726, 1023)
@@ -15,3 +15,6 @@ shape = SubResource("RectangleShape2D_u4fkt")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=901407572]
 texture = ExtResource("1_dd2wi")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
