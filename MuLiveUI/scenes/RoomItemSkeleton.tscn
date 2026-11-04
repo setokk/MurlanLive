@@ -1,0 +1,163 @@
+[gd_scene format=3 uid="uid://ca5ij1obqgeeg"]
+
+[ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_jatfd"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yy2xu"]
+bg_color = Color(0.5019608, 0.5019608, 0.5019608, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_743nf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ojke4"]
+bg_color = Color(0.6156863, 0.6156863, 0.6156863, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ud1i"]
+bg_color = Color(0.6156863, 0.6156863, 0.6156863, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rv886"]
+bg_color = Color(0.6156863, 0.6156863, 0.6156863, 1)
+
+[node name="RoomItemSkeleton" type="PanelContainer" unique_id=938990275]
+custom_minimum_size = Vector2(0, 100)
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.2
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_jatfd")
+theme_override_styles/panel = SubResource("StyleBoxFlat_yy2xu")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1786041193]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Panel" type="Panel" parent="MarginContainer" unique_id=425292178]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_743nf")
+
+[node name="RoomItemInfo" type="HBoxContainer" parent="MarginContainer/Panel" unique_id=1694903364]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="MarginContainer/Panel/RoomItemInfo" unique_id=167667996]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch_mode = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Panel/RoomItemInfo/AspectRatioContainer" unique_id=1617360980]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ojke4")
+
+[node name="AspectRatioContainer2" type="AspectRatioContainer" parent="MarginContainer/Panel/RoomItemInfo" unique_id=29023255]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch_mode = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Panel/RoomItemInfo/AspectRatioContainer2" unique_id=798037659]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ojke4")
+
+[node name="AspectRatioContainer3" type="AspectRatioContainer" parent="MarginContainer/Panel/RoomItemInfo" unique_id=2132540011]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch_mode = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Panel/RoomItemInfo/AspectRatioContainer3" unique_id=1504544360]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ojke4")
+
+[node name="AspectRatioContainer4" type="AspectRatioContainer" parent="MarginContainer/Panel/RoomItemInfo" unique_id=753386311]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch_mode = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Panel/RoomItemInfo/AspectRatioContainer4" unique_id=13435724]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ojke4")
+
+[node name="RoomDetails" type="HBoxContainer" parent="MarginContainer/Panel" unique_id=1560366167]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.55
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="RoomInfo" type="VBoxContainer" parent="MarginContainer/Panel/RoomDetails" unique_id=1572084440]
+layout_mode = 2
+size_flags_horizontal = 6
+alignment = 1
+
+[node name="RoomName" type="ColorRect" parent="MarginContainer/Panel/RoomDetails/RoomInfo" unique_id=384915924]
+custom_minimum_size = Vector2(0, 26)
+layout_mode = 2
+color = Color(0.6156863, 0.6156863, 0.6156863, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo" unique_id=18516555]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="PointsPanel" type="PanelContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer" unique_id=1231862391]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8ud1i")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/PointsPanel" unique_id=1791279270]
+layout_mode = 2
+alignment = 1
+
+[node name="PointsLabel" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/PointsPanel/HBoxContainer" unique_id=1629306949]
+layout_mode = 2
+text = "           "
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TurnTimePanel" type="PanelContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer" unique_id=1220632002]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8ud1i")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/TurnTimePanel" unique_id=2106838620]
+layout_mode = 2
+alignment = 1
+
+[node name="TurnTimeLabel" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/TurnTimePanel/HBoxContainer" unique_id=269542961]
+layout_mode = 2
+text = "           "
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="JoinedPlayersSizePanel" type="PanelContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer" unique_id=134018983]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8ud1i")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/JoinedPlayersSizePanel" unique_id=669296901]
+layout_mode = 2
+alignment = 1
+
+[node name="JoinedPlayersSizeLabel" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/HBoxContainer/JoinedPlayersSizePanel/HBoxContainer" unique_id=458117362]
+layout_mode = 2
+text = "           "
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="JoinButton" type="Button" parent="MarginContainer/Panel/RoomDetails" unique_id=12403353]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+theme_override_styles/normal = SubResource("StyleBoxFlat_rv886")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_rv886")
+disabled = true
+expand_icon = true

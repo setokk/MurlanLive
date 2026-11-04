@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://b0qv0decrfipu"]
+
+[ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="1_f62x0"]
+[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="2_uxx2p"]
+
+[node name="ShowMoreButton" type="Button" unique_id=1649879088]
+offset_left = 521.2
+offset_top = 173.6848
+offset_right = 629.2
+offset_bottom = 208.6848
+size_flags_horizontal = 4
+theme = ExtResource("1_f62x0")
+text = "Show More"
+script = ExtResource("2_uxx2p")
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"

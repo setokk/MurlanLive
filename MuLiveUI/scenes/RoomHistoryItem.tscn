@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://dry4me0btsro2"]
 
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_3qcha"]
-[ext_resource type="Script" uid="uid://dspt8obo3d5sw" path="res://RoomHistoryItem.gd" id="2_y5ruh"]
+[ext_resource type="Script" uid="uid://dom6a1hhl5weo" path="res://RoomHistoryItem.gd" id="2_y5ruh"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="3_nqu86"]
 [ext_resource type="Texture2D" uid="uid://fm1quphn3o62" path="res://assets/images/crown-icon.png" id="4_q37kb"]
 [ext_resource type="Texture2D" uid="uid://co41il6cypa66" path="res://assets/images/number2-icon.png" id="5_3qcha"]
 [ext_resource type="Texture2D" uid="uid://cdnv6c3qrdugb" path="res://assets/images/trophy.svg" id="5_47s6j"]
 [ext_resource type="Texture2D" uid="uid://5b0uvqo0a8ki" path="res://assets/images/clock.svg" id="5_y5ruh"]
-[ext_resource type="Script" uid="uid://bh8mxvl0td7av" path="res://PlayerScore.gd" id="6_nqu86"]
+[ext_resource type="Script" uid="uid://bnnksicxqpigk" path="res://PlayerScore.gd" id="6_nqu86"]
 [ext_resource type="Texture2D" uid="uid://dyp5eeaq7gafl" path="res://assets/images/number3-icon.png" id="6_y5ruh"]
 [ext_resource type="Texture2D" uid="uid://cjd4qpcnp68d6" path="res://assets/images/number4-icon.png" id="7_nqu86"]
 
@@ -106,6 +106,7 @@ shadow_offset = Vector2(2, 2)
 
 [node name="RoomHistoryItem" type="PanelContainer" unique_id=1212699660]
 custom_minimum_size = Vector2(0, 100)
+anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 0.15
 grow_horizontal = 2
@@ -161,6 +162,7 @@ layout_mode = 2
 
 [node name="PointsPanel" type="PanelContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo" unique_id=1349620088]
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_3qcha")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo/PointsPanel" unique_id=990448862]
@@ -180,6 +182,7 @@ vertical_alignment = 1
 
 [node name="TurnTimePanel" type="PanelContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo" unique_id=637684726]
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_y5ruh")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo/TurnTimePanel" unique_id=1860671394]
@@ -204,12 +207,16 @@ size_flags_horizontal = 3
 [node name="CreationDate" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo/VBoxContainer" unique_id=1509276130]
 layout_mode = 2
 size_flags_horizontal = 10
-text = "Created at: 21/02/2026 - 13:35"
+text = "21/02/2026 - 13:35"
 
-[node name="FinishedDate" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo/VBoxContainer" unique_id=1482636311]
+[node name="Duration" type="Label" parent="MarginContainer/Panel/RoomDetails/RoomInfo/GeneralRoomInfo/VBoxContainer" unique_id=1482636311]
 layout_mode = 2
 size_flags_horizontal = 10
-text = "Finished at: 21/02/2026 - 13:35"
+theme_override_colors/font_color = Color(0.94509804, 0.7019608, 0.6745098, 1)
+theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 14
+text = "34:02'"
 
 [node name="PlayersInfo" type="HBoxContainer" parent="MarginContainer/Panel/RoomDetails/RoomInfo" unique_id=638424286]
 layout_mode = 2

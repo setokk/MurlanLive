@@ -1,0 +1,208 @@
+[gd_scene format=3 uid="uid://cy36up1vwd2mp"]
+
+[ext_resource type="Script" uid="uid://bcqk5j384oqfw" path="res://Rooms.gd" id="1_h3dmn"]
+[ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="1_psogy"]
+[ext_resource type="Script" uid="uid://c5c0ntqx2ry6w" path="res://RoomButtonsContainer.gd" id="2_gho6q"]
+[ext_resource type="Texture2D" uid="uid://dkt4rbxlikmv8" path="res://assets/images/plus-icon.svg" id="3_h3dmn"]
+[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="4_6equw"]
+[ext_resource type="Texture2D" uid="uid://c5mlenjmrvwrv" path="res://assets/images/dice-icon.svg" id="5_bdqu8"]
+[ext_resource type="Texture2D" uid="uid://dabfi7n7nrrpg" path="res://assets/images/magnifying-glass.svg" id="6_6wx5g"]
+[ext_resource type="Script" uid="uid://bcawcgfu2eid5" path="res://LoadingRoomScrollContainer.gd" id="7_gho6q"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wrp6g"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5ttxw"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+shadow_size = 4
+shadow_offset = Vector2(4, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1wla2"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_wua1q"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mb4cf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h3dmn"]
+
+[node name="Rooms" type="VBoxContainer" unique_id=386906967]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_h3dmn")
+
+[node name="RoomOptionsPanel" type="Panel" parent="." unique_id=826748954]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_wrp6g")
+
+[node name="MarginContainer" type="MarginContainer" parent="RoomOptionsPanel" unique_id=698973348]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 20
+
+[node name="RoomButtonsContainer" type="HBoxContainer" parent="RoomOptionsPanel/MarginContainer" unique_id=825014104]
+layout_mode = 2
+theme = ExtResource("1_psogy")
+theme_override_constants/separation = 10
+script = ExtResource("2_gho6q")
+
+[node name="CreateRoom" type="Button" parent="RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1379795390]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "CREATE_ROOM_BUTTON"
+icon = ExtResource("3_h3dmn")
+script = ExtResource("4_6equw")
+hue = 5
+normal_shade = 4
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
+
+[node name="JoinRandomRoom" type="Button" parent="RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=185871089]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "JOIN_RANDOM_ROOM_BUTTON"
+icon = ExtResource("5_bdqu8")
+script = ExtResource("4_6equw")
+hue = 3
+normal_shade = 4
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
+
+[node name="MarginContainer" type="MarginContainer" parent="RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=833220783]
+layout_mode = 2
+theme_override_constants/margin_right = 10
+
+[node name="JoinRoomWithIdInput" type="LineEdit" parent="RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=540660116]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_colors/font_placeholder_color = Color(0.27058825, 0.2784314, 0.30980393, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_5ttxw")
+placeholder_text = "JOIN_ROOM_WITH_ID_PLACEHOLDER"
+emoji_menu_enabled = false
+clear_button_enabled = true
+right_icon = ExtResource("6_6wx5g")
+
+[node name="JoinRoomWithIdButton" type="Button" parent="RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=227958787]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "JOIN_ROOM_BUTTON"
+script = ExtResource("4_6equw")
+hue = 0
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
+
+[node name="MarginContainer2" type="MarginContainer" parent="RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1748498789]
+layout_mode = 2
+theme_override_constants/margin_right = 10
+
+[node name="ShowAvailableRooms" type="Button" parent="RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=1011018136]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_colors/font_pressed_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_colors/font_hover_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_1wla2")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_1wla2")
+theme_override_styles/hover = SubResource("StyleBoxFlat_1wla2")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_1wla2")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_wua1q")
+text = "AVAILABLE_ROOMS_TEXT"
+script = ExtResource("4_6equw")
+normal_shade = 4
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
+
+[node name="ShowAllRooms" type="Button" parent="RoomOptionsPanel/MarginContainer/RoomButtonsContainer" unique_id=775358374]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_colors/font_pressed_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_colors/font_hover_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_1wla2")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_1wla2")
+theme_override_styles/hover = SubResource("StyleBoxFlat_1wla2")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_1wla2")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_wua1q")
+text = "ALL_ROOMS_TEXT"
+script = ExtResource("4_6equw")
+normal_shade = 4
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
+
+[node name="RoomScrollContainer" type="ScrollContainer" parent="." unique_id=911472650]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_mb4cf")
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="RoomScrollContainer" unique_id=1073180116]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="RoomList" type="VBoxContainer" parent="RoomScrollContainer/MarginContainer" unique_id=194797745]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 15
+
+[node name="LoadingRoomScrollContainer" type="ScrollContainer" parent="." unique_id=1816339622]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_h3dmn")
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 3
+script = ExtResource("7_gho6q")
+
+[node name="MarginContainer" type="MarginContainer" parent="LoadingRoomScrollContainer" unique_id=1042057631]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="LoadingRoomList" type="VBoxContainer" parent="LoadingRoomScrollContainer/MarginContainer" unique_id=1635053061]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 15

@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://ctiqqa23jajmf"]
 
 [ext_resource type="Script" uid="uid://cnfr068ybvthk" path="res://RoomInfo.gd" id="1_rdgol"]
-[ext_resource type="Texture2D" uid="uid://db6p7v6k4c8d3" path="res://assets/images/edit-icon.png" id="2_e1r5k"]
 [ext_resource type="Texture2D" uid="uid://by11rgbb78bj5" path="res://assets/images/361082-200.png" id="3_2y4yk"]
+[ext_resource type="Texture2D" uid="uid://bdxguotcfc6w2" path="res://assets/images/edit-icon.svg" id="3_koah1"]
 [ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="3_msm78"]
 [ext_resource type="Texture2D" uid="uid://cnbp1yk6x4ylm" path="res://assets/images/grabber.svg" id="4_e1r5k"]
+[ext_resource type="Texture2D" uid="uid://b5a26dr8e0pjn" path="res://assets/images/edit-icon-hovered.svg" id="4_jjnu3"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="4_msm78"]
 [ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="5_koah1"]
 [ext_resource type="Texture2D" uid="uid://be31gmt5m06ip" path="res://assets/images/grabber_disabled.svg" id="6_msm78"]
@@ -115,19 +116,21 @@ theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 16
 text = "Room Name"
 alignment = 1
-editable = false
+max_length = 20
 expand_to_text_length = true
+context_menu_enabled = false
+shortcut_keys_enabled = false
 flat = true
+select_all_on_focus = true
 
-[node name="EditRoomNameButton" type="Button" parent="Panel/MarginContainer2/HBoxContainer" unique_id=628047068]
+[node name="EditRoomNameButton" type="TextureButton" parent="Panel/MarginContainer2/HBoxContainer" unique_id=1298911630]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("StyleBoxEmpty_7ua8r")
-text = " "
-icon = ExtResource("2_e1r5k")
-icon_alignment = 1
-expand_icon = true
+texture_normal = ExtResource("3_koah1")
+texture_hover = ExtResource("4_jjnu3")
+ignore_texture_size = true
+stretch_mode = 5
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=758772913]
 layout_mode = 1

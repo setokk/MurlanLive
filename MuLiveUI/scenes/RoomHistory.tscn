@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://bv8kshgy0mrjs"]
+
+[ext_resource type="Script" uid="uid://cexjsectmv0i1" path="res://RoomHistory.gd" id="1_hflag"]
+[ext_resource type="Script" uid="uid://bp50t0fkx01sp" path="res://LoadingRoomHistoryScrollContainer.gd" id="1_qnkd1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hflag"]
+
+[node name="RoomHistory" type="VBoxContainer" unique_id=2123342332]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hflag")
+
+[node name="RoomHistoryScrollContainer" type="ScrollContainer" parent="." unique_id=1893670329]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_hflag")
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="RoomHistoryScrollContainer" unique_id=642659353]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="RoomHistoryList" type="VBoxContainer" parent="RoomHistoryScrollContainer/MarginContainer" unique_id=837432460]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 15
+
+[node name="LoadingRoomHistoryScrollContainer" type="ScrollContainer" parent="." unique_id=1509135615]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_hflag")
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 3
+script = ExtResource("1_qnkd1")
+
+[node name="MarginContainer" type="MarginContainer" parent="LoadingRoomHistoryScrollContainer" unique_id=2111003444]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="LoadingRoomHistoryList" type="VBoxContainer" parent="LoadingRoomHistoryScrollContainer/MarginContainer" unique_id=618190244]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 15

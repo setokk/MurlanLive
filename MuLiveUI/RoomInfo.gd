@@ -4,7 +4,7 @@ extends Panel
 @onready var slider: HSlider = $MarginContainer/VBoxContainer/TotalScore
 @onready var value_label: Label = $MarginContainer/VBoxContainer/TotalScoreLabel
 @onready var room_name: LineEdit = $Panel/MarginContainer2/HBoxContainer/RoomName
-@onready var edit_room_name_button: Button = $Panel/MarginContainer2/HBoxContainer/EditRoomNameButton
+@onready var edit_room_name_button: TextureButton = $Panel/MarginContainer2/HBoxContainer/EditRoomNameButton
 @onready var room_id: Label = $MarginContainer/VBoxContainer/HBoxContainer2/RoomId
 @onready var copy_room_id_button: Button = $MarginContainer/VBoxContainer/HBoxContainer2/CopyRoomIdButton
 
