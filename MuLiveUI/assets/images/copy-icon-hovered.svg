@@ -1,0 +1,12 @@
+<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 4 V2 H4 V12 H6"
+        fill="#F5F5F5"
+        stroke="#26272C"
+        stroke-width="1.5"
+        stroke-linejoin="miter"/>
+  <path d="M12 4 H6 V14 H14 V4 Z"
+        fill="#F5F5F5"
+        stroke="#26272C"
+        stroke-width="1.5"
+        stroke-linejoin="miter"/>
+</svg>

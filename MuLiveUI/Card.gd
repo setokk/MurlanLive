@@ -2,6 +2,9 @@ extends Area2D
 
 class_name Card
 
+signal hovered
+signal hovered_off
+
 @onready var sprite: Sprite2D = $Sprite2D
 
 const CARD_BACK_TEXTURE: Texture2D = preload(
@@ -13,6 +16,7 @@ var original_position: Vector2
 var value: _Card
 
 func _ready() -> void:
+	mouse_entered.connect(_hovered)
 	original_position = position
 	if value:
 		sprite.texture = CardTextureLoader.CARD_TEXTURES[value._ordinal]
@@ -55,3 +59,10 @@ func flip_to_front(duration: float) -> void:
 		duration/2
 	)
 	await tween2.finished
+
+
+func _hovered() -> void:
+	hovered.emit()
+
+func _hovered_off() -> void:
+	hovered_off.emit()
