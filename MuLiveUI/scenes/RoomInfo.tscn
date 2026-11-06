@@ -1,13 +1,14 @@
 [gd_scene format=3 uid="uid://ctiqqa23jajmf"]
 
 [ext_resource type="Script" uid="uid://cnfr068ybvthk" path="res://RoomInfo.gd" id="1_rdgol"]
-[ext_resource type="Texture2D" uid="uid://by11rgbb78bj5" path="res://assets/images/361082-200.png" id="3_2y4yk"]
 [ext_resource type="Texture2D" uid="uid://bdxguotcfc6w2" path="res://assets/images/edit-icon.svg" id="3_koah1"]
 [ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="3_msm78"]
 [ext_resource type="Texture2D" uid="uid://cnbp1yk6x4ylm" path="res://assets/images/grabber.svg" id="4_e1r5k"]
 [ext_resource type="Texture2D" uid="uid://b5a26dr8e0pjn" path="res://assets/images/edit-icon-hovered.svg" id="4_jjnu3"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="4_msm78"]
+[ext_resource type="Texture2D" uid="uid://dnsdcwyoobqbx" path="res://assets/images/copy-icon.svg" id="5_jjnu3"]
 [ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="5_koah1"]
+[ext_resource type="Texture2D" uid="uid://j2yivcq1ip47" path="res://assets/images/copy-icon-hovered.svg" id="6_jq3nt"]
 [ext_resource type="Texture2D" uid="uid://be31gmt5m06ip" path="res://assets/images/grabber_disabled.svg" id="6_msm78"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bm31b"]
@@ -17,8 +18,6 @@ bg_color = Color(0.84705883, 0.84705883, 0.84705883, 1)
 border_width_bottom = 4
 border_color = Color(0, 0, 0, 1)
 shadow_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ua8r"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_msm78"]
 content_margin_left = 3.0
@@ -33,6 +32,10 @@ border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jjnu3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_koah1"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
 bg_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
 border_width_left = 3
 border_width_top = 3
@@ -41,6 +44,10 @@ border_width_bottom = 3
 border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e1r5k"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
 bg_color = Color(0.7294118, 0.7294118, 0.7294118, 1)
 border_width_left = 3
 border_width_top = 3
@@ -49,6 +56,10 @@ border_width_bottom = 3
 border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2y4yk"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
 bg_color = Color(0.84705883, 0.84705883, 0.84705883, 1)
 border_width_left = 3
 border_width_top = 3
@@ -156,6 +167,8 @@ alignment = 1
 [node name="RoomIdLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1877264176]
 layout_mode = 2
 text = "ROOM_ID_LABEL"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="RoomId" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1239126022]
 visible = false
@@ -165,16 +178,15 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 14
 autowrap_mode = 1
 
-[node name="CopyRoomIdButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=761540861]
+[node name="CopyRoomIdButton" type="TextureButton" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1028673177]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
-theme_override_styles/normal = SubResource("StyleBoxEmpty_7ua8r")
-text = " "
-icon = ExtResource("3_2y4yk")
-icon_alignment = 1
-expand_icon = true
+texture_normal = ExtResource("5_jjnu3")
+texture_hover = ExtResource("6_jq3nt")
+ignore_texture_size = true
+stretch_mode = 5
 
 [node name="TotalScoreLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1274959027]
 layout_mode = 2
@@ -202,6 +214,10 @@ text = "TURN_TIME_LABEL"
 [node name="TimeOptions" type="OptionButton" parent="MarginContainer/VBoxContainer" unique_id=604298599]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_colors/font_focus_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_colors/font_pressed_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_colors/font_hover_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_koah1")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_e1r5k")
 theme_override_styles/hover = SubResource("StyleBoxFlat_2y4yk")

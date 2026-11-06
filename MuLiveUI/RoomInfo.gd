@@ -1,12 +1,14 @@
 extends Panel
 
+const checkmark_icon: CompressedTexture2D = preload("res://assets/images/checkmark-icon.svg")
+const copy_icon: CompressedTexture2D = preload("res://assets/images/copy-icon.svg")
 @onready var time_options : OptionButton = $MarginContainer/VBoxContainer/TimeOptions
 @onready var slider: HSlider = $MarginContainer/VBoxContainer/TotalScore
 @onready var value_label: Label = $MarginContainer/VBoxContainer/TotalScoreLabel
 @onready var room_name: LineEdit = $Panel/MarginContainer2/HBoxContainer/RoomName
 @onready var edit_room_name_button: TextureButton = $Panel/MarginContainer2/HBoxContainer/EditRoomNameButton
 @onready var room_id: Label = $MarginContainer/VBoxContainer/HBoxContainer2/RoomId
-@onready var copy_room_id_button: Button = $MarginContainer/VBoxContainer/HBoxContainer2/CopyRoomIdButton
+@onready var copy_room_id_button: TextureButton = $MarginContainer/VBoxContainer/HBoxContainer2/CopyRoomIdButton
 
 func _ready() -> void:
 	room_name.editable = false
@@ -63,6 +65,14 @@ func set_room_info_editable(is_editable: bool) -> void:
 		
 func _on_copy_room_id_requested() -> void:
 	DisplayServer.clipboard_set(room_id.text)
+	copy_room_id_button.texture_normal = checkmark_icon
+	copy_room_id_button.tooltip_text = "Copied!"
+	copy_room_id_button.disabled = true
+	await get_tree().create_timer(2.5).timeout
+	copy_room_id_button.texture_normal = copy_icon
+	copy_room_id_button.tooltip_text = ""
+	copy_room_id_button.disabled = false
+	
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED:

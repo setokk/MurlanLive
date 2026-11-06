@@ -1,0 +1,168 @@
+[gd_scene format=3 uid="uid://3r3eio1sgqdi"]
+
+[ext_resource type="Script" uid="uid://cdw047wnr2aht" path="res://PlayerProfileDialog.gd" id="1_d5fp6"]
+[ext_resource type="Texture2D" uid="uid://bgerxb1km1ifd" path="res://assets/images/dialog-box-textured.png" id="2_lxtx0"]
+[ext_resource type="Texture2D" uid="uid://d3bqlnt8vijtk" path="res://assets/images/mute-icon.svg" id="3_d5fp6"]
+[ext_resource type="Texture2D" uid="uid://cxablw423tqgt" path="res://assets/images/kick-icon.svg" id="3_xpmhs"]
+[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="4_oy48w"]
+[ext_resource type="Texture2D" uid="uid://cjynedsp1vbif" path="res://assets/images/pow-effect-bg-ink-outline.png" id="4_qiqdt"]
+[ext_resource type="Texture2D" uid="uid://cvqnhic3xboyy" path="res://assets/images/block-icon.svg" id="5_aei2r"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bm31b"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8ud1i"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ud1i"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.9254902, 0.79607844, 0.5019608, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q4plt"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.98039216, 0.7529412, 0.4862745, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+
+[node name="PlayerProfileDialog" type="PopupPanel" unique_id=911066526]
+oversampling_override = 1.0
+size = Vector2i(208, 208)
+visible = true
+theme_override_styles/panel = SubResource("StyleBoxEmpty_bm31b")
+script = ExtResource("1_d5fp6")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1948426974]
+custom_minimum_size = Vector2(200, 200)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 208.0
+offset_bottom = 208.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("2_lxtx0")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Panel" type="Panel" parent="TextureRect" unique_id=1222329818]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.12
+anchor_right = 0.8
+anchor_bottom = 0.88
+theme_override_styles/panel = SubResource("StyleBoxEmpty_8ud1i")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TextureRect/Panel" unique_id=1232171334]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="TextureRect/Panel/VBoxContainer" unique_id=1888330204]
+self_modulate = Color(0.78431374, 0.2509804, 0.18431373, 1)
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+texture = ExtResource("4_qiqdt")
+expand_mode = 2
+flip_v = true
+
+[node name="Username" type="Label" parent="TextureRect/Panel/VBoxContainer/TextureRect" unique_id=1947964143]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+theme_override_colors/font_outline_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 12
+text = "PenisSlayer42069"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RankInfo" type="PanelContainer" parent="TextureRect/Panel/VBoxContainer" unique_id=1681158445]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8ud1i")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TextureRect/Panel/VBoxContainer/RankInfo" unique_id=375131796]
+layout_mode = 2
+
+[node name="Rank" type="Label" parent="TextureRect/Panel/VBoxContainer/RankInfo/HBoxContainer2" unique_id=650505484]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.05882353, 0.0627451, 0.07058824, 1)
+theme_override_font_sizes/font_size = 14
+text = "Bronze"
+
+[node name="Points" type="Label" parent="TextureRect/Panel/VBoxContainer/RankInfo/HBoxContainer2" unique_id=612333083]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "143 pts"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TextureRect/Panel/VBoxContainer" unique_id=1968391996]
+layout_mode = 2
+size_flags_vertical = 10
+alignment = 2
+
+[node name="KickButton" type="Button" parent="TextureRect/Panel/VBoxContainer/HBoxContainer" unique_id=549403336]
+layout_mode = 2
+tooltip_text = "Kick
+"
+theme_override_styles/normal = SubResource("StyleBoxFlat_q4plt")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_q4plt")
+theme_override_styles/hover = SubResource("StyleBoxFlat_q4plt")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_q4plt")
+theme_override_styles/focus = SubResource("StyleBoxFlat_q4plt")
+icon = ExtResource("3_xpmhs")
+icon_alignment = 1
+script = ExtResource("4_oy48w")
+normal_shade = 4
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
+
+[node name="MuteButton" type="Button" parent="TextureRect/Panel/VBoxContainer/HBoxContainer" unique_id=1730067061]
+layout_mode = 2
+tooltip_text = "Mute"
+theme_override_styles/normal = SubResource("StyleBoxFlat_q4plt")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_q4plt")
+theme_override_styles/hover = SubResource("StyleBoxFlat_q4plt")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_q4plt")
+theme_override_styles/focus = SubResource("StyleBoxFlat_q4plt")
+icon = ExtResource("3_d5fp6")
+icon_alignment = 1
+script = ExtResource("4_oy48w")
+hue = 7
+normal_shade = 2
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
+
+[node name="BlockButton" type="Button" parent="TextureRect/Panel/VBoxContainer/HBoxContainer" unique_id=904364874]
+layout_mode = 2
+tooltip_text = "Block
+"
+theme_override_styles/normal = SubResource("StyleBoxFlat_q4plt")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_q4plt")
+theme_override_styles/hover = SubResource("StyleBoxFlat_q4plt")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_q4plt")
+theme_override_styles/focus = SubResource("StyleBoxFlat_q4plt")
+icon = ExtResource("5_aei2r")
+icon_alignment = 1
+script = ExtResource("4_oy48w")
+hue = 3
+normal_shade = 4
+metadata/_custom_type_script = "uid://dd0iu4mcd07mg"

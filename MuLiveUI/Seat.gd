@@ -10,10 +10,12 @@ const SEAT_ICON: Texture2D = preload(
 	"res://assets/images/seat-icon-greyscale-no-bg.png"
 )
 
+const space_for_owner_icon: float = 7.5
+
 signal on_taken_seat_pressed
 
 @onready var is_ready_visual: TextureRect = $Panel/CenterContainer/SeatVisual/IsReadyVisual
-@onready var seat_icon: Button = $Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/MarginContainer/AspectRatioContainer/SeatIcon
+@onready var seat_icon: Button = $Panel/CenterContainer/SeatVisual/MarginContainer/PanelContainer/AspectRatioContainer/SeatIcon
 @onready var username: Label = $Panel/Username
 @onready var score: Label = $Panel/Score
 @onready var is_owner_crown: TextureRect = $Panel/IsOwnerCrown
@@ -23,6 +25,7 @@ signal on_taken_seat_pressed
 
 var is_seat_taken: bool = false
 var is_owner: bool = false
+var player: Dictionary
 var player_id: int = -1
 
 func _ready() -> void:
@@ -33,10 +36,13 @@ func _ready() -> void:
 	turn_timer_bar.visible = false
 	turn_timer_bar.min_value = 0.0
 	turn_timer_bar.step = 0.0
+	turn_timer_bar.radial_initial_angle = 0.0
+	turn_timer_bar.radial_fill_degrees = 360.0
 	seat_icon.pressed.connect(_on_seat_pressed)
 	
 func start_turn(turn_time) -> void:
 	turn_timer_bar.visible = true
+	turn_timer_bar.max_value = turn_time
 	turn_timer.wait_time = turn_time
 	turn_timer.start()
 	turn_timer_bar.value = turn_time
@@ -58,19 +64,28 @@ func _process(_delta: float) -> void:
 		turn_timer_bar.value = turn_timer.time_left
 
 func set_player(player: Dictionary, is_owner: bool) -> void:
+	self.player = player
+	self.is_owner =  is_owner
 	seat_icon.icon = ProfileIconUtils.load_image(int(player["profileIconId"]))
 	username.visible = true
 	username.text = player["username"]
-	self.is_owner =  is_owner
 	if is_owner:
 		is_owner_crown.visible = true
 		username.set_anchor_and_offset(SIDE_BOTTOM, anchor_bottom, -15)
+		turn_timer_bar.radial_initial_angle = 25.0
+		turn_timer_bar.radial_fill_degrees = 310.0
 	else:
 		is_owner_crown.visible = false
 		username.set_anchor_and_offset(SIDE_BOTTOM, anchor_bottom, 0)
 	is_ready_visual.visible = true
 	is_seat_taken = true
 	player_id = player["id"]
+	
+func get_player() -> Dictionary:
+	if player:
+		return player
+	else:
+		return {}
 
 func remove_player() -> void:
 	seat_icon.icon = SEAT_ICON
@@ -80,6 +95,7 @@ func remove_player() -> void:
 	remove_ready()
 	is_seat_taken = false
 	player_id = -1
+	player = {}
 	
 func set_ready() -> void:
 	is_ready_visual.self_modulate = MainPalette.get_color(MainPalette.Hue.GREEN, 4)

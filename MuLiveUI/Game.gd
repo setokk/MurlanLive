@@ -35,7 +35,7 @@ enum GameStateEnum {
 @onready var leave_room_button: Button = $TopArea/HBoxContainer/LeftArea/TextureRect/RoomInfo/MarginContainer/VBoxContainer/VBoxContainer2/LeaveButton
 @onready var give_card_button: Button = $BottomArea/ButtonsContainer/GiveCardButton
 @onready var room_info : Panel = $TopArea/HBoxContainer/LeftArea/TextureRect/RoomInfo
-@onready var player_context_menu: PlayerContextMenu = $PlayerContextMenu
+@onready var player_profile_dialog: PlayerProfileDialog = $PlayerProfileDialog
 @onready var chat: Chat = $TopArea/HBoxContainer/RightArea/Chat
 
 @onready var seats: Array[Seat] = [
@@ -93,9 +93,9 @@ func _ready() -> void:
 	WebSocketClient.inform_player_reconnected_resp.connect(_on_opponent_reconnected)
 	WebSocketClient.inform_update_player_info_resp.connect(_on_opponent_update_player_info)
 	WebSocketClient.update_player_info_resp.connect(_on_update_player_info_completed)
-	player_context_menu.mute_button_pressed.connect(_on_mute_requested)
-	player_context_menu.block_button_pressed.connect(_on_block_requested)
-	player_context_menu.kick_button_pressed.connect(_on_kick_requested)
+	player_profile_dialog.mute_button_pressed.connect(_on_mute_requested)
+	player_profile_dialog.block_button_pressed.connect(_on_block_requested)
+	player_profile_dialog.kick_button_pressed.connect(_on_kick_requested)
 	WebSocketClient.send_message(GameStateReq.new())
 	
 func init_active_game(game_state: Dictionary) -> void:
@@ -223,7 +223,7 @@ func _on_game_state(resp: GameStateResp) -> void:
 				
 	if is_owner(PlayerSession.player):
 		room_info.set_room_info_editable(true)
-		player_context_menu.kick_button.visible = true
+		player_profile_dialog.kick_button.visible = true
 
 # Local user actions functions:
 func _on_play_requested() -> void:
@@ -525,7 +525,7 @@ func handle_player_not_in_room(
 		if has_left_room and (was_not_owner && became_owner_now):
 			WebSocketClient.send_message(UpdateRoomDetailsReq.new(PlayerSession.player.username + "'s Room", -1, -1))
 			room_info.set_room_info_editable(true)
-			player_context_menu.kick_button.visible = true
+			player_profile_dialog.kick_button.visible = true
 			chat.add_message("", false, "You are the owner of the room now.")
 	else:
 		print("Error")
@@ -537,7 +537,8 @@ func is_owner(player: Player) -> bool:
 		return players[0].id == player.id
 
 func _on_player_context_menu_requested(seat: Seat) -> void:
-	player_context_menu.open_for_seat(seat)
+	player_profile_dialog.set_player_profile_info(seat.get_player())
+	player_profile_dialog.open_for_seat(seat)
 
 func update_room_details(room_details: Dictionary) -> void:
 	room["name"] = room_details["roomName"]
