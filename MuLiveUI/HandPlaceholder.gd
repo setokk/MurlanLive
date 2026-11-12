@@ -7,6 +7,18 @@ const CARD_WIDTH: float = 730.0
 const CARD_HEIGHT: float = 1024.0
 const MAX_CARDS: int = 15
 const CARD_OVERLAP: float = 0.50
+const DRAG_THRESHOLD: float = 8.0   # pixels the mouse must move before it counts as a drag
+const DRAG_LIFT: float = 30.0       # the held card floats a bit above the hand
+const DRAG_Z_INDEX: int = 1000
+const SLOT_TWEEN_TIME: float = 0.12
+
+var _pressed_card: Card = null
+var _dragging: bool = false
+var _press_mouse_pos: Vector2
+var _drag_offset_x: float = 0.0
+var _z_locked_card: Card = null     # keeps its high z_index until it has settled
+var _hovered_card: Card = null
+var _hovering: bool = false
 
 var cards: Array[Card] = []
 var selected_cards: Array[Card] = []
@@ -16,12 +28,129 @@ func _ready() -> void:
 	call_deferred("layout_cards")
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton \
-	and event.button_index == MOUSE_BUTTON_LEFT \
-	and event.pressed:
-		var card: Card = get_top_card_under_mouse()
-		if card:
-			select_or_unselect_card(card)
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			_on_mouse_pressed()
+		else:
+			_on_mouse_released()
+	elif event is InputEventMouseMotion:
+		_update_hover()
+
+		if _pressed_card != null:
+			_on_mouse_moved()
+		
+func _update_hover() -> void:
+	if _dragging:
+		return
+
+	var card: Card = get_top_card_under_mouse()
+
+	if card == _hovered_card:
+		return
+	
+	if card in selected_cards:
+		return 
+		
+	if is_instance_valid(_hovered_card):
+		highlight_card(_hovered_card, false)
+
+	_hovered_card = card
+
+	if is_instance_valid(_hovered_card):
+		highlight_card(_hovered_card, true)
+		
+		
+func _on_mouse_pressed() -> void:
+	if is_instance_valid(_hovered_card):
+		highlight_card(_hovered_card, false)
+	_pressed_card = get_top_card_under_mouse()
+	_dragging = false
+	if _pressed_card:
+		_press_mouse_pos = get_local_mouse_position()
+		_drag_offset_x = _pressed_card.position.x - _press_mouse_pos.x
+
+func _on_mouse_moved() -> void:
+	if not cards.has(_pressed_card):
+		_cancel_drag()
+		return
+	var mouse: Vector2 = get_local_mouse_position()
+	if not _dragging:
+		if mouse.distance_to(_press_mouse_pos) < DRAG_THRESHOLD:
+			return
+		_start_drag()
+	var x: float = clampf(mouse.x + _drag_offset_x, 0.0, size.x)
+	_pressed_card.position = Vector2(x, _pressed_card.original_position.y - DRAG_LIFT)
+	_update_drag_slot()
+
+func _start_drag() -> void:
+	_dragging = true
+	_z_locked_card = _pressed_card
+	_pressed_card.z_index = DRAG_Z_INDEX
+	_stop_slot_tween(_pressed_card)
+
+func _update_drag_slot() -> void:
+	var current: int = cards.find(_pressed_card)
+	var slots: Array[Vector2] = _compute_layout()["positions"]
+	var best: int = current
+	var best_dist: float = INF
+	for i in slots.size():
+		var d: float = absf(slots[i].x - _pressed_card.position.x)
+		if d < best_dist:
+			best_dist = d
+			best = i
+	if best == current:
+		return
+	cards.erase(_pressed_card)
+	cards.insert(best, _pressed_card)
+	layout_cards(true)   # the other cards slide; the held card is skipped
+
+func _on_mouse_released() -> void:
+	var card: Card = _pressed_card
+	_pressed_card = null
+	if card == null:
+		return
+	if not _dragging:
+		select_or_unselect_card(card)   # just a click
+		return
+	_dragging = false
+	layout_cards(true)                  # the dropped card glides into its slot
+	var tween: Tween = card.get_meta("slot_tween", null)
+	if tween and tween.is_valid():
+		tween.finished.connect(_unlock_z.bind(card), CONNECT_ONE_SHOT)
+	else:
+		_unlock_z(card)
+
+func _unlock_z(card: Card) -> void:
+	if is_instance_valid(card) and _z_locked_card == card:
+		_z_locked_card = null
+		_refresh_z_indices()
+
+func _refresh_z_indices() -> void:
+	for i in cards.size():
+		if cards[i] != _z_locked_card:
+			cards[i].z_index = i
+
+func _cancel_drag() -> void:
+	_pressed_card = null
+	_dragging = false
+	_z_locked_card = null
+
+func _stop_slot_tween(card: Card) -> void:
+	if card.has_meta("slot_tween"):
+		var tween: Tween = card.get_meta("slot_tween")
+		if tween and tween.is_valid():
+			tween.kill()
+
+func _move_card(card: Card, target: Vector2, animate: bool) -> void:
+	_stop_slot_tween(card)
+	if not animate:
+		card.position = target
+		return
+	var tween: Tween = card.create_tween()   # bound to the card, so it dies with it
+	tween.set_trans(Tween.TRANS_QUAD)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(card, "position", target, SLOT_TWEEN_TIME)
+	card.set_meta("slot_tween", tween)
 
 func get_top_card_under_mouse() -> Card:
 	var space_state := get_world_2d().direct_space_state
@@ -60,6 +189,16 @@ func select_or_unselect_card(card: Card) -> void:
 func add_card(card: Card) -> void:
 	cards.append(card)
 	layout_cards()
+
+		
+func highlight_card(card: Card, is_hovered: bool) -> void:
+	var normal_scale: Vector2 = card.get_meta("normal_scale", card.scale)
+
+	if is_hovered:
+		card.set_meta("normal_scale", card.scale)
+		card.scale = normal_scale * 1.05
+	else:
+		card.scale = normal_scale
 	
 func clear_hand() -> void:
 	for card in cards:
@@ -130,60 +269,51 @@ func play_selected_cards(card_combination: CardCombination) -> Array[Card]:
 	layout_cards()
 	return played
 	
-func layout_cards() -> void:
-	if cards.is_empty():
-		return
-
+func _compute_layout() -> Dictionary:
 	var available_width: float = size.x
 	var available_height: float = size.y
 	var height_scale: float = available_height / CARD_HEIGHT
 	var card_width_from_height: float = CARD_WIDTH * height_scale
 	var normal_spacing: float = card_width_from_height * (1.0 - CARD_OVERLAP)
-	var required_width: float = (
-		card_width_from_height
-		+ (cards.size() - 1) * normal_spacing
-	)
+	var required_width: float = card_width_from_height + (cards.size() - 1) * normal_spacing
 
 	var card_scale: float = height_scale
-
 	if required_width > available_width:
-
-		var width_scale: float = (
-			available_width
-			/
-			(CARD_WIDTH
-			+ (cards.size() - 1)
-			* CARD_WIDTH
-			* (1.0 - CARD_OVERLAP)))
-
-		card_scale = min(height_scale, width_scale)
+		var width_scale: float = available_width / (
+			CARD_WIDTH + (cards.size() - 1) * CARD_WIDTH * (1.0 - CARD_OVERLAP)
+		)
+		card_scale = minf(height_scale, width_scale)
 
 	var actual_card_width: float = CARD_WIDTH * card_scale
-	var actual_card_height: float = CARD_HEIGHT * card_scale
 	var card_spacing: float = actual_card_width * (1.0 - CARD_OVERLAP)
 	var hand_width: float = actual_card_width + (cards.size() - 1) * card_spacing
 	var start_x: float = (available_width - hand_width) / 2.0
 	var y: float = available_height / 2.0
-	
-	# Position cards
-	for i in range(cards.size()):
+
+	var positions: Array[Vector2] = []
+	for i in cards.size():
+		positions.append(Vector2(start_x + actual_card_width / 2.0 + i * card_spacing, y))
+	return {"scale": card_scale, "positions": positions}
+
+func layout_cards(animate: bool = false) -> void:
+	if cards.is_empty():
+		return
+	var layout: Dictionary = _compute_layout()
+	var card_scale: float = layout["scale"]
+	var slots: Array[Vector2] = layout["positions"]
+
+	for i in cards.size():
 		var card: Card = cards[i]
 		card.scale = Vector2.ONE * card_scale
-
-		var new_position := Vector2(
-			start_x
-			+ actual_card_width / 2.0
-			+ i * card_spacing,
-			y
-		)
-
-		card.original_position = new_position
+		card.original_position = slots[i]
+		if card != _z_locked_card:
+			card.z_index = i
+		if _dragging and card == _pressed_card:
+			continue   # the held card follows the mouse, not its slot
+		var target: Vector2 = slots[i]
 		if card.selected:
-			card.position = new_position + Vector2(0, -20)
-		else:
-			card.position = new_position
-
-		card.z_index = i
+			target += Vector2(0, -20)
+		_move_card(card, target, animate)
 		
 		
 func get_next_card_position() -> Vector2:
