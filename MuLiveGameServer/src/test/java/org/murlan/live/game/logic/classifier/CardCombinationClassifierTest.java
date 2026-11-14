@@ -7,7 +7,6 @@ import org.murlan.live.game.classifier.CardCombinationClassifier01;
 import org.murlan.live.game.classifier.CardCombinationClassifier02;
 import org.murlan.live.game.classifier.CardCombinationClassifier03;
 import org.murlan.live.game.classifier.CardCombinationClassifier04;
-import org.murlan.live.game.classifier.CardCombinationClassifier05;
 import org.murlan.live.game.classifier.ICardCombinationClassifier;
 import org.murlan.live.game.deck.Card;
 import org.murlan.live.game.deck.CardCombination;
@@ -20,7 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CardCombinationClassifierTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(CardCombinationClassifierTest.class);
@@ -34,8 +35,7 @@ public class CardCombinationClassifierTest {
                 new CardCombinationClassifier01(),
                 new CardCombinationClassifier02(),
                 new CardCombinationClassifier03(),
-                new CardCombinationClassifier04(),
-                new CardCombinationClassifier05()
+                new CardCombinationClassifier04()
         );
     }
 

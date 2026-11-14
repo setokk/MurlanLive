@@ -40,3 +40,8 @@ func _on_show_rooms_or_history_requested() -> void:
 		show_history_button.apply_colors()
 		show_history.emit()
 		
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED:
+		if is_node_ready():
+			show_rooms_button.text = tr("SHOW_ROOMS_BUTTON")
+			show_history_button.text = tr("SHOW_HISTORY_BUTTON")

@@ -38,8 +38,6 @@ public class CreateRoomTest {
     @Test
     public void printRoomJson() throws IOException, InterruptedException {
         Room room = prepareRoom();
-        System.out.println("------Saving room:------");
-        System.out.println(objectMapper.writeValueAsString(room));
         System.out.println("------Making REST call to /api/rooms/create");
         Optional<UMRoomDto> umRoomDto = restClient.createRoom(room);
         assertTrue(umRoomDto.isPresent());

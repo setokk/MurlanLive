@@ -32,7 +32,6 @@ enum GameStateEnum {
 @onready var pass_button: Button = $BottomArea/ButtonsContainer/PassButton
 @onready var played_cards: Panel = $TopArea/HBoxContainer/TableArea/TableLayout/PlayedCards
 @onready var is_ready_button: Button = $TopArea/HBoxContainer/LeftArea/TextureRect/RoomInfo/MarginContainer/VBoxContainer/VBoxContainer2/ReadyButton
-@onready var leave_room_button: Button = $TopArea/HBoxContainer/LeftArea/TextureRect/RoomInfo/MarginContainer/VBoxContainer/VBoxContainer2/LeaveButton
 @onready var give_card_button: Button = $BottomArea/ButtonsContainer/GiveCardButton
 @onready var room_info : Panel = $TopArea/HBoxContainer/LeftArea/TextureRect/RoomInfo
 @onready var player_profile_dialog: PlayerProfileDialog = $PlayerProfileDialog
@@ -71,8 +70,6 @@ func _ready() -> void:
 	pass_button.pressed.connect(_on_pass_requested)
 	WebSocketClient.pass_resp.connect(_on_pass_completed)
 	WebSocketClient.inform_pass_resp.connect(_on_opponent_passed_hand)
-	leave_room_button.pressed.connect(_on_leave_requested)
-	WebSocketClient.leave_room_resp.connect(_on_leave_completed)
 	WebSocketClient.inform_player_leave_room_resp.connect(_on_opponent_leave)
 	is_ready_button.pressed.connect(_on_ready_requested)
 	WebSocketClient.ready_resp.connect(_on_ready_completed)
@@ -110,11 +107,16 @@ func init_active_game(game_state: Dictionary) -> void:
 		for player in players:
 			seats[find_player_seat_index(player["id"])].remove_ready()
 	
-	var my_hand: Array[int] = []
+	var my_hand: Array[_Card] = []
+	var card_enum := CardEnum.new()
 
 	for value in game_state["hand"].split(ProtocolConfigProvider.get_config().protocol_list_delimiter):
-		my_hand.append(int(value))
-		
+		my_hand.append(card_enum.from_ordinal(int(value)))
+
+	var active_layout: HandLayoutDto = HandLayoutConfig.get_active_layout()
+	if active_layout != null:
+		my_hand = HandLayoutResolver.resolve_layout(my_hand, active_layout)
+
 	$TopArea/HBoxContainer/TableArea.start_dealing(
 		my_hand,
 		game_state["numOfCardsPerPlayerId"],
@@ -206,10 +208,11 @@ func _on_game_state(resp: GameStateResp) -> void:
 			current_player_seat_index = find_player_seat_index(current_player["id"])
 			seats[current_player_seat_index].start_turn(float(game_state["turnDurationInSeconds"]))
 			
-			var my_hand: Array[int] = []
+			var my_hand: Array[_Card] = []
+			var card_enum := CardEnum.new()
 
 			for value in game_state["hand"].split(ProtocolConfigProvider.get_config().protocol_list_delimiter):
-				my_hand.append(int(value))
+				my_hand.append(card_enum.from_ordinal(int(value)))
 
 			if current_player["id"] != PlayerSession.player.id:
 				play_button.disabled = true
@@ -274,15 +277,6 @@ func _on_ready_completed(resp: ReadyResp):
 		))
 	else:
 		print("error bruh: ", resp)
-
-func _on_leave_requested() -> void:
-	WebSocketClient.send_message(LeaveRoomReq.new())
-	
-func _on_leave_completed(resp: LeaveRoomResp) -> void:
-	if resp.response_status == 200:
-		SceneManager.show_lobby()
-	else:
-		print("Error: ", resp)
 		
 func _on_give_card_requested() -> void:
 	var card_to_give: _Card = hand_placeholder.get_card_to_give(is_local_player_loser)

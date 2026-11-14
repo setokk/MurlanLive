@@ -156,11 +156,10 @@ public class EndpointHelper {
         }
     }
 
-    public Optional<String> getAndCheckQueryParam(String key, String queryParamString) {
+    public Optional<Map<String, String>> getQueryParams(String queryParamString) {
         if (queryParamString == null || queryParamString.isEmpty()) {
             return Optional.empty();
         }
-        Map<String, String> queryParams = parser.parseQueryParams(queryParamString);
-        return Optional.ofNullable(queryParams.get(key));
+        return Optional.ofNullable(parser.parseQueryParams(queryParamString));
     }
 }

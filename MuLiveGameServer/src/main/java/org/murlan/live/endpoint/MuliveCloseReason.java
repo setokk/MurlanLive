@@ -30,6 +30,16 @@ public enum MuliveCloseReason {
     NO_ACTIVE_SESSION(
             CloseReason.CloseCodes.UNEXPECTED_CONDITION,
             "No active session found"
+    ),
+
+    NO_QUERY_PARAMS_PROVIDED(
+            CloseReason.CloseCodes.VIOLATED_POLICY,
+            "No query params provided"
+    ),
+
+    MISSING_PROTOCOL_VERSION(
+            CloseReason.CloseCodes.VIOLATED_POLICY,
+            "Incompatible protocol version provided. Please update client or change gameserver host"
     );
 
     private final CloseReason.CloseCode code;

@@ -1,16 +1,16 @@
 [gd_scene format=3 uid="uid://c127j2awg5s3w"]
 
 [ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="1_qbi84"]
-[ext_resource type="Script" uid="uid://dp5ek2top2eoq" path="res://Lobby.gd" id="2_oeg6l"]
+[ext_resource type="Script" uid="uid://bjrp1twxhdl6p" path="res://Lobby.gd" id="2_oeg6l"]
 [ext_resource type="PackedScene" uid="uid://clmyy0m2xv6vj" path="res://scenes/Background.tscn" id="3_1yh37"]
 [ext_resource type="Texture2D" uid="uid://c4de00wk83x2i" path="res://assets/images/MuLive Background Transparent.png" id="4_h77bf"]
 [ext_resource type="Texture2D" uid="uid://bmdq8lj6s7iwe" path="res://assets/images/subtle-noise-no-bg.png" id="4_l31xl"]
 [ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="4_wuide"]
-[ext_resource type="Script" uid="uid://k1e0x0o7n4q0" path="res://RoomsAndHistoryButtonContainer.gd" id="5_ug4sb"]
-[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="6_hwwg2"]
+[ext_resource type="Script" uid="uid://7bsdpb0688t2" path="res://RoomsAndHistoryButtonContainer.gd" id="5_ug4sb"]
+[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="6_hwwg2"]
 [ext_resource type="ButtonGroup" uid="uid://bw0v52j7i8mb2" path="res://themes/ButtonGroups/RoomsAndHistoryButtonGroup.tres" id="6_yyg1t"]
 [ext_resource type="Texture2D" uid="uid://dbfh4c0al253p" path="res://assets/images/refresh.svg" id="9_h77bf"]
-[ext_resource type="Script" uid="uid://b0wa6fr6gqgj2" path="res://RefreshRoomsButton.gd" id="11_4hpk5"]
+[ext_resource type="Script" uid="uid://c03aktuqopelr" path="res://RefreshRoomsButton.gd" id="11_4hpk5"]
 [ext_resource type="PackedScene" uid="uid://cy36up1vwd2mp" path="res://scenes/Rooms.tscn" id="11_h77bf"]
 [ext_resource type="PackedScene" uid="uid://bv8kshgy0mrjs" path="res://scenes/RoomHistory.tscn" id="12_wuide"]
 
@@ -91,7 +91,6 @@ text = "SHOW_ROOMS_BUTTON"
 script = ExtResource("6_hwwg2")
 hue = 2
 normal_shade = 3
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="ShowHistoryButton" type="Button" parent="RoomsAndHistoryButtonContainer" unique_id=1259840096]
 custom_minimum_size = Vector2(100, 0)
@@ -108,7 +107,6 @@ button_group = ExtResource("6_yyg1t")
 text = "SHOW_HISTORY_BUTTON"
 script = ExtResource("6_hwwg2")
 hue = 7
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="LobbyPanel" type="Panel" parent="." unique_id=973502729]
 layout_mode = 1

@@ -7,10 +7,10 @@ import org.murlan.um.core.ranking.Rating;
 import org.murlan.um.error.BusinessLogicException;
 import org.murlan.um.model.PlayerEmailVerificationEntity;
 import org.murlan.um.model.PlayerEntity;
-import org.murlan.um.model.PlayerRatingEntity;
 import org.murlan.um.model.PlayerResetPasswordEntity;
 import org.murlan.um.model.ProfileIconEntity;
 import org.murlan.um.model.dto.PlayerDetailsDto;
+import org.murlan.um.model.view.PlayerDetailsView;
 import org.murlan.um.model.dto.PlayerDto;
 import org.murlan.um.repository.PlayerEmailVerificationRepository;
 import org.murlan.um.repository.PlayerRepository;
@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -118,34 +117,30 @@ public class PlayerService {
                 ? playerDto.getId()
                 : playerId;
 
-        PlayerEntity player = playerRepository.findById(actualPlayerId)
+        PlayerDetailsView playerDetailsView = playerRepository.findPlayerDetails(actualPlayerId, playerDto.getId())
                 .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Player with id: " + actualPlayerId + " not found"));
-
-        String email = playerDto.getId().equals(actualPlayerId)
-                ? player.getEmail()
-                : null;
 
         Short rank = null;
         Integer displayRating = null;
         int roomsPlayed = 0;
 
-        PlayerRatingEntity playerRating = player.getRating();
-        if (playerRating != null) {
-            Rating rating = playerRating.toRating();
+        if (playerDetailsView.getMu() != null) {
+            Rating rating = new Rating(playerDetailsView.getMu(), playerDetailsView.getSigma(), playerDetailsView.getRoomsPlayed());
             rank = (short) Rank.of(rating).ordinal();
             displayRating = rating.displayRating();
             roomsPlayed = rating.roomsPlayed;
         }
 
         return new PlayerDetailsDto(
-                player.getId(),
-                player.getUsername(),
-                player.getCreatedDate(),
-                email,
-                player.getProfileIcon().getId(),
+                playerDetailsView.getId(),
+                playerDetailsView.getUsername(),
+                playerDetailsView.getCreationDate(),
+                playerDetailsView.getEmail(),
+                playerDetailsView.getProfileIconId(),
                 rank,
                 displayRating,
-                roomsPlayed
+                roomsPlayed,
+                playerDetailsView.getTotalWins()
         );
     }
 

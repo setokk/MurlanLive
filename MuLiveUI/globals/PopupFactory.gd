@@ -49,3 +49,26 @@ func confirmation(message: String, on_confirm: Callable, on_cancel: Callable = C
 	popup.confirmed.connect(on_confirm)
 	if on_cancel.is_valid():
 		popup.cancelled.connect(on_cancel)
+
+func confirmation_with_checkbox(
+		message: String,
+		checkbox_text: String,
+		on_confirm: Callable,
+		on_cancel: Callable = Callable(),
+		title: String = "Confirm",
+		ok_text: String = "Yes",
+		cancel_text: String = "No",
+		checkbox_default: bool = false
+) -> void:
+	var popup := _spawn({
+		"title": title,
+		"message": message,
+		"show_cancel": true,
+		"ok_text": ok_text,
+		"cancel_text": cancel_text,
+		"checkbox_text": checkbox_text,
+		"checkbox_default": checkbox_default,
+	})
+	popup.confirmed_with_checkbox.connect(on_confirm)
+	if on_cancel.is_valid():
+		popup.cancelled.connect(on_cancel)

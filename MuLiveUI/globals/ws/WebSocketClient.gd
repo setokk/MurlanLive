@@ -7,6 +7,7 @@ var generator: Generator = Generator.new(config)
 var parser: Parser = Parser.new(config)
 
 signal connection_established
+signal connection_closed(code: int, reason: String, clean: bool)
 
 # Server Events
 signal inform_play_hand_resp(resp: InformPlayHandResp)
@@ -100,7 +101,7 @@ func connect_to_ws(jwt: String) -> bool:
 		return false
 
 	var wss_url: String = "ws://%s:%d/game-lobby" % [config.protocol_host, config.protocol_port]
-	var url: String = "%s?jwt=%s" % [wss_url, jwt]
+	var url: String = "%s?jwt=%s&v=%s" % [wss_url, jwt, config.protocol_version]
 	
 	var err: int = socket.connect_to_url(url)
 	if err != OK:
@@ -136,6 +137,10 @@ func _process(_delta):
 	elif state == WebSocketPeer.STATE_CLOSING:
 		pass
 	elif state == WebSocketPeer.STATE_CLOSED:
-		print("WebSocket closed with code: %d, reason: %s" % [socket.get_close_code(), socket.get_close_reason()])
+		var code: int = socket.get_close_code()
+		var reason: String = socket.get_close_reason()
+		var clean: bool = code != -1
+		print("WebSocket closed with code: %d, reason: %s" % [code, reason])
 		connected = false
 		set_process(false)
+		connection_closed.emit(code, reason, clean)
