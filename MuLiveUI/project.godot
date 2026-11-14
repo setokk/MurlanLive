@@ -33,6 +33,7 @@ PlayerRESTClient="*res://globals/rest/PlayerRESTClient.gd"
 RoomRESTClient="*res://globals/rest/RoomRESTClient.gd"
 HandLayoutRESTClient="*res://globals/rest/HandLayoutRESTClient.gd"
 WebSocketClient="*res://globals/ws/WebSocketClient.gd"
+ConnectionNotifier="*res://globals/ws/ConnectionNotifier.gd"
 
 [debug]
 

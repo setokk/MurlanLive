@@ -140,7 +140,7 @@ func setup_deck() -> void:
 		
 	
 func start_dealing(
-	my_hand: Array[int],
+	my_hand: Array[_Card],
 	card_counts: Dictionary,
 	players: Array,
 	local_player_index: int
@@ -177,9 +177,7 @@ func start_dealing(
 				0:
 					if my_card_index < my_hand.size():
 						await card.set_value(
-							CardEnum.VALUES[
-								my_hand[my_card_index]
-							]
+							my_hand[my_card_index]
 						)
 
 					my_card_index += 1

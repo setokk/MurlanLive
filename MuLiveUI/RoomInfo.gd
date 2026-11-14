@@ -9,8 +9,12 @@ const copy_icon: CompressedTexture2D = preload("res://assets/images/copy-icon.sv
 @onready var edit_room_name_button: TextureButton = $Panel/MarginContainer2/HBoxContainer/EditRoomNameButton
 @onready var room_id: Label = $MarginContainer/VBoxContainer/HBoxContainer2/RoomId
 @onready var copy_room_id_button: TextureButton = $MarginContainer/VBoxContainer/HBoxContainer2/CopyRoomIdButton
+@onready var leave_room_button: MainButton = $MarginContainer/VBoxContainer/VBoxContainer2/LeaveButton
 
 func _ready() -> void:
+	leave_room_button.pressed.connect(_on_leave_requested)
+	WebSocketClient.leave_room_resp.connect(_on_leave_completed)
+	
 	room_name.editable = false
 	edit_room_name_button.pressed.connect(_on_edit_requested)
 	room_name.text_submitted.connect(_on_room_name_submitted)
@@ -73,7 +77,18 @@ func _on_copy_room_id_requested() -> void:
 	copy_room_id_button.tooltip_text = ""
 	copy_room_id_button.disabled = false
 	
-
+func _on_leave_requested() -> void:
+	PopupFactory.confirmation(
+		"Penalties will apply if you leave during an active game.\nAre you sure you want to leave?",
+		func(): WebSocketClient.send_message(LeaveRoomReq.new())
+	)
+	
+func _on_leave_completed(resp: LeaveRoomResp) -> void:
+	if resp.response_status == 200:
+		SceneManager.show_lobby()
+	else:
+		PopupFactory.error("There was an error with leaving the room.\nPlease try again later")
+	
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED:
 		if is_node_ready():

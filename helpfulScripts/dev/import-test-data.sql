@@ -202,5 +202,29 @@ BEGIN
     END LOOP;
 
     RAISE NOTICE 'Created % room(s)', v_room_count;
+
+    -- -------------------------------------------------------------------
+    -- 3) Seed player_rating (dev data only)
+    --
+    -- mu/sigma are just set to the rating-system defaults since their exact
+    -- value doesn't matter for dev testing. rooms_played, however, is set to
+    -- the player's actual number of room_player rows, so totalRoomsPlayed
+    -- returned by the API reflects real data instead of coming back as 0.
+    -- -------------------------------------------------------------------
+    INSERT INTO player_rating (player_id, mu, sigma, rooms_played, version)
+    SELECT
+        pid,
+        25.0,
+        8.333333,
+        COALESCE(rp.rooms_played, 0),
+        0
+    FROM unnest(v_player_ids) AS pid
+    LEFT JOIN (
+        SELECT player_id, COUNT(*) AS rooms_played
+        FROM room_player
+        GROUP BY player_id
+    ) rp ON rp.player_id = pid;
+
+    RAISE NOTICE 'Seeded player_rating for % player(s)', v_player_count;
 END;
 $$;

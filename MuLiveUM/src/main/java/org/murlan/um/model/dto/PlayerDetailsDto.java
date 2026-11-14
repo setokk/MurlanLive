@@ -25,6 +25,7 @@ public final class PlayerDetailsDto {
     private Short rank;
     private Integer rating;
     private long totalRoomsPlayed;
+    private long totalWins;
 
     @Override
     public boolean equals(Object o) {

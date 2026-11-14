@@ -6,12 +6,8 @@ const HAND_LAYOUT_ITEM_SCENE: PackedScene = preload("res://scenes/HandLayoutItem
 @onready var create_new_button: MainButton = $MainPanel/MarginContainer/Content/Header/CreateNewButton
 @onready var hand_layout_list: VBoxContainer = $MainPanel/MarginContainer/Content/HandLayoutScrollContainer/MarginContainer/HandLayoutList
 
-## Mock data standing in for config/hand_layout.json until the real loading
-## (and the "create new layout" flow) is wired up in a follow-up task.
 var hand_layouts: Array[HandLayoutDto] = []
 
-## Sample cards (see CardEnum.gd ordinals) used purely to preview what each
-## layout's sort mode would look like in-game.
 var preview_card_ordinals_by_layout_name: Dictionary = {
 	"Default (Random)": [27, 4, 49, 14, 3, 33],
 	"Default (Ascending)": [8, 21, 34, 47, 0, 5],

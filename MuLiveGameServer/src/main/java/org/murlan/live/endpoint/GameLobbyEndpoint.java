@@ -51,6 +51,7 @@ import org.murlan.live.protocol.util.Parser;
 import org.murlan.live.util.MLObjectMapper;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -103,8 +104,20 @@ public class GameLobbyEndpoint {
     public void onOpen(Session session) throws IOException, InterruptedException {
         log.info("Incoming connection request with sessionId: {}", session.getId());
 
-        String jwt = endpointHelper.getAndCheckQueryParam("jwt", session.getQueryString()).orElse("");
-        if (!playerRESTClient.validateJwt(jwt)) {
+        var queryParams = endpointHelper.getQueryParams(session.getQueryString()).orElse(Collections.emptyMap());
+        if (queryParams.isEmpty()) {
+            endpointHelper.closeWithErrorMessage(session, MuliveCloseReason.NO_QUERY_PARAMS_PROVIDED);
+            return;
+        }
+
+        String version = queryParams.getOrDefault("v", "");
+        if (version.isBlank() || !version.equals(config.getProtocol_version())) {
+            endpointHelper.closeWithErrorMessage(session, MuliveCloseReason.MISSING_PROTOCOL_VERSION);
+            return;
+        }
+
+        String jwt = queryParams.getOrDefault("jwt", "");
+        if (jwt.isBlank() || !playerRESTClient.validateJwt(jwt)) {
             endpointHelper.closeWithErrorMessage(session, MuliveCloseReason.FORBIDDEN);
             return;
         }

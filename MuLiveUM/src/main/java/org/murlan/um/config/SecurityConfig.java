@@ -2,6 +2,7 @@ package org.murlan.um.config;
 
 import lombok.RequiredArgsConstructor;
 import org.murlan.um.auth.JwtAuthFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,7 +12,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -26,13 +26,8 @@ public class SecurityConfig implements WebMvcConfigurer {
     private final MuliveHeaderInterceptor interceptor;
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
-    }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**");
+    public BCryptPasswordEncoder passwordEncoder(@Value("${security.bcrypt.strength:12}") int strength) {
+        return new BCryptPasswordEncoder(strength);
     }
 
     @Override

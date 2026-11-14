@@ -31,6 +31,12 @@ func _read_file_as_text(path: String) -> String:
 	file.close()
 	return text
 
+func get_active_layout() -> HandLayoutDto:
+	for layout in layouts:
+		if layout.is_active:
+			return layout
+	return null
+
 func save_layouts() -> bool:
 	var dict_array: Array = []
 	for layout in layouts:

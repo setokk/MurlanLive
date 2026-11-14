@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://ctiqqa23jajmf"]
 
-[ext_resource type="Script" uid="uid://cnfr068ybvthk" path="res://RoomInfo.gd" id="1_rdgol"]
+[ext_resource type="Script" uid="uid://cvnw1l8hi3cih" path="res://RoomInfo.gd" id="1_rdgol"]
 [ext_resource type="Texture2D" uid="uid://bdxguotcfc6w2" path="res://assets/images/edit-icon.svg" id="3_koah1"]
 [ext_resource type="Texture2D" uid="uid://ckq2laot3qq0f" path="res://assets/images/polka-dots-no-bg.png" id="3_msm78"]
 [ext_resource type="Texture2D" uid="uid://cnbp1yk6x4ylm" path="res://assets/images/grabber.svg" id="4_e1r5k"]
 [ext_resource type="Texture2D" uid="uid://b5a26dr8e0pjn" path="res://assets/images/edit-icon-hovered.svg" id="4_jjnu3"]
 [ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="4_msm78"]
 [ext_resource type="Texture2D" uid="uid://dnsdcwyoobqbx" path="res://assets/images/copy-icon.svg" id="5_jjnu3"]
-[ext_resource type="Script" uid="uid://dd0iu4mcd07mg" path="res://MainButton.gd" id="5_koah1"]
+[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="5_koah1"]
 [ext_resource type="Texture2D" uid="uid://j2yivcq1ip47" path="res://assets/images/copy-icon-hovered.svg" id="6_jq3nt"]
 [ext_resource type="Texture2D" uid="uid://be31gmt5m06ip" path="res://assets/images/grabber_disabled.svg" id="6_msm78"]
 
@@ -251,7 +251,6 @@ text = "READY_BUTTON"
 script = ExtResource("5_koah1")
 hue = 5
 normal_shade = 4
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"
 
 [node name="LeaveButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer2" unique_id=1984847619]
 layout_mode = 2
@@ -259,4 +258,3 @@ text = "LEAVE_ROOM_BUTTON"
 script = ExtResource("5_koah1")
 hue = 3
 normal_shade = 4
-metadata/_custom_type_script = "uid://dd0iu4mcd07mg"

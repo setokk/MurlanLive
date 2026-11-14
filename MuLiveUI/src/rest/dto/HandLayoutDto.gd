@@ -86,5 +86,5 @@ class CardCombinationPlacementDto:
 	static func _enum_from_string(enum_type: Dictionary, value: String) -> int:
 		if enum_type.has(value):
 			return enum_type[value]
-		push_warning("Unknown enum value '%s' for %s, defaulting to 0" % [value, enum_type])
+		push_error("Unknown enum value '%s' for %s (valid values: %s), defaulting to 0 - this placement will silently behave as DEFAULT" % [value, enum_type, enum_type.keys()])
 		return 0

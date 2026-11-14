@@ -311,7 +311,12 @@ public class GameState {
 
     public Map<Long, Short> getNumOfCardsPerPlayerId() {
         return players.stream()
-                .collect(Collectors.toMap(Player::getId, p -> (short) p.getHand().size()));
+                .collect(Collectors.toMap(
+                        Player::getId,
+                        p -> p.getHand() == null
+                                ? 0
+                                : (short) p.getHand().size()
+                ));
     }
 
     public boolean shouldGameStart() {

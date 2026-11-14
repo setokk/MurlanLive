@@ -1,13 +1,39 @@
 [
   {
 	"name": "Default (Random)",
-	"isActive": true,
+	"isActive": false,
 	"cardCombinationPlacements": [
 	  {
 		"cardCombinationPlacementType": "DEFAULT",
 		"sortMode": "RANDOM"
 	  }
 	]
+  },
+  {
+    "name": "Bomb Kolor Mania",
+    "isActive": true,
+    "cardCombinationPlacements": [
+      {
+        "cardCombinationPlacementType": "BOMB_KOLOR",
+        "sortMode": "RANDOM"
+      },
+      {
+        "cardCombinationPlacementType": "KOLOR",
+        "sortMode": "RANDOM"
+      },
+      {
+        "cardCombinationPlacementType": "TRIPLE_CARDS",
+        "sortMode": "ASC"
+      },
+      {
+        "cardCombinationPlacementType": "DOUBLE_CARDS",
+        "sortMode": "ASC"
+      },
+      {
+        "cardCombinationPlacementType": "DEFAULT",
+        "sortMode": "ASC"
+      }
+    ]
   },
   {
 	"name": "Default (Ascending)",

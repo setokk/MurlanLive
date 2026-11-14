@@ -31,13 +31,12 @@ func _ready() -> void:
 	room_buttons_container.show_available_rooms_requested.connect(_on_show_available_rooms_requested)
 	WebSocketClient.available_rooms_resp.connect(_on_available_rooms_completed)
 	WebSocketClient.create_room_resp.connect(_on_create_completed)
+	WebSocketClient.join_room_resp.connect(_on_join_completed)
 	
 	room_buttons_container.show_available_rooms_requested.emit()
 	show_available_rooms.set_pressed_no_signal(true)
 	room_scroll_container.hide()
 	loading_room_scroll_container.start_loading()
-	
-	
 
 func _on_available_rooms_completed(resp: AvailableRoomsResp) -> void:
 	await loading_room_scroll_container.stop_loading()
@@ -79,7 +78,16 @@ func _on_create_requested() -> void:
 	var room_name: String = PlayerSession.player.username + "'s " + "Room"
 	var turn_duration_in_seconds: int = GameConstants.TURN_DURATION_SECONDS[default_turn_duration_in_seconds_id]
 	
-	WebSocketClient.send_message(CreateRoomReq.new(room_name, true, default_total_score_to_win, turn_duration_in_seconds))
+	PopupFactory.confirmation_with_checkbox(
+		"Room Visibility:",
+		"Make Private",
+		func(is_private_room: bool) -> void:
+			WebSocketClient.send_message(CreateRoomReq.new(room_name, not is_private_room, default_total_score_to_win, turn_duration_in_seconds)),
+		Callable(),
+		"Create Room",
+		"Create",
+		"Back"
+	)
 	
 func _on_create_completed(resp: CreateRoomResp) -> void:	
 	SceneManager.show_game(resp.room)
@@ -97,6 +105,12 @@ func _on_join_with_id_requested() -> void:
 		PopupFactory.warning("Room id is empty!")
 	else:
 		WebSocketClient.send_message(JoinRoomReq.new(join_room_with_id_input.text.strip_edges()))
+
+func _on_join_completed(resp: JoinRoomResp) -> void:
+	if resp.response_status == 200:
+		SceneManager.show_game(resp.room)
+	else:
+		PopupFactory.error("Room id not found")
 
 func format_pressed_button(pressed_button: Button, other_button: Button) -> void:
 	pressed_button.hue = pressed_button_hue

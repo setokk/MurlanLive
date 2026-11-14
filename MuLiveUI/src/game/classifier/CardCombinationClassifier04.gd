@@ -19,5 +19,7 @@ func classify_card_combination(card_combination: CardCombination) -> bool:
 	var is_bomb_kolor := card_count_by_suit.size() == 1
 	if is_bomb_kolor:
 		card_combination.set_type(CardCombinationTypeEnum.BOMB_KOLOR)
-		return true
-	return false
+
+	# A Kolor is still a valid Kolor even when it isn't also a Bomb Kolor;
+	# same-suit only upgrades the type, it never gates acceptance.
+	return true
