@@ -20,6 +20,21 @@ var name: String = ""
 var is_active: bool = false
 var card_combination_placements: Array[CardCombinationPlacementDto] = []
 
+## A layout can only ever be saved if it still has a DEFAULT placement -
+## it's the catch-all every other placement type falls back to, so without
+## it HandLayoutResolver would simply drop any cards that don't match a
+## more specific placement.
+func has_default_placement() -> bool:
+	for placement in card_combination_placements:
+		if placement.card_combination_placement_type == CardCombinationPlacementType.DEFAULT:
+			return true
+	return false
+
+## Deep copy, so an in-progress edit can be cancelled without mutating the
+## original (which may still be referenced elsewhere, e.g. the list UI).
+func clone() -> HandLayoutDto:
+	return HandLayoutDto.from_dict(to_dict())
+
 static func from_dict(data: Dictionary) -> HandLayoutDto:
 	var dto := HandLayoutDto.new()
 	dto.name = data.get("name", "")
@@ -64,6 +79,15 @@ class CardCombinationPlacementDto:
 	var card_combination_placement_type: HandLayoutDto.CardCombinationPlacementType = \
 		HandLayoutDto.CardCombinationPlacementType.DEFAULT
 	var sort_mode: HandLayoutDto.SortMode = HandLayoutDto.SortMode.ASC
+
+	static func create(
+		type: HandLayoutDto.CardCombinationPlacementType,
+		sort_mode: HandLayoutDto.SortMode
+	) -> CardCombinationPlacementDto:
+		var dto := CardCombinationPlacementDto.new()
+		dto.card_combination_placement_type = type
+		dto.sort_mode = sort_mode
+		return dto
 
 	static func from_dict(data: Dictionary) -> CardCombinationPlacementDto:
 		var dto := CardCombinationPlacementDto.new()

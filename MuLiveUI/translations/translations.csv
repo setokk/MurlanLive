@@ -43,7 +43,7 @@ LOBBY_BUTTON,Lobby,Lobi
 CREATION_DATE_LABEL,Created at: ,U krijua: 
 FINISHED_DATE_LABEL,Finished at: ,Mbarroj: 
 ME_LABEL,Me,Unë
-HAND_LAYOUT_CONFIGURATION_TITLE,HAND LAYOUT CONFIGURATION,KONFIGURIMI I RENDITJES LETRAVE
+HAND_LAYOUT_CONFIGURATION_TITLE,HAND LAYOUT CONFIGURATION,KONFIGURIMI I LETRAVE               
 CREATE_NEW_HAND_LAYOUT_BUTTON,CREATE NEW,KRIJO TË RE
 ACTIVE_HAND_LAYOUT_TEXT,Active,Aktive
 HAND_LAYOUT_CONFIGURATION_SETTINGS,Hand Layout,Renditja ë Letrave
@@ -101,6 +101,36 @@ ROOM_ITEM_JOIN_BUTTON,JOIN ROOM,BASHKOHU NË DHOMË
 PLAY_HAND_TOOLTIP,Play Hand,Luaj dorën
 PASS_TOOLTIP,Pass,Kaloj
 HAND_LAYOUT_MORE_TOOLTIP,"More card combination placements (triple cards, kolor, bomb, etc.) will be configurable here.","Vendosje të tjera të kombinimeve të letrave (treshe, kolor, bombë etj.) do të mund të konfigurohen këtu."
+EDIT_HAND_LAYOUT_TOOLTIP,Edit,Ndrysho
+DELETE_HAND_LAYOUT_TOOLTIP,Delete,Fshij
+HAND_LAYOUT_DELETE_ACTIVE_TOOLTIP,The active layout cannot be deleted,Renditja aktive nuk mund të fshihet
+HAND_LAYOUT_DELETE_ACTIVE_WARNING,You can't delete the active hand layout. Activate another layout first.,Nuk mund të fshini renditjen aktive. Aktivizoni një renditje tjetër së pari.
+HAND_LAYOUT_DELETE_CONFIRMATION,Are you sure you want to delete the hand layout '%s'?,A jeni i sigurt që dëshironi të fshini renditjen '%s'?
+HAND_LAYOUT_MISSING_DEFAULT_ERROR_LIST,"The following hand layouts are missing a DEFAULT card placement and cannot be saved:\n%s","Renditjet e mëposhtme nuk kanë një vendosje DEFAULT dhe nuk mund të ruhen:\n%s"
+HAND_LAYOUT_SAVE_SUCCESS,Hand layouts saved successfully!,Renditjet e letrave u ruajtën me sukses!
+HAND_LAYOUT_SAVE_ERROR_TITLE,Save Failed,Ruajtja dështoi
+HAND_LAYOUT_UNSAVED_CHANGES_TITLE,Unsaved Changes,Ndryshime të paruajtura
+HAND_LAYOUT_UNSAVED_CHANGES_CONFIRMATION,You have unsaved hand layout changes. Do you want to save them before leaving?,Keni ndryshime të paruajtura në renditjen e letrave. Dëshironi t'i ruani përpara se të largoheni?
+HAND_LAYOUT_EDITOR_TITLE,Hand Layout,Renditja e letrave
+HAND_LAYOUT_EDITOR_CREATE_TITLE,Create New Hand Layout,Krijo renditje të re
+HAND_LAYOUT_EDITOR_EDIT_TITLE,Edit Hand Layout,Ndrysho renditjen
+HAND_LAYOUT_NAME_LABEL,Name:,Emri:
+HAND_LAYOUT_NAME_PLACEHOLDER,Hand layout name,Emri i renditjes
+CARD_PLACEMENTS_LABEL,Card Placements,Vendosjet e letrave
+ADD_PLACEMENT_BUTTON,Add,Shto
+REMOVE_PLACEMENT_TOOLTIP,Remove,Hiq
+HAND_LAYOUT_NAME_EMPTY_ERROR,Hand layout name cannot be empty,Emri i renditjes nuk mund të jetë bosh
+HAND_LAYOUT_DUPLICATE_NAME_ERROR,A hand layout with this name already exists,Ekziston tashmë një renditje me këtë emër
+HAND_LAYOUT_MISSING_DEFAULT_ERROR,Every hand layout must have at least a DEFAULT card placement,Çdo renditje duhet të ketë të paktën një vendosje DEFAULT
+PLACEMENT_TYPE_DEFAULT,Default,Parazgjedhur
+PLACEMENT_TYPE_DOUBLE_CARDS,Double Cards,Dyshe letrash
+PLACEMENT_TYPE_TRIPLE_CARDS,Triple Cards,Treshe letrash
+PLACEMENT_TYPE_KOLOR,Kolor,Kolor
+PLACEMENT_TYPE_BOMB,Bomb,Bombë
+PLACEMENT_TYPE_BOMB_KOLOR,Bomb Kolor,Bombë Kolor
+SORT_MODE_ASC,Ascending,Rritës
+SORT_MODE_DESC,Descending,Zbritës
+SORT_MODE_RANDOM,Random,Rastësisht
 CONNECTION_CLOSED_WITH_CODE,%s (code %d),%s (kodi %d)
 CLOSE_LABEL_CONNECTION_LOST,Connection lost,Lidhja humbi
 CLOSE_LABEL_DISCONNECTED,Disconnected,Lidhja u ndërpre
