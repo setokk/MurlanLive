@@ -31,7 +31,7 @@ func prepare_room_item() -> void:
 	var players: Array = room["players"]
 	
 	room_name_label.text = str(room["name"])
-	points_label.text = str(int(room["totalScoreToWin"])) + " " + tr("PTS_TEXT")
+	_update_points_text()
 	turn_time_label.text = TimeUtils.format_seconds(int(room["turnDurationInSeconds"]))
 	joined_players_size_label.text = str(players.size()) + "/4"
 	
@@ -87,6 +87,9 @@ func update_seat(
 		username_label.text = ""
 		username_label.visible = false
 
+func _update_points_text() -> void:
+	points_label.text = str(int(room["totalScoreToWin"])) + " " + tr("PTS_TEXT")
+
 func get_player_count() -> int:
 	var players: Array = room["players"]
 	return players.size()
@@ -106,3 +109,8 @@ func _on_join_completed(resp: JoinRoomResp) -> void:
 		print("Joined successfully")
 	else:
 		print("Cannot join")
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED:
+		if is_node_ready():
+			_update_points_text()

@@ -70,7 +70,7 @@ func set_room_info_editable(is_editable: bool) -> void:
 func _on_copy_room_id_requested() -> void:
 	DisplayServer.clipboard_set(room_id.text)
 	copy_room_id_button.texture_normal = checkmark_icon
-	copy_room_id_button.tooltip_text = "Copied!"
+	copy_room_id_button.tooltip_text = tr("COPIED_TOOLTIP")
 	copy_room_id_button.disabled = true
 	await get_tree().create_timer(2.5).timeout
 	copy_room_id_button.texture_normal = copy_icon
@@ -79,7 +79,7 @@ func _on_copy_room_id_requested() -> void:
 	
 func _on_leave_requested() -> void:
 	PopupFactory.confirmation(
-		"Penalties will apply if you leave during an active game.\nAre you sure you want to leave?",
+		tr("LEAVE_ROOM_CONFIRMATION"),
 		func(): WebSocketClient.send_message(LeaveRoomReq.new())
 	)
 	
@@ -87,7 +87,7 @@ func _on_leave_completed(resp: LeaveRoomResp) -> void:
 	if resp.response_status == 200:
 		SceneManager.show_lobby()
 	else:
-		PopupFactory.error("There was an error with leaving the room.\nPlease try again later")
+		PopupFactory.error(tr("LEAVE_ROOM_ERROR"))
 	
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED:

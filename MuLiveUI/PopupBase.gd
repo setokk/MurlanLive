@@ -20,9 +20,9 @@ func _ready() -> void:
 func configure(config: Dictionary) -> void:
 	title_label.text = config.get("title", "")
 	message_label.text = config.get("message", "")
-	ok_button.text = config.get("ok_text", "OK")
+	ok_button.text = config.get("ok_text", tr("POPUP_OK_BUTTON"))
 	cancel_button.visible = config.get("show_cancel", false)
-	cancel_button.text = config.get("cancel_text", "Cancel")
+	cancel_button.text = config.get("cancel_text", tr("POPUP_CANCEL_BUTTON"))
 
 	if config.has("icon"):
 		icon_rect.texture = config["icon"]

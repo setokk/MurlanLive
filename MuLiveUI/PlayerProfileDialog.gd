@@ -57,6 +57,9 @@ func set_mute_and_block_buttons_tooltip_text():
 	else:
 		block_button.tooltip_text = tr("BLOCK_BUTTON")
 
+	# Kick has no state to toggle, but its tooltip is translated at the same moments as the others.
+	kick_button.tooltip_text = tr("KICK_BUTTON")
+
 func _on_close_requested() -> void:
 	visible = false
 	

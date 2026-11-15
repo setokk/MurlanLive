@@ -2,34 +2,34 @@ extends CenterContainer
 
 @onready var random_message: Label = $RandomMessage
 
-const MESSAGES: Array[String] = [
-	"Murlan.. From the times Albania and Communism made love",
-	"Even this game is better than Pirate Software's
-	 (We didn't work at Blizzard)",
-	"Kosovo is.. *drumroll* ..Albania",
-	"Definitely not a knockoff Tichu!",
-	"Fun fact: The main developer of the game thought the name of this card game was Mulan
-	 (Thank god it wasn't, it would get copyrighted)",
-	"First Second Generation of Murlan Game Developers",
-	"01110011 01100101 01101110 01100100 00100000 01101110 01110101 01100100 01100101 01110011",
-	"This game was brought to you by graduates of Makedonia College",
-	"Woof woof",
-	"Got Murlan before GTA6",
-	"Tip: You need to learn how to read in order to play the game",
-	"A ROCK!! 🪨",
-	"Shrek is love. Shrek is life.",
-	"Kaboom. Kablow.",
-	"Don't know the rules of the game? ➡️ Look up Enver Hoxha",
-	"Tip: Eating seeds helps with digestion plus it's a good past time activity",
-	"Use open source or imma open source your ass",
-	"Seeing this message fills you with determination",
-	"Git gud!",
-	"⭐️❌➗🐮",
-	"Inside you are two wolves.. One is gay. The other one is gay too."
+# Translation keys (see translations.csv), not display text.
+const MESSAGE_KEYS: Array[String] = [
+	"RANDOM_MESSAGE_01",
+	"RANDOM_MESSAGE_02",
+	"RANDOM_MESSAGE_03",
+	"RANDOM_MESSAGE_04",
+	"RANDOM_MESSAGE_05",
+	"RANDOM_MESSAGE_06",
+	"RANDOM_MESSAGE_07",
+	"RANDOM_MESSAGE_08",
+	"RANDOM_MESSAGE_09",
+	"RANDOM_MESSAGE_10",
+	"RANDOM_MESSAGE_11",
+	"RANDOM_MESSAGE_12",
+	"RANDOM_MESSAGE_13",
+	"RANDOM_MESSAGE_14",
+	"RANDOM_MESSAGE_15",
+	"RANDOM_MESSAGE_16",
+	"RANDOM_MESSAGE_17",
+	"RANDOM_MESSAGE_18",
+	"RANDOM_MESSAGE_19",
+	"RANDOM_MESSAGE_20",
+	"RANDOM_MESSAGE_21",
 ]
 
 const MESSAGE_INTERVAL: float = 5.0
-var last_message: String = ""
+var last_key: String = ""
+var current_key: String = ""
 var new_message: String = ""
 const ROW_OVERHEAD: float = 10.0
 
@@ -37,6 +37,13 @@ func _ready() -> void:
 	random_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	random_message_loop()
 	_fit_message()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED:
+		if is_node_ready() and not current_key.is_empty():
+			new_message = tr(current_key)
+			random_message.text = new_message
+			_fit_message()
 
 func _fit_message() -> void:
 	var row_width := get_parent_area_size().x
@@ -49,11 +56,12 @@ func _fit_message() -> void:
 	
 func random_message_loop() -> void:
 	while true:
-		new_message = random_message.text
-		while new_message == last_message:
-			new_message = MESSAGES.pick_random()
+		current_key = MESSAGE_KEYS.pick_random()
+		while current_key == last_key:
+			current_key = MESSAGE_KEYS.pick_random()
 
-		last_message = new_message
+		last_key = current_key
+		new_message = tr(current_key)
 
 		var fade_out := create_tween()
 

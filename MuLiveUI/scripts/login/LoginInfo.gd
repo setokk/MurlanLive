@@ -19,7 +19,7 @@ func _on_login_pressed() -> void:
 	var password: String = password_input.text
 	
 	if usernameOrEmail.is_empty() or password.is_empty():
-		PopupFactory.error("Please enter username and password.", "Input Error")
+		PopupFactory.error(tr("LOGIN_INPUT_ERROR"), tr("INPUT_ERROR_TITLE"))
 		return
 		
 	PlayerRESTClient.login(usernameOrEmail, password)
@@ -49,27 +49,27 @@ func _on_login_completed(res: ApiResponse, jwt: String):
 		WebSocketClient.send_message(ReconnectReq.new())
 		var resp: ReconnectResp = await WebSocketClient.reconnect_resp
 		if resp.response_status == 200:
-			PopupFactory.info("Automatically reconnected to room id: " + str(resp.room["id"]))
+			PopupFactory.info(tr("AUTO_RECONNECTED_INFO") % str(resp.room["id"]))
 			SceneManager.show_game(resp.room, true)
 		else:
 			SceneManager.show_lobby()
 		
 	else:
-		PopupFactory.error("Errors:\n" + res.error_message())
+		PopupFactory.error(tr("ERRORS_LIST_TEXT") % res.error_message())
 
 func _on_forgot_password_pressed() -> void:
 	var usernameOrEmail: String = username_or_email_input.text.strip_edges()
 	if usernameOrEmail.is_empty():
-		PopupFactory.error("Please enter a username or email", "Input Error")
+		PopupFactory.error(tr("FORGOT_PASSWORD_INPUT_ERROR"), tr("INPUT_ERROR_TITLE"))
 		return
 	
 	PlayerRESTClient.forgot_password(usernameOrEmail)
 
 func _on_forgot_password_completed(res: ApiResponse) -> void:
 	if res.success:
-		PopupFactory.info("If an account with this email exists, we will send an email", "Success!")
+		PopupFactory.info(tr("FORGOT_PASSWORD_SUCCESS"), tr("SUCCESS_TITLE"))
 	else:
-		PopupFactory.error("Errors:\n" + res.error_message())
+		PopupFactory.error(tr("ERRORS_LIST_TEXT") % res.error_message())
 
 func _on_register_page_pressed() -> void:
 	SceneManager.show_register()
@@ -80,7 +80,7 @@ func _on_get_blocked_players_completed(res: ApiResponse) -> void:
 		blocked_players.assign(res.data)
 		PlayerSession.init_blocked_players(blocked_players)
 	else:
-		PopupFactory.error("Errors:\n" + res.error_message())
+		PopupFactory.error(tr("ERRORS_LIST_TEXT") % res.error_message())
 		
 func _on_hand_layout_check_completed(res: ApiResponse) -> void:
 	if res.status_code == 200:

@@ -10,6 +10,6 @@ offset_right = 629.2
 offset_bottom = 208.6848
 size_flags_horizontal = 4
 theme = ExtResource("1_f62x0")
-text = "Show More"
+text = "SHOW_MORE_BUTTON"
 script = ExtResource("2_uxx2p")
 metadata/_custom_type_script = "uid://dd0iu4mcd07mg"

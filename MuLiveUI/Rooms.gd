@@ -75,18 +75,18 @@ func _on_show_available_rooms_requested() -> void:
 		room.visible = not room.is_full()
 
 func _on_create_requested() -> void:
-	var room_name: String = PlayerSession.player.username + "'s " + "Room"
+	var room_name: String = tr("DEFAULT_ROOM_NAME") % PlayerSession.player.username
 	var turn_duration_in_seconds: int = GameConstants.TURN_DURATION_SECONDS[default_turn_duration_in_seconds_id]
 	
 	PopupFactory.confirmation_with_checkbox(
-		"Room Visibility:",
-		"Make Private",
+		tr("ROOM_VISIBILITY_TEXT"),
+		tr("MAKE_PRIVATE_CHECKBOX"),
 		func(is_private_room: bool) -> void:
 			WebSocketClient.send_message(CreateRoomReq.new(room_name, not is_private_room, default_total_score_to_win, turn_duration_in_seconds)),
 		Callable(),
-		"Create Room",
-		"Create",
-		"Back"
+		tr("CREATE_ROOM_POPUP_TITLE"),
+		tr("CREATE_BUTTON"),
+		tr("BACK_BUTTON")
 	)
 	
 func _on_create_completed(resp: CreateRoomResp) -> void:	
@@ -102,7 +102,7 @@ func _on_random_join_requested() -> void:
 
 func _on_join_with_id_requested() -> void:
 	if join_room_with_id_input.text.is_empty():
-		PopupFactory.warning("Room id is empty!")
+		PopupFactory.warning(tr("ROOM_ID_EMPTY_WARNING"))
 	else:
 		WebSocketClient.send_message(JoinRoomReq.new(join_room_with_id_input.text.strip_edges()))
 
@@ -110,7 +110,7 @@ func _on_join_completed(resp: JoinRoomResp) -> void:
 	if resp.response_status == 200:
 		SceneManager.show_game(resp.room)
 	else:
-		PopupFactory.error("Room id not found")
+		PopupFactory.error(tr("ROOM_ID_NOT_FOUND_ERROR"))
 
 func format_pressed_button(pressed_button: Button, other_button: Button) -> void:
 	pressed_button.hue = pressed_button_hue

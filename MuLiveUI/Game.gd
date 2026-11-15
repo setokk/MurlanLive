@@ -260,7 +260,7 @@ func _on_ready_requested() -> void:
 		var turn_duration_in_seconds: int = room_info.get_time_option_in_seconds()
 		
 		if room_name.is_empty():
-			PopupFactory.error("Room name cannot be empty")
+			PopupFactory.error(tr("ROOM_NAME_EMPTY_ERROR"))
 			return
 		WebSocketClient.send_message(UpdateRoomDetailsReq.new(room_name, total_score_to_win, turn_duration_in_seconds))
 		
@@ -308,7 +308,7 @@ func _on_give_card_completed(resp: GiveCardResp) -> void:
 func _on_opponent_joined(resp: InformPlayerJoinRoomResp):
 	if resp.response_status == 200:
 		var player: Dictionary = resp.player
-		chat.add_message("", false, player["username"] + " joined the room")
+		chat.add_system_message("CHAT_PLAYER_JOINED", [player["username"]])
 		players.append(player)
 		seats[find_player_seat_index(player["id"])].set_player(player, false)
 	else:
@@ -351,7 +351,7 @@ func _on_opponent_lost_connection(resp: InformPlayerLostConnectionResp) -> void:
 
 func _on_opponent_reconnected(resp: InformPlayerReconnectedResp) -> void:
 	if resp.response_status == 200:
-		chat.add_message("", false, resp.player["username"] + " just reconnected")
+		chat.add_system_message("CHAT_PLAYER_RECONNECTED", [resp.player["username"]])
 
 func _on_opponent_give_card(resp: InformGiveCardResp) -> void:
 	if resp.response_status == 200:
@@ -373,7 +373,7 @@ func _on_update_room_details_completed(resp: UpdateRoomDetailsResp) -> void:
 	if resp.response_status == 200:
 		update_room_details(resp.room_details)
 	else:
-		PopupFactory.error("There was an error with the update of room details.\nPlease try again")
+		PopupFactory.error(tr("ROOM_UPDATE_ERROR"))
 		
 func _on_opponent_update_room_details(resp: InformUpdateRoomDetailsResp) -> void:
 	if resp.response_status == 200:
@@ -386,17 +386,17 @@ func _on_kick_requested(player_id: int):
 
 func _on_kick_completed(resp: KickResp) -> void:
 	if resp.response_status == 200:
-		PopupFactory.info("Player: " + resp.kicked_player["username"] + " successfully kicked!")
+		PopupFactory.info(tr("PLAYER_KICKED_SUCCESS") % resp.kicked_player["username"])
 		remove_player(resp.kicked_player["id"])
 		display_players()
 	
 func _on_opponent_kicked(resp: InformPlayerKickedResp) -> void:
 	if resp.response_status == 200:
 		if int(resp.kicked_player["id"]) == PlayerSession.player.id:
-			PopupFactory.info("You got kicked by: " + players[0]["username"] + " (owner)")
+			PopupFactory.info(tr("YOU_WERE_KICKED") % players[0]["username"])
 			SceneManager.show_lobby()
 		else:	
-			PopupFactory.info("Player: " + resp.kicked_player["username"] + " kicked by: " + players[0]["username"] + " (owner)")
+			PopupFactory.info(tr("PLAYER_KICKED_BY_OWNER") % [resp.kicked_player["username"], players[0]["username"]])
 			remove_player(resp.kicked_player["id"])
 			display_players()
 
@@ -512,15 +512,15 @@ func handle_player_not_in_room(
 		if has_left_room:
 			remove_player(player_id)
 		
-		var chat_message: String = " left the room" if has_left_room else " disconnected from the room"
-		chat.add_message("", false, player["username"] + chat_message)
+		var chat_message_key: String = "CHAT_PLAYER_LEFT" if has_left_room else "CHAT_PLAYER_DISCONNECTED"
+		chat.add_system_message(chat_message_key, [player["username"]])
 		var became_owner_now: bool = is_owner(PlayerSession.player)
 		
 		if has_left_room and (was_not_owner && became_owner_now):
-			WebSocketClient.send_message(UpdateRoomDetailsReq.new(PlayerSession.player.username + "'s Room", -1, -1))
+			WebSocketClient.send_message(UpdateRoomDetailsReq.new(tr("DEFAULT_ROOM_NAME") % PlayerSession.player.username, -1, -1))
 			room_info.set_room_info_editable(true)
 			player_profile_dialog.kick_button.visible = true
-			chat.add_message("", false, "You are the owner of the room now.")
+			chat.add_system_message("CHAT_YOU_ARE_OWNER")
 	else:
 		print("Error")
 

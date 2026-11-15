@@ -23,4 +23,5 @@ static func from_http(response_code: int, body: PackedByteArray) -> ApiResponse:
 	return res
 
 func error_message() -> String:
-	return "\n".join(errors) if not errors.is_empty() else "Something went wrong."
+	# RefCounted has no tr(), so go through the TranslationServer directly.
+	return "\n".join(errors) if not errors.is_empty() else str(TranslationServer.translate("GENERIC_ERROR_MESSAGE"))
