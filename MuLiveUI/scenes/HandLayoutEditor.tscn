@@ -1,0 +1,117 @@
+[gd_scene format=3 uid="uid://c5n7h3xkp1dq0"]
+
+[ext_resource type="Script" uid="uid://bq2n4kj8w4m2r" path="res://HandLayoutEditor.gd" id="1_hled"]
+[ext_resource type="Theme" uid="uid://ds8a0br1b0g6w" path="res://themes/FontTheme.tres" id="2_hled"]
+[ext_resource type="Texture2D" uid="uid://bnkjq5vo2180i" path="res://assets/images/polka-dot-bg.png" id="3_hled"]
+[ext_resource type="Theme" uid="uid://dnip6lglpvn3c" path="res://themes/MainButtonTheme.tres" id="4_hled"]
+[ext_resource type="Script" uid="uid://1fdacoak2q7y" path="res://MainButton.gd" id="5_hled"]
+[ext_resource type="Texture2D" uid="uid://dkt4rbxlikmv8" path="res://assets/images/plus-icon.svg" id="6_hled"]
+[ext_resource type="Texture2D" uid="uid://blhllhluypvco" path="res://assets/images/save.svg" id="7_hled"]
+
+[node name="HandLayoutEditor" type="Popup" unique_id=1046838900]
+oversampling_override = 1.0
+initial_position = 2
+size = Vector2i(420, 480)
+visible = true
+theme = ExtResource("2_hled")
+script = ExtResource("1_hled")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1046838901]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ContentPanel" type="PanelContainer" parent="CenterContainer" unique_id=1046838902]
+custom_minimum_size = Vector2(420, 480)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/ContentPanel" unique_id=1046838903]
+layout_mode = 2
+texture = ExtResource("3_hled")
+expand_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="CenterContainer/ContentPanel" unique_id=1046838904]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 15
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/ContentPanel/Margin" unique_id=1046838905]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="HBoxContainer" parent="CenterContainer/ContentPanel/Margin/VBox" unique_id=1046838906]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/ContentPanel/Margin/VBox/Header" unique_id=1046838907]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+text = "HAND_LAYOUT_EDITOR_TITLE"
+
+[node name="CloseButton" type="Button" parent="CenterContainer/ContentPanel/Margin/VBox/Header" unique_id=1046838908]
+layout_mode = 2
+text = "x"
+alignment = 2
+
+[node name="NameRow" type="HBoxContainer" parent="CenterContainer/ContentPanel/Margin/VBox" unique_id=1046838909]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="NameLabel" type="Label" parent="CenterContainer/ContentPanel/Margin/VBox/NameRow" unique_id=1046838910]
+layout_mode = 2
+text = "HAND_LAYOUT_NAME_LABEL"
+
+[node name="NameInput" type="LineEdit" parent="CenterContainer/ContentPanel/Margin/VBox/NameRow" unique_id=1046838911]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "HAND_LAYOUT_NAME_PLACEHOLDER"
+max_length = 40
+
+[node name="PlacementsHeaderRow" type="HBoxContainer" parent="CenterContainer/ContentPanel/Margin/VBox" unique_id=1046838912]
+layout_mode = 2
+
+[node name="PlacementsLabel" type="Label" parent="CenterContainer/ContentPanel/Margin/VBox/PlacementsHeaderRow" unique_id=1046838913]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "CARD_PLACEMENTS_LABEL"
+
+[node name="AddPlacementButton" type="Button" parent="CenterContainer/ContentPanel/Margin/VBox/PlacementsHeaderRow" unique_id=1046838914]
+custom_minimum_size = Vector2(130, 32)
+layout_mode = 2
+theme = ExtResource("4_hled")
+theme_override_font_sizes/font_size = 13
+text = "ADD_PLACEMENT_BUTTON"
+icon = ExtResource("6_hled")
+alignment = 0
+expand_icon = true
+script = ExtResource("5_hled")
+hue = 6
+normal_shade = 4
+
+[node name="PlacementsScrollContainer" type="ScrollContainer" parent="CenterContainer/ContentPanel/Margin/VBox" unique_id=1046838915]
+custom_minimum_size = Vector2(0, 220)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="PlacementsList" type="VBoxContainer" parent="CenterContainer/ContentPanel/Margin/VBox/PlacementsScrollContainer" unique_id=1046838916]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="SaveButton" type="Button" parent="CenterContainer/ContentPanel/Margin/VBox" unique_id=1046838917]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme = ExtResource("4_hled")
+theme_override_font_sizes/font_size = 16
+text = "SAVE_BUTTON"
+icon = ExtResource("7_hled")
+alignment = 0
+expand_icon = true
+script = ExtResource("5_hled")
+hue = 5
+normal_shade = 4
