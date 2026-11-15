@@ -192,7 +192,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_dq6oh")
-placeholder_text = "Username"
+placeholder_text = "USERNAME_PLACEHOLDER"
 clear_button_enabled = true
 
 [node name="MarginContainer3" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/HBoxContainer" unique_id=1225542396]
@@ -230,7 +230,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_dq6oh")
-placeholder_text = "Email"
+placeholder_text = "EMAIL_PLACEHOLDER"
 clear_button_enabled = true
 
 [node name="MarginContainer2" type="MarginContainer" parent="RegisterInfo/VBoxContainer/1/RegisterPanel/Panel/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoginContainer" unique_id=468576616]

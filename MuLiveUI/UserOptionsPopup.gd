@@ -21,7 +21,7 @@ func _on_profile_picker_save_requested(profile_icon_id: int) -> void:
 
 func _on_update_player_info_completed(resp: UpdatePlayerInfoResp) -> void:
 	if resp.response_status != 200:
-		PopupFactory.error("There was an error with updating player info.\nPlease try again later")
+		PopupFactory.error(tr("PLAYER_INFO_UPDATE_ERROR"))
 		return
 	
 	PlayerSession.player.profile_icon_id = int(resp.player["profileIconId"])

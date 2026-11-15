@@ -49,3 +49,98 @@ ACTIVE_HAND_LAYOUT_TEXT,Active,Aktive
 HAND_LAYOUT_CONFIGURATION_SETTINGS,Hand Layout,Renditja ë Letrave
 HOW_TO_PLAY_SETTINGS,How to play,Si të luaj
 SETTINGS_SETTINGS,Settings,Cilësimet
+POPUP_ERROR_TITLE,Error,Gabim
+POPUP_WARNING_TITLE,Warning,Paralajmërim
+POPUP_INFO_TITLE,Info,Informacion
+POPUP_CONFIRM_TITLE,Confirm,Konfirmo
+POPUP_OK_BUTTON,OK,OK
+POPUP_CANCEL_BUTTON,Cancel,Anulo
+POPUP_YES_BUTTON,Yes,Po
+POPUP_NO_BUTTON,No,Jo
+INPUT_ERROR_TITLE,Input Error,Gabim në të dhëna
+SUCCESS_TITLE,Success!,Sukses!
+ERRORS_LIST_TEXT,"Errors:\n%s","Gabimet:\n%s"
+GENERIC_ERROR_MESSAGE,Something went wrong.,Diçka shkoi keq.
+CHAT,CHAT,CHAT
+CHAT_YOU_LABEL,You,Ti
+CHAT_EMPTY_MESSAGE_WARNING,Message is empty,Mesazhi është bosh
+CHAT_SEND_ERROR,Issue with sending the message,Problem gjatë dërgimit të mesazhit
+CHAT_PLAYER_JOINED,%s joined the room,%s iu bashkua dhomës
+CHAT_PLAYER_LEFT,%s left the room,%s u largua nga dhoma
+CHAT_PLAYER_DISCONNECTED,%s disconnected from the room,%s u shkëput nga dhoma
+CHAT_PLAYER_RECONNECTED,%s just reconnected,%s u rilidh përsëri
+CHAT_YOU_ARE_OWNER,You are the owner of the room now.,Tani je pronari i dhomës.
+ROOM_NAME_EMPTY_ERROR,Room name cannot be empty,Emri i dhomës nuk mund të jetë bosh
+ROOM_UPDATE_ERROR,"There was an error with the update of room details.\nPlease try again","Ndodhi një gabim gjatë përditësimit të detajeve të dhomës.\nJu lutemi provoni përsëri"
+PLAYER_KICKED_SUCCESS,Player: %s successfully kicked!,Lojtari: %s u përjashtua me sukses!
+YOU_WERE_KICKED,You got kicked by: %s (owner),U përjashtove nga: %s (pronari)
+PLAYER_KICKED_BY_OWNER,Player: %s kicked by: %s (owner),Lojtari: %s u përjashtua nga: %s (pronari)
+DEFAULT_ROOM_NAME,%s's Room,Dhoma e %s
+ROOM_VISIBILITY_TEXT,Room Visibility:,Privatësia e dhomës:
+MAKE_PRIVATE_CHECKBOX,Make Private,Bëje private
+CREATE_ROOM_POPUP_TITLE,Create Room,Krijo dhomë
+CREATE_BUTTON,Create,Krijo
+BACK_BUTTON,Back,Mbrapa
+ROOM_ID_EMPTY_WARNING,Room id is empty!,ID e dhomës është bosh!
+ROOM_ID_NOT_FOUND_ERROR,Room id not found,ID e dhomës nuk u gjet
+COPIED_TOOLTIP,Copied!,U kopjua!
+LEAVE_ROOM_CONFIRMATION,"Penalties will apply if you leave during an active game.\nAre you sure you want to leave?","Do të zbatohen penalitete nëse largoheni gjatë një loje aktive.\nA jeni të sigurt që dëshironi të largoheni?"
+LEAVE_ROOM_ERROR,"There was an error with leaving the room.\nPlease try again later","Ndodhi një gabim gjatë largimit nga dhoma.\nJu lutemi provoni përsëri më vonë"
+PLAYER_INFO_UPDATE_ERROR,"There was an error with updating player info.\nPlease try again later","Ndodhi një gabim gjatë përditësimit të informacionit të lojtarit.\nJu lutemi provoni përsëri më vonë"
+LOGIN_INPUT_ERROR,Please enter username and password.,Ju lutemi vendosni emrin e përdoruesit dhe fjalëkalimin.
+FORGOT_PASSWORD_INPUT_ERROR,Please enter a username or email,Ju lutemi vendosni emrin e përdoruesit ose email-in
+FORGOT_PASSWORD_SUCCESS,"If an account with this email exists, we will send an email","Nëse ekziston një llogari me këtë email, do t'ju dërgojmë një email"
+AUTO_RECONNECTED_INFO,Automatically reconnected to room id: %s,U rilidhët automatikisht me dhomën me ID: %s
+REGISTER_INPUT_ERROR,"Please enter username, email and password.","Ju lutemi vendosni emrin e përdoruesit, email-in dhe fjalëkalimin."
+REGISTER_VERIFY_EMAIL_INFO,Register complete! Please verify your email.,Regjistrimi përfundoi! Ju lutemi verifikoni email-in tuaj.
+USERNAME_PLACEHOLDER,Username,Emri i përdoruesit
+EMAIL_PLACEHOLDER,Email,Email
+SHOW_MORE_BUTTON,Show More,Shfaq më shumë
+HOME_TITLE_TEXT,Play Murlan Live!,Luaj Murlan Live!
+ROOM_ITEM_JOIN_BUTTON,JOIN ROOM,BASHKOHU NË DHOMË
+PLAY_HAND_TOOLTIP,Play Hand,Luaj dorën
+PASS_TOOLTIP,Pass,Kaloj
+HAND_LAYOUT_MORE_TOOLTIP,"More card combination placements (triple cards, kolor, bomb, etc.) will be configurable here.","Vendosje të tjera të kombinimeve të letrave (treshe, kolor, bombë etj.) do të mund të konfigurohen këtu."
+CONNECTION_CLOSED_WITH_CODE,%s (code %d),%s (kodi %d)
+CLOSE_LABEL_CONNECTION_LOST,Connection lost,Lidhja humbi
+CLOSE_LABEL_DISCONNECTED,Disconnected,Lidhja u ndërpre
+CLOSE_LABEL_SERVER_GOING_AWAY,Server is going away,Serveri po mbyllet
+CLOSE_LABEL_SERVER_ERROR,Server error,Gabim në server
+CLOSE_LABEL_SERVER_RESTARTING,Server is restarting,Serveri po riniset
+CLOSE_LABEL_SERVER_OVERLOADED,"Server is overloaded, try again shortly","Serveri është i mbingarkuar, provoni përsëri pas pak"
+CONNECTION_DISCONNECTED_TITLE,Disconnected,Lidhja u ndërpre
+CONNECTION_LOST_TITLE,Connection Lost,Lidhja humbi
+CONNECTION_ERROR_TITLE,Connection Error,Gabim në lidhje
+CLOSE_FORBIDDEN_TITLE,Access Denied,Akses i mohuar
+CLOSE_FORBIDDEN_MESSAGE,You don't have permission to connect.,Nuk keni leje për t'u lidhur.
+CLOSE_INVALID_JWT_TITLE,Session Expired,Seanca skadoi
+CLOSE_INVALID_JWT_MESSAGE,Your session is no longer valid. Please log in again.,Seanca juaj nuk është më e vlefshme. Ju lutemi identifikohuni përsëri.
+CLOSE_JWT_EXISTS_TITLE,Already Connected,Tashmë i lidhur
+CLOSE_JWT_EXISTS_MESSAGE,This account is already connected in another session.,Kjo llogari është tashmë e lidhur në një seancë tjetër.
+CLOSE_BAD_BODY_MESSAGE,The client sent a malformed request to the server.,Klienti i dërgoi serverit një kërkesë me format të pavlefshëm.
+CLOSE_NO_SESSION_TITLE,Session Not Found,Seanca nuk u gjet
+CLOSE_NO_SESSION_MESSAGE,No active session was found for this connection. Please log in again.,Nuk u gjet asnjë seancë aktive për këtë lidhje. Ju lutemi identifikohuni përsëri.
+CLOSE_NO_QUERY_PARAMS_MESSAGE,The connection request was missing required parameters.,Kërkesës për lidhje i mungonin parametrat e nevojshëm.
+CLOSE_INCOMPATIBLE_PROTOCOL_TITLE,Update Required,Përditësim i nevojshëm
+CLOSE_INCOMPATIBLE_PROTOCOL_MESSAGE,Your client's protocol version is incompatible with the server. Please update the client or change the game server host.,Versioni i protokollit të klientit tuaj nuk është i pajtueshëm me serverin. Ju lutemi përditësoni klientin ose ndryshoni hostin e serverit të lojës.
+RANDOM_MESSAGE_01,Murlan.. From the times Albania and Communism made love,
+RANDOM_MESSAGE_02,"Even this game is better than Pirate Software's\n(We didn't work at Blizzard)",
+RANDOM_MESSAGE_03,Kosovo is.. *drumroll* ..Albania,
+RANDOM_MESSAGE_04,Definitely not a knockoff Tichu!,
+RANDOM_MESSAGE_05,"Fun fact: The main developer of the game thought the name of this card game was Mulan\n(Thank god it wasn't, it would get copyrighted)",
+RANDOM_MESSAGE_06,First Second Generation of Murlan Game Developers,
+RANDOM_MESSAGE_07,01110011 01100101 01101110 01100100 00100000 01101110 01110101 01100100 01100101 01110011,
+RANDOM_MESSAGE_08,This game was brought to you by graduates of Makedonia College,
+RANDOM_MESSAGE_09,Woof woof,
+RANDOM_MESSAGE_10,Got Murlan before GTA6,
+RANDOM_MESSAGE_11,Tip: You need to learn how to read in order to play the game,
+RANDOM_MESSAGE_12,A ROCK!! 🪨,
+RANDOM_MESSAGE_13,Shrek is love. Shrek is life.,
+RANDOM_MESSAGE_14,Kaboom. Kablow.,
+RANDOM_MESSAGE_15,Don't know the rules of the game? ➡️ Look up Enver Hoxha,
+RANDOM_MESSAGE_16,Tip: Eating seeds helps with digestion plus it's a good past time activity,
+RANDOM_MESSAGE_17,Use open source or imma open source your ass,
+RANDOM_MESSAGE_18,Seeing this message fills you with determination,
+RANDOM_MESSAGE_19,Git gud!,
+RANDOM_MESSAGE_20,⭐️❌➗🐮,
+RANDOM_MESSAGE_21,Inside you are two wolves.. One is gay. The other one is gay too.,

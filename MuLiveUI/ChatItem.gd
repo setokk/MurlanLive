@@ -13,19 +13,37 @@ var type: Type = Type.OTHER
 var username: String
 var message: String
 
+# Set for system lines that should be (re)translated from a key, e.g. "%s joined the room".
+var message_key: String = ""
+var message_args: Array = []
+
 @onready var username_label: Label = $MarginContainer/HBoxContainer/Username
 @onready var message_label: Label = $MarginContainer/HBoxContainer/Message
 
 func _ready() -> void:
-	username_label.visible = true
-	if username:
-		username_label.text = username + ":"
-	else:
-		username_label.visible = false
-	message_label.text = message
+	_refresh_texts()
 	message_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_apply_type()
 	_fit_message()
+
+func _refresh_texts() -> void:
+	# Own messages show a translated "You" instead of a stored username.
+	var display_username: String = tr("CHAT_YOU_LABEL") if type == Type.OWN else username
+	if display_username.is_empty():
+		username_label.visible = false
+	else:
+		username_label.visible = true
+		username_label.text = display_username + ":"
+
+	if not message_key.is_empty():
+		message = tr(message_key) if message_args.is_empty() else tr(message_key) % message_args
+	message_label.text = message
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED:
+		if is_node_ready():
+			_refresh_texts()
+			_fit_message()
 
 func _fit_message() -> void:
 	var row_width := size.x
@@ -62,3 +80,7 @@ func set_username(value: String) -> void:
 
 func set_message(value: String) -> void:
 	message = value
+
+func set_translatable_message(key: String, args: Array = []) -> void:
+	message_key = key
+	message_args = args

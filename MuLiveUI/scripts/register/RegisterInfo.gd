@@ -18,7 +18,7 @@ func _on_register_pressed() -> void:
 	var password: String = password_input.text
 	
 	if username.is_empty() or email.is_empty() or password.is_empty():
-		PopupFactory.error("Please enter username, email and password.", "Input Error")
+		PopupFactory.error(tr("REGISTER_INPUT_ERROR"), tr("INPUT_ERROR_TITLE"))
 		return
 	else:
 		PlayerRESTClient.register(username, email, password)
@@ -26,7 +26,7 @@ func _on_register_pressed() -> void:
 func _on_register_completed(res: ApiResponse, jwt: String):
 	if res.success:
 		if not PlayerSession.set_session(jwt):
-			PopupFactory.info("Register complete! Please verify your email.")
+			PopupFactory.info(tr("REGISTER_VERIFY_EMAIL_INFO"))
 			return
 		
 		WebSocketClient.connect_to_ws(jwt)
@@ -37,7 +37,7 @@ func _on_register_completed(res: ApiResponse, jwt: String):
 		
 		SceneManager.show_lobby()
 	else:
-		PopupFactory.error("Errors:\n" + res.error_message())
+		PopupFactory.error(tr("ERRORS_LIST_TEXT") % res.error_message())
 
 func _on_login_page_pressed() -> void:
 	SceneManager.show_login()

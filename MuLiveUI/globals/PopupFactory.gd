@@ -17,34 +17,40 @@ func _spawn(config: Dictionary) -> PopupPanel:
 	popup.popup_centered(Vector2(360, 160))
 	return popup
 
-func error(message: String, title: String = "Error") -> void:
+# Callers are expected to pass already-translated text (tr("SOME_KEY")).
+# Only the *default* titles / button labels are translated here; an empty
+# string means "use the default for this popup type".
+func _or_default(value: String, translation_key: String) -> String:
+	return value if not value.is_empty() else tr(translation_key)
+
+func error(message: String, title: String = "") -> void:
 	_spawn({
-		"title": title,
+		"title": _or_default(title, "POPUP_ERROR_TITLE"),
 		"message": message,
 		"accent_color": Color.INDIAN_RED,
 	})
 
-func warning(message: String, title: String = "Warning") -> void:
+func warning(message: String, title: String = "") -> void:
 	_spawn({
-		"title": title,
+		"title": _or_default(title, "POPUP_WARNING_TITLE"),
 		"message": message,
 		"accent_color": Color.ORANGE,
 	})
 
-func info(message: String, title: String = "Info") -> void:
+func info(message: String, title: String = "") -> void:
 	_spawn({
-		"title": title,
+		"title": _or_default(title, "POPUP_INFO_TITLE"),
 		"message": message,
 		"accent_color": Color.CORNFLOWER_BLUE,
 	})
 
-func confirmation(message: String, on_confirm: Callable, on_cancel: Callable = Callable(), title: String = "Confirm") -> void:
+func confirmation(message: String, on_confirm: Callable, on_cancel: Callable = Callable(), title: String = "") -> void:
 	var popup := _spawn({
-		"title": title,
+		"title": _or_default(title, "POPUP_CONFIRM_TITLE"),
 		"message": message,
 		"show_cancel": true,
-		"ok_text": "Yes",
-		"cancel_text": "No",
+		"ok_text": tr("POPUP_YES_BUTTON"),
+		"cancel_text": tr("POPUP_NO_BUTTON"),
 	})
 	popup.confirmed.connect(on_confirm)
 	if on_cancel.is_valid():
@@ -55,17 +61,17 @@ func confirmation_with_checkbox(
 		checkbox_text: String,
 		on_confirm: Callable,
 		on_cancel: Callable = Callable(),
-		title: String = "Confirm",
-		ok_text: String = "Yes",
-		cancel_text: String = "No",
+		title: String = "",
+		ok_text: String = "",
+		cancel_text: String = "",
 		checkbox_default: bool = false
 ) -> void:
 	var popup := _spawn({
-		"title": title,
+		"title": _or_default(title, "POPUP_CONFIRM_TITLE"),
 		"message": message,
 		"show_cancel": true,
-		"ok_text": ok_text,
-		"cancel_text": cancel_text,
+		"ok_text": _or_default(ok_text, "POPUP_YES_BUTTON"),
+		"cancel_text": _or_default(cancel_text, "POPUP_NO_BUTTON"),
 		"checkbox_text": checkbox_text,
 		"checkbox_default": checkbox_default,
 	})

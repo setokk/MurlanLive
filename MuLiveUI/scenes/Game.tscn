@@ -781,14 +781,14 @@ script = ExtResource("10_8r6kd")
 
 [node name="PlayButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=406496635]
 layout_mode = 2
-tooltip_text = "Play Hand"
+tooltip_text = "PLAY_HAND_TOOLTIP"
 text = "PLAY_HAND_BUTTON"
 script = ExtResource("9_sv1m6")
 hue = 0
 
 [node name="PassButton" type="Button" parent="BottomArea/ButtonsContainer" unique_id=306511266]
 layout_mode = 2
-tooltip_text = "Play Hand"
+tooltip_text = "PASS_TOOLTIP"
 text = "PASS_BUTTON"
 script = ExtResource("9_sv1m6")
 hue = 0
